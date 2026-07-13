@@ -1,0 +1,14 @@
+{
+  "name": "smallgame-twentieth-ring",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "为 LXY 20 岁生日制作的原创网页解谜游戏：1029 · 第20圈年轮。",
+  "scripts": {
+    "test": "node --test",
+    "serve": "python3 -m http.server 4173"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

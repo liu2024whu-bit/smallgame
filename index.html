@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="《1029 · 第20圈年轮》是一款为即将20岁的朋友制作的原创网页解谜生日礼物。" />
+    <meta name="theme-color" content="#edf3ea" />
+    <title>1029 · 第20圈年轮｜生日解谜游戏</title>
+    <link rel="icon" href="assets/mark.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-glow page-glow--left" aria-hidden="true"></div>
+    <div class="page-glow page-glow--right" aria-hidden="true"></div>
+
+    <main class="game-shell" id="gameShell">
+      <header class="topbar">
+        <a class="brand" href="#scene" aria-label="回到记忆庭院">
+          <span class="brand__mark" aria-hidden="true">
+            <svg viewBox="0 0 48 48"><path d="M24 42V19"/><path d="M24 25c-7-1-11-6-11-13 7 0 12 4 13 10"/><path d="M24 29c7-1 11-5 12-11-7-1-12 3-13 9"/><path d="M16 42h16"/></svg>
+          </span>
+          <span class="brand__copy">
+            <strong id="brandTitle">1029 · 第20圈年轮</strong>
+            <small id="brandSubtitle">从初三到大三，一棵树替我们记住时间。</small>
+          </span>
+        </a>
+        <nav class="topbar__actions" aria-label="游戏控制">
+          <button class="icon-button" id="storyButton" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H20v16H7.5A3.5 3.5 0 0 0 4 21.5v-16Z"/><path d="M4 5.5A3.5 3.5 0 0 1 7.5 9H20"/></svg><span>序章</span></button>
+          <button class="icon-button" id="soundToggle" type="button" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h4l5 4V6L8 10H4Z"/><path class="sound-wave" d="M16 9c1.3 1.6 1.3 4.4 0 6M18.8 6.5c3.1 3.1 3.1 7.9 0 11"/></svg><span>声音</span></button>
+          <button class="icon-button" id="hintButton" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M8.7 14.7A7 7 0 1 1 15.3 14.7c-.9.7-1.3 1.3-1.3 2.3h-4c0-1-.4-1.6-1.3-2.3Z"/></svg><span>提示</span></button>
+          <button class="icon-button" id="resetButton" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4v6h6M5.5 15.5A8 8 0 1 0 6 7.3L4 10"/></svg><span>重置</span></button>
+        </nav>
+      </header>
+
+      <section class="game-layout" aria-label="生日解谜游戏界面">
+        <aside class="side-panel progress-panel" aria-labelledby="progressTitle">
+          <div class="panel-heading"><div><p class="panel-kicker">GROWTH LOG</p><h2 id="progressTitle">成长记录</h2></div><div class="progress-dial" id="progressDial" aria-label="已完成 0 / 5 个主线机关"><span id="progressNumber">0/5</span></div></div>
+          <ol class="memory-list" id="memoryList">
+            <li data-memory="rootUnlocked"><span class="memory-list__index">01</span><span><strong>树根</strong><small>把日期写成第一把钥匙</small></span></li>
+            <li data-memory="monogramSolved"><span class="memory-list__index">02</span><span><strong>时间线</strong><small>从初三排到大三</small></span></li>
+            <li data-memory="flowersSolved"><span class="memory-list__index">03</span><span><strong>鲜花</strong><small>用花语拼出生日</small></span></li>
+            <li data-memory="ringSolved"><span class="memory-list__index">04</span><span><strong>年轮</strong><small>补完第20圈</small></span></li>
+            <li data-memory="giftOpened"><span class="memory-list__index">05</span><span><strong>礼物</strong><small>让所有线索回到同一处</small></span></li>
+          </ol>
+          <section class="journal" aria-labelledby="journalTitle"><div class="section-title-row"><h3 id="journalTitle">树的记录</h3><span>自动存档</span></div><div class="journal-feed" id="journalFeed" aria-live="polite"></div></section>
+        </aside>
+
+        <section class="scene-panel" id="scene" aria-labelledby="sceneTitle">
+          <div class="scene-heading"><div><p class="panel-kicker">MEMORY GARDEN / 23:59</p><h1 id="sceneTitle">月下的第20圈</h1></div><div class="scene-status"><span class="scene-status__dot" aria-hidden="true"></span><span id="sceneStatus">等待第一片新叶</span></div></div>
+          <div class="garden-stage" id="gardenStage">
+            <svg class="garden-art" viewBox="0 0 1000 650" role="img" aria-label="月光下的一棵大树，树下有鲜花、猫、狗、礼物盒和可调查的线索">
+              <defs>
+                <linearGradient id="skyGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fb7b3"/><stop offset="0.55" stop-color="#a9c6bb"/><stop offset="1" stop-color="#dce7d5"/></linearGradient>
+                <linearGradient id="trunkGradient" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#71513e"/><stop offset="0.45" stop-color="#9d7354"/><stop offset="1" stop-color="#5b4437"/></linearGradient>
+                <linearGradient id="grassGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b8d0a5"/><stop offset="1" stop-color="#7d9b76"/></linearGradient>
+                <radialGradient id="moonGlow"><stop offset="0" stop-color="#fff9df" stop-opacity="0.95"/><stop offset="0.35" stop-color="#ffe9b7" stop-opacity="0.35"/><stop offset="1" stop-color="#ffe9b7" stop-opacity="0"/></radialGradient>
+              </defs>
+              <rect width="1000" height="650" fill="url(#skyGradient)"/>
+              <circle cx="140" cy="105" r="96" fill="url(#moonGlow)"/><circle cx="140" cy="105" r="38" fill="#fff4cf" opacity="0.92"/>
+              <g class="scene-stars" fill="#fff7dc"><circle cx="275" cy="70" r="2"/><circle cx="360" cy="118" r="1.8"/><circle cx="840" cy="92" r="2.2"/><circle cx="915" cy="148" r="1.7"/><circle cx="735" cy="48" r="1.4"/><circle cx="74" cy="215" r="1.6"/></g>
+              <path d="M0 360Q150 270 310 346T630 336T1000 314V650H0Z" fill="#a8c6a7"/><path d="M0 455Q170 405 340 455T660 445T1000 420V650H0Z" fill="url(#grassGradient)"/>
+              <g class="tree-canopy" fill="#7ea178" stroke="#5f805f" stroke-width="4"><circle cx="500" cy="138" r="112"/><circle cx="395" cy="170" r="90"/><circle cx="610" cy="172" r="96"/><circle cx="320" cy="215" r="72"/><circle cx="690" cy="228" r="78"/><circle cx="505" cy="225" r="108"/></g>
+              <g class="tree-leaf-specks" fill="#bdd09a" opacity="0.8"><circle cx="359" cy="142" r="9"/><circle cx="446" cy="89" r="7"/><circle cx="562" cy="112" r="8"/><circle cx="644" cy="183" r="10"/><circle cx="401" cy="228" r="8"/><circle cx="528" cy="201" r="9"/><circle cx="702" cy="235" r="7"/></g>
+              <path class="tree-trunk" d="M430 585C451 516 452 453 445 392C438 334 422 278 441 226C459 178 498 152 519 156C545 160 573 195 570 237C566 288 544 334 551 396C558 465 573 523 595 585Z" fill="url(#trunkGradient)" stroke="#4d382e" stroke-width="8"/>
+              <path d="M470 257C416 245 366 217 322 176" fill="none" stroke="#77543f" stroke-width="25" stroke-linecap="round"/><path d="M541 250C595 227 650 195 699 145" fill="none" stroke="#77543f" stroke-width="24" stroke-linecap="round"/><path d="M458 332C407 326 360 310 321 279" fill="none" stroke="#77543f" stroke-width="17" stroke-linecap="round"/><path d="M548 333C599 321 649 300 690 267" fill="none" stroke="#77543f" stroke-width="17" stroke-linecap="round"/><path d="M446 542C380 559 322 584 266 625" fill="none" stroke="#664938" stroke-width="28" stroke-linecap="round"/><path d="M577 538C650 556 715 585 765 622" fill="none" stroke="#664938" stroke-width="28" stroke-linecap="round"/>
+              <g id="treeRingArt" class="tree-ring-art"><circle cx="507" cy="390" r="70" fill="#f0dfc5" stroke="#c58e55" stroke-width="5"/><circle cx="507" cy="390" r="53" fill="none" stroke="#b28a64" stroke-width="4" stroke-dasharray="8 7"/><circle cx="507" cy="390" r="35" fill="none" stroke="#c5a27d" stroke-width="3"/><text x="507" y="381" text-anchor="middle" class="ring-number">19</text><text x="507" y="412" text-anchor="middle" class="ring-caption">+ 1 未闭合</text></g>
+              <g id="calendarArt" class="calendar-art"><line x1="300" y1="154" x2="300" y2="230" stroke="#9b7f5d" stroke-width="4"/><rect x="257" y="220" width="86" height="108" rx="8" fill="#fff7df" stroke="#755b43" stroke-width="6"/><rect x="257" y="220" width="86" height="28" rx="8" fill="#d8857f"/><text x="300" y="242" text-anchor="middle" class="paper-small">OCT</text><text x="300" y="292" text-anchor="middle" class="paper-big">29</text><text x="300" y="316" text-anchor="middle" class="paper-note">月 → 日</text></g>
+              <g id="timelineArt" class="timeline-art"><path d="M625 160C684 187 728 188 776 172" fill="none" stroke="#9c7e58" stroke-width="4"/><g transform="translate(642 165) rotate(-6)"><rect width="52" height="70" rx="5" fill="#fff6dc" stroke="#826a4d" stroke-width="4"/><text x="26" y="28" text-anchor="middle">初三</text><text x="26" y="53" text-anchor="middle">✿</text></g><g transform="translate(704 177) rotate(5)"><rect width="52" height="70" rx="5" fill="#f6edd2" stroke="#826a4d" stroke-width="4"/><text x="26" y="28" text-anchor="middle">大一</text><text x="26" y="53" text-anchor="middle">❉</text></g><g transform="translate(766 162) rotate(-3)"><rect width="52" height="70" rx="5" fill="#fff6dc" stroke="#826a4d" stroke-width="4"/><text x="26" y="28" text-anchor="middle">大三</text><text x="26" y="53" text-anchor="middle">✦</text></g></g>
+              <g id="rootLockArt" class="root-lock-art"><rect x="335" y="485" width="128" height="84" rx="12" fill="#8e6748" stroke="#5d4536" stroke-width="7"/><rect x="356" y="503" width="86" height="30" rx="5" fill="#eef3df" stroke="#b07d45" stroke-width="3"/><text x="399" y="524" text-anchor="middle" class="lock-text">••••</text><path d="M369 485v-15c0-26 59-26 59 0v15" fill="none" stroke="#a57a4c" stroke-width="8"/></g>
+              <g id="giftArt" class="gift-art"><rect x="792" y="392" width="110" height="94" rx="10" fill="#d9958d" stroke="#815a50" stroke-width="7"/><rect x="778" y="382" width="138" height="32" rx="8" fill="#e3aaa1" stroke="#815a50" stroke-width="7"/><path d="M848 382v104M804 382l88 104M892 382l-88 104" stroke="#ffe1a8" stroke-width="8" opacity="0.9"/><circle cx="848" cy="425" r="18" fill="#f6f0dc" stroke="#c4975d" stroke-width="4"/><text x="848" y="432" text-anchor="middle" class="gift-mark">?</text></g>
+              <g id="notebookArt" class="notebook-art"><path d="M194 520l86-17 18 78-86 18Z" fill="#7b6657" stroke="#584436" stroke-width="5"/><path d="M238 511l17 79" stroke="#d7b26e" stroke-width="4"/><path d="M210 540c14-18 24-18 37 0M260 536l21 23" fill="none" stroke="#e48c59" stroke-width="5"/><circle cx="221" cy="562" r="12" fill="none" stroke="#e48c59" stroke-width="4"/><path d="M272 534l11 14-17 5Z" fill="#e6ece7"/></g>
+              <g id="catArt" class="pet-art pet-art--cat" transform="translate(190 418)"><path d="M32 70C7 60 5 29 19 12l10 12 16-13c16 18 21 45 8 64 11 12 23 28 20 54H18c-3-28 3-44 14-59Z" fill="#64645f" stroke="#41423f" stroke-width="5"/><path d="M67 116c34-3 42-24 27-36" fill="none" stroke="#64645f" stroke-width="13" stroke-linecap="round"/><circle cx="31" cy="48" r="3" fill="#f2cb76"/><circle cx="47" cy="48" r="3" fill="#f2cb76"/><rect x="22" y="72" width="37" height="8" rx="4" fill="#79a9a2"/><text x="40" y="70" text-anchor="middle" class="pet-tag">257</text></g>
+              <g id="dogArt" class="pet-art pet-art--dog" transform="translate(708 450)"><path d="M16 46C11 20 27 2 53 8l18-8 14 18c19 9 25 27 16 47 18 12 27 35 24 64H28c-4-28-1-51 14-65-14-2-23-8-26-18Z" fill="#b9855c" stroke="#70523e" stroke-width="5"/><path d="M28 25C7 20 3 45 17 57M86 21c19 2 21 25 11 36" fill="#a97650" stroke="#70523e" stroke-width="5"/><path d="M116 101c31 0 37-21 22-31" fill="none" stroke="#b9855c" stroke-width="13" stroke-linecap="round"/><circle cx="52" cy="39" r="3" fill="#40342e"/><circle cx="71" cy="39" r="3" fill="#40342e"/><rect x="42" y="67" width="44" height="8" rx="4" fill="#d59b6b"/><path d="M61 76l13 0-6 16Z" fill="#f2d7a1"/></g>
+              <g id="flowerArt" class="flower-art"><g class="scene-flower scene-flower--1" transform="translate(390 565)"><path d="M0 45V10" stroke="#6d8e5d" stroke-width="5"/><circle cy="4" r="13" fill="#fff3d0"/><circle cy="4" r="5" fill="#d99d5a"/></g><g class="scene-flower scene-flower--2" transform="translate(435 580)"><path d="M0 34V4" stroke="#6d8e5d" stroke-width="5"/><circle cy="0" r="12" fill="#8eb5c8"/><circle cy="0" r="4" fill="#f1e6bc"/></g><g class="scene-flower scene-flower--3" transform="translate(575 572)"><path d="M0 42V7" stroke="#6d8e5d" stroke-width="5"/><circle cy="2" r="15" fill="#e9b44f"/><circle cy="2" r="6" fill="#6d4c28"/></g><g class="scene-flower scene-flower--4" transform="translate(620 582)"><path d="M0 32V4" stroke="#6d8e5d" stroke-width="5"/><path d="M-12 2Q0-16 12 2Q0 17-12 2Z" fill="#a493c3"/></g><g class="future-bud" transform="translate(530 565)"><path d="M0 47V9" stroke="#5e7e56" stroke-width="5"/><path d="M-9 8Q0-8 9 8Q0 19-9 8Z" fill="#8fa67d"/></g></g>
+            </svg>
+            <button class="scene-hotspot scene-hotspot--calendar" type="button" data-object="calendar" aria-label="查看枝头的十月日历"><span>日历</span></button>
+            <button class="scene-hotspot scene-hotspot--timeline" type="button" data-object="timeline" aria-label="查看悬挂的成长卡片"><span>时间线</span></button>
+            <button class="scene-hotspot scene-hotspot--root" type="button" data-object="root" aria-label="查看树根上的四位数锁"><span>树根锁</span></button>
+            <button class="scene-hotspot scene-hotspot--flowers" type="button" data-object="flowers" aria-label="查看树下的鲜花"><span>花圃</span></button>
+            <button class="scene-hotspot scene-hotspot--ring" type="button" data-object="ring" aria-label="查看树心的年轮"><span>年轮</span></button>
+            <button class="scene-hotspot scene-hotspot--gift" type="button" data-object="gift" aria-label="查看树旁的生日礼物"><span>礼物</span></button>
+            <button class="scene-hotspot scene-hotspot--cat" type="button" data-object="cat" aria-label="查看戴着数字项圈的猫"><span>猫</span></button>
+            <button class="scene-hotspot scene-hotspot--dog" type="button" data-object="dog" aria-label="查看守在树根旁的狗"><span>狗</span></button>
+            <button class="scene-hotspot scene-hotspot--notebook" type="button" data-object="notebook" aria-label="查看树根旁的双人忍者手账"><span>手账彩蛋</span></button>
+            <button class="scene-hotspot scene-hotspot--lantern" type="button" data-object="lantern" aria-label="开关树下的小灯"><span>灯</span></button>
+            <div class="lantern-object" aria-hidden="true"><div class="lantern-object__handle"></div><div class="lantern-object__light"></div><div class="lantern-object__base"></div></div>
+            <div class="scene-message" id="sceneMessage" aria-live="polite">先调查枝头的日历。树根上的锁正在等待四位数字。</div>
+          </div>
+        </section>
+
+        <aside class="side-panel inventory-panel" aria-labelledby="inventoryTitle">
+          <div class="panel-heading"><div><p class="panel-kicker">FOUND MEMORIES</p><h2 id="inventoryTitle">收集到的记忆</h2></div><span class="inventory-count" id="inventoryCount">0 / 5</span></div>
+          <div class="inventory-grid" id="inventoryGrid"></div>
+          <section class="clue-board" aria-labelledby="clueBoardTitle"><div class="section-title-row"><h3 id="clueBoardTitle">线索板</h3><span id="caseStatus">等待生长</span></div><dl><div><dt>日期</dt><dd id="clueDate">????</dd></div><div><dt>名字</dt><dd id="clueName">???</dd></div><div><dt>年龄</dt><dd id="clueAge">??</dd></div><div><dt>关键词</dt><dd id="clueWord">????????</dd></div></dl></section>
+          <section class="future-note" aria-labelledby="futureTitle"><h3 id="futureTitle">留给以后</h3><p>初版只写到大三和第20圈。后续真实照片、语音、更多年份与章节都可以继续接在这棵树上。</p><div class="future-buds-list" aria-label="三个待补充的未来花苞"><span>待续</span><span>待续</span><span>待续</span></div></section>
+        </aside>
+      </section>
+    </main>
+
+    <div class="modal-backdrop" id="modalBackdrop" hidden><section class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDescription"><div class="modal__header"><div><p class="panel-kicker" id="modalEyebrow">OBJECT</p><h2 id="modalTitle">物件</h2></div><button class="modal__close" id="modalClose" type="button" aria-label="关闭对话框"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div><div class="modal__body" id="modalBody"></div><p class="sr-only" id="modalDescription">游戏物件详情与解谜操作。</p></section></div>
+    <div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
+    <noscript><div class="noscript">这款游戏需要 JavaScript 才能运行。</div></noscript>
+    <script type="module" src="src/game.js"></script>
+  </body>
+</html>
