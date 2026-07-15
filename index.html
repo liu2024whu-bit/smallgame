@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="styles/wind-breath.css" />
   <link rel="stylesheet" href="styles/film-finale.css" />
   <link rel="stylesheet" href="styles/ui.css" />
+  <link rel="stylesheet" href="styles/photo-scenes.css" />
   <link rel="stylesheet" href="styles/responsive.css" />
   <style>
     .boot-screen,.boot-error{box-sizing:border-box;min-height:100vh;display:grid;place-content:center;gap:14px;padding:32px;text-align:center;color:#403933;background:radial-gradient(circle at 50% 28%,#fffaf0 0,#efe5d5 64%,#e5d7c5 100%);font-family:"Noto Serif SC","Songti SC",serif}
@@ -38,7 +39,7 @@
   <noscript><main class="boot-error"><h1>需要启用 JavaScript</h1><p>请在浏览器设置中允许 JavaScript，然后刷新页面。</p></main></noscript>
   <script type="module">
     const root = document.querySelector('#app');
-    import('./src/app.js?v=1.0.3').catch((error) => {
+    import('./src/app.js?v=1.1.0').catch((error) => {
       console.error('smallgame boot failed', error);
       root.innerHTML = `
         <main class="boot-error">
