@@ -1,5 +1,5 @@
 import { STORY } from './content.js';
-import { breathWord, finalRibbonCode, ringAge, starCode, windLetters, WIND_RINGS } from './puzzles.js';
+import { breathWord, postmarkCode, ringAge, starCode, windLetters, WIND_RINGS } from './puzzles.js';
 import { DIRECTIONS, escapeHTML, store } from './runtime.js';
 import { BREATH_GLYPHS, BREATH_LABELS, endingCopy, orderControls, solvedBanner, stageHeader, STAR_GLYPHS, STAR_LABELS } from './view-helpers.js';
 
