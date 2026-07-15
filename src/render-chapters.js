@@ -33,6 +33,7 @@ export function renderBirth(state, chapter) {
 }
 
 export function renderStars(state, chapter) {
+  const code = starCode(state.starOrder);
   return `${stageHeader(chapter, '初三那一页被做成一张夜航照片：巫师帽、短发光环、樱花与玫瑰各占据一段星轨。')}
     <div class="memory-collage memory-collage--stars">
       ${picture(ART.sky.wizard, 'memory-cutout memory-cutout--hat', '巫师帽')}
@@ -43,9 +44,9 @@ export function renderStars(state, chapter) {
     </div>
     ${state.solved.stars ? solvedBanner(chapter, '四张照片按星轨顺序装订后，背面的点数读作2020。') : `
       <div class="puzzle-card puzzle-card--photo-order">
-        <p class="puzzle-riddle">最早出现的是帽檐。光环从它右侧升起；樱花落下以后，玫瑰才被收进玻璃罩。照片背面的点数只在顺序正确时连成四位数。</p>
+        <p class="puzzle-riddle">最早出现的是帽檐。光环从它右侧升起；樱花落下以后，玫瑰才被收进玻璃罩。照片背面的孔洞会随着顺序重新对齐。</p>
         ${orderControls(state.starOrder, STAR_LABELS, null, 'starOrder')}
-        <div class="result-window"><small>照片背面的星点</small><strong>${starCode(state.starOrder)}</strong></div>
+        <div class="result-window"><small>照片背面的孔洞</small><strong>${code === '2020' ? code : code.replaceAll('0', '○').replaceAll('2', '••')}</strong></div>
         <button class="primary-button" type="button" data-check-stars>压下四枚图钉</button>
       </div>`}`;
 }
@@ -91,18 +92,18 @@ export function renderFilm(state, chapter) {
       <div class="safe-light"></div>
       <div class="film-strip">${[1,2,3,4,5].map(() => '<i></i>').join('')}</div>
       <div class="artwork-stack artwork-stack--overlap">
-        ${picture(ART.owned.duo, 'artwork-photo artwork-photo--duo', '双人画稿')}
-        <figure class="artwork-photo artwork-photo--keychain ${state.filmSteps.invert ? 'is-inverted' : ''}">${imageMarkup(ART.owned.keychain, 'artwork-photo__image')}<figcaption>钥匙扣正反面</figcaption></figure>
-        ${picture(ART.owned.cats, 'artwork-photo artwork-photo--cats', '猫咪动作稿')}
+        <figure class="artwork-photo artwork-photo--duo">${imageMarkup(ART.owned.duo, 'artwork-photo__image')}<figcaption>双人画稿</figcaption><button class="art-hotspot art-hotspot--red" type="button" data-film-step="red" aria-label="检查双人画稿中央红色焦点"></button></figure>
+        <figure class="artwork-photo artwork-photo--keychain ${state.filmSteps.invert ? 'is-inverted' : ''}"><button class="artwork-action" type="button" data-film-step="invert" aria-label="把钥匙扣设计稿切换为负片">${imageMarkup(ART.owned.keychain, 'artwork-photo__image')}</button><figcaption>钥匙扣正反面</figcaption></figure>
+        <figure class="artwork-photo artwork-photo--cats">${imageMarkup(ART.owned.cats, 'artwork-photo__image')}<figcaption>猫咪动作稿</figcaption><div class="cat-hotspots">${[1,2,3,4,5].map((n) => `<button type="button" data-cat-choice="${n}" aria-label="检查第${n}组猫咪动作">${n}</button>`).join('')}</div></figure>
       </div>
     </div>
     ${state.solved.film ? `${solvedBanner(chapter, '第一处红色、一次负片翻转与第四只猫共同显影出LXY。')}<button class="secondary-button" type="button" data-open-notebook>${state.notebookSolved ? '查看并肩灯' : '打开双页手账'}</button>` : `
       <div class="puzzle-card film-puzzle">
-        <p class="puzzle-riddle">暗房记录只有“1 / 0 / 4”。先找构图中第一处仍醒着的红色，再把中间画稿翻成负片，最后按阅读方向寻找第四组猫咪动作。</p>
-        <div class="film-steps">
-          <article class="${state.filmSteps.red ? 'is-done' : ''}"><span>1</span><div><strong>红色焦点</strong><p>观察双人作品的中央区域。</p><button type="button" data-film-step="red">放大中央红色纹样</button></div></article>
-          <article class="${state.filmSteps.invert ? 'is-done' : ''}"><span>0</span><div><strong>负片交叉</strong><p>正面和反面重叠以后，线条会留下一个字母。</p><button type="button" data-film-step="invert">${state.filmSteps.invert ? '负片已显影：X' : '打开负片灯'}</button></div></article>
-          <article class="${state.filmSteps.cat ? 'is-done' : ''}"><span>4</span><div><strong>第四组动作</strong><p>从左上向右下，选择第四组猫咪。</p><div class="cat-choice">${[1,2,3,4,5].map((n) => `<button type="button" data-cat-choice="${n}">${n}</button>`).join('')}</div></div></article>
+        <p class="puzzle-riddle">暗房记录只有“1 / 0 / 4”。在三张画稿上完成对应观察，再回来检查显影结果。</p>
+        <div class="film-progress">
+          <span class="${state.filmSteps.red ? 'is-done' : ''}">第一处红色 ${state.filmSteps.red ? '已找到' : '未找到'}</span>
+          <span class="${state.filmSteps.invert ? 'is-done' : ''}">负片交叉 ${state.filmSteps.invert ? '已显影' : '未显影'}</span>
+          <span class="${state.filmSteps.cat ? 'is-done' : ''}">第四组猫咪 ${state.filmSteps.cat ? '已确认' : '未确认'}</span>
         </div>
         <div class="result-window"><small>底片显影</small><strong>${state.filmSteps.red ? 'L' : '·'}${state.filmSteps.invert ? 'X' : '·'}${state.filmSteps.cat ? 'Y' : '·'}</strong></div>
         <button class="primary-button" type="button" data-check-film>冲洗104号底片</button>
@@ -121,7 +122,7 @@ export function renderCities(state, chapter) {
         <p class="puzzle-riddle">高中页已经留下读取方向。让左侧照片中的樱花顺着它转动，让右侧照片中的梧桐与之相望。</p>
         <div class="postmarks postmarks--photos">
           <article><small>武汉邮戳</small><button type="button" data-turn-postmark="wuhan">${imageMarkup(ART.flowers.cherry, 'postmark-photo', `style="transform:rotate(${state.postmarks.wuhan * 90}deg)"`)}<strong>${DIRECTIONS[state.postmarks.wuhan]}</strong></button><em>${state.postmarks.wuhan === 1 ? '10' : '??'}</em></article>
-          <article><small>南京邮戳</small><button type="button" data-turn-postmark="nanjing">${imageMarkup(ART.campuses.nanjing, 'postmark-photo', `style="transform:rotate(${state.postmarks.nanjing * 90}deg)"`)}<strong>${DIRECTIONS[state.postmarks.nanjing]}</strong></button><em>${state.postmarks.nanjing === 3 ? '29' : '??'}</em></article>
+          <article><small>南京邮戳</small><button type="button" data-turn-postmark="nanjing">${imageMarkup(ART.campuses.planeLeaf, 'postmark-photo', `style="transform:rotate(${state.postmarks.nanjing * 90}deg)"`)}<strong>${DIRECTIONS[state.postmarks.nanjing]}</strong></button><em>${state.postmarks.nanjing === 3 ? '29' : '??'}</em></article>
         </div>
         <div class="result-window"><small>重合日期</small><strong>${postmarkCode(state.postmarks.wuhan, state.postmarks.nanjing) || '····'}</strong></div>
         <button class="primary-button" type="button" data-check-cities>压下双城邮戳</button>
