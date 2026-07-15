@@ -1,33 +1,39 @@
+const SKY_SHOTA = Object.freeze({
+  src: 'https://media.9game.cn/gamebase/ieu-gdc-pre-process/images/20240927/1/17/2a8db33ee12bb0b9a3bbfded0537737c.jpg',
+  alt: '光遇正太头造型的游戏截图',
+  credit: 'Sky: Children of the Light / 9Game image source'
+});
+
 export const ART = Object.freeze({
   flowers: Object.freeze({
     daisy: Object.freeze({
-      src: 'https://images.unsplash.com/photo-1659472499304-83f4279e0436?auto=format&fit=crop&fm=jpg&q=82&w=1200',
-      alt: '带露水的白色雏菊真实近景',
+      src: 'https://images.unsplash.com/photo-1659472499304-83f4279e0436?auto=format&fit=crop&fm=jpg&q=84&w=1200',
+      alt: '自然光下带露水的白色雏菊近景',
       credit: 'Unsplash / Jana Ohajdova'
     }),
     cherry: Object.freeze({
-      src: 'https://images.unsplash.com/photo-1588822172033-964244c83ab5?auto=format&fit=crop&fm=jpg&q=82&w=1200',
-      alt: '浅粉色樱花真实照片',
+      src: 'https://images.unsplash.com/photo-1588822172033-964244c83ab5?auto=format&fit=crop&fm=jpg&q=84&w=1200',
+      alt: '自然光下的浅粉色樱花近景',
       credit: 'Unsplash / White.Rainforest'
     }),
     rose: Object.freeze({
-      src: 'https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&fm=jpg&q=82&w=1200',
-      alt: '自然光下的真实玫瑰花',
+      src: 'https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&fm=jpg&q=84&w=1200',
+      alt: '自然光下的粉色玫瑰近景',
       credit: 'Unsplash'
     }),
     sunflower: Object.freeze({
-      src: 'https://images.unsplash.com/photo-1470509037663-253afd7f0f51?auto=format&fit=crop&fm=jpg&q=82&w=1200',
-      alt: '真实向日葵花盘与花瓣',
+      src: 'https://images.unsplash.com/photo-1470509037663-253afd7f0f51?auto=format&fit=crop&fm=jpg&q=84&w=1200',
+      alt: '自然光下的向日葵近景',
       credit: 'Unsplash'
     }),
     wisteria: Object.freeze({
-      src: 'https://images.unsplash.com/photo-1558636508-e0db3814bd1d?auto=format&fit=crop&fm=jpg&q=82&w=1200',
-      alt: '紫藤花串真实照片',
+      src: 'https://images.unsplash.com/photo-1558636508-e0db3814bd1d?auto=format&fit=crop&fm=jpg&q=84&w=1200',
+      alt: '自然光下垂落的紫藤花串',
       credit: 'Unsplash'
     }),
     forgetMeNot: Object.freeze({
-      src: 'https://images.unsplash.com/photo-1527061011665-3652c757a4d4?auto=format&fit=crop&fm=jpg&q=82&w=1200',
-      alt: '蓝色小花真实近景',
+      src: 'https://images.unsplash.com/photo-1527061011665-3652c757a4d4?auto=format&fit=crop&fm=jpg&q=84&w=1200',
+      alt: '自然光下的蓝色勿忘我近景',
       credit: 'Unsplash'
     })
   }),
@@ -63,12 +69,12 @@ export const ART = Object.freeze({
   genshin: Object.freeze({
     xiao: Object.freeze({
       src: 'https://upload.wikimedia.org/wikipedia/en/thumb/b/b0/Xiao_in_Genshin_Impact.png/250px-Xiao_in_Genshin_Impact.png',
-      alt: '魈的官方角色立绘',
+      alt: '魈的角色立绘',
       credit: 'Genshin Impact / HoYoverse; image served by Wikipedia'
     }),
     wanderer: Object.freeze({
       src: 'https://upload.wikimedia.org/wikipedia/en/6/6c/Wanderer_in_Genshin_Impact.png',
-      alt: '流浪者的官方角色立绘',
+      alt: '流浪者的角色立绘',
       credit: 'Genshin Impact / HoYoverse; image served by Wikipedia'
     })
   }),
@@ -76,29 +82,31 @@ export const ART = Object.freeze({
     giyu: Object.freeze({
       src: 'https://www.kindpng.com/picc/m/14-142137_kimetsu-no-yaiba-characters-hd-png-download.png',
       alt: '水柱富冈义勇透明背景角色图',
-      credit: 'Demon Slayer character art; external personal-use image host'
+      credit: 'Demon Slayer character art; external image host'
     }),
     sanemi: Object.freeze({
       src: 'https://image.pngaaa.com/214/4482214-middle.png',
       alt: '风柱不死川实弥透明背景角色图',
-      credit: 'Demon Slayer character art; external non-commercial image host'
+      credit: 'Demon Slayer character art; external image host'
     }),
     obanai: Object.freeze({
       src: 'https://image.pngaaa.com/970/5367970-middle.png',
       alt: '蛇柱伊黑小芭内透明背景角色图',
-      credit: 'Demon Slayer character art; external non-commercial image host'
+      credit: 'Demon Slayer character art; external image host'
     })
   }),
   sky: Object.freeze({
-    wizard: Object.freeze({
-      src: 'https://static.wikia.nocookie.net/sky-children-of-the-light/images/5/54/Witch_Hat.png',
-      alt: '光遇巫师帽造型参考图',
-      credit: 'Sky: Children of the Light community wiki'
+    witch: Object.freeze({
+      src: 'https://media.9game.cn/gamebase/ieu-gdc-pre-process/images/20220909/1/1/a255773c70fa0f0a6842ec280eafbfbf.jpg',
+      alt: '光遇巫师帽造型的游戏截图',
+      credit: 'Sky: Children of the Light / 9Game image source'
     }),
-    child: Object.freeze({
-      src: 'https://static.wikia.nocookie.net/sky-children-of-the-light/images/7/7d/Valley_Elder_Hair.png',
-      alt: '光遇短发造型参考图',
-      credit: 'Sky: Children of the Light community wiki'
+    shota: SKY_SHOTA,
+    child: SKY_SHOTA,
+    sakura: Object.freeze({
+      src: 'https://pic.kts.g.mi.com/b1fffdb0d491a55ebbde4e0c6a164f4b4002826424541853694.gif',
+      alt: '光遇樱花头与花瓣斗篷造型的游戏截图',
+      credit: 'Sky: Children of the Light / Xiaomi Game Center image source'
     })
   }),
   owned: Object.freeze({
