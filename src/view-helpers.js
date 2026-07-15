@@ -1,27 +1,65 @@
+import { ART, imageMarkup } from './assets.js';
 import { BREATH_CHUNKS } from './puzzles.js';
-import { BREATH_GLYPHS, BREATH_LABELS, escapeHTML, STAR_GLYPHS, STAR_LABELS } from './runtime.js';
+import { escapeHTML } from './runtime.js';
 
-export { BREATH_GLYPHS, BREATH_LABELS, STAR_GLYPHS, STAR_LABELS };
+export const STAR_LABELS = Object.freeze({ hat: '巫师帽', halo: '短发光环', blossom: '樱花', rose: '玻璃罩玫瑰' });
+export const BREATH_LABELS = Object.freeze({ water: '水柱', wind: '风柱', serpent: '蛇柱', wisteria: '紫藤' });
 
-export function orderControls(list, labels, glyphs, dataKey) {
-  return `<div class="order-list">${list.map((id, index) => `
-    <article class="order-card">
-      <span class="order-card__glyph">${escapeHTML(glyphs[id])}</span>
-      <span class="order-card__copy"><strong>${escapeHTML(labels[id])}</strong><small>${escapeHTML(dataKey === 'breathOrder' ? BREATH_CHUNKS[id] : '星章')}</small></span>
+const STAR_ASSETS = Object.freeze({
+  hat: ART.sky.wizard,
+  halo: ART.sky.child,
+  blossom: ART.flowers.cherry,
+  rose: ART.flowers.rose,
+});
+
+const BREATH_ASSETS = Object.freeze({
+  water: ART.demonSlayer.giyu,
+  wind: ART.demonSlayer.sanemi,
+  serpent: ART.demonSlayer.obanai,
+  wisteria: ART.flowers.wisteria,
+});
+
+const FLOWER_ASSETS = Object.freeze({
+  雏菊: ART.flowers.daisy,
+  樱花: ART.flowers.cherry,
+  向日葵: ART.flowers.sunflower,
+  紫藤: ART.flowers.wisteria,
+  勿忘我: ART.flowers.forgetMeNot,
+  桂花: ART.flowers.sunflower,
+  桔梗: ART.flowers.forgetMeNot,
+  玫瑰: ART.flowers.rose,
+});
+
+function orderAsset(dataKey, id) {
+  return dataKey === 'breathOrder' ? BREATH_ASSETS[id] : STAR_ASSETS[id];
+}
+
+export function orderControls(list, labels, _unusedGlyphs, dataKey) {
+  return `<div class="order-list order-list--images">${list.map((id, index) => {
+    const asset = orderAsset(dataKey, id);
+    const detail = dataKey === 'breathOrder' ? BREATH_CHUNKS[id] : '翻到背面后可见一枚星点';
+    return `<article class="order-card order-card--image">
+      <figure class="order-card__visual">${imageMarkup(asset, 'order-card__image')}</figure>
+      <span class="order-card__copy"><strong>${escapeHTML(labels[id])}</strong><small>${escapeHTML(detail)}</small></span>
       <span class="order-card__actions">
         <button type="button" data-move-key="${dataKey}" data-index="${index}" data-direction="-1" aria-label="向前移动">↑</button>
         <button type="button" data-move-key="${dataKey}" data-index="${index}" data-direction="1" aria-label="向后移动">↓</button>
       </span>
-    </article>`).join('')}</div>`;
+    </article>`;
+  }).join('')}</div>`;
 }
 
 export function flowerGlyph(name) {
-  const map = { 雏菊: '✼', 樱花: '✿', 向日葵: '☼', 紫藤: '❋', 勿忘我: '❉', 桂花: '❊', 桔梗: '♧', 玫瑰: '❀' };
-  return map[name] ?? '✤';
+  const asset = FLOWER_ASSETS[name] ?? ART.flowers.rose;
+  return imageMarkup(asset, 'flower-photo', `title="${escapeHTML(name)}"`);
 }
 
 export function stageHeader(chapter, copy) {
-  return `<header class="chapter-header"><div><p>${escapeHTML(chapter.motif)}</p><h1>${escapeHTML(chapter.title)}</h1></div><span>${escapeHTML(chapter.flower)}</span></header><p class="chapter-lead">${escapeHTML(copy ?? chapter.summary)}</p>`;
+  const flower = FLOWER_ASSETS[chapter.flower] ?? ART.flowers.rose;
+  return `<header class="chapter-header">
+    <div><p>${escapeHTML(chapter.motif)}</p><h1>${escapeHTML(chapter.title)}</h1></div>
+    <figure class="chapter-flower-photo">${imageMarkup(flower, 'chapter-flower-image')}</figure>
+  </header><p class="chapter-lead">${escapeHTML(copy ?? chapter.summary)}</p>`;
 }
 
 export function solvedBanner(chapter, extra = '') {
