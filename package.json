@@ -1,11 +1,12 @@
 {
-  "name": "smallgame-twentieth-ring",
-  "version": "0.1.0",
+  "name": "smallgame-addressless-letter",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "为 LXY 20 岁生日制作的原创网页解谜游戏：1029 · 第20圈年轮。",
+  "description": "写给第20圈的无地址信：原创网页解谜生日礼物。",
   "scripts": {
     "test": "node --test",
+    "check": "node --check src/*.js",
     "serve": "python3 -m http.server 4173"
   },
   "engines": {
