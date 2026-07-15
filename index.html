@@ -25,6 +25,6 @@
 <dialog id="dialog" class="dialog"><button class="dialog-close" type="button" aria-label="关闭" onclick="this.closest('dialog').close()">×</button><div id="dialogBody"></div></dialog>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 <noscript><main class="boot-error"><h1>需要启用 JavaScript</h1><p>请在浏览器设置中允许 JavaScript，然后刷新页面。</p></main></noscript>
-<script type="module">const root=document.querySelector('#app');import('./src/app.js?v=1.1.2').catch((error)=>{console.error('smallgame boot failed',error);root.innerHTML=`<main class="boot-error"><div class="boot-seal">!</div><h1>记忆册暂时没有打开</h1><p>页面文件已经载入，但游戏模块启动失败。请先强制刷新；下方信息可用于继续修复。</p><pre id="bootErrorDetail"></pre><button type="button" onclick="location.reload()">重新打开</button></main>`;document.querySelector('#bootErrorDetail').textContent=error?.stack||error?.message||String(error);});</script>
+<script type="module">const root=document.querySelector('#app');import('./src/app.js?v=1.2.0').catch((error)=>{console.error('smallgame boot failed',error);root.innerHTML=`<main class="boot-error"><div class="boot-seal">!</div><h1>记忆册暂时没有打开</h1><p>页面文件已经载入，但游戏模块启动失败。请先强制刷新；下方信息可用于继续修复。</p><pre id="bootErrorDetail"></pre><button type="button" onclick="location.reload()">重新打开</button></main>`;document.querySelector('#bootErrorDetail').textContent=error?.stack||error?.message||String(error);});</script>
 </body>
 </html>

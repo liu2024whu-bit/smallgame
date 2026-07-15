@@ -2,13 +2,18 @@ import { ART, imageMarkup } from './assets.js';
 import { BREATH_CHUNKS } from './puzzles.js';
 import { escapeHTML } from './runtime.js';
 
-export const STAR_LABELS = Object.freeze({ hat: '巫师帽', halo: '短发光环', blossom: '樱花', rose: '玻璃罩玫瑰' });
+export const STAR_LABELS = Object.freeze({
+  hat: '巫师帽造型',
+  halo: '正太头造型',
+  blossom: '樱花头造型',
+  rose: '玻璃罩玫瑰'
+});
 export const BREATH_LABELS = Object.freeze({ water: '水柱', wind: '风柱', serpent: '蛇柱', wisteria: '紫藤' });
 
 const STAR_ASSETS = Object.freeze({
-  hat: ART.sky.wizard,
-  halo: ART.sky.child,
-  blossom: ART.flowers.cherry,
+  hat: ART.sky.witch,
+  halo: ART.sky.shota,
+  blossom: ART.sky.sakura,
   rose: ART.flowers.rose,
 });
 
@@ -37,7 +42,7 @@ function orderAsset(dataKey, id) {
 export function orderControls(list, labels, _unusedGlyphs, dataKey) {
   return `<div class="order-list order-list--images">${list.map((id, index) => {
     const asset = orderAsset(dataKey, id);
-    const detail = dataKey === 'breathOrder' ? BREATH_CHUNKS[id] : '翻到背面后可见一枚星点';
+    const detail = dataKey === 'breathOrder' ? '字片被封在照片背面' : '背面留有一段穿孔';
     return `<article class="order-card order-card--image">
       <figure class="order-card__visual">${imageMarkup(asset, 'order-card__image')}</figure>
       <span class="order-card__copy"><strong>${escapeHTML(labels[id])}</strong><small>${escapeHTML(detail)}</small></span>

@@ -1,10 +1,8 @@
 import { ART, imageMarkup } from './assets.js';
 import { STORY } from './content.js';
-import { breathWord, postmarkCode, ringAge, starCode, windLetters, WIND_RINGS } from './puzzles.js';
+import { postmarkCode, ringAge } from './puzzles.js';
 import { DIRECTIONS, escapeHTML } from './runtime.js';
-import { BREATH_LABELS, endingCopy, orderControls, solvedBanner, stageHeader, STAR_LABELS } from './view-helpers.js';
-
-const WIND_OBJECTS = Object.freeze(['魈的长枪', '魈的面具', '流浪者的斗笠', '流浪者的羽饰']);
+import { endingCopy, solvedBanner, stageHeader } from './view-helpers.js';
 
 function picture(asset, className, caption = '') {
   return `<figure class="${className}">${imageMarkup(asset, `${className}__image`)}${caption ? `<figcaption>${escapeHTML(caption)}</figcaption>` : ''}</figure>`;
@@ -32,62 +30,8 @@ export function renderBirth(state, chapter) {
     </div>`;
 }
 
-export function renderStars(state, chapter) {
-  const code = starCode(state.starOrder);
-  return `${stageHeader(chapter, '初三那一页被做成一张夜航照片：巫师帽、短发光环、樱花与玫瑰各占据一段星轨。')}
-    <div class="memory-collage memory-collage--stars">
-      ${picture(ART.sky.wizard, 'memory-cutout memory-cutout--hat', '巫师帽')}
-      ${picture(ART.sky.child, 'memory-cutout memory-cutout--halo', '短发光环')}
-      ${picture(ART.flowers.cherry, 'memory-photo memory-photo--blossom', '樱花')}
-      ${picture(ART.flowers.rose, 'memory-photo memory-photo--rose', '被保护的玫瑰')}
-      <div class="memory-red-thread" aria-hidden="true"></div>
-    </div>
-    ${state.solved.stars ? solvedBanner(chapter, '四张照片按星轨顺序装订后，背面的点数读作2020。') : `
-      <div class="puzzle-card puzzle-card--photo-order">
-        <p class="puzzle-riddle">最早出现的是帽檐。光环从它右侧升起；樱花落下以后，玫瑰才被收进玻璃罩。照片背面的孔洞会随着顺序重新对齐。</p>
-        ${orderControls(state.starOrder, STAR_LABELS, null, 'starOrder')}
-        <div class="result-window"><small>照片背面的孔洞</small><strong>${code === '2020' ? code : code.replaceAll('0', '○').replaceAll('2', '••')}</strong></div>
-        <button class="primary-button" type="button" data-check-stars>压下四枚图钉</button>
-      </div>`}`;
-}
-
-export function renderWind(state, chapter) {
-  const letters = windLetters(state.windRotations);
-  return `${stageHeader(chapter, '高中那一页有两张被风掀起的角色立绘。魈与流浪者分居纸页两侧，四枚转盘藏在衣摆、长枪、斗笠与羽饰附近。')}
-    <div class="character-scene character-scene--wind">
-      ${picture(ART.genshin.xiao, 'character-cutout character-cutout--xiao', '魈')}
-      ${picture(ART.genshin.wanderer, 'character-cutout character-cutout--wanderer', '流浪者')}
-      <div class="wind-paper-trail" aria-hidden="true"><i></i><i></i><i></i></div>
-    </div>
-    ${state.solved.wind ? solvedBanner(chapter, '上一页的年份被拆成四个转动次数，四个观察窗最终停在EAST。') : `
-      <div class="puzzle-card puzzle-card--wind">
-        <p class="puzzle-riddle">照片角落写着“相识年份不是门牌，而是四次风向校准”。转盘从左到右对应长枪、面具、斗笠与羽饰。</p>
-        <div class="wind-wheels">${state.windRotations.map((rotation, index) => `
-          <article><small>${WIND_OBJECTS[index]}</small><button type="button" data-turn-wind="${index}"><span>${WIND_RINGS[index][rotation]}</span><em>已转${rotation}格</em></button></article>`).join('')}</div>
-        <div class="result-window"><small>四扇风窗</small><strong>${letters}</strong></div>
-        <button class="primary-button" type="button" data-check-wind>锁住风向</button>
-      </div>`}`;
-}
-
-export function renderBreath(state, chapter) {
-  return `${stageHeader(chapter, '大一的书页留下三位柱的角色图与一串垂落的紫藤。每张图背后都有一段字片，只有正确的相邻关系才能让句子完整。')}
-    <div class="character-scene character-scene--breath">
-      ${picture(ART.demonSlayer.giyu, 'character-cutout character-cutout--giyu', '富冈义勇')}
-      ${picture(ART.demonSlayer.sanemi, 'character-cutout character-cutout--sanemi', '不死川实弥')}
-      ${picture(ART.demonSlayer.obanai, 'character-cutout character-cutout--obanai', '伊黑小芭内')}
-      ${picture(ART.flowers.wisteria, 'wisteria-photo', '紫藤')}
-    </div>
-    ${state.solved.breath ? solvedBanner(chapter, '水柱、风柱、蛇柱与紫藤按线索排好后，四段字片组成BIRTHDAY。') : `
-      <div class="puzzle-card puzzle-card--photo-order">
-        <p class="puzzle-riddle">水的照片早于风；蛇必须紧贴紫藤左侧；风不愿站在队尾。高中页留下的方向仍然有效。</p>
-        ${orderControls(state.breathOrder, BREATH_LABELS, null, 'breathOrder')}
-        <div class="result-window"><small>照片背后的字片</small><strong>${breathWord(state.breathOrder) || '········'}</strong></div>
-        <button class="primary-button" type="button" data-check-breath>装订这一页</button>
-      </div>`}`;
-}
-
 export function renderFilm(state, chapter) {
-  return `${stageHeader(chapter, '大二的暗房里晾着三张真实画稿。红灯亮起以后，104被拆成三种观察动作，答案只会从作品本身显影。')}
+  return `${stageHeader(chapter, '大二的暗房里晾着三张画稿。红灯亮起以后，104被拆成三种观察动作，答案只会从作品本身显影。')}
     <div class="film-room film-room--photographic">
       <div class="safe-light"></div>
       <div class="film-strip">${[1,2,3,4,5].map(() => '<i></i>').join('')}</div>

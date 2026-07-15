@@ -1,8 +1,10 @@
 import { CHAPTERS, FUTURE_SLOTS, STORY } from './content.js';
 import { app, chapterById, chapterUnlocked, escapeHTML, solvedCount, store } from './runtime.js';
 import { flowerGlyph } from './view-helpers.js';
-import { renderBirth, renderBreath, renderCities, renderEnding, renderFilm, renderGift, renderRings, renderStars } from './render-chapters.js';
+import { renderBirth, renderCities, renderEnding, renderFilm, renderGift, renderRings } from './render-chapters.js';
+import { renderStars } from './render-stars.js';
 import { renderWind } from './render-wind.js';
+import { renderBreath } from './render-breath.js';
 
 export function renderApp() {
   const state = store.get();
