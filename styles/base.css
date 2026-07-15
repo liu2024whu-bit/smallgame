@@ -1,0 +1,14 @@
+:root{
+  color-scheme:light;
+  --paper:#f7f0e4;--paper-2:#efe4d3;--paper-3:#e3d2ba;--ink:#3e3833;--muted:#7c7065;
+  --green:#496b63;--green-2:#739084;--rose:#c77d79;--rose-2:#e0aaa2;--gold:#b8894f;--red:#a44d4d;
+  --blue:#66858f;--purple:#7b718f;--line:rgba(65,55,48,.16);--shadow:0 24px 70px rgba(74,57,42,.18);
+  --serif:"Songti SC","STSong","Noto Serif CJK SC",Georgia,serif;
+  --sans:Inter,"PingFang SC","Microsoft YaHei",sans-serif;
+}
+*{box-sizing:border-box}html{min-width:320px;background:#e9dece}body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--sans);background:
+radial-gradient(circle at 12% 15%,rgba(255,255,255,.78),transparent 28%),
+radial-gradient(circle at 88% 10%,rgba(202,162,151,.16),transparent 26%),
+linear-gradient(135deg,#e8ddce,#f5eee3 52%,#e5d7c5);overflow-x:hidden}
+button,input,select{font:inherit}button{color:inherit}.ambient{position:fixed;z-index:-1;border-radius:50%;filter:blur(80px);opacity:.55;pointer-events:none}.ambient--one{width:420px;height:420px;background:#dca59a;right:-130px;top:-160px}.ambient--two{width:360px;height:360px;background:#90aa9e;left:-160px;bottom:-120px}
+.site-header{height:88px;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:14px clamp(18px,3vw,44px);border-bottom:1px solid var(--line);background:rgba(249,244,235,.82);backdrop-filter:blur(18px);position:sticky;top:0;z-index:20}.brand{border:0;background:none;display:flex;align-items:center;text-align:left;gap:14px;cursor:pointer;padding:0}.brand__seal{width:50px;height:50px;border-radius:50%;display:grid;place-items:center;background:#d5b68c;color:#fff;border:3px double rgba(255,255,255,.8);box-shadow:0 7px 18px rgba(96,67,43,.2);font-family:var(--serif);font-size:20px}.brand strong{display:block;font-family:var(--serif);font-size:21px;letter-spacing:.06em}.brand small{display:block;color:var(--muted);font-size:12px;margin-top:4px}.header-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.header-actions button,.secondary-button{border:1px solid var(--line);background:rgba(255,252,246,.74);border-radius:999px;padding:9px 14px;cursor:pointer;transition:.2s}.header-actions button:hover,.secondary-button:hover{transform:translateY(-1px);border-color:rgba(73,107,99,.4);background:#fffaf1}
