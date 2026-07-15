@@ -1,9 +1,9 @@
 export const ART = Object.freeze({
   flowers: Object.freeze({
     daisy: Object.freeze({
-      src: 'https://images.unsplash.com/photo-1588822172033-964244c83ab5?auto=format&fit=crop&fm=jpg&q=82&w=1200',
-      alt: '白色花瓣与黄色花心的真实花朵近景',
-      credit: 'Unsplash / White.Rainforest'
+      src: 'https://images.unsplash.com/photo-1659472499304-83f4279e0436?auto=format&fit=crop&fm=jpg&q=82&w=1200',
+      alt: '带露水的白色雏菊真实近景',
+      credit: 'Unsplash / Jana Ohajdova'
     }),
     cherry: Object.freeze({
       src: 'https://images.unsplash.com/photo-1588822172033-964244c83ab5?auto=format&fit=crop&fm=jpg&q=82&w=1200',
@@ -29,6 +29,30 @@ export const ART = Object.freeze({
       src: 'https://images.unsplash.com/photo-1527061011665-3652c757a4d4?auto=format&fit=crop&fm=jpg&q=82&w=1200',
       alt: '蓝色小花真实近景',
       credit: 'Unsplash'
+    })
+  }),
+  pets: Object.freeze({
+    cat: Object.freeze({
+      src: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&fm=jpg&q=84&w=1200',
+      alt: '窗边灰白猫的真实照片',
+      credit: 'Unsplash'
+    }),
+    dog: Object.freeze({
+      src: 'https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&fm=jpg&q=84&w=1200',
+      alt: '暖色光线下小狗的真实照片',
+      credit: 'Unsplash'
+    })
+  }),
+  campuses: Object.freeze({
+    wuhan: Object.freeze({
+      src: 'https://k.sinaimg.cn/n/spider2020221/109/w685h1024/20200221/657d-ipvnsze3647741.jpg/w700d1q75cms.jpg',
+      alt: '武汉大学樱花季校园照片',
+      credit: 'Sina image source'
+    }),
+    nanjing: Object.freeze({
+      src: 'https://www.nju.edu.cn/images/277.jpg',
+      alt: '南京大学仙林校区校园照片',
+      credit: 'Nanjing University official website'
     })
   }),
   genshin: Object.freeze({
