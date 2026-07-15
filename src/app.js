@@ -4,11 +4,32 @@ import { app, chapterById, chapterUnlocked, closeDialog, dialog, errorSound, sho
 import { openBirthLock, openHint, openNotebook, openPrologue } from './dialogs.js';
 import { renderApp } from './render.js';
 
+const WIND_CLUE_MESSAGES = Object.freeze([
+  '长枪护手内侧刻着第一枚转盘的起点。',
+  '面具边缘留下第二枚风窗的零位。',
+  '斗笠垂带压住第三枚转盘。',
+  '羽饰背面藏着最后一扇风窗。',
+]);
+
 function resetGame() {
   if (!window.confirm('清除本浏览器中的全部解谜进度？GitHub里的文件和历史版本不会受到影响。')) return;
   store.reset();
   showToast('记忆簿已回到第一页。');
 }
+
+app.addEventListener('error', (event) => {
+  const image = event.target;
+  if (!(image instanceof HTMLImageElement)) return;
+  image.hidden = true;
+  image.parentElement?.classList.add('is-image-missing');
+}, true);
+
+app.addEventListener('load', (event) => {
+  const image = event.target;
+  if (!(image instanceof HTMLImageElement)) return;
+  image.hidden = false;
+  image.parentElement?.classList.remove('is-image-missing');
+}, true);
 
 app.addEventListener('click', (event) => {
   const target = event.target.closest('button, [data-action]');
@@ -41,41 +62,55 @@ app.addEventListener('click', (event) => {
   }
 
   if (target.matches('[data-check-stars]')) {
-    if (isStarSolved(state.starOrder)) solve('stars', '初三星图复原：2020'); else { errorSound(); showToast('星章的位置仍不满足三条关系。'); }
+    if (isStarSolved(state.starOrder)) solve('stars', '初三星图复原：2020'); else { errorSound(); showToast('照片之间仍有一段先后关系没有对齐。'); }
+    return;
+  }
+
+  if (target.dataset.windClue != null) {
+    const index = Number(target.dataset.windClue);
+    if (!Number.isInteger(index) || index < 0 || index > 3) return;
+    store.update((draft) => { draft.windClues[index] = true; return draft; });
+    showToast(WIND_CLUE_MESSAGES[index]);
     return;
   }
 
   if (target.dataset.turnWind != null) {
     const index = Number(target.dataset.turnWind);
+    if (!state.windClues?.[index]) {
+      errorSound();
+      showToast('这枚风窗还没有在角色立绘中被找到。');
+      return;
+    }
     store.update((draft) => { draft.windRotations[index] = (draft.windRotations[index] + 1) % 4; return draft; });
     return;
   }
   if (target.matches('[data-check-wind]')) {
-    if (isWindSolved(state.windRotations)) solve('wind', '四阵风停在东方：EAST'); else { errorSound(); showToast('四个风轮的步数还没有对应2020。'); }
+    if (!state.windClues?.every(Boolean)) { errorSound(); showToast('四个观察位置还没有全部找到。'); return; }
+    if (isWindSolved(state.windRotations)) solve('wind', '四阵风停在东方：EAST'); else { errorSound(); showToast('四个转动次数仍没有对应上一页留下的年份。'); }
     return;
   }
 
   if (target.matches('[data-check-breath]')) {
-    if (isBreathSolved(state.breathOrder)) solve('breath', '呼吸谱完成：BIRTHDAY'); else { errorSound(); showToast('线条关系仍有一处冲突。'); }
+    if (isBreathSolved(state.breathOrder)) solve('breath', '照片背面的字片完成：BIRTHDAY'); else { errorSound(); showToast('人物与紫藤之间仍有一处相邻关系不成立。'); }
     return;
   }
 
   if (target.dataset.filmStep === 'red') {
     store.update((draft) => { draft.filmSteps.red = true; return draft; });
-    showToast('中央红色纹样显出字母L。');
+    showToast('中央红色焦点的暗记显出字母L。');
     return;
   }
   if (target.dataset.filmStep === 'invert') {
     store.update((draft) => { draft.filmSteps.invert = true; return draft; });
-    showToast('负片交叉处显出字母X。');
+    showToast('正反面切换成负片，交叉线显出字母X。');
     return;
   }
   if (target.dataset.catChoice) {
     if (target.dataset.catChoice === '4') {
       store.update((draft) => { draft.filmSteps.cat = true; return draft; });
-      showToast('第四只猫的尾巴旁留下字母Y。');
+      showToast('第四组猫咪动作旁留下字母Y。');
     } else {
-      errorSound(); showToast('阅读顺序不对，再从左上往右下看。');
+      errorSound(); showToast('这组动作没有显影。重新确认阅读方向。');
     }
     return;
   }
@@ -91,7 +126,7 @@ app.addEventListener('click', (event) => {
     return;
   }
   if (target.matches('[data-check-cities]')) {
-    if (postmarkCode(state.postmarks.wuhan, state.postmarks.nanjing) === '1029') solve('cities', '双城邮戳重合：1029'); else { errorSound(); showToast('樱花与梧桐还没有朝向彼此约定的方向。'); }
+    if (postmarkCode(state.postmarks.wuhan, state.postmarks.nanjing) === '1029') solve('cities', '双城邮戳重合：1029'); else { errorSound(); showToast('两张植物照片还没有朝向正确的方位。'); }
     return;
   }
 
@@ -124,7 +159,7 @@ app.addEventListener('submit', (event) => {
     showToast('礼物盒在00:00打开。');
   } else {
     errorSound();
-    showToast('缎带、名字或花窗词条仍有一处不对。数字应由06、1029和20组成。');
+    showToast('三重锁仍有一处与前面的线索不一致。');
   }
 });
 
