@@ -58,9 +58,9 @@ export function postmarkCode(wuhanRotation, nanjingRotation) {
 }
 
 export function ringAge(values) {
-  const birth = Number(values?.root);
-  const met = Number(values?.branch);
-  const now = Number(values?.crown);
+  const raw = [values?.root, values?.branch, values?.crown];
+  if (raw.some((value) => value == null || String(value).trim() === '')) return NaN;
+  const [birth, met, now] = raw.map(Number);
   if (![birth, met, now].every(Number.isFinite)) return NaN;
   return (met - birth) + (now - met);
 }
