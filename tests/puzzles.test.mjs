@@ -51,10 +51,11 @@ test('postmarks align to 1029', () => {
   assert.equal(postmarkCode(3, 1), '');
 });
 
-test('ring distances total 20', () => {
+test('ring distances total 20 and reject blank placement', () => {
   const values = { root: '2006', branch: '2020', crown: '2026' };
   assert.equal(ringAge(values), 20);
   assert.equal(isRingSolved(values), true);
+  assert.equal(Number.isNaN(ringAge({ root: '', branch: '', crown: '' })), true);
 });
 
 test('final gift lock reuses all recovered clues', () => {
