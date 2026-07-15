@@ -53,11 +53,16 @@ export const ART = Object.freeze({
       src: 'https://www.nju.edu.cn/images/277.jpg',
       alt: '南京大学仙林校区校园照片',
       credit: 'Nanjing University official website'
+    }),
+    planeLeaf: Object.freeze({
+      src: 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Ahornblatt_01_KMJ.jpg',
+      alt: '白色背景上的梧桐叶真实照片',
+      credit: 'KMJ / Wikimedia Commons, CC BY-SA 3.0'
     })
   }),
   genshin: Object.freeze({
     xiao: Object.freeze({
-      src: 'https://upload.wikimedia.org/wikipedia/en/b/b0/Xiao_in_Genshin_Impact.png',
+      src: 'https://upload.wikimedia.org/wikipedia/en/thumb/b/b0/Xiao_in_Genshin_Impact.png/250px-Xiao_in_Genshin_Impact.png',
       alt: '魈的官方角色立绘',
       credit: 'Genshin Impact / HoYoverse; image served by Wikipedia'
     }),
