@@ -3,16 +3,18 @@ import { WIND_RINGS, WIND_TARGET, windLetters } from './puzzles.js';
 import { escapeHTML } from './runtime.js';
 import { solvedBanner, stageHeader } from './view-helpers.js';
 
-const CLUES = Object.freeze([
-  Object.freeze({ label: '长枪护手', className: 'wind-hotspot--spear' }),
-  Object.freeze({ label: '面具边缘', className: 'wind-hotspot--mask' }),
-  Object.freeze({ label: '斗笠垂带', className: 'wind-hotspot--hat' }),
-  Object.freeze({ label: '羽饰背面', className: 'wind-hotspot--feather' }),
-]);
 const WHEEL_LABELS = Object.freeze(['魈的长枪', '魈的面具', '流浪者的斗笠', '流浪者的羽饰']);
 
-function character(asset, className, caption) {
-  return `<figure class="${className}">${imageMarkup(asset, `${className}__image`)}<figcaption>${escapeHTML(caption)}</figcaption></figure>`;
+function hotspot(index, className, label, found) {
+  return `<button type="button" class="wind-hotspot ${className} ${found ? 'is-found' : ''}" data-wind-clue="${index}" aria-label="检查${escapeHTML(label)}"><span>${found ? '已发现' : '检查'}</span></button>`;
+}
+
+function characterPanel(asset, className, caption, hotspots) {
+  return `<figure class="wind-character-panel ${className}">
+    <div class="wind-character-panel__image-wrap">${imageMarkup(asset, 'wind-character-panel__image')}</div>
+    ${hotspots}
+    <figcaption>${escapeHTML(caption)}</figcaption>
+  </figure>`;
 }
 
 function maskedLetters(state) {
@@ -23,12 +25,19 @@ function maskedLetters(state) {
 
 export function renderWind(state, chapter) {
   const found = state.windClues?.filter(Boolean).length ?? 0;
-  return `${stageHeader(chapter, '两张立绘之间没有现成的转盘说明。先在长枪、面具、斗笠和羽饰附近找出四处压痕，再用上一页留下的年份校准风窗。')}
-    <div class="character-scene character-scene--wind character-scene--searchable">
-      ${character(ART.genshin.xiao, 'character-cutout character-cutout--xiao', '魈')}
-      ${character(ART.genshin.wanderer, 'character-cutout character-cutout--wanderer', '流浪者')}
-      <div class="wind-paper-trail" aria-hidden="true"><i></i><i></i><i></i></div>
-      ${CLUES.map((clue, index) => `<button type="button" class="wind-hotspot ${clue.className} ${state.windClues?.[index] ? 'is-found' : ''}" data-wind-clue="${index}" aria-label="检查${escapeHTML(clue.label)}"><span>${state.windClues?.[index] ? '已发现' : '检查'}</span></button>`).join('')}
+  const xiaoHotspots = [
+    hotspot(0, 'wind-hotspot--spear', '长枪护手', state.windClues?.[0]),
+    hotspot(1, 'wind-hotspot--mask', '面具边缘', state.windClues?.[1]),
+  ].join('');
+  const wandererHotspots = [
+    hotspot(2, 'wind-hotspot--hat', '斗笠垂带', state.windClues?.[2]),
+    hotspot(3, 'wind-hotspot--feather', '羽饰背面', state.windClues?.[3]),
+  ].join('');
+
+  return `${stageHeader(chapter, '风把两张立绘掀到书页两侧。魈的长枪与面具、流浪者的斗笠与羽饰，各自压住一枚尚未校准的观察窗。')}
+    <div class="wind-character-grid">
+      ${characterPanel(ART.genshin.xiao, 'wind-character-panel--xiao', '魈', xiaoHotspots)}
+      ${characterPanel(ART.genshin.wanderer, 'wind-character-panel--wanderer', '流浪者', wandererHotspots)}
       <div class="wind-discovery-count">照片压痕 ${found}/4</div>
     </div>
     ${state.solved.wind ? solvedBanner(chapter, '四处压痕被找到以后，2020拆成四次转动，风窗最终停在EAST。') : `
