@@ -1,0 +1,14 @@
+:root {
+  --paper:#f7f0df;
+  --ink:#3b4038;
+  --sage:#829b83;
+  --rose:#d8a0a0;
+  --gold:#c8a46b;
+  --shadow:rgba(55,45,35,.14);
+}
+
+.memory-paper {
+  background:var(--paper);
+  color:var(--ink);
+  box-shadow:0 18px 50px var(--shadow);
+}
