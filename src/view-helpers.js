@@ -1,6 +1,8 @@
 import { BREATH_CHUNKS } from './puzzles.js';
 import { BREATH_GLYPHS, BREATH_LABELS, escapeHTML, STAR_GLYPHS, STAR_LABELS } from './runtime.js';
 
+export { BREATH_GLYPHS, BREATH_LABELS, STAR_GLYPHS, STAR_LABELS };
+
 export function orderControls(list, labels, glyphs, dataKey) {
   return `<div class="order-list">${list.map((id, index) => `
     <article class="order-card">
