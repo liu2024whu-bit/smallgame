@@ -13,6 +13,13 @@ export function moveAdjacent(list, index, direction) {
   return result;
 }
 
+export function reorder(list, from, to) {
+  if (!indexIn(from, list.length) || !indexIn(to, list.length) || from === to) return list;
+  const next = [...list];
+  next.splice(to, 0, ...next.splice(from, 1));
+  return next;
+}
+
 export function enumeratePermutations(values) {
   if (!values.length) return [[]];
   return values.flatMap((value, index) => enumeratePermutations(values.filter((_, i) => i !== index)).map(tail => [value, ...tail]));

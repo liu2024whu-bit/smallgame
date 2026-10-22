@@ -15,7 +15,7 @@ export function createDialog(element, onClose) {
       const scroll = preserveFocus ? element.scrollTop : 0;
       if (!element.open) returnFocus = document.activeElement;
       element.className = panel.className;
-      element.innerHTML = `<header class="dialog-header"><h2 id="dialog-title">${escape(panel.title)}</h2><div><button class="icon-button" data-action="journal" aria-label="查看手账">${icon('book')}</button><button class="icon-button close-dialog" data-action="close" aria-label="返回书房或上一页">${icon('close')}</button></div></header><div class="dialog-body">${panel.html}</div>`;
+      element.innerHTML = `<header class="dialog-header"><h2 id="dialog-title">${escape(panel.title)}</h2><div><button class="icon-button" data-action="journal" aria-label="查看手账">${icon('book')}</button><button class="icon-button close-dialog" data-action="close" aria-label="返回">${icon('close')}</button></div></header><div class="dialog-body">${panel.html}</div>`;
       element.querySelectorAll('.solved-field [data-pmove]').forEach(button => { button.disabled = true; });
       if (!element.open) element.showModal();
       if (focusKey) element.querySelector(`[data-focus="${CSS.escape(focusKey)}"]`)?.focus({ preventScroll: true });

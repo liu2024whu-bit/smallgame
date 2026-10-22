@@ -1,4 +1,4 @@
-import { ASSETS, MOTIFS } from '../data/assets.js';
+import { ASSETS, MOTIFS, MOTIF_LABELS } from '../data/assets.js';
 import { ASSET_LAYOUTS } from '../data/asset-layouts.js';
 
 export const escape = value => String(value ?? '').replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
@@ -18,10 +18,6 @@ export function icon(name, className = '') {
   return `<svg class="icon ${escape(className)}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${ICONS[name] ?? ICONS.hint}"/></svg>`;
 }
 
-export function actionButton(label, action, extra = '') {
-  return `<button type="button" class="quiet-button" data-action="${escape(action)}" ${extra}>${escape(label)}</button>`;
-}
-
 export function moveButton(label, move, { className = '', disabled = false, key = '' } = {}) {
   return `<button type="button" class="puzzle-control ${escape(className)}" data-pmove="${escape(JSON.stringify(move))}" data-focus="${escape(key || JSON.stringify(move))}" ${disabled ? 'disabled' : ''}>${label}</button>`;
 }
@@ -34,14 +30,15 @@ export function atlas(asset, index, { columns = 4, rows = 3, label = '', classNa
   const ratio = frame ? frame[2] / frame[3] : layout ? (layout.width / columns) / (layout.height / rows) : 1;
   const sizeX = frame ? layout.width / frame[2] * 100 : columns * 100;
   const sizeY = frame ? layout.height / frame[3] * 100 : rows * 100;
-  const positionX = frame ? frame[0] / (layout.width - frame[2]) * 100 : columns > 1 ? column * 100 / (columns - 1) : 0;
-  const positionY = frame ? frame[1] / (layout.height - frame[3]) * 100 : rows > 1 ? row * 100 / (rows - 1) : 0;
+  const positionX = frame ? layout.width === frame[2] ? 0 : frame[0] / (layout.width - frame[2]) * 100 : columns > 1 ? column * 100 / (columns - 1) : 0;
+  const positionY = frame ? layout.height === frame[3] ? 0 : frame[1] / (layout.height - frame[3]) * 100 : rows > 1 ? row * 100 / (rows - 1) : 0;
   const url = new URL(ASSETS[asset], new URL('../../', import.meta.url)).href;
-  return `<span class="raster-sprite ${escape(className)}" role="img" aria-label="${escape(label)}" style="--sprite:url('${url}');--size-x:${sizeX}%;--size-y:${sizeY}%;--pos-x:${positionX}%;--pos-y:${positionY}%;--ratio:${ratio};${escape(style)}"></span>`;
+  const clip = layout?.clips?.[index] ? `clip-path:${layout.clips[index]};` : '';
+  return `<span class="raster-sprite ${escape(className)}" role="img" aria-label="${escape(label)}" style="--sprite:url('${url}');--size-x:${sizeX}%;--size-y:${sizeY}%;--pos-x:${positionX}%;--pos-y:${positionY}%;--ratio:${ratio};${clip}${escape(style)}"></span>`;
 }
 
-export const motif = (id, className = '') => atlas('motifs', MOTIFS[id] ?? 0, { label: id, className: `motif ${className}` });
-export const itemSprite = (index, className = '') => atlas('items', index, { className: `item-art ${className}` });
+export const motif = (id, className = '') => atlas('motifs', MOTIFS[id] ?? 0, { label: MOTIF_LABELS[id] ?? '', className: `motif ${className}` });
+export const itemSprite = (index, className = '') => index === 0 ? atlas('bookmarkFull', 0, { columns: 1, rows: 1, label: '木书签', className: `item-art ${className}` }) : atlas('items', index, { className: `item-art ${className}` });
 export function character(asset, index, columns, rows, label, className = '') {
   return atlas(asset, index, { columns, rows, label, className: `character-art ${className}` });
 }

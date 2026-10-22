@@ -1,7 +1,8 @@
 import { bounded, indexIn, mod, same } from './common.js';
+import { FILM_ORDER, filmHeights } from './film.js';
 
 export const FLOWER_LINKS = [[0, 1], [1, 2], [0, 2]];
-export const FLOWER_TARGET = [3, 2, 1];
+export const FLOWER_TARGET = filmHeights(FILM_ORDER);
 export const flowers = {
   create: () => ({ heights: [0, 1, 2], pin: -1 }),
   valid: state => bounded(state?.heights, 3, 4) && Number.isInteger(state.pin) && state.pin >= -1 && state.pin < 3,

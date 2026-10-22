@@ -5,16 +5,18 @@ const OBJECTS = [
   ['.loose-stamp', element => `stamp:${element.querySelector('.motif')?.getAttribute('aria-label')}`],
   ['.loose-page', element => `page:${element.querySelector('.page-letter')?.textContent}`],
   ['.film-frame', element => `film:${element.querySelector('.frame-number')?.textContent}`],
+  ['.drawer-unit button', (_, index) => `drawer:${index}`],
+  ['.music-pin', (_, index) => `pin:${index}`],
   ['.flower-pot', (_, index) => `flower:${index}`],
   ['.cloud-layer .motif', (_, index) => `cloud:${index}`],
 ];
-const allowed = () => !document.documentElement.classList.contains('reduce-motion') && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+export const motionAllowed = () => !document.documentElement.classList.contains('reduce-motion') && !matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 function objects(root) {
   return OBJECTS.flatMap(([selector, identify]) => [...root.querySelectorAll(selector)].map((element, index) => [identify(element, index), element]));
 }
 export function captureMotion(root) {
-  if (!allowed()) return null;
+  if (!motionAllowed()) return null;
   return {
     boxes: new Map(objects(root).map(([key, element]) => [key, element.getBoundingClientRect()])),
     dials: [...root.querySelectorAll('.dial-face')].map(element => parseFloat(element.style.getPropertyValue('--turn')) || 0),
@@ -24,7 +26,7 @@ export function captureMotion(root) {
   };
 }
 export function playMotion(root, before) {
-  if (!before || !allowed()) return;
+  if (!before || !motionAllowed()) return;
   for (const [key, element] of objects(root)) {
     const old = before.boxes.get(key), next = element.getBoundingClientRect();
     if (!old || !old.width || !next.width) continue;

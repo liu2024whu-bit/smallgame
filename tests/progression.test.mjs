@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createState, reduce, inventory, access, normalizeState, serializable } from '../src/core/state.js';
+import { createState, reduce, inventory, keepsakes, discoveredCollections, access, normalizeState, serializable } from '../src/core/state.js';
 import { MAIN_IDS } from '../src/data/puzzles.js';
 import { createStore } from '../src/core/store.js';
 import { SAVE_KEY, BACKUP_KEY, parseSave, loadSave, writeSave } from '../src/core/storage.js';
@@ -76,11 +76,36 @@ test('blocked browser storage permits play and export without erasing V1 keys', 
   const local = memoryStorage(); local.setItem('smallgame:v1', 'keep'); writeSave(local, start());
   assert.equal(local.getItem('smallgame:v1'), 'keep');
 });
-test('independent sky cape and mask changes survive a save without changing puzzle state', () => {
+test('legacy sky settings remain readable without changing puzzle state', () => {
   let state = start();
   state = reduce(state, { type: 'setting', key: 'skyCapeLeft', value: 'kizuna' });
   state = reduce(state, { type: 'setting', key: 'skyMask', value: 'innocence' });
   const restored = parseSave(JSON.stringify(serializable(state)));
   assert.equal(restored.settings.skyCapeLeft, 'kizuna'); assert.equal(restored.settings.skyCapeRight, 'bat'); assert.equal(restored.settings.skyMask, 'innocence');
   assert.deepEqual(restored.progress.cloud, createState().progress.cloud);
+});
+
+test('keepsakes are earned from actual exploration and puzzle results and survive reloads', () => {
+  let state = createState();
+  assert.deepEqual(keepsakes(state), []);
+  assert.equal(discoveredCollections(state).size, 0);
+  state = start();
+  assert.deepEqual(keepsakes(state).map(gift => gift.id), ['wood-bookmark']);
+  for (const id of [...MAIN_IDS, 'maze', 'balance', 'melody', 'packing', 'drawers', 'flips']) state = finish(state, id);
+  const gifts = keepsakes(parseSave(JSON.stringify(serializable(state))));
+  assert.equal(gifts.length, 14);
+  assert.ok(gifts.some(gift => gift.id === 'muichiro-block'));
+  assert.ok(gifts.some(gift => gift.id === 'mitsuri-block'));
+  assert.notEqual(gifts.find(gift => gift.id === 'muichiro-block').index, gifts.find(gift => gift.id === 'mitsuri-block').index);
+});
+
+test('collection discoveries cannot forge gift rewards and old saves remain readable', () => {
+  let state = start();
+  state = reduce(state, { type: 'discover', id: 'naruto' });
+  assert.ok(discoveredCollections(state).has('naruto'));
+  const restored = normalizeState({ ...serializable(state), discovered: ['naruto', 'unknown'], keepsakes: ['keyboard'] });
+  assert.deepEqual(restored.discovered, ['naruto']);
+  assert.deepEqual(keepsakes(restored).map(gift => gift.id), ['wood-bookmark']);
+  const old = serializable(start()); delete old.discovered;
+  assert.deepEqual(normalizeState(old).discovered, []);
 });

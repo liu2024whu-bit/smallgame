@@ -1,11 +1,11 @@
-import { moveAdjacent, permutation } from './common.js';
+import { moveAdjacent, reorder, permutation } from './common.js';
 
 export const BOOKS = ['绿山墙的安妮', '杀死一只知更鸟', '白夜行', '傲慢与偏见', '小王子'];
 export const BOOK_CLUES = [
   '《小王子》不在两端。',
-  '《安妮》与《白夜行》中间隔着两本。安妮在左。',
+  '魈和流浪者的书签之间隔着两本，魈在左。',
   '《知更鸟》紧接在《小王子》右边。',
-  '《傲慢与偏见》在《安妮》左边。',
+  '《傲慢与偏见》在魈的书签左边。',
 ];
 
 export function booksFit(order) {
@@ -16,6 +16,6 @@ export function booksFit(order) {
 export const books = {
   create: () => ({ order: [0, 1, 2, 3, 4] }),
   valid: state => permutation(state?.order, 5),
-  move: (state, action) => action.type === 'shift' ? { order: moveAdjacent(state.order, action.index, action.direction) } : state,
+  move: (state, action) => action.type === 'reorder' ? { order: reorder(state.order, action.from, action.to) } : action.type === 'shift' ? { order: moveAdjacent(state.order, action.index, action.direction) } : state,
   solved: state => booksFit(state.order),
 };

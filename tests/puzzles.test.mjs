@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import { RULES } from '../src/puzzles/index.js';
 import { enumeratePermutations } from '../src/puzzles/common.js';
 import { mazePath } from '../src/puzzles/maze.js';
+import { FILM_ORDER, filmHeights, PAGE_FACES, replayFilm } from '../src/puzzles/film.js';
+import { pageOrderFits } from '../src/puzzles/album.js';
 import { WITNESSES, solvedProgress } from './witnesses.mjs';
 
 for (const [id, rule] of Object.entries(RULES)) {
@@ -92,4 +94,27 @@ test('packing refuses overlap and off-board pieces while allowing removal', () =
   assert.deepEqual(RULES.packing.move(state, { type: 'cell', index: 0 }), state);
   const completed = solvedProgress('packing'); assert.ok(RULES.packing.solved(completed));
   assert.equal(RULES.packing.solved(RULES.packing.move(completed, { type: 'remove' })), false);
+});
+
+test('film actions must be read in time order, and perforations carry the flower clue', () => {
+  assert.deepEqual(replayFilm(FILM_ORDER), PAGE_FACES);
+  assert.deepEqual(PAGE_FACES, [1, 0, 1, 0]);
+  assert.notDeepEqual(replayFilm([0, 1, 2]), PAGE_FACES);
+  assert.deepEqual(filmHeights(FILM_ORDER), [3, 2, 1]);
+});
+
+test('album needs the relation from the film as well as the two cloud relations', () => {
+  const partial = enumeratePermutations([0, 1, 2, 3]).filter(order => order.indexOf(0) === order.indexOf(1) + 2 && order.indexOf(3) === order.indexOf(1) + 1);
+  assert.equal(partial.length, 2);
+  assert.deepEqual(partial.filter(pageOrderFits), [[1, 3, 0, 2]]);
+});
+
+test('a full wood frame with the T pieces swapped is not a completed picture', () => {
+  const state = solvedProgress('packing');
+  [state.placed[1], state.placed[2]] = [state.placed[2], state.placed[1]];
+  assert.ok(RULES.packing.valid(state));
+  assert.equal(RULES.packing.solved(state), false);
+  state.placed[0].turn = 2;
+  assert.ok(RULES.packing.valid(state));
+  assert.equal(RULES.packing.solved(state), false);
 });

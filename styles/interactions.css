@@ -1,0 +1,19 @@
+@layer puzzles {
+  .can-drag, [data-pack-id], .music-pin-track, [data-weight] { touch-action: none; cursor: grab; user-select: none; }
+  .is-dragging, .is-dragging * { cursor: grabbing !important; }
+  .drag-ghost { position: fixed; z-index: 40; pointer-events: none; margin: 0; opacity: .9; filter: drop-shadow(3px 7px 5px #4e4b3330); user-select: none; }
+  .drag-ghost .shift-controls, .drag-ghost button, .drag-ghost > small { visibility: hidden; }
+  .drag-source { opacity: .22 !important; }
+  .drop-target { outline: 2px dashed #8b9a77; outline-offset: 5px; background-color: #e4edd8a8; }
+  .packing-ghost .piece-mini { height: auto; gap: 0; }
+  .packing-ghost .mini-filled { background: #fffdf8; outline: 1px solid #a89573; border-radius: 2px; }
+  .packing-cell.drop-valid { background: #ccd9b0; outline: 2px solid #7f9669; outline-offset: -2px; }
+  .packing-cell.drop-invalid { background: #e7c9bd; outline: 2px dashed #b58370; outline-offset: -2px; }
+  .reorder-ghost { display: grid; justify-items: center; background: #fcf9ed; border-radius: 3px; padding: 6px; }
+  .reorder-ghost .character-bookmark { top: -65px; }
+  .weight-ghost { width: 75px; display: grid; justify-items: center; padding: 5px; background: #fffcf0; border-radius: 50%; }
+  .weight-ghost small, .weight-ghost span:not(.raster-sprite) { display: none; }
+  .scale-pan { cursor: default; }
+  .music-pin-track { touch-action: none; }
+  .solved-field [data-pack-id], .solved-field .music-pin-track { cursor: default; touch-action: auto; }
+}

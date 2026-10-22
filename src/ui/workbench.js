@@ -2,21 +2,22 @@ import { PUZZLE_BY_ID } from '../data/puzzles.js';
 import { CLUES } from '../data/clues.js';
 import { ITEMS } from '../data/items.js';
 import { MEMORIES } from '../data/memories.js';
+import { KEEPSAKES } from '../data/keepsakes.js';
 import { access } from '../core/state.js';
 import { PUZZLE_VIEWS } from './puzzles/index.js';
-import { escape, icon, itemSprite, motif } from './dom.js';
+import { escape, icon, itemSprite, motif, character } from './dom.js';
 
 const WAITING = {
-  calibration: '灯下有透片的定位槽，还有反射光线的支架。稿盒与窗边的纸景也许有合适的小工具。',
-  books: '书脊之间像有细小的字，换个光照方向才能看清。',
-  screen: '折屏背面的线路太浅。先给它一点侧光。',
-  belt: '导槽里缺一枚轮子。棉线需要一根针带路，轴上还缺摇柄。看看书架和折屏的夹层。',
-  film: '先让放映机转起来。',
-  flowers: '花架的轮轴有一个方形接口。投影中的画页似乎记着它的高低。',
-  paperBack: '稿盒底下的夹层需要另一束光，先看看窗边。',
-  cloudGap: '纸景的另一层还没有透出光。花架也许挡住了它。',
-  album: '四张画页、托板、页序和正反面的记录，都要收齐。它们散在这间书房里。',
-  stitch: '先把四张画页排好，再开始装订。',
+  calibration: '灯座上，还空着两个槽。',
+  books: '书脊上的字太浅了。',
+  screen: '侧光没有照过来。',
+  belt: '轮子和摇柄还没装上。',
+  film: '胶片轮还没动。',
+  flowers: '花架上，留着一个方口。',
+  paperBack: '夹层里太暗了。',
+  cloudGap: '花架挡住了后面的光。',
+  album: '纸页还没凑齐。',
+  stitch: '先把画页理好。',
 };
 
 export function puzzlePanel(id, context) {
@@ -24,13 +25,14 @@ export function puzzlePanel(id, context) {
   const definition = PUZZLE_BY_ID[id];
   const availability = access(state, id);
   const completed = state.solved.includes(id);
-  if (!availability.ready) return { title: definition.title, className: 'inspect-dialog', html: `<div class="locked-object">${motif('leaf')}<p>${escape(WAITING[id] ?? '还缺一个可以放在这里的小工具。')}</p>${availability.missing.length ? `<div class="missing-tools">${availability.missing.map(tool => `<span>${escape(ITEMS[tool].name)}</span>`).join('')}</div>` : ''}<button class="primary-button" data-action="close">再去看看</button></div>` };
+  if (!availability.ready) return { title: definition.title, className: 'inspect-dialog', html: `<div class="locked-object">${motif('leaf')}<p>${escape(WAITING[id] ?? '还少点东西。')}</p>${availability.missing.length ? `<div class="missing-tools">${availability.missing.map(tool => `<span>${escape(ITEMS[tool].name)}</span>`).join('')}</div>` : ''}<button class="primary-button" data-action="close">再找找</button></div>` };
   const hintCount = state.hints[id] ?? 0;
-  return { title: definition.title, className: `workbench-dialog puzzle-${id} ${completed ? 'puzzle-complete' : ''}`, html: `<div class="workbench-intro"><p class="eyebrow">${definition.optional ? '书房小机关 · 可随时玩' : '一页，慢慢来'}</p><p>${escape(definition.instruction)}</p></div>${definition.tools.length ? `<div class="workbench-tools" aria-label="已放好的工具">${definition.tools.map(tool => `<span title="${escape(ITEMS[tool].description)}">${itemSprite(ITEMS[tool].sprite)}${escape(ITEMS[tool].name)}</span>`).join('')}<small>工具已放好，可以重复使用</small></div>` : ''}<div class="puzzle-field ${completed ? 'solved-field' : ''}">${PUZZLE_VIEWS[id](state.progress[id], context)}</div>${completed ? completion(id) : `<div class="workbench-footer"><div><button class="quiet-button" data-action="undo" ${state.history[id]?.length ? '' : 'disabled'}>${icon('undo')}退一步</button><button class="quiet-button" data-action="reset-puzzle">${icon('reset')}复位</button></div><button class="quiet-button hint-button" data-action="hint">${icon('hint')}${hintCount ? '再一点提示' : '一点提示'}<small>${hintCount} / 3</small></button></div>`}${hintCount && !completed ? `<aside class="hint-notes">${definition.hints.slice(0, hintCount).map((hint, index) => `<p><span>${index + 1}</span>${escape(hint)}</p>`).join('')}</aside>` : ''}` };
+  return { title: definition.title, className: `workbench-dialog puzzle-${id} ${completed ? 'puzzle-complete' : ''}`, html: `<div class="workbench-intro"><p>${escape(definition.instruction)}</p></div>${definition.tools.length ? `<div class="workbench-tools" aria-label="手边的物件">${definition.tools.map(tool => `<span title="${escape(ITEMS[tool].description)}">${itemSprite(ITEMS[tool].sprite)}${escape(ITEMS[tool].name)}</span>`).join('')}</div>` : ''}<div class="puzzle-field ${completed ? 'solved-field' : ''}">${PUZZLE_VIEWS[id](state.progress[id], context)}</div>${completed ? completion(id) : `<div class="workbench-footer"><div><button class="quiet-button" data-action="undo" ${state.history[id]?.length ? '' : 'disabled'}>${icon('undo')}退一步</button><button class="quiet-button" data-action="reset-puzzle">${icon('reset')}重来</button></div><button class="quiet-button hint-button" data-action="hint">${icon('hint')}${hintCount ? '再看一点' : '提示'}<small>${hintCount} / 3</small></button></div>`}${hintCount && !completed ? `<aside class="hint-notes">${definition.hints.slice(0, hintCount).map((hint, index) => `<p><span>${index + 1}</span>${escape(hint)}</p>`).join('')}</aside>` : ''}` };
 }
 
 function completion(id) {
   const definition = PUZZLE_BY_ID[id];
   const memory = MEMORIES[id];
-  return `<section class="completion-note" aria-live="polite"><span class="completion-seal">${icon('check')}</span><h3>${definition.optional ? '这一处也亮了' : '这一页，收好了'}</h3>${definition.rewards.length ? `<div class="reward-items">${definition.rewards.map(item => `<span>${itemSprite(ITEMS[item].sprite)}${escape(ITEMS[item].name)}</span>`).join('')}</div>` : ''}${CLUES[id] ? `<p>${escape(CLUES[id][1])}</p>` : ''}${memory ? `<details><summary>${escape(memory.title)}</summary><p>${escape(memory.text)}</p></details>` : ''}<button class="primary-button" data-action="close">${id === 'stitch' ? '去看看年轮灯' : '收好，继续看看'}${icon('right')}</button></section>`;
+  const gifts = KEEPSAKES.filter(gift => gift.puzzle === id);
+  return `<section class="completion-note" aria-live="polite"><span class="completion-seal">${icon('check')}</span><h3>解开了</h3>${definition.rewards.length ? `<div class="reward-items">${definition.rewards.map(item => `<span>${itemSprite(ITEMS[item].sprite)}${escape(ITEMS[item].name)}</span>`).join('')}</div>` : ''}${gifts.length ? `<div class="keepsake-finds">${gifts.map(gift => `<button data-action="keepsake" data-id="${gift.id}" aria-label="${escape(gift.name)}">${character(gift.asset, gift.index, gift.columns, gift.rows, gift.name)}<span>${escape(gift.name)}</span><small>收好了</small></button>`).join('')}</div>` : ''}${CLUES[id] ? `<p>${escape(CLUES[id][1])}</p>` : ''}${memory ? `<details><summary>${escape(memory.title)}</summary><p>${escape(memory.text)}</p></details>` : ''}<button class="primary-button" data-action="close">${id === 'stitch' ? '去年轮灯' : '继续'}${icon('right')}</button></section>`;
 }

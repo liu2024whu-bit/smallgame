@@ -16,32 +16,30 @@
   .progress-garden small { flex: 0 0 100%; text-align: center; color: #a2ab90; font-size: 12px; }
   .empty-note { color: #9ba58b; text-align: center; padding: 35px; }
   .collection-index { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px 30px; }
-  .collection-link { display: grid; justify-items: center; align-content: end; gap: 9px; border-bottom: 1px solid #d6dcc7; padding-bottom: 14px; }
-  .collection-link .character-art { height: 135px; width: auto; }
+  .collection-link { display: grid; grid-template-rows: 135px auto; justify-items: center; align-items: end; align-content: end; gap: 9px; border-bottom: 1px solid #d6dcc7; padding-bottom: 14px; min-width: 0; }
+  .collection-link .character-art { width: min(100%, calc(var(--ratio) * 135px)); height: auto; }
   .collection-link > span:last-child { font-size: 15px; color: #7e8c6e; }
   .collection-link:hover { background: #eff3e350; }
   .journal-links { display: flex; gap: 15px; justify-content: center; margin: 30px auto 0; flex-wrap: wrap; }
   .collection-gallery { display: grid; grid-template-columns: repeat(var(--gallery-columns), 1fr); gap: 20px; max-width: 800px; margin: auto; }
-  .collection-gallery figure { margin: 0; display: grid; justify-items: center; align-content: end; }
-  .collection-gallery .character-art { width: min(260px, 100%); }
-  .collection-gallery figcaption { color: #8c987c; font-size: 14px; padding-top: 10px; }
-  .gallery-hei .character-art { width: min(220px, 100%); }
-  .gallery-naruto .character-art { width: min(220px, 100%); }
-  .gallery-hashira { max-width: 650px; }
-  .gallery-hashira .character-art { width: min(180px, 100%); }
-  .gallery-prince { grid-template-columns: 1fr 1fr; }
-  .gallery-prince figure:nth-child(n+3) { display: none; }
-  .gallery-cities { gap: 14px; }
-  .gallery-cities .character-art { width: 100%; }
   .gallery-gifts .character-art { width: min(210px, 100%); }
-  .gallery-gifts figure:nth-child(6) .character-art { clip-path: polygon(20% 0, 100% 0, 100% 100%, 0 100%, 0 24%); }
+  .collection-link:disabled { opacity: 1; }.collection-hidden { color: #a3aa96; }
+  .unfound-art { display: grid; place-items: center; height: 135px; width: 100%; opacity: .3; }
+  .collection-hidden small { font-size: 12px; color: #a4ab99; }
+  .collection-count { text-align: center; color: #8c987b; font: 14px Georgia, serif; margin-bottom: 26px; }
+  .keepsake-card { display: grid; grid-template-rows: 170px auto; align-items: end; justify-items: center; align-content: end; gap: 12px; padding: 8px; min-width: 0; border-bottom: 1px dotted #d6dcc7; }
+  .keepsake-card .character-art { width: min(100%, calc(var(--ratio) * 170px)); height: auto; }
+  .keepsake-card span:last-child { font-size: 14px; color: #849373; }
+  .unfound-gift { align-content: center; min-height: 205px; opacity: .4; }.unfound-gift .motif { width: 65px; }
+  .keepsake-inspect { display: flex; align-items: center; justify-content: center; padding: 18px 0; }
+  .keepsake-inspect .character-art { width: min(370px, 100%, calc(var(--ratio) * 55dvh)); height: auto; }
+  .keepsake-finds { display: flex; justify-content: center; gap: 18px; margin: 18px auto 24px; }
+  .keepsake-finds button { display: grid; justify-items: center; gap: 5px; }
+  .keepsake-finds .character-art { width: min(210px, calc(var(--ratio) * 105px)); height: auto; }
+  .keepsake-finds span { font-size: 14px; }.keepsake-finds small { color: #a1ac92; font-size: 12px; }
   .collection-caption { max-width: 680px; margin: 26px auto 0; text-align: center; line-height: 1.9; color: #8a947c; }
   .collection-dialog .appearance-controls { margin-bottom: 24px; }
-  .little-quote { text-align: center; font: italic 19px/1.7 Georgia, serif; margin: 24px auto 16px; color: #9b9e7b; }
-  .little-quote small { display: block; font-size: 10px; font-style: normal; letter-spacing: .08em; margin-top: 5px; }
-  .quote-note { text-align: center; color: #a6ac93; font-size: 14px; }
   .reading-shelf { display: grid; grid-template-columns: 1fr 1fr; gap: 17px 25px; }
-  .reading-shelf > div { display: flex; gap: 14px; align-items: center; border-bottom: 1px dotted #cdd5bd; padding-bottom: 10px; }
   .reading-shelf .motif { width: 45px; }
   .reading-shelf span:last-child { font-size: 16px; }
   .interest-notes { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 15px; }
@@ -77,10 +75,10 @@
   @media (max-width: 700px) {
     .notebook-paper { padding: 18px 8px; }
     .notebook-tabs { gap: 4px; padding: 0; }.notebook-tabs button { padding: 6px 10px; font-size: 14px; }
-    .collection-index { grid-template-columns: 1fr 1fr; gap: 15px; }.collection-link .character-art { height: 110px; }
-    .collection-gallery { gap: 12px; }.collection-gallery figcaption { font-size: 12px; }
+    .collection-index { grid-template-columns: 1fr 1fr; gap: 15px; }.collection-link { grid-template-rows: 110px auto; }.collection-link .character-art { width: min(100%, calc(var(--ratio) * 110px)); }
+    .collection-gallery { gap: 12px; }
+    .keepsake-card { padding: 4px; grid-template-rows: 110px auto; }.keepsake-card .character-art { width: min(100%, calc(var(--ratio) * 110px)); }.keepsake-card span:last-child { font-size: 11px; }.unfound-gift { min-height: 145px; }
     .reading-shelf { grid-template-columns: 1fr; gap: 10px; }
-    .reading-shelf > div { gap: 8px; }.reading-shelf .motif { width: 35px; }
     .interest-notes { padding: 7px; gap: 16px; }.interest-notes h3 { font-size: 18px; }.interest-notes p { font-size: 13px; }
     .wish-flower { font-size: 12px; }.flower-wish { font-size: 16px; padding-left: 8px; padding-right: 8px; }
     .settings-controls { padding: 8px; }

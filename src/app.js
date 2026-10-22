@@ -9,6 +9,8 @@ import { renderPanel } from './ui/panels.js';
 import { createDialog } from './ui/dialog.js';
 import { announce } from './ui/dom.js';
 import { createAudio } from './services/audio.js';
+import { bindInteractions } from './ui/interactions/index.js';
+import { memoryActions } from './ui/memory-actions.js';
 
 const app = document.querySelector('#app');
 app.innerHTML = '<div class="game-shell"><div id="room-stage" class="room-stage"></div><div id="hud"></div><div id="home"></div></div><dialog id="explore-dialog" aria-labelledby="dialog-title"></dialog><p id="toast" role="status" class="toast" hidden></p><input id="save-file" type="file" accept=".json,application/json" hidden>';
@@ -18,9 +20,24 @@ const ui = { panel: null, stack: [], home: !store.get().begun, skyPair: 0, petAw
 const stage = document.querySelector('#room-stage');
 const dialog = createDialog(document.querySelector('#explore-dialog'), closePanel);
 let roomSignature = '', hudSignature = '', toastTimer;
+let disposeInteractions = () => {};
 
-function context() { return { state: store.get(), skyPair: ui.skyPair, flower: store.get().settings.flower, petAwake: ui.petAwake, writable: store.writable() }; }
-function renderDialog(preserveFocus = true) { if (ui.panel) dialog.show(renderPanel(ui.panel, context()), { preserveFocus }); }
+function context() { return { state: store.get(), view: ui.panel?.view ?? {}, skyPair: ui.skyPair, flower: store.get().settings.flower, petAwake: ui.petAwake, writable: store.writable() }; }
+function activity(id) { store.dispatch({ type: 'activity', id }); }
+function performMove(move) {
+  if (ui.panel?.type !== 'puzzle') return false;
+  const id = ui.panel.id;
+  const changed = store.dispatch({ type: 'move', id, move });
+  if (changed) audio.material(['paper', 'paperBack', 'album', 'screen', 'film'].includes(id) ? 'paper' : 'wood');
+  return changed;
+}
+function renderDialog(preserveFocus = true) {
+  disposeInteractions();
+  if (!ui.panel) return;
+  dialog.show(renderPanel(ui.panel, context()), { preserveFocus });
+  const state = store.get(), id = ui.panel.type === 'puzzle' ? ui.panel.id : null;
+  disposeInteractions = bindInteractions(dialog.element, { id, progress: state.progress[id], solved: state.solved.includes(id), move: performMove, activity });
+}
 function render(state) {
   const signature = `${state.scene}:${state.collected.join()}:${state.solved.includes('flowers')}`;
   if (signature !== roomSignature) {
@@ -47,6 +64,7 @@ function openPanel(panel, push = true) {
   renderDialog(false);
 }
 function closePanel() {
+  disposeInteractions();
   audio.stopMelody();
   ui.panel = ui.stack.pop() ?? null;
   if (ui.panel) renderDialog(false); else dialog.hide();
@@ -64,6 +82,7 @@ function look(direction) {
   audio.material('paper');
 }
 function openPuzzle(id) { openPanel({ type: 'puzzle', id }); }
+function openCollection(id) { store.dispatch({ type: 'discover', id }); activity(`memory:${id}`); openPanel({ type: 'collection', id }); }
 function hotspot(id) {
   const state = store.get();
   const spot = SCENE_BY_ID[state.scene].hotspots.find(h => h.id === id);
@@ -72,7 +91,7 @@ function hotspot(id) {
     pickup: () => { if (store.dispatch({ type: 'pickup', id: spot.target })) { audio.material('pickup'); toast(`收好${ITEMS[spot.target].name}。`); } },
     puzzle: () => openPuzzle(spot.revisit && state.solved.includes(spot.revisitAfter) ? spot.revisit : spot.target),
     album: () => openPuzzle(state.solved.includes('album') ? 'stitch' : 'album'),
-    collection: () => openPanel({ type: 'collection', id: spot.target }),
+    collection: () => openCollection(spot.target),
     pet: () => { ui.petAwake = false; openPanel({ type: 'pet', id: spot.target }); },
     ending: () => { if (state.solved.includes('stitch')) { store.dispatch({ type: 'ending' }); audio.success(); openPanel({ type: 'ending' }); } else openPanel({ type: 'ring-wait' }); },
   };
@@ -88,9 +107,10 @@ function exportSave() {
   const anchor = document.createElement('a');
   anchor.href = url; anchor.download = 'smallgame-1029-save.json'; anchor.click();
   window.setTimeout(() => URL.revokeObjectURL(url), 1000);
-  toast('进度已打包好。');
+  toast('存档已保存。');
 }
 const actions = {
+  ...memoryActions({ panel: () => ui.panel, render: renderDialog, activity }),
   start: async () => { ui.home = false; await audio.resume(); audio.ambient(); store.dispatch({ type: 'start' }); },
   home: () => { ui.home = true; render(store.get()); },
   'scene-prev': () => look(-1), 'scene-next': () => look(1),
@@ -100,17 +120,17 @@ const actions = {
   close: closePanel,
   journal: () => openPanel({ type: 'journal', tab: 'clues' }),
   'journal-tab': button => { ui.panel = { type: 'journal', tab: button.dataset.tab }; renderDialog(false); },
-  collection: button => openPanel({ type: 'collection', id: button.dataset.id }),
+  collection: button => openCollection(button.dataset.id),
+  keepsake: button => openPanel({ type: 'keepsake', id: button.dataset.id }),
+  encore: () => openPanel({ type: 'encore' }),
   reading: () => openPanel({ type: 'reading' }), interests: () => openPanel({ type: 'interests' }),
   flowers: () => openPanel({ type: 'flowers' }),
-  'wish-flower': button => { setting('flower', button.dataset.id); audio.material('glass'); },
+  'wish-flower': button => { setting('flower', button.dataset.id); activity(`flower:${button.dataset.id}`); audio.material('glass'); },
   settings: () => openPanel({ type: 'settings' }), 'how-to': () => openPanel({ type: 'how-to' }),
   sound: async () => { setting('sound', !store.get().settings.sound); await audio.resume(); if (store.get().begun) audio.ambient(); },
   undo: () => currentPuzzle('undo'), 'reset-puzzle': () => currentPuzzle('reset'), hint: () => currentPuzzle('hint'),
   'sky-pair': () => { ui.skyPair = 1 - ui.skyPair; renderDialog(); },
-  'sky-cape': button => { const key = button.dataset.side === 'right' ? 'skyCapeRight' : 'skyCapeLeft'; setting(key, store.get().settings[key] === 'bat' ? 'kizuna' : 'bat'); },
-  'sky-mask': () => setting('skyMask', store.get().settings.skyMask === 'chibi' ? 'innocence' : 'chibi'),
-  'pet-touch': () => { ui.petAwake = !ui.petAwake; renderDialog(); audio.material('pet'); },
+  'pet-touch': () => { ui.petAwake = !ui.petAwake; if (ui.petAwake) activity(`pet:${ui.panel.id}`); renderDialog(); audio.material('pet'); },
   'play-melody': () => audio.melody(store.get().progress.melody.notes, index => {
     dialog.element.querySelectorAll('.music-pin-column').forEach((el, i) => el.classList.toggle('playing', index === i));
     window.setTimeout(() => dialog.element.querySelectorAll('.playing').forEach(el => el.classList.remove('playing')), 350);
@@ -122,15 +142,15 @@ const actions = {
 };
 
 app.addEventListener('click', async event => {
+  if (Date.now() < Number(dialog.element.dataset.suppressUntil ?? 0)) { event.preventDefault(); return; }
   const button = event.target.closest('button');
   if (!button || button.disabled) return;
   await audio.resume();
   if (button.dataset.pmove && ui.panel?.type === 'puzzle') {
     try {
-      const changed = store.dispatch({ type: 'move', id: ui.panel.id, move: JSON.parse(button.dataset.pmove) });
-      if (changed) audio.material(['paper', 'paperBack', 'album', 'screen', 'film'].includes(ui.panel.id) ? 'paper' : 'wood');
-      else toast('这里暂时放不下，换个位置或退一步试试。');
-    } catch { toast('这一步没有放好，可以再试一次。'); }
+      const changed = performMove(JSON.parse(button.dataset.pmove));
+      if (!changed) announce(ui.panel.id === 'stitch' ? '这个孔现在穿不过去。' : ui.panel.id === 'belt' ? '线到不了这一轮。' : '这一步没有挪动。');
+    } catch { toast('没放好，再试试。'); }
     return;
   }
   await actions[button.dataset.action]?.(button);
@@ -149,8 +169,8 @@ document.querySelector('#save-file').addEventListener('change', async event => {
     if (file.size > MAX_SAVE_BYTES) throw new Error('这份文件太大，不像是书房存档。');
     const saved = parseSave(await file.text());
     store.replace(saved); ui.home = !saved.begun; ui.stack = []; ui.panel = null; dialog.hide(); render(store.get());
-    toast('进度已经放回书房。');
-  } catch { toast('这份存档暂时无法读取，当前进度仍在。'); }
+    toast('存档已读入。');
+  } catch { toast('这份存档打不开，原来的进度还在。'); }
 });
 document.addEventListener('keydown', event => {
   if (ui.panel || ui.home || /INPUT|TEXTAREA|SELECT/.test(event.target.tagName)) return;
@@ -159,7 +179,7 @@ document.addEventListener('keydown', event => {
 store.subscribe((state, previous) => {
   render(state);
   if (state.solved.length > previous.solved.length) {
-    audio.success(); announce('这一处解开了。');
+    audio.success(); announce('解开了。');
     dialog.element.querySelector('.completion-note')?.scrollIntoView({ behavior: state.settings.motion ? 'smooth' : 'instant', block: 'nearest' });
   }
 });

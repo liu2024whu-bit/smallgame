@@ -23,6 +23,12 @@ for (const [id, path] of Object.entries({ ...ASSETS, ...SCENE_ART })) {
   const data = await readFile(resolve(root, path));
   if (data.toString('ascii', 0, 4) !== 'RIFF' || data.toString('ascii', 8, 12) !== 'WEBP' || data.readUInt32LE(4) + 8 !== data.length) throw new Error(`Invalid or truncated WebP: ${path}`);
   if (!ASSET_LAYOUTS[id]?.width || !ASSET_LAYOUTS[id]?.height) throw new Error(`Missing decoded dimensions: ${id}`);
+  const layout = ASSET_LAYOUTS[id];
+  for (const frame of layout.frames ?? []) {
+    if (!frame) continue;
+    const [x, y, width, height] = frame;
+    if (![x, y, width, height].every(Number.isFinite) || x < 0 || y < 0 || width <= 0 || height <= 0 || x + width > layout.width || y + height > layout.height) throw new Error(`Frame leaves its source image: ${id}`);
+  }
 }
 for (const puzzle of PUZZLES) {
   if (!RULES[puzzle.id] || !PUZZLE_VIEWS[puzzle.id] || !puzzle.instruction || puzzle.hints.length !== 3) throw new Error(`Incomplete puzzle: ${puzzle.id}`);

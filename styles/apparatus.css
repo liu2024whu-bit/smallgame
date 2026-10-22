@@ -1,0 +1,43 @@
+@layer puzzles {
+  .puzzle-paper .puzzle-field, .puzzle-paperBack .puzzle-field { background: #f6efe0 url('../assets/illustrations/board.webp') center / cover; }
+  .puzzle-cloud .puzzle-field, .puzzle-cloudGap .puzzle-field { background: #edf1e8; }
+  .puzzle-books .puzzle-field { background: #ece9de; border-bottom: 12px solid #c7b99e; }
+  .puzzle-screen .puzzle-field { background: #eeecf1; }
+  .puzzle-film .puzzle-field { background: #e9e6da; }
+  .puzzle-flowers .puzzle-field { padding: 0 0 20px; background: #f3f0e5; }
+  .puzzle-packing .puzzle-field { background: #eae0cb url('../assets/illustrations/board.webp') center / cover; }
+  .puzzle-drawers .puzzle-field { background: #ebf0ef; }.puzzle-flips .puzzle-field { background: #f0f0dc; }
+  .puzzle-melody .puzzle-field { background: #f2e9da; }
+  .maze-apparatus { position: relative; width: min(370px, 100%); margin: auto; }
+  .maze-apparatus > .character-art { width: 100%; display: block; }
+  .maze-apparatus > .ring-maze { position: absolute; inset: 6% 8% 10%; width: 84%; height: 84%; mix-blend-mode: multiply; }
+  .garden-lift { position: relative; width: 100%; }
+  .garden-lift > .character-art { width: 100%; display: block; }
+  .garden-lift .flower-stands { position: absolute; inset: 22% 26% 26%; padding: 0; gap: 4%; }
+  .garden-lift .flower-column { height: 100%; width: 31%; }
+  .garden-lift .flower-pot { bottom: calc(var(--height) * 16%); width: 100%; left: 0; }
+  .garden-lift .flower-pot::after { content: ''; position: absolute; left: -2%; right: -2%; bottom: -3px; height: 6px; background: #d2bb94 url('../assets/illustrations/board.webp') center / cover; box-shadow: 1px 3px 2px #5a563624; border-radius: 2px; }
+  .garden-lift .flower-pot .motif { width: 100%; }
+  .garden-lift .flower-pot b { bottom: 5%; right: 2%; font-size: 10px; }
+  .garden-lift .height-scale { inset: 0 0 3%; font-size: 9px; }
+  .garden-lift .height-scale span { width: 100%; border-color: #a99b7538; }
+  .garden-lift .flower-column-foot { bottom: -32%; left: -12%; width: 124%; }
+  .garden-lift .flower-column-foot .puzzle-control { font-size: 11px; padding: 2px 5px; background: #fbf6e4e8; }
+  .music-apparatus { position: relative; max-width: 520px; margin: 12px auto; }
+  .music-apparatus > .character-art { display: block; width: 100%; opacity: .65; }
+  .music-apparatus .music-pins { position: absolute; inset: 42% 9% 10%; gap: 1%; margin: 0; }
+  .music-pin-column { flex: 1; min-width: 0; gap: 1px; }
+  .music-pin-track { height: 160px; width: 100%; border-color: #c1b888; }
+  .music-pin { width: 100%; display: grid; justify-items: center; }.music-pin .motif { width: 35px; }
+  .music-brass-pin { display: block; width: 16px; height: 12px; border-radius: 50%; border: 1px solid #9d7f4a; background: radial-gradient(at 35% 25%,#fff2ba,#c3a465 70%,#997a48); box-shadow: 0 2px 2px #5c49364d; margin: 4px; }
+  .music-pin-column .puzzle-control { min-height: 25px; height: 25px; min-width: 25px; font-size: 14px; }
+  .binding-background { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .8; }
+  .binding-pages { inset: 7% 7% 20%; }.binding-page { background: #fffaf080; border-color: #c5bda380; }
+  .binding-page .character-art { opacity: .12; }
+  @media(max-width:700px) {
+    .left-pan { top: calc(95px - var(--lean) / 1deg * 2px); }.right-pan { top: calc(95px + var(--lean) / 1deg * 2px); }.scale-pan { width: 100px; height: 70px; }
+    .garden-lift .flower-column-foot .puzzle-control { font-size: 9px; min-height: 27px; }.garden-lift .flower-column-foot .item-art { width: 18px; }
+    .music-apparatus { margin-bottom: 45px; }.music-apparatus .music-pins { inset: 35% 8% 0; }.music-pin-track { height: 135px; }.music-pin-column .puzzle-control { min-height: 22px; height: 22px; }.music-pin .motif { width: 27px; }
+    .drawer-chest { padding-top: 32px; }
+  }
+}

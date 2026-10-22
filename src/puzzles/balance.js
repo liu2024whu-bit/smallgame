@@ -8,7 +8,7 @@ export function panWeights(places) {
 export const balance = {
   create: () => ({ places: [0, 0, 0, 0] }),
   valid: state => bounded(state?.places, 4, 3),
-  move: (state, action) => action.type === 'place' && indexIn(action.index, 4) ? { places: state.places.map((v, i) => i === action.index ? (v + 1) % 3 : v) } : state,
+  move: (state, action) => action.type === 'place' && indexIn(action.index, 4) && (action.pan === undefined || indexIn(action.pan, 3)) ? { places: state.places.map((v, i) => i === action.index ? action.pan ?? (v + 1) % 3 : v) } : state,
   solved(state) {
     const [left, right] = panWeights(state.places);
     return state.places.filter(v => v === 1).length === 2 && state.places.filter(v => v === 2).length === 2 && left === right;

@@ -15,7 +15,7 @@
 | `assets/illustrations/items.webp` | 12件可重复使用的工具与画页；木书签按描述的实物外观重绘，刻尺纸套是游戏虚构 |
 | `assets/illustrations/motifs.webp` | 云、星、叶、玫瑰、猫爪、月、三盆花、书、信封与花瓣 |
 | `assets/illustrations/board.webp` | 可放大机关的纸面工作台，不参与判断答案 |
-| `assets/illustrations/sky-*.webp` | 两组发型、两种斗篷、两种矮个子面具的组合；角色高度和发型独立保留 |
+| `assets/illustrations/sky-clouds.webp` | 两组造型作为同一木纸景的正面，第三格为真实纸景背面；旧四套孤立角色图集已从运行资产删除 |
 | `assets/illustrations/hei2.webp` | 小黑、无限、鹿野、哪吒、小黑猫形与黑咻、师徒同行 |
 | `assets/illustrations/naruto.webp` | 带土和卡卡西的少年/后来造型 |
 | `assets/illustrations/genshin.webp` | 魈、流浪者 |
@@ -25,6 +25,20 @@
 | `assets/illustrations/campuses.webp` | 武大老斋舍、南大北大楼，依据公开照片新绘 |
 | `assets/illustrations/gifts.webp` | 根据已描述的实物外观新绘，未提交原始照片；使用单独裁切框避免宽物件被精灵格切掉 |
 
+| `assets/illustrations/bookmark-full.webp` | 单独完整绘制木书签，代替旧工具图集中底部不全的版本 |
+| `assets/illustrations/gifts-more.webp` | 键盘、雨伞、独立霞/恋柱砖、零食、小瓶护手霜、写作本、猫挂件；采用不透明浅纸底清理彩色透明边缘 |
+| `assets/illustrations/puppy-parcel.webp` | 小狗包装礼物单独绘制并完整留边，避免图集右边缘压住盒角 |
+| `assets/illustrations/memory-genshin.webp` | 原创同人绘画跨页，作为添色互动，非她本人画作 |
+| `assets/illustrations/memory-naruto.webp` | 共同视角中的稿本、明信片与挂件，不重现已有漫画分镜，非她本人画作 |
+| `assets/illustrations/film-scenes.webp` | 以官方角色图核对小黑绿袖宽裤、无限深色长发与灰青袍、鹿野银色偏分短发与裤装；弃用白发无限/长角鹿野的错误稿 |
+| `assets/illustrations/puzzle-garden.webp` | 同原书房笔触与浅色调的花架近景；可动花盆独立叠在支架上 |
+| `assets/illustrations/puzzle-props.webp` | 迷宫木盒、天平、音乐盒、抽屉柜、翻片盒、装订稿本；不同机关采用各自的实物画面 |
+| `assets/illustrations/packing-picture.webp` | 专门为五块木片制作完整画面，替代孤立角色白底切片 |
+
+最新绘制/修饰的提示词与参考角色对应关系保存在 [art-prompts.json](art-prompts.json)。使用内置图像工具；Pillow仅用于WebP编码转换，没有用程序图形替代场景，也未将私人原照或信件发送给绘图工具。
+
+裁切按实际像素边界配置，检查头发、斗篷、武器、穗子、星球和页角。仅在相邻物件落入空白角时用图集遮罩排除碎角，不能靠缩小窗口截掉本体来隐藏问题。缩略图和放大图按原比例contain，不能固定宽高后把人物拉瘦。九柱图集增加留白，非等分旧图集不再统一套格。
+
 生成后检查了解码尺寸、透明通道、裁切和实际浏览器呈现。发型/服装等识别度还可继续根据目视反馈精修，不能只因名称匹配就宣称与实机完全一致。
 
 ## 光遇外观核对
@@ -33,8 +47,8 @@
 - [鸣谢收藏家发型实机展示](https://wiki.biligame.com/sky/旅行先祖：鸣谢收藏家)：正太为紧贴头部的短发轮廓、不规则刘海、两侧较长发尖与小翘发，按多角度展示核对。
 - [火先知整套服装展示](https://wiki.biligame.com/sky/旅行先祖：火先知)与[服装说明](https://sky-children-of-the-light.fandom.com/wiki/Prophet_of_Fire)：浅蓝交叠领上衣、中袖、宽腰带、灰蓝宽裤与深色尖头靴。已弃用“普通白衫＋宽裤”的早期稿。
 - [经典巫师帽实机图](https://www.9game.cn/skygy/4781959.html)、[樱花发型实机图](https://shouyou.3dmgame.com/gl/254143.html)用于核对帽檐、自带白发、低双尾和花结。
-- [蝙蝠斗篷搭配实机图](https://game.xiaomi.com/viewpoint/1359077112_1675851105710_100)与中国绊爱斗篷展示用于黑色外层、橙红内衬、下摆与白粉斗篷的区分。两人可以独立切换，不强制穿不同斗篷。
-- [国服官方App版本记录](https://apps.apple.com/cn/app/id1344733855)确认“回归童真面具”的正式名称；[2026年儿童节图鉴](https://wiki.biligame.com/sky/2026年儿童节)用于面具图标参考。默认矮个子仍使用已确认的矮人面具。
+- [蝙蝠斗篷搭配实机图](https://game.xiaomi.com/viewpoint/1359077112_1675851105710_100)与中国绊爱斗篷展示用于黑色外层、橙红内衬、下摆与白粉斗篷的区分。这些属于造型研究记录；当前用双人纸景替换换装界面，不宣称实现了完整衣柜。
+- [国服官方App版本记录](https://apps.apple.com/cn/app/id1344733855)确认“回归童真面具”的正式名称；[2026年儿童节图鉴](https://wiki.biligame.com/sky/2026年儿童节)用于面具图标参考。用户确认矮个子使用矮人面具。童真面具属于参考记录，当前纸景不提供换装按钮。
 
 公开的参考原图没有被直接拷入游戏资产。角色的身高与面具分工来自用户确认，不由发型名称推测人物身份。
 
@@ -46,3 +60,7 @@
 - 小王子收藏中的法语短句引自 Antoine de Saint-Exupéry《Le Petit Prince》；中文说明为本作表述，不引用现代中文译本的整段文字。
 
 V1中的三张既有WebP在仓库历史中已经截断，无法正常解码；V2不继续引用，也不把重新生成的插画伪称为修复后的原作。原文件仍可在归档分支查看。
+
+## 动效实现依据
+
+核对了 [Motion](https://github.com/motiondivision/motion) 与 [Anime.js](https://github.com/juliangarnier/anime) 的项目说明。当前位移、旋转、描线与减少动态效果可用浏览器原生动画接口完成，因此未引入额外运行库或克隆依赖。只动画实际被操作的对象，省去常驻粒子、全屏发光与持续漂浮。开源库目录没有新增安装。

@@ -16,10 +16,10 @@ export function loadSave(storage) {
     try { return { state: parseSave(text), notice: '' }; }
     catch {
       const backup = storage.getItem(BACKUP_KEY);
-      if (backup) return { state: parseSave(backup), notice: '已恢复上一份可读存档。' };
-      return { state: createState(), notice: '原存档无法读取。可以导入备份，或重新开始。' };
+      if (backup) return { state: parseSave(backup), notice: '已恢复上一份存档。' };
+      return { state: createState(), notice: '存档打不开了。如果留过备份，可以在设置里读进来。' };
     }
-  } catch { return { state: createState(), notice: '浏览器暂时不能保存进度。可以在设置中导出存档。' }; }
+  } catch { return { state: createState(), notice: '这次没能自动保存。离开前，记得在设置里保存一份。' }; }
 }
 
 export function writeSave(storage, state) {
