@@ -1,15 +1,13 @@
 {
-  "name": "smallgame-addressless-letter",
-  "version": "1.0.0",
+  "name": "before-the-twentieth-ring",
+  "version": "2.0.0",
   "private": true,
   "type": "module",
-  "description": "写给第20圈的无地址信：原创网页解谜生日礼物。",
+  "description": "第20圈以前：一间可以慢慢解开的手绘书房。",
   "scripts": {
-    "test": "node --test",
-    "check": "node --check src/*.js",
-    "serve": "python3 -m http.server 4173"
+    "serve": "node tools/serve.mjs",
+    "check": "node tools/check.mjs",
+    "test": "node --test tests/*.test.mjs"
   },
-  "engines": {
-    "node": ">=20"
-  }
+  "engines": { "node": ">=22" }
 }

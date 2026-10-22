@@ -1,215 +1,169 @@
-import { CHAPTERS } from './content.js';
-import { decodeBirth, isBreathSolved, isFilmSolved, isGiftSolved, isNotebookSolved, isRingSolved, isStarSolved, isWindSolved, moveItem, postmarkCode } from './puzzles.js';
-import { app, chapterById, chapterUnlocked, closeDialog, dialog, errorSound, showToast, solve, store, successSound, tone } from './runtime.js';
-import { openBirthLock, openHint, openNotebook, openPrologue } from './dialogs.js';
-import { renderApp } from './render.js';
+import { createStore } from './core/store.js';
+import { serializable, inventory } from './core/state.js';
+import { MAX_SAVE_BYTES, parseSave } from './core/storage.js';
+import { SCENES, SCENE_BY_ID } from './data/scenes.js';
+import { SCENE_ART } from './data/assets.js';
+import { ITEMS } from './data/items.js';
+import { renderRoom, renderHud, renderHome } from './ui/room.js';
+import { renderPanel } from './ui/panels.js';
+import { createDialog } from './ui/dialog.js';
+import { announce } from './ui/dom.js';
+import { createAudio } from './services/audio.js';
 
-const WIND_CLUE_MESSAGES = Object.freeze([
-  '长枪护手内侧刻着第一枚转盘的起点。',
-  '面具边缘留下第二枚风窗的零位。',
-  '斗笠垂带压住第三枚转盘。',
-  '羽饰背面藏着最后一扇风窗。',
-]);
+const app = document.querySelector('#app');
+app.innerHTML = '<div class="game-shell"><div id="room-stage" class="room-stage"></div><div id="hud"></div><div id="home"></div></div><dialog id="explore-dialog" aria-labelledby="dialog-title"></dialog><p id="toast" role="status" class="toast" hidden></p><input id="save-file" type="file" accept=".json,application/json" hidden>';
+const store = createStore({ getItem: key => window.localStorage.getItem(key), setItem: (key, value) => window.localStorage.setItem(key, value) });
+const audio = createAudio();
+const ui = { panel: null, stack: [], home: !store.get().begun, skyPair: 0, petAwake: false };
+const stage = document.querySelector('#room-stage');
+const dialog = createDialog(document.querySelector('#explore-dialog'), closePanel);
+let roomSignature = '', hudSignature = '', toastTimer;
 
-function resetGame() {
-  if (!window.confirm('清除本浏览器中的全部解谜进度？GitHub里的文件和历史版本不会受到影响。')) return;
-  store.reset();
-  showToast('记忆簿已回到第一页。');
+function context() { return { state: store.get(), skyPair: ui.skyPair, flower: store.get().settings.flower, petAwake: ui.petAwake, writable: store.writable() }; }
+function renderDialog(preserveFocus = true) { if (ui.panel) dialog.show(renderPanel(ui.panel, context()), { preserveFocus }); }
+function render(state) {
+  const signature = `${state.scene}:${state.collected.join()}:${state.solved.includes('flowers')}`;
+  if (signature !== roomSignature) {
+    const sameScene = stage.dataset.scene === state.scene;
+    stage.innerHTML = renderRoom(state); stage.dataset.scene = state.scene; roomSignature = signature;
+    if (sameScene) stage.querySelector('.scene-image').style.animation = 'none';
+  }
+  const hudKey = JSON.stringify([inventory(state), state.selected, state.solved.length, state.settings.sound, store.writable()]);
+  if (hudKey !== hudSignature) {
+    const owned = new Set([...document.querySelectorAll('.inventory-slot')].map(element => element.dataset.id));
+    document.querySelector('#hud').innerHTML = renderHud(state, store.writable()); hudSignature = hudKey;
+    document.querySelectorAll('.inventory-slot').forEach(element => { if (!owned.has(element.dataset.id)) element.classList.add('new-item'); });
+  }
+  document.querySelector('#home').innerHTML = ui.home ? renderHome(state) : '';
+  document.querySelector('.game-shell').classList.toggle('at-home', ui.home);
+  document.documentElement.classList.toggle('show-hotspots', state.settings.hotspots);
+  document.documentElement.classList.toggle('reduce-motion', !state.settings.motion);
+  audio.configure(state.settings);
+  renderDialog();
 }
-
-app.addEventListener('error', (event) => {
-  const image = event.target;
-  if (!(image instanceof HTMLImageElement)) return;
-  image.hidden = true;
-  image.parentElement?.classList.add('is-image-missing');
-}, true);
-
-app.addEventListener('load', (event) => {
-  const image = event.target;
-  if (!(image instanceof HTMLImageElement)) return;
-  image.hidden = false;
-  image.parentElement?.classList.remove('is-image-missing');
-}, true);
-
-app.addEventListener('click', (event) => {
-  const target = event.target.closest('button, [data-action]');
-  if (!target) return;
-  tone(310, 0.055);
+function openPanel(panel, push = true) {
+  if (push && ui.panel) ui.stack.push(ui.panel);
+  ui.panel = panel;
+  renderDialog(false);
+}
+function closePanel() {
+  audio.stopMelody();
+  ui.panel = ui.stack.pop() ?? null;
+  if (ui.panel) renderDialog(false); else dialog.hide();
+}
+function toast(text) {
+  const element = document.querySelector('#toast');
+  element.textContent = text; element.hidden = false;
+  window.clearTimeout(toastTimer);
+  toastTimer = window.setTimeout(() => { element.hidden = true; }, 3500);
+  announce(text);
+}
+function look(direction) {
+  const position = SCENES.findIndex(scene => scene.id === store.get().scene);
+  store.dispatch({ type: 'scene', id: SCENES[(position + direction + SCENES.length) % SCENES.length].id });
+  audio.material('paper');
+}
+function openPuzzle(id) { openPanel({ type: 'puzzle', id }); }
+function hotspot(id) {
   const state = store.get();
+  const spot = SCENE_BY_ID[state.scene].hotspots.find(h => h.id === id);
+  if (!spot) return;
+  const handlers = {
+    pickup: () => { if (store.dispatch({ type: 'pickup', id: spot.target })) { audio.material('pickup'); toast(`收好${ITEMS[spot.target].name}。`); } },
+    puzzle: () => openPuzzle(spot.revisit && state.solved.includes(spot.revisitAfter) ? spot.revisit : spot.target),
+    album: () => openPuzzle(state.solved.includes('album') ? 'stitch' : 'album'),
+    collection: () => openPanel({ type: 'collection', id: spot.target }),
+    pet: () => { ui.petAwake = false; openPanel({ type: 'pet', id: spot.target }); },
+    ending: () => { if (state.solved.includes('stitch')) { store.dispatch({ type: 'ending' }); audio.success(); openPanel({ type: 'ending' }); } else openPanel({ type: 'ring-wait' }); },
+  };
+  (handlers[spot.kind] ?? (() => openPanel({ type: spot.kind })))();
+}
+function currentPuzzle(action) {
+  if (ui.panel?.type === 'puzzle') store.dispatch({ type: action, id: ui.panel.id });
+}
+function setting(key, value) { store.dispatch({ type: 'setting', key, value }); }
+function exportSave() {
+  const blob = new Blob([JSON.stringify(serializable(store.get()), null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement('a');
+  anchor.href = url; anchor.download = 'smallgame-1029-save.json'; anchor.click();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  toast('进度已打包好。');
+}
+const actions = {
+  start: async () => { ui.home = false; await audio.resume(); audio.ambient(); store.dispatch({ type: 'start' }); },
+  home: () => { ui.home = true; render(store.get()); },
+  'scene-prev': () => look(-1), 'scene-next': () => look(1),
+  scene: button => store.dispatch({ type: 'scene', id: button.dataset.id }),
+  hotspot: button => hotspot(button.dataset.id),
+  item: button => { store.dispatch({ type: 'select', id: button.dataset.id }); openPanel({ type: 'item', id: button.dataset.id }); },
+  close: closePanel,
+  journal: () => openPanel({ type: 'journal', tab: 'clues' }),
+  'journal-tab': button => { ui.panel = { type: 'journal', tab: button.dataset.tab }; renderDialog(false); },
+  collection: button => openPanel({ type: 'collection', id: button.dataset.id }),
+  reading: () => openPanel({ type: 'reading' }), interests: () => openPanel({ type: 'interests' }),
+  flowers: () => openPanel({ type: 'flowers' }),
+  'wish-flower': button => { setting('flower', button.dataset.id); audio.material('glass'); },
+  settings: () => openPanel({ type: 'settings' }), 'how-to': () => openPanel({ type: 'how-to' }),
+  sound: async () => { setting('sound', !store.get().settings.sound); await audio.resume(); if (store.get().begun) audio.ambient(); },
+  undo: () => currentPuzzle('undo'), 'reset-puzzle': () => currentPuzzle('reset'), hint: () => currentPuzzle('hint'),
+  'sky-pair': () => { ui.skyPair = 1 - ui.skyPair; renderDialog(); },
+  'sky-cape': button => { const key = button.dataset.side === 'right' ? 'skyCapeRight' : 'skyCapeLeft'; setting(key, store.get().settings[key] === 'bat' ? 'kizuna' : 'bat'); },
+  'sky-mask': () => setting('skyMask', store.get().settings.skyMask === 'chibi' ? 'innocence' : 'chibi'),
+  'pet-touch': () => { ui.petAwake = !ui.petAwake; renderDialog(); audio.material('pet'); },
+  'play-melody': () => audio.melody(store.get().progress.melody.notes, index => {
+    dialog.element.querySelectorAll('.music-pin-column').forEach((el, i) => el.classList.toggle('playing', index === i));
+    window.setTimeout(() => dialog.element.querySelectorAll('.playing').forEach(el => el.classList.remove('playing')), 350);
+  }),
+  export: exportSave, import: () => document.querySelector('#save-file').click(),
+  fullscreen: async () => { try { if (document.fullscreenElement) await document.exitFullscreen(); else await document.documentElement.requestFullscreen(); } catch { toast('也可以使用浏览器的全屏功能。'); } },
+  restart: () => openPanel({ type: 'restart' }),
+  'confirm-restart': () => { ui.stack = []; ui.panel = null; dialog.hide(); ui.home = true; store.restart(); },
+};
 
-  if (target.matches('[data-open-prologue]')) return openPrologue();
-  if (target.matches('[data-open-hint]')) return openHint();
-  if (target.matches('[data-toggle-sound]')) return store.set({ sound: !state.sound });
-  if (target.matches('[data-reset]')) return resetGame();
-
-  if (target.dataset.chapter) {
-    const chapter = chapterById(target.dataset.chapter);
-    if (chapterUnlocked(chapter, state)) store.set({ active: chapter.id });
+app.addEventListener('click', async event => {
+  const button = event.target.closest('button');
+  if (!button || button.disabled) return;
+  await audio.resume();
+  if (button.dataset.pmove && ui.panel?.type === 'puzzle') {
+    try {
+      const changed = store.dispatch({ type: 'move', id: ui.panel.id, move: JSON.parse(button.dataset.pmove) });
+      if (changed) audio.material(['paper', 'paperBack', 'album', 'screen', 'film'].includes(ui.panel.id) ? 'paper' : 'wood');
+      else toast('这里暂时放不下，换个位置或退一步试试。');
+    } catch { toast('这一步没有放好，可以再试一次。'); }
     return;
   }
-
-  if (target.dataset.pet) {
-    store.update((draft) => { draft.discoveries[target.dataset.pet] = true; return draft; });
-    showToast(target.dataset.pet === 'cat' ? '猫把高处的吊牌露了出来：Ⅱ ○' : '狗把地面的吊牌推到桌脚旁：○ Ⅵ');
-    return;
-  }
-  if (target.matches('[data-open-birth-lock]')) return openBirthLock();
-
-  if (target.dataset.moveKey) {
-    const key = target.dataset.moveKey;
-    store.update((draft) => { draft[key] = moveItem(draft[key], Number(target.dataset.index), Number(target.dataset.direction)); return draft; });
-    return;
-  }
-
-  if (target.matches('[data-check-stars]')) {
-    if (isStarSolved(state.starOrder)) solve('stars', '初三星图复原：2020'); else { errorSound(); showToast('照片之间仍有一段先后关系没有对齐。'); }
-    return;
-  }
-
-  if (target.dataset.windClue != null) {
-    const index = Number(target.dataset.windClue);
-    if (!Number.isInteger(index) || index < 0 || index > 3) return;
-    store.update((draft) => { draft.windClues[index] = true; return draft; });
-    showToast(WIND_CLUE_MESSAGES[index]);
-    return;
-  }
-
-  if (target.dataset.turnWind != null) {
-    const index = Number(target.dataset.turnWind);
-    if (!state.windClues?.[index]) {
-      errorSound();
-      showToast('这枚风窗还没有在角色立绘中被找到。');
-      return;
-    }
-    store.update((draft) => { draft.windRotations[index] = (draft.windRotations[index] + 1) % 4; return draft; });
-    return;
-  }
-  if (target.matches('[data-check-wind]')) {
-    if (!state.windClues?.every(Boolean)) { errorSound(); showToast('四个观察位置还没有全部找到。'); return; }
-    if (isWindSolved(state.windRotations)) solve('wind', '四阵风停在东方：EAST'); else { errorSound(); showToast('四个转动次数仍没有对应上一页留下的年份。'); }
-    return;
-  }
-
-  if (target.matches('[data-check-breath]')) {
-    if (isBreathSolved(state.breathOrder)) solve('breath', '照片背面的字片完成：BIRTHDAY'); else { errorSound(); showToast('人物与紫藤之间仍有一处相邻关系不成立。'); }
-    return;
-  }
-
-  if (target.dataset.filmStep === 'red') {
-    store.update((draft) => { draft.filmSteps.red = true; return draft; });
-    showToast('中央红色焦点的暗记显出字母L。');
-    return;
-  }
-  if (target.dataset.filmStep === 'invert') {
-    store.update((draft) => { draft.filmSteps.invert = true; return draft; });
-    showToast('正反面切换成负片，交叉线显出字母X。');
-    return;
-  }
-  if (target.dataset.catChoice) {
-    if (target.dataset.catChoice === '4') {
-      store.update((draft) => { draft.filmSteps.cat = true; return draft; });
-      showToast('第四组猫咪动作旁留下字母Y。');
-    } else {
-      errorSound(); showToast('这组动作没有显影。重新确认阅读方向。');
-    }
-    return;
-  }
-  if (target.matches('[data-check-film]')) {
-    if (isFilmSolved(state.filmSteps)) solve('film', '104号底片冲洗完成：LXY'); else { errorSound(); showToast('104对应的三个观察动作还没有全部完成。'); }
-    return;
-  }
-  if (target.matches('[data-open-notebook]')) return openNotebook();
-
-  if (target.dataset.turnPostmark) {
-    const key = target.dataset.turnPostmark;
-    store.update((draft) => { draft.postmarks[key] = (draft.postmarks[key] + 1) % 4; return draft; });
-    return;
-  }
-  if (target.matches('[data-check-cities]')) {
-    if (postmarkCode(state.postmarks.wuhan, state.postmarks.nanjing) === '1029') solve('cities', '双城邮戳重合：1029'); else { errorSound(); showToast('两张植物照片还没有朝向正确的方位。'); }
-    return;
-  }
-
-  if (target.matches('[data-check-rings]')) {
-    if (isRingSolved(state.rings)) solve('rings', '第20圈完整闭合。'); else { errorSound(); showToast('三个年份的位置或两段距离仍不正确。'); }
-    return;
-  }
-
-  if (target.dataset.ending) {
-    store.set({ ending: target.dataset.ending });
-    successSound();
-    return;
-  }
-  if (target.matches('[data-change-ending]')) return store.set({ ending: null });
+  await actions[button.dataset.action]?.(button);
 });
-
-app.addEventListener('change', (event) => {
-  const select = event.target.closest('[data-ring]');
-  if (!select) return;
-  store.update((draft) => { draft.rings[select.dataset.ring] = select.value; return draft; });
-});
-
-app.addEventListener('submit', (event) => {
-  if (!event.target.matches('[data-gift-form]')) return;
-  event.preventDefault();
-  const values = Object.fromEntries(new FormData(event.target).entries());
-  if (isGiftSolved(values)) {
-    store.solve('gift');
-    successSound();
-    showToast('礼物盒在00:00打开。');
-  } else {
-    errorSound();
-    showToast('三重锁仍有一处与前面的线索不一致。');
+app.addEventListener('change', event => {
+  if (event.target.dataset.setting) {
+    const input = event.target;
+    setting(input.dataset.setting, input.type === 'checkbox' ? input.checked : Number(input.value));
   }
 });
-
-dialog.addEventListener('click', (event) => {
-  const target = event.target.closest('button');
-  if (!target) return;
-  tone(330, 0.055);
-  const state = store.get();
-  if (target.matches('[data-close-dialog]')) return closeDialog();
-  if (target.matches('[data-next-hint]')) {
-    const chapter = chapterById(state.active);
-    store.update((draft) => { draft.hintLevels[chapter.id] = Math.min((draft.hintLevels[chapter.id] ?? 0) + 1, chapter.hints.length - 1); return draft; });
-    closeDialog(); openHint(); return;
-  }
-  if (target.matches('[data-check-birth]')) {
-    const input = dialog.querySelector('#birthInput');
-    if (decodeBirth(state.discoveries.cat, state.discoveries.dog, input?.value)) solve('birth', '两张吊牌组成出生年份：2006');
-    else { errorSound(); showToast('注意高低顺序，以及空心圆的含义。'); }
-    return;
-  }
-  if (target.dataset.notebookSide) {
-    const side = target.dataset.notebookSide;
-    store.update((draft) => { draft.notebook[side] = moveItem(draft.notebook[side], Number(target.dataset.index), Number(target.dataset.direction)); return draft; });
-    closeDialog(); openNotebook(); return;
-  }
-  if (target.matches('[data-check-notebook]')) {
-    if (isNotebookSolved(state.notebook.orange, state.notebook.silver)) {
-      store.set({ notebookSolved: true });
-      successSound(); closeDialog(); showToast('获得隐藏物品：并肩灯。');
-    } else {
-      errorSound(); showToast('两页各自的叙事顺序还没有恢复。');
-    }
+document.querySelector('#save-file').addEventListener('change', async event => {
+  const file = event.target.files[0];
+  event.target.value = '';
+  if (!file) return;
+  try {
+    if (file.size > MAX_SAVE_BYTES) throw new Error('这份文件太大，不像是书房存档。');
+    const saved = parseSave(await file.text());
+    store.replace(saved); ui.home = !saved.begun; ui.stack = []; ui.panel = null; dialog.hide(); render(store.get());
+    toast('进度已经放回书房。');
+  } catch { toast('这份存档暂时无法读取，当前进度仍在。'); }
+});
+document.addEventListener('keydown', event => {
+  if (ui.panel || ui.home || /INPUT|TEXTAREA|SELECT/.test(event.target.tagName)) return;
+  if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') { event.preventDefault(); look(event.key === 'ArrowLeft' ? -1 : 1); }
+});
+store.subscribe((state, previous) => {
+  render(state);
+  if (state.solved.length > previous.solved.length) {
+    audio.success(); announce('这一处解开了。');
+    dialog.element.querySelector('.completion-note')?.scrollIntoView({ behavior: state.settings.motion ? 'smooth' : 'instant', block: 'nearest' });
   }
 });
-
-dialog.addEventListener('click', (event) => {
-  if (event.target === dialog) closeDialog();
-});
-
-document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape') closeDialog();
-});
-
-store.subscribe(renderApp);
-renderApp();
-setTimeout(() => {
-  let seen = false;
-  try { seen = localStorage.getItem('smallgame.prologue.seen') === '1'; } catch { seen = false; }
-  if (!seen) {
-    try { localStorage.setItem('smallgame.prologue.seen', '1'); } catch { /* storage can be blocked */ }
-    openPrologue();
-  }
-}, 300);
+render(store.get());
+if (store.notice) toast(store.notice);
+// Local-only artwork; preload the other views without delaying the first room.
+Object.values(SCENE_ART).slice(1).forEach(src => { const image = new Image(); image.src = src; });

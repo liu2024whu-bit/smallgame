@@ -1,17 +1,17 @@
-name: CI
+name: Game checks
 on:
   push:
-    branches: [main, develop-v1]
+    branches: [main]
   pull_request:
 permissions:
   contents: read
 jobs:
-  test:
+  verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm run check
-      - run: npm test
+      - run: node tools/check.mjs
+      - run: node --test tests/*.test.mjs

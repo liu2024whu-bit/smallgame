@@ -1,0 +1,19 @@
+import { renderPaper, renderPaperBack } from './paper.js';
+import { renderCloud, renderCalibration } from './light.js';
+import { renderBooks, renderScreen } from './collection.js';
+import { renderBelt, renderFlowers } from './mechanical.js';
+import { renderFilm } from './film.js';
+import { renderAlbum, renderStitch } from './assembly.js';
+import { renderMaze, renderBalance, renderDrawers, renderFlips } from './toys.js';
+import { renderPacking } from './packing.js';
+import { renderMelody } from './melody.js';
+
+export const PUZZLE_VIEWS = Object.freeze({
+  paper: renderPaper, cloud: renderCloud, calibration: renderCalibration,
+  books: renderBooks, screen: renderScreen, belt: renderBelt,
+  film: renderFilm, flowers: renderFlowers, paperBack: renderPaperBack,
+  cloudGap: (progress, context) => renderCloud(progress, context, true),
+  album: renderAlbum, stitch: renderStitch, maze: renderMaze,
+  balance: renderBalance, drawers: renderDrawers, flips: renderFlips,
+  packing: renderPacking, melody: renderMelody,
+});

@@ -1,30 +1,48 @@
-# 图像素材说明
+# 画面与参考
 
-游戏的图像入口集中在 `src/assets.js`，章节代码不直接散落图片地址。
+运行时的图片全部随仓库提供，不依赖远程热链。四幅完整书房场景、机关物件、猫狗和角色同人插画由图像生成工具绘制，再以 WebP 导出；图片本身不是用CSS或矢量图形拼出来的场景。源码中的小图标、连线和轨道只承担界面与规则表达。
 
-## 本地原创作品
+游戏使用的新绘画面不等同于原作官方素材，也不等同于收礼者的真实画作。代码的MIT许可不覆盖第三方角色与作品的原有权利。此项目未取得这些角色的商业授权，不对素材目录作此授权声明。
 
-以下三张图来自收礼人自己的作品，只用于 `104号底片` 章节：
+## 运行资产
 
-- `assets/art/duo.webp`
-- `assets/art/keychain.webp`
-- `assets/art/cats.webp`
+| 路径 | 内容与处理 |
+| --- | --- |
+| `assets/scenes/desk.webp` | 书桌、画册、台灯、玫瑰和猫；可拾取物件独立绘制，拿走后场景不残留重复物件 |
+| `assets/scenes/window.webp` | 双面云景、联动花架、玫瑰与明信片 |
+| `assets/scenes/collection.webp` | 软木板中的带土/卡卡西画稿，书架上的魈/流浪者立牌，与柜中机械摆件；角色作为场景内物件整合绘制 |
+| `assets/scenes/entry.webp` | 门边、礼物、狗和年轮灯 |
+| `assets/illustrations/items.webp` | 12件可重复使用的工具与画页；木书签按描述的实物外观重绘，刻尺纸套是游戏虚构 |
+| `assets/illustrations/motifs.webp` | 云、星、叶、玫瑰、猫爪、月、三盆花、书、信封与花瓣 |
+| `assets/illustrations/board.webp` | 可放大机关的纸面工作台，不参与判断答案 |
+| `assets/illustrations/sky-*.webp` | 两组发型、两种斗篷、两种矮个子面具的组合；角色高度和发型独立保留 |
+| `assets/illustrations/hei2.webp` | 小黑、无限、鹿野、哪吒、小黑猫形与黑咻、师徒同行 |
+| `assets/illustrations/naruto.webp` | 带土和卡卡西的少年/后来造型 |
+| `assets/illustrations/genshin.webp` | 魈、流浪者 |
+| `assets/illustrations/hashira.webp` | 九位柱，顺序与角色标签一致 |
+| `assets/illustrations/prince-hei.webp` | 小王子、玫瑰与小黑相关图案；小王子收藏只使用前两格 |
+| `assets/illustrations/pets.webp` | 猫与狗各两种姿态 |
+| `assets/illustrations/campuses.webp` | 武大老斋舍、南大北大楼，依据公开照片新绘 |
+| `assets/illustrations/gifts.webp` | 根据已描述的实物外观新绘，未提交原始照片；使用单独裁切框避免宽物件被精灵格切掉 |
 
-## 光遇外观
+生成后检查了解码尺寸、透明通道、裁切和实际浏览器呈现。发型/服装等识别度还可继续根据目视反馈精修，不能只因名称匹配就宣称与实机完全一致。
 
-初三章节使用玩家常用的外观称呼，而不是把发型误写成有固定姓名的剧情人物：
+## 光遇外观核对
 
-- 巫师帽造型；
-- 正太头造型；
-- 樱花头造型。
+- [TGC 2021年9月补丁说明](https://thatgamecompany.helpshift.com/hc/en/17-sky-children-of-the-light/faq/841-patch-notes---september-28-2021---0-15-0-176984-ios-switch-177511-android/)用于区分经典巫师帽的发型槽位关系，不能把它与正太发型同时叠戴。
+- [鸣谢收藏家发型实机展示](https://wiki.biligame.com/sky/旅行先祖：鸣谢收藏家)：正太为紧贴头部的短发轮廓、不规则刘海、两侧较长发尖与小翘发，按多角度展示核对。
+- [火先知整套服装展示](https://wiki.biligame.com/sky/旅行先祖：火先知)与[服装说明](https://sky-children-of-the-light.fandom.com/wiki/Prophet_of_Fire)：浅蓝交叠领上衣、中袖、宽腰带、灰蓝宽裤与深色尖头靴。已弃用“普通白衫＋宽裤”的早期稿。
+- [经典巫师帽实机图](https://www.9game.cn/skygy/4781959.html)、[樱花发型实机图](https://shouyou.3dmgame.com/gl/254143.html)用于核对帽檐、自带白发、低双尾和花结。
+- [蝙蝠斗篷搭配实机图](https://game.xiaomi.com/viewpoint/1359077112_1675851105710_100)与中国绊爱斗篷展示用于黑色外层、橙红内衬、下摆与白粉斗篷的区分。两人可以独立切换，不强制穿不同斗篷。
+- [国服官方App版本记录](https://apps.apple.com/cn/app/id1344733855)确认“回归童真面具”的正式名称；[2026年儿童节图鉴](https://wiki.biligame.com/sky/2026年儿童节)用于面具图标参考。默认矮个子仍使用已确认的矮人面具。
 
-场景明确呈现两组关系：`巫师帽＋正太头`、`正太头＋樱花头`。每组图片进入独立裁切页槽，人物与说明文字不互相覆盖。
+公开的参考原图没有被直接拷入游戏资产。角色的身高与面具分工来自用户确认，不由发型名称推测人物身份。
 
-## 外部图像
+## 其他依据
 
-- 花、猫狗与室内照片来自项目展示用图库链接；花卉统一为自然光近景，并应用相同裁切和色调处理。
-- 武汉大学与南京大学使用校园照片链接。
-- 魈、流浪者与鬼灭之刃角色图用于私人生日礼物中的非商业展示，版权归原权利人所有。
-- 人物素材使用完整轮廓容器，鬼灭三位柱各占独立立绘卡片；不会通过大面积重叠遮住其他人物或操作区。
+- [《罗小黑战记2》官方角色页](https://luoxiaohei-movie.com/2nd/character/)用于核对小黑、无限、鹿野、哪吒的第二部造型。
+- [武汉大学老斋舍照片](https://news.whu.edu.cn/info/1002/46686.htm)、[南京大学北大楼介绍与照片](https://www.nju.edu.cn/info/4041/422051.htm)用于校园明信片外观，不用于推断人物升学或同行经历。
+- [《她的树》作者页面](https://stonetreebook.itch.io/her-trees-2)、[Rusty Lake 开发日志](https://blog.rustylake.com/the-past-within-devlog-3/)、[《拣爱》官网](https://akabastudio.com/lovechoice/)作为观察、关联推理、点击动作与温柔手绘情绪的研究依据。房间构图、机关参数、依赖链和叙事均为本作设计，不复刻对应场景或谜题。
+- 小王子收藏中的法语短句引自 Antoine de Saint-Exupéry《Le Petit Prince》；中文说明为本作表述，不引用现代中文译本的整段文字。
 
-仓库公开展示或长期发布前，建议把外部角色图替换成获得许可的本地文件。替换时只需修改 `src/assets.js`，无需调整谜题和渲染逻辑。
+V1中的三张既有WebP在仓库历史中已经截断，无法正常解码；V2不继续引用，也不把重新生成的插画伪称为修复后的原作。原文件仍可在归档分支查看。

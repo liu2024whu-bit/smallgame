@@ -1,0 +1,89 @@
+@layer notebook {
+  .notebook-tabs { display: flex; gap: 12px; border-bottom: 1px solid #d1d8c1; padding: 0 10px; }
+  .notebook-tabs button { padding: 6px 17px 10px; color: #8b957e; border-bottom: 2px solid transparent; }
+  .notebook-tabs button.active { color: #647e55; border-bottom-color: #8fa779; }
+  .notebook-paper { padding: 22px 20px 10px; }
+  .journal-intro { font-size: 14px; color: #9ba38d; margin-bottom: 30px; }
+  .journal-entry { position: relative; padding: 3px 0 18px; margin: 20px 0; border-bottom: 1px dotted #ced5c0; }
+  .journal-entry h3 { font-size: 20px; margin-bottom: 8px; color: #77886a; }
+  .journal-entry p { font-size: 16px; line-height: 1.9; margin: 0; }
+  .entry-leaf { position: absolute; right: 10px; top: -8px; opacity: .5; transform: rotate(30deg); }
+  .entry-leaf .motif { width: 36px; }
+  .progress-garden { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 25px; flex-wrap: wrap; }
+  .progress-garden > span { opacity: .25; }
+  .progress-garden > .bloomed { opacity: 1; }
+  .progress-garden .motif { width: 50px; }
+  .progress-garden small { flex: 0 0 100%; text-align: center; color: #a2ab90; font-size: 12px; }
+  .empty-note { color: #9ba58b; text-align: center; padding: 35px; }
+  .collection-index { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px 30px; }
+  .collection-link { display: grid; justify-items: center; align-content: end; gap: 9px; border-bottom: 1px solid #d6dcc7; padding-bottom: 14px; }
+  .collection-link .character-art { height: 135px; width: auto; }
+  .collection-link > span:last-child { font-size: 15px; color: #7e8c6e; }
+  .collection-link:hover { background: #eff3e350; }
+  .journal-links { display: flex; gap: 15px; justify-content: center; margin: 30px auto 0; flex-wrap: wrap; }
+  .collection-gallery { display: grid; grid-template-columns: repeat(var(--gallery-columns), 1fr); gap: 20px; max-width: 800px; margin: auto; }
+  .collection-gallery figure { margin: 0; display: grid; justify-items: center; align-content: end; }
+  .collection-gallery .character-art { width: min(260px, 100%); }
+  .collection-gallery figcaption { color: #8c987c; font-size: 14px; padding-top: 10px; }
+  .gallery-hei .character-art { width: min(220px, 100%); }
+  .gallery-naruto .character-art { width: min(220px, 100%); }
+  .gallery-hashira { max-width: 650px; }
+  .gallery-hashira .character-art { width: min(180px, 100%); }
+  .gallery-prince { grid-template-columns: 1fr 1fr; }
+  .gallery-prince figure:nth-child(n+3) { display: none; }
+  .gallery-cities { gap: 14px; }
+  .gallery-cities .character-art { width: 100%; }
+  .gallery-gifts .character-art { width: min(210px, 100%); }
+  .gallery-gifts figure:nth-child(6) .character-art { clip-path: polygon(20% 0, 100% 0, 100% 100%, 0 100%, 0 24%); }
+  .collection-caption { max-width: 680px; margin: 26px auto 0; text-align: center; line-height: 1.9; color: #8a947c; }
+  .collection-dialog .appearance-controls { margin-bottom: 24px; }
+  .little-quote { text-align: center; font: italic 19px/1.7 Georgia, serif; margin: 24px auto 16px; color: #9b9e7b; }
+  .little-quote small { display: block; font-size: 10px; font-style: normal; letter-spacing: .08em; margin-top: 5px; }
+  .quote-note { text-align: center; color: #a6ac93; font-size: 14px; }
+  .reading-shelf { display: grid; grid-template-columns: 1fr 1fr; gap: 17px 25px; }
+  .reading-shelf > div { display: flex; gap: 14px; align-items: center; border-bottom: 1px dotted #cdd5bd; padding-bottom: 10px; }
+  .reading-shelf .motif { width: 45px; }
+  .reading-shelf span:last-child { font-size: 16px; }
+  .interest-notes { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 15px; }
+  .interest-notes article { border-bottom: 1px dotted #c9d2b8; padding-bottom: 15px; }
+  .interest-notes article > .motif { width: 35px; float: right; opacity: .5; }
+  .interest-notes h3 { font-size: 20px; color: #80916f; margin-bottom: 7px; }
+  .interest-notes p { color: #9ca68c; font-size: 15px; margin: 0; }
+  .wish-flowers { display: flex; justify-content: center; gap: 9px; padding-top: 18px; }
+  .wish-flower { display: grid; align-content: end; justify-items: center; flex: 1; gap: 15px; border-bottom: 1px solid transparent; padding-bottom: 12px; color: #8f9d7c; font-size: 14px; }
+  .wish-flower .motif { width: min(100%, 115px); }
+  .wish-flower.chosen-flower { border-color: #92a67b; background: linear-gradient(transparent, #ebf0e050); }
+  .flower-wish { padding: 26px 15px 5px; text-align: center; color: #7e916a; min-height: 100px; line-height: 2; }
+  .pet-dialog .dialog-body { text-align: center; }
+  .pet-portrait .character-art { width: min(330px, 100%); }
+  .pet-dialog .primary-button { margin: 22px auto 15px; }
+  .pet-dialog .quiet-button { display: flex; margin: 0 auto; font-size: 14px; }
+  .settings-controls { padding: 10px 15px; }
+  .setting-toggle, .setting-volume { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px dotted #d1d8c1; padding: 16px 0; }
+  .setting-toggle input { accent-color: #869b71; width: 21px; height: 21px; }
+  .setting-volume input { accent-color: #869b71; width: 160px; }
+  .save-actions { display: flex; gap: 10px; justify-content: center; margin: 25px auto; flex-wrap: wrap; }
+  .restart-link { display: block; margin: 20px auto; font-size: 14px; color: #ac9684; }
+  .credits-note { margin: 28px 0 0; font-size: 11px; color: #a9ae99; text-align: center; line-height: 1.9; }
+  .ending-dialog { max-width: 760px !important; }
+  .ending-page { text-align: center; padding: 15px 25px 30px; }
+  .ending-flower .motif { width: 135px; margin: 10px; }
+  .ending-page h2 { font: 38px/1.4 Georgia, serif; letter-spacing: -.02em; color: #889c75; margin: 0 0 30px; }
+  .ending-page h2 span { font-size: 46px; }
+  .ending-page > p:not(.eyebrow) { font-size: 17px; line-height: 2.1; margin: 13px auto; }
+  .ending-wish { color: #859a71; }
+  .unfinished-page { display: block; padding: 25px; color: #b7bea8; font-size: 14px; line-height: 2.4; }
+  .ending-page > button { margin: 8px; }
+  @media (max-width: 700px) {
+    .notebook-paper { padding: 18px 8px; }
+    .notebook-tabs { gap: 4px; padding: 0; }.notebook-tabs button { padding: 6px 10px; font-size: 14px; }
+    .collection-index { grid-template-columns: 1fr 1fr; gap: 15px; }.collection-link .character-art { height: 110px; }
+    .collection-gallery { gap: 12px; }.collection-gallery figcaption { font-size: 12px; }
+    .reading-shelf { grid-template-columns: 1fr; gap: 10px; }
+    .reading-shelf > div { gap: 8px; }.reading-shelf .motif { width: 35px; }
+    .interest-notes { padding: 7px; gap: 16px; }.interest-notes h3 { font-size: 18px; }.interest-notes p { font-size: 13px; }
+    .wish-flower { font-size: 12px; }.flower-wish { font-size: 16px; padding-left: 8px; padding-right: 8px; }
+    .settings-controls { padding: 8px; }
+    .ending-page { padding: 12px 5px; }.ending-page h2 { font-size: 32px; }.ending-page h2 span { font-size: 40px; }
+  }
+}

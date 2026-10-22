@@ -1,76 +1,95 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {
-  breathWord,
-  decodeBirth,
-  finalRibbonCode,
-  isBreathSolved,
-  isFilmSolved,
-  isGiftSolved,
-  isNotebookSolved,
-  isRingSolved,
-  isStarSolved,
-  isWindSolved,
-  moveItem,
-  postmarkCode,
-  ringAge,
-  starCode,
-  windLetters,
-} from '../src/puzzles.js';
+import { RULES } from '../src/puzzles/index.js';
+import { enumeratePermutations } from '../src/puzzles/common.js';
+import { mazePath } from '../src/puzzles/maze.js';
+import { WITNESSES, solvedProgress } from './witnesses.mjs';
 
-test('two tags decode 2006 only after both are found', () => {
-  assert.equal(decodeBirth(true, true, '2006'), true);
-  assert.equal(decodeBirth(true, false, '2006'), false);
-  assert.equal(decodeBirth(true, true, '2060'), false);
+for (const [id, rule] of Object.entries(RULES)) {
+  test(`${id}: legal controls reach a winning state without mutating previous state`, () => {
+    let current = rule.create();
+    assert.ok(rule.valid(current)); assert.equal(rule.solved(current), false);
+    for (const move of WITNESSES[id]) {
+      const before = JSON.stringify(current);
+      const next = rule.move(current, move);
+      assert.equal(JSON.stringify(current), before);
+      assert.ok(rule.valid(next), `${id}: invalid state after ${JSON.stringify(move)}`);
+      current = next;
+    }
+    assert.ok(rule.solved(current));
+  });
+  test(`${id}: malformed saved progress does not masquerade as valid state`, () => {
+    for (const input of [null, false, 0, '', [], {}, { order: [0, 0, 0] }, { values: [NaN, 0, 0] }]) assert.equal(rule.valid(input), false);
+    assert.deepEqual(rule.move(rule.create(), { type: 'unknown' }), rule.create());
+  });
+}
+
+function product(count, length) {
+  return Array.from({ length: count ** length }, (_, number) => Array.from({ length }, (_, i) => Math.floor(number / count ** i) % count));
+}
+test('paper operations and inverse, book ordering, film and album have unique solutions', () => {
+  for (const id of ['paper', 'paperBack', 'books']) {
+    const initial = RULES[id].create();
+    assert.equal(enumeratePermutations(initial.order).filter(order => RULES[id].solved({ order })).length, 1, id);
+  }
+  for (const id of ['film', 'album']) {
+    const seed = RULES[id].create();
+    const winners = enumeratePermutations(seed.order).flatMap(order => product(2, 4).filter(faces => RULES[id].solved({ ...seed, order, faces })));
+    assert.equal(winners.length, 1, id);
+  }
 });
-
-test('star chapter restores 2020', () => {
-  const order = ['hat', 'halo', 'blossom', 'rose'];
-  assert.equal(starCode(order), '2020');
-  assert.equal(isStarSolved(order), true);
+test('both cloud systems and side light each have one joint solution, not independent window guesses', () => {
+  for (const id of ['cloud', 'cloudGap', 'calibration']) assert.equal(product(4, 3).filter(values => RULES[id].solved({ values, back: false })).length, 1, id);
 });
-
-test('wind wheels use 2020 to reveal EAST', () => {
-  assert.equal(windLetters([2, 0, 2, 0]), 'EAST');
-  assert.equal(isWindSolved([2, 0, 2, 0]), true);
+test('all nine paper-screen seams yield one solution', () => {
+  const winners = product(2, 9).filter(flips => RULES.screen.solved({ flips }));
+  assert.deepEqual(winners, [solvedProgress('screen').flips]);
 });
-
-test('breathing sequence produces BIRTHDAY', () => {
-  const order = ['water', 'wind', 'serpent', 'wisteria'];
-  assert.equal(breathWord(order), 'BIRTHDAY');
-  assert.equal(isBreathSolved(order), true);
+test('mechanical belt has one route, direction and gear solution', () => {
+  const winners = enumeratePermutations([0, 1, 2, 3, 4, 5, 6]).flatMap(route => [false, true].flatMap(crossed => [0, 1, 2].filter(ratio => RULES.belt.solved({ route, crossed, ratio })).map(ratio => ({ route, crossed, ratio }))));
+  assert.deepEqual(winners, [solvedProgress('belt')]);
 });
-
-test('104 film requires all three observations', () => {
-  assert.equal(isFilmSolved({ red: true, invert: true, cat: true }), true);
-  assert.equal(isFilmSolved({ red: true, invert: false, cat: true }), false);
+test('the flower lock is necessary and the bookmark releases at the target', () => {
+  const seed = RULES.flowers.create(), queue = [seed], seen = new Set([JSON.stringify(seed.heights)]);
+  for (let i = 0; i < queue.length; i++) for (let index = 0; index < 3; index++) {
+    const next = RULES.flowers.move(queue[i], { type: 'crank', index });
+    assert.equal(RULES.flowers.solved(next), false);
+    const key = JSON.stringify(next.heights); if (!seen.has(key)) { seen.add(key); queue.push(next); }
+  }
+  assert.equal(solvedProgress('flowers').pin, -1);
 });
-
-test('postmarks align to 1029', () => {
-  assert.equal(postmarkCode(1, 3), '1029');
-  assert.equal(postmarkCode(3, 1), '');
+test('the ring maze accepts exactly its two equivalent legal orientations', () => {
+  const winners = product(6, 3).filter(turns => RULES.maze.solved({ turns }));
+  assert.deepEqual(winners, [[0, 0, 2], [0, 0, 3]]);
+  for (const turns of winners) { const path = mazePath(turns); assert.ok(path.includes(8) && path.includes(17)); }
 });
-
-test('ring distances total 20 and reject blank placement', () => {
-  const values = { root: '2006', branch: '2020', crown: '2026' };
-  assert.equal(ringAge(values), 20);
-  assert.equal(isRingSolved(values), true);
-  assert.equal(Number.isNaN(ringAge({ root: '', branch: '', crown: '' })), true);
+test('balance accepts either side, and neither empty pans nor equal counts alone', () => {
+  assert.equal(product(3, 4).filter(places => RULES.balance.solved({ places })).length, 2);
+  assert.equal(RULES.balance.solved({ places: [0, 0, 0, 0] }), false);
 });
-
-test('final gift lock reuses all recovered clues', () => {
-  assert.equal(finalRibbonCode(), '06102920');
-  assert.equal(isGiftSolved({ ribbon: '06102920', name: 'lxy', word: 'birthday' }), true);
+test('stitch rules have one eight-hole route', () => {
+  assert.equal(enumeratePermutations([0, 1, 2, 3, 4, 5, 6, 7]).filter(path => RULES.stitch.solved({ path })).length, 1);
 });
-
-test('optional notebook order unlocks side-by-side ending', () => {
-  assert.equal(isNotebookSolved(
-    ['spiral', 'clock', 'promise', 'mask'],
-    ['eye', 'lightning', 'page', 'paw'],
-  ), true);
+test('interlocking drawers can always recover to the start from reachable configurations', () => {
+  const queue = [RULES.drawers.create()], seen = new Map([[JSON.stringify(queue[0]), queue[0]]]), edges = [];
+  for (let i = 0; i < queue.length; i++) for (let index = 0; index < 4; index++) {
+    const next = RULES.drawers.move(queue[i], { type: 'drawer', index });
+    const key = JSON.stringify(next), previous = JSON.stringify(queue[i]);
+    edges.push([previous, key]);
+    if (!seen.has(key)) { seen.set(key, next); queue.push(next); }
+  }
+  for (const [from, to] of edges) assert.ok(edges.some(([a, b]) => a === to && b === from));
 });
-
-test('moveItem remains predictable at boundaries', () => {
-  assert.deepEqual(moveItem(['a', 'b', 'c'], 1, -1), ['b', 'a', 'c']);
-  assert.deepEqual(moveItem(['a', 'b', 'c'], 0, -1), ['a', 'b', 'c']);
+test('flower tiles are reversible, and music pins have one solution', () => {
+  for (let index = 0; index < 9; index++) { const initial = RULES.flips.create(); assert.deepEqual(RULES.flips.move(RULES.flips.move(initial, { type: 'flip', index }), { type: 'flip', index }), initial); }
+  assert.equal(product(5, 6).filter(notes => RULES.melody.solved({ notes })).length, 1);
+});
+test('packing refuses overlap and off-board pieces while allowing removal', () => {
+  let state = RULES.packing.create();
+  assert.deepEqual(RULES.packing.move(state, { type: 'cell', index: 4 }), state);
+  state = RULES.packing.move(state, { type: 'cell', index: 0 });
+  state = RULES.packing.move(state, { type: 'select', index: 1 });
+  assert.deepEqual(RULES.packing.move(state, { type: 'cell', index: 0 }), state);
+  const completed = solvedProgress('packing'); assert.ok(RULES.packing.solved(completed));
+  assert.equal(RULES.packing.solved(RULES.packing.move(completed, { type: 'remove' })), false);
 });
