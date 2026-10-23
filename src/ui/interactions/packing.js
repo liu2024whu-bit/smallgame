@@ -37,10 +37,15 @@ export function bindPacking(root, progress, move) {
       const id = Number(source.dataset.packId);
       const position = progress.placed[id];
       const index = Number(source.dataset.packCell);
-      return { id, source, turn: id === progress.selected ? progress.turn : position?.turn ?? 0,
-        grabRow: source.hasAttribute('data-pack-cell') ? Math.floor(index / PACK_COLS) - position.row : 0,
-        grabColumn: source.hasAttribute('data-pack-cell') ? index % PACK_COLS - position.column : 0,
-        fromBoard: source.hasAttribute('data-pack-cell') };
+      const turn = id === progress.selected ? progress.turn : position?.turn ?? 0;
+      let grabRow = source.hasAttribute('data-pack-cell') ? Math.floor(index / PACK_COLS) - position.row : 0;
+      let grabColumn = source.hasAttribute('data-pack-cell') ? index % PACK_COLS - position.column : 0;
+      const hit=event.target.closest('.mini-filled'),mini=hit?.parentElement;
+      if(hit&&mini){const columns=Number(mini.style.getPropertyValue('--mini-cols')),cell=[...mini.children].indexOf(hit);grabRow=Math.floor(cell/columns);grabColumn=cell%columns;}
+      const grabbed=pieceTiles(id,turn).find(tile=>tile.row===grabRow&&tile.column===grabColumn)??pieceTiles(id,turn)[0];
+      grabRow=grabbed.row;grabColumn=grabbed.column;
+      const grabPrint = grabbed.print;
+      return { id, source, turn, grabRow, grabColumn, grabPrint, fromBoard: source.hasAttribute('data-pack-cell') };
     },
     start(gesture) { gesture.ghost = dragGhost(miniature(pieceTiles(gesture.id, gesture.turn)), 'packing-ghost'); },
     move: update,
@@ -48,7 +53,8 @@ export function bindPacking(root, progress, move) {
       if (event.key.toLowerCase() !== 'r') return;
       event.preventDefault();
       gesture.turn = (gesture.turn + 1) % 4;
-      gesture.grabRow = 0; gesture.grabColumn = 0;
+      const grabbed = pieceTiles(gesture.id, gesture.turn).find(tile => tile.print === gesture.grabPrint);
+      gesture.grabRow = grabbed.row; gesture.grabColumn = grabbed.column;
       gesture.ghost.innerHTML = miniature(pieceTiles(gesture.id, gesture.turn));
       update(gesture, gesture.last);
     },

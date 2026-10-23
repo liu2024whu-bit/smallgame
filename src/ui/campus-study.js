@@ -1,0 +1,6 @@
+import { ASSETS } from '../data/assets.js';
+
+export function studyDesk(context) {
+  const complete=context.state.activities.includes('campus:desk');
+  return `<div class="campus-study-desk" data-rubbing="${complete}"><img src="${ASSETS.campusDesk}" alt="窗边的书桌，铅笔搁在拓纸旁，书和仙林明信片放在一边" draggable="false"><span class="study-book-label">马克思主义原理</span><div class="rubbing-sheet" aria-label="按住在纸上轻轻拓印" role="group"><svg viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true"><defs><mask id="rubbing-mask" maskUnits="userSpaceOnUse"><rect width="100" height="60" fill="${complete?'white':'black'}"/><g data-rubbing-strokes fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"></g></mask></defs><image href="${ASSETS.campusRubbing}" width="100" height="60" preserveAspectRatio="xMidYMid meet" mask="url(#rubbing-mask)"/><g data-rubbing-tones fill="none" stroke="#737164" stroke-width="7" opacity=".07" stroke-linecap="round"></g></svg>${complete?'<span class="rubbing-signature">仙林</span>':''}</div></div><div class="rubbing-tools"><span>${complete?'好好夹着。':'铅笔在手边。'}</span>${complete?'':'<button class="text-button" data-rubbing-key aria-label="用键盘拓一遍纸，重复几次可拓完整">拓一拓</button>'}</div>`;
+}

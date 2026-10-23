@@ -1,5 +1,11 @@
 // Source-pixel frames follow the actual edges of each illustration.
 export const ASSET_LAYOUTS = Object.freeze({
+  campusXianlin:{width:1672,height:941},
+  campusPlum:{width:1672,height:941},
+  recordsFolio:{width:1536,height:1024},
+  encoreTheatre:{width:1536,height:1024},
+  campusDesk:{width:1536,height:1024},
+  campusRubbing:{width:1448,height:1086},
   heiCat:{width:1312,height:1199,frames:[[80,20,560,580],[690,20,560,580],[80,600,560,580],[690,600,560,580]]},
   musicbox:{width:1536,height:1024},
   musicMechanism:{width:1536,height:1024,frames:[[465,448,615,260]]},

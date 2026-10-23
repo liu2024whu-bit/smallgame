@@ -10,14 +10,14 @@ import { achievementsPage } from './achievements.js';
 import { EVIDENCE_TITLES } from './evidence.js';
 import { ITEM_EVIDENCE } from '../data/ciphers.js';
 
-export function journalPanel(state, tab = 'clues') {
+export function journalPanel(state, tab = 'clues', view = {}) {
   const tabs = [['clues', '线索'], ['memories', '以前'], ['collections', '收藏'], ['activities', '小记']];
   const entries = state.solved.filter(id => CLUES[id]);
   const body = {
     clues: `<div class="found-evidence">${Object.entries(EVIDENCE_TITLES).filter(([id]) => state.activities.includes(`evidence:${id}`)).map(([id,title]) => `<button class="text-button" data-action="evidence" data-id="${id}">${title}</button>`).join('')}</div>${entries.length ? entries.map(id => `<article class="journal-entry"><h3>${escape(CLUES[id][0])}</h3><p>${escape(CLUES[id][1])}</p></article>`).join('') : '<p class="empty-note">还没记下什么。</p>'}<div class="progress-garden">${PUZZLES.filter(p => p.optional).map(p => `<span class="${state.solved.includes(p.id) ? 'bloomed' : ''}" title="${escape(p.title)}">${motif(state.solved.includes(p.id) ? 'daisy' : 'leaf')}</span>`).join('')}<small>柜里的小玩意</small></div>`,
     memories: entries.filter(id => MEMORIES[id]).map(id => `<article class="journal-entry"><h3>${escape(MEMORIES[id].title)}</h3><p>${escape(MEMORIES[id].text)}</p></article>`).join('') || '<p class="empty-note">还没写到这里。</p>',
     collections: collectionIndex(state),
-    activities: achievementsPage(state),
+    activities: achievementsPage(state, view),
   };
   return { title: '手账', className: 'notebook-dialog', html: `<nav class="notebook-tabs" aria-label="手账内容">${tabs.map(([id, text]) => `<button data-action="journal-tab" data-tab="${id}" class="${tab === id ? 'active' : ''}" aria-current="${tab === id}">${text}</button>`).join('')}</nav><div class="notebook-paper">${body[tab] ?? body.clues}</div>` };
 }

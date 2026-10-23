@@ -13,6 +13,7 @@ import { createDialog } from './ui/dialog.js';
 import { announce, itemSprite } from './ui/dom.js';
 import { createAudio } from './services/audio.js';
 import { fitHandle } from './services/tool-motion.js';
+import { motionAllowed } from './services/motion.js';
 import { bindInteractions } from './ui/interactions/index.js';
 import { viewActions } from './ui/view-actions.js';
 import { blockedMove } from './ui/interactions/feedback.js';
@@ -48,7 +49,7 @@ function renderDialog(preserveFocus = true) {
   dialog.show(renderPanel(ui.panel, context()), { preserveFocus });
   if (ui.panel.type === 'ambient') audio.rain(); else audio.stopRain();
   const state = store.get(), id = ui.panel.type === 'puzzle' ? ui.panel.id : null;
-  disposeInteractions = bindInteractions(dialog.element, { id, progress: state.progress[id], solved: state.solved.includes(id), move: performMove, activity });
+  disposeInteractions = bindInteractions(dialog.element, { id, progress: state.progress[id], solved: state.solved.includes(id), move: performMove, activity, changeView: patch => { ui.panel.view = {...ui.panel.view,...patch}; renderDialog(); } });
 }
 function render(state) {
   const signature = `${state.scene}:${state.collected.join()}:${sceneChanges(state).map(change=>change.puzzle??change.activity).join()}:${state.solved.includes('flowers')}:${state.ending}`;
@@ -170,6 +171,7 @@ const actions = {
   collection: button => openCollection(button.dataset.id),
   evidence: button => { activity(`evidence:${button.dataset.id}`); openPanel({ type: 'evidence', id: button.dataset.id }); },
   campus: button => openPanel({ type:'campus', id:Number(button.dataset.index) }),
+  'flower-note':()=>openPanel({type:'flower-note'}),
   keepsake: button => openPanel({ type: 'keepsake', id: button.dataset.id }),
   encore: () => openPanel({ type: 'encore' }),
   reading: () => openPanel({ type: 'reading' }), interests: () => openPanel({ type: 'interests' }),
@@ -234,7 +236,7 @@ store.subscribe((state, previous) => {
   if(revealed.length)toast(revealed[0].unlocked);
   if (state.solved.length > previous.solved.length) {
     audio.success(); announce('解开了。');
-    dialog.element.querySelector('.completion-note')?.scrollIntoView({ behavior: state.settings.motion ? 'smooth' : 'instant', block: 'nearest' });
+    dialog.element.querySelector('.completion-note')?.scrollIntoView({ behavior: motionAllowed() ? 'smooth' : 'instant', block: 'nearest' });
   }
 });
 render(store.get());

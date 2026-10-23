@@ -15,3 +15,5 @@ export function musicPinStyle(index,note) {
 export const BINDING_HOLES=[27,42,58,73].map(x=>[x,45.2]).concat([27,42,58,73].map(x=>[x,51]));
 export const DRAWER_RECTS=[11.6,29.5,47.5,65.4].map(top=>[16.6,top,66.5,17.1]);
 export const FLIP_RECT=[15.4,10,69.8,65.6];
+// Winding socket in the paper theatre; pivot is measured inside item sprite 3.
+export const ENCORE_HANDLE = Object.freeze({ x:76.6,y:66.3,width:13,pivotX:.106,pivotY:.717 });

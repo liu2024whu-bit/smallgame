@@ -11,7 +11,7 @@ export function createDialog(element, onClose) {
       const focusKey = preserveFocus ? document.activeElement?.dataset.focus : null;
       const settingKey = preserveFocus ? document.activeElement?.dataset.setting : null;
       const actionKey = preserveFocus ? document.activeElement?.dataset.action : null;
-      const sideKey = preserveFocus ? document.activeElement?.dataset.side : null;
+      const identity = preserveFocus ? ['side','id','index','tab'].filter(key => document.activeElement?.dataset[key] !== undefined).map(key => `[data-${key}="${CSS.escape(document.activeElement.dataset[key])}"]`).join('') : '';
       const scroll = preserveFocus ? element.scrollTop : 0;
       if (!element.open) returnFocus = document.activeElement;
       element.className = panel.className;
@@ -20,7 +20,7 @@ export function createDialog(element, onClose) {
       if (!element.open) element.showModal();
       if (focusKey) element.querySelector(`[data-focus="${CSS.escape(focusKey)}"]`)?.focus({ preventScroll: true });
       else if (settingKey) element.querySelector(`[data-setting="${CSS.escape(settingKey)}"]`)?.focus({ preventScroll: true });
-      else if (actionKey) element.querySelector(`[data-action="${CSS.escape(actionKey)}"]${sideKey ? `[data-side="${CSS.escape(sideKey)}"]` : ''}`)?.focus({ preventScroll: true });
+      else if (actionKey) element.querySelector(`[data-action="${CSS.escape(actionKey)}"]${identity}`)?.focus({ preventScroll: true });
       else if (!preserveFocus) element.querySelector('.close-dialog')?.focus({ preventScroll: true });
       if (!element.contains(document.activeElement)) element.querySelector('.close-dialog')?.focus({ preventScroll: true });
       element.scrollTop = scroll;

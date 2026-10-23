@@ -29,9 +29,7 @@ function bindBookmark(root, move) {
 }
 
 function bindWeights(root, move) {
-  const weights = [...root.querySelectorAll('.weight-tray button')];
   const zones = [...root.querySelectorAll('[data-pan]')];
-  weights.forEach((weight, index) => { weight.dataset.weight = index; });
   return pointerSession(root, {
     pick(event) { const source = event.target.closest('[data-weight]'); return source ? { source, index: Number(source.dataset.weight) } : null; },
     start(gesture) { gesture.ghost = dragGhost(gesture.source, 'weight-ghost'); },

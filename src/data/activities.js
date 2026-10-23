@@ -7,6 +7,8 @@ export const ACTIVITY_IDS = Object.freeze([
   'birthday:fries', 'birthday:unwrap',
   ...EVIDENCE_IDS.map(id => `evidence:${id}`),
   'campus:whu', 'campus:nju',
+  'campus:duxia', 'campus:plum',
+  'campus:desk',
   ...[0, 1, 2].map(index => `art:detail:${index}`),
   ...['rose', 'daisy', 'tulip', 'lavender'].map(id => `flower:${id}`),
   ...READING.map((_, index) => `reading:${index}`),
@@ -14,6 +16,7 @@ export const ACTIVITY_IDS = Object.freeze([
 ]);
 
 export const ACHIEVEMENTS = Object.freeze([
+  { id:'xianlin', title:'课本之外', intro:'翻过书页，也看看窗外。', hint:'仙林的折页里，还夹着一张拓纸。', text:'窗边多了一张拓印。', keys:['campus:duxia','campus:plum','campus:desk'], motif:'leaf' },
   { id:'campuses', title:'两枚邮戳', intro:'纸上也能逛校园。', hint:'两张折页里，还有地方没走到。', text:'两张折页，都盖好印了。', keys:['campus:whu','campus:nju'], motif:'envelope' },
   { id:'pets', title:'都摸摸', intro:'睡醒了，再陪它们玩。', hint:'屋里还睡着另一只。', text:'猫和狗都醒过一小会儿。', keys:['pet:cat','pet:dog'], motif:'paw' },
   { id:'flowers', title:'一小束', intro:'每朵花，都有一句祝福。', hint:'还可以换一朵看看。', text:'四朵花，都挑过了。', keys:['rose','daisy','tulip','lavender'].map(id=>`flower:${id}`), motif:'daisy' },

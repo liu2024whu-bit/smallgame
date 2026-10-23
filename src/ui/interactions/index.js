@@ -10,9 +10,14 @@ import { bindShadows } from './shadows.js';
 import { bindChocolate } from './chocolate.js';
 import { bindPouring } from './pouring.js';
 import { bindMaze } from './maze.js';
+import { bindEncore } from './encore.js';
+import { bindRubbing } from './rubbing.js';
+import { bindDrawers } from './drawers.js';
 
-export function bindInteractions(root, { id, progress, solved, move, activity }) {
+export function bindInteractions(root, { id, progress, solved, move, activity, changeView }) {
   const cleanup = [];
+  cleanup.push(bindEncore(root,changeView));
+  cleanup.push(bindRubbing(root,activity));
   if (id === 'film') cleanup.push(bindFilm(root,progress));
   if (id && !solved) {
     cleanup.push(id === 'packing' ? bindPacking(root, progress, move) : bindReorder(root, id, move));
@@ -25,6 +30,7 @@ export function bindInteractions(root, { id, progress, solved, move, activity })
     if(id==='chocolate')cleanup.push(bindChocolate(root,progress,move));
     if(id==='cocoa')cleanup.push(bindPouring(root,progress,move));
     if(id==='maze')cleanup.push(bindMaze(root,progress,move));
+    if(id==='drawers')cleanup.push(bindDrawers(root,progress,move));
   }
   const pencil = root.querySelector('[data-color-drawing]');
   if (pencil) {

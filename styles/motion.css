@@ -3,10 +3,6 @@
   .room-light { transition: opacity 1.6s; }
   .scene-image { animation: room-enter .45s ease both; }
   .hotspot-caption { transition: opacity .18s; }
-  .dial-face .item-art { transition: transform .35s cubic-bezier(.2,.7,.3,1); }
-  .flower-pot { transition: bottom .55s cubic-bezier(.25,.85,.3,1.05); }
-  .drawer-unit { transition: transform .3s ease, box-shadow .3s; }
-  .cloud-layer .motif { transition: transform .45s ease; }
   .inventory-slot.new-item { animation: item-enter .35s ease both; }
   .completion-note { animation: note-enter .5s ease both; }
   .ending-flower { animation: note-enter 1s .1s ease both; }

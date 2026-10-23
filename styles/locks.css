@@ -14,7 +14,7 @@
   .postal-latch.puzzle-control { position: absolute; left: 65%; top: 50.6%; width: 8%; height: 17%; background: transparent; border: 0; box-shadow: none; border-radius: 40%; }
   .postal-latch:hover { filter: drop-shadow(0 0 3px #fdf0b5); background: #ffe7a81f; }
   .lock-reply { position: absolute; bottom: 4%; margin: 0; width: 100%; text-align: center; color: #5c6658; font-size: 15px; pointer-events: none; }
-  .input-note { margin: 9px auto 0; text-align: center; color: #8c8b7b; font-size: 12px; }
+  .input-note { margin: 12px auto 0; text-align: center; color: #686e5c; font-size: 13px; }
   .letter-windows { position: absolute; left: 33.65%; top: 30.7%; width: 34.1%; height: 7.9%; display: grid; grid-template-columns: repeat(5,1fr); gap: 5.8%; }
   .letter-windows .puzzle-control { min-width: 0; min-height: 0; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; font: clamp(15px,2.7vw,30px)/1 Georgia,serif; color: #5e6356; position: relative; }
   .letter-windows .letter-cursor::after { content: ''; height: 1px; background: #6c7a65; position: absolute; left: 30%; right: 30%; bottom: 12%; }

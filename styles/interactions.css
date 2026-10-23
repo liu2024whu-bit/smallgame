@@ -1,4 +1,9 @@
 @layer puzzles {
+  .can-drag { transition:translate .18s ease; }
+  .scale-pan [data-weight] { padding:0; border:0; background:transparent; touch-action:none; }
+  .scale-pan [data-weight] .motif { width:clamp(28px,4.8vw,50px); }
+  .weight-away > .motif { opacity:.2; filter:grayscale(.8); }
+  .weight-away { border-style:dotted !important; }
   .can-drag, [data-pack-id], .music-pin-track, [data-weight] { touch-action: none; cursor: grab; user-select: none; }
   .is-dragging, .is-dragging * { cursor: grabbing !important; }
   .drag-ghost { position: fixed; z-index: 40; pointer-events: none; margin: 0; opacity: .9; filter: drop-shadow(3px 7px 5px #4e4b3330); user-select: none; }

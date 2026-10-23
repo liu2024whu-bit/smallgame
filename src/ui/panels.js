@@ -5,21 +5,23 @@ import { encorePanel } from './achievements.js';
 import { evidencePanel } from './evidence.js';
 import { campusPanel } from './campus.js';
 import { passagePanel, birthdayNotePanel } from './birthday.js';
+import { flowerNotePanel } from './puzzles/flowers.js';
 
 export function renderPanel(panel, context) {
   const simple = {
     puzzle: () => puzzlePanel(panel.id, context),
     evidence: () => evidencePanel(panel.id, context),
     campus: () => campusPanel(Number(panel.id), context),
+    'flower-note':()=>flowerNotePanel(context.state),
     passage:()=>passagePanel(panel.id,context),
     'birthday-note':()=>birthdayNotePanel(panel.id,context),
     'birthday-wait':()=>({title:'蛋糕',className:'inspect-dialog',html:'<div class="short-note"><p>可可还没有分好。</p><button class="text-button" data-action="close">再看看</button></div>'}),
     ambient: () => ({ title: '雨声', className: 'inspect-dialog', html: '<div class="rain-listening"><p>等一小会儿。</p><p>雨落在窗沿上。</p></div>' }),
-    journal: () => journalPanel(context.state, panel.tab),
+    journal: () => journalPanel(context.state, panel.tab, context.view),
     collection: () => collectionPanel(panel.id, context),
     keepsake: () => keepsakePanel(panel.id, context.state),
     reading: () => readingPanel(context.state),
-    encore: () => encorePanel(context.state),
+    encore: () => encorePanel(context),
     interests: interestsPanel,
     flowers: () => flowersPanel(context.flower),
     item: () => itemPanel(panel.id),

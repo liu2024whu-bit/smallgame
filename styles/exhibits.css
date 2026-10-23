@@ -1,7 +1,7 @@
 @layer notebook {
   .collection-dialog .dialog-body { padding: 20px 24px 26px; }
   .exhibit-art { width: 100%; height: auto; display: block; user-select: none; }
-  .memory-caption { text-align: center; max-width: 34em; margin: 20px auto 0; font-size: 16px; line-height: 1.9; color: #7c826e; }
+  .memory-caption { text-align: center; max-width: 32em; margin: 20px auto 0; font-size: 16px; line-height: 1.9; color: #647057; }
   .memory-tabs { display: flex; justify-content: center; gap: 22px; margin: 20px auto 0; flex-wrap: wrap; }
   .memory-active { color: #4f725e; border-bottom: 2px solid #8a9c76; }
   .color-sketch { position: relative; overflow: hidden; border-radius: 5px; }
@@ -45,17 +45,9 @@
   .postcard { display: block; padding: 12px; width: min(285px, 80%); aspect-ratio: .75; background: #fffdf2; transform: rotate(-4deg); box-shadow: 3px 4px 9px #615a4229; margin: auto; }
   .postcard > .character-art { width: 100%; }.postcard-writing { height: 100%; padding: 16px 8px; border-top: 1px dotted #b8bc9e; display: flex; flex-direction: column; justify-content: space-between; text-align: left; font-size: 15px; line-height: 1.9; }.postcard-writing small { text-align: right; color: #99a18b; }.postcard-writing p { margin: 0; }
   .postcard-thread { position: absolute; right: 4%; bottom: 4%; transform: rotate(28deg); }.postcard-thread .motif { width: 80px; }
-  .little-records { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 30px; }
-  .little-record { display: flex; align-items: center; gap: 13px; padding: 14px 0; border-bottom: 1px dotted #d0d5c2; opacity: .5; }
-  .little-record.record-complete { opacity: 1; }.little-record .motif { width: 45px; }.little-record h3 { color: #7f906f; font-size: 17px; }.little-record p { font-size: 13px; margin: 3px 0 0; }.little-record small { margin-left: auto; font: 12px Georgia, serif; white-space: nowrap; }
-  .record-footnote { margin: 25px auto 0; text-align: center; color: #97a08b; font-size: 14px; }
-  .encore-envelope { display: block; padding: 24px; margin: 25px auto 0; background: #f1ebd9; border: 1px solid #c8c8af; box-shadow: 3px 4px 0 #dadac580; transform: rotate(-2deg); }
-  .encore-scene { position: relative; max-width: 680px; margin: auto; padding-bottom: 10%; }.encore-window .character-art { width: 100%; }.encore-pets { position: absolute; bottom: 0; display: flex; justify-content: space-between; width: 100%; padding: 0 8%; }.encore-pets .character-art { width: 20%; }.encore-bell { position: absolute; top: 0; right: 7%; width: 7%; transform-origin: top; animation: bell-rock 5s ease-in-out infinite; }.encore-bell .character-art { width: 100%; }
-  .encore-note { text-align: center; color: #79876e; padding: 15px; line-height: 2; }
   .ending-page .birthday-letter { text-align: left; max-width: 34em; }.ending-page .birthday-letter:first-of-type { text-align: center; }
   .reading-shelf > .reading-book { display: flex; gap: 14px; align-items: center; border-bottom: 1px dotted #cdd5bd; padding-bottom: 10px; text-align: left; }.reading-book.book-opened { color: #6f8c69; background: #edf0e6; }
-  @keyframes bell-rock { 0%, 100% { rotate: -2deg; } 50% { rotate: 2deg; } }
   @media(max-width:700px) {
-    .collection-dialog .dialog-body { padding: 14px 12px 24px; }.memory-caption { font-size: 14px; margin-top: 17px; }.memory-tabs { gap: 15px; margin-top: 16px; }.artist-table { aspect-ratio: 1.5; }.cinema-ticket { width:170px; margin-right:10px; }.prince-keepsake { height: 310px; }.prince-page p { font-size: 12px; }.fan-leaves { height: 275px; }.fan-leaf { width: 105px; height: 175px; left: calc(50% - 52px); padding: 10px 6px 22px; }.paper-fan { overflow: hidden; }.fan-index { gap: 0; }.fan-index button { min-width: 29px; padding: 3px; }.little-records { grid-template-columns: 1fr; }.little-record { gap: 10px; }.little-record p { font-size: 12px; }
+    .collection-dialog .dialog-body { padding: 14px 12px 24px; }.memory-caption { font-size: 14px; margin-top: 17px; }.memory-tabs { gap: 15px; margin-top: 16px; }.artist-table { aspect-ratio: 1.5; }.cinema-ticket { width:170px; margin-right:10px; }.prince-keepsake { height: 310px; }.prince-page p { font-size: 12px; }.fan-leaves { height: 275px; }.fan-leaf { width: 105px; height: 175px; left: calc(50% - 52px); padding: 10px 6px 22px; }.paper-fan { overflow: hidden; }.fan-index { gap: 0; }.fan-index button { min-width: 29px; padding: 3px; }
   }
 }

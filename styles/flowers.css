@@ -29,5 +29,10 @@
   .garden-frame { display:block; position:relative; border:2px solid #b6ae96; width:100%; }.garden-frame>.character-art { display:block; width:100%; }.garden-frame>.motif { position:absolute; top:25%; left:10%; width:20%; }
   .garden-perforations { display:flex; justify-content:center; gap:3px; margin:4px auto; }.garden-perforations i { display:block; height:5px; width:3px; border:1px solid #a99d7c; border-radius:1px; }
   .garden-film>div>span>.motif { width:19px; }
+  .garden-note-closeup { padding:24px 20px; background:#f7f0d9; box-shadow:1px 3px 4px #6c624321; transform:rotate(1deg); color:#6b7259; }
+  .garden-note-closeup>small { display:block; text-align:center; margin-bottom:20px; font-size:17px; letter-spacing:.2em; }
+  .garden-note-closeup>div { display:flex; justify-content:center; gap:22px; }.garden-note-closeup>div>span { width:30%; display:grid; justify-items:center; gap:12px; }.garden-note-closeup b { font:20px Georgia,serif; font-weight:400; }
+  .garden-note-closeup .garden-perforations { gap:7px; margin:8px auto; }.garden-note-closeup .garden-perforations i { height:15px; width:9px; }
+  .garden-note-closeup>div>span>.motif { width:62px; }
   @media(max-width:700px){.flower-platform { height:4px; }.platform-collar { top:3px; height:5px; }.garden-film { top:6%; right:1%; width:25%; padding:3px; }.garden-film>small { font-size:7px; margin-bottom:2px; }.garden-film b { font-size:7px; }.garden-film>div { gap:2px; }.garden-perforations { gap:2px; margin:2px auto; }.garden-perforations i { height:4px; width:2px; }.garden-film>div>span>.motif { width:13px; }.garden-film::before { height:10px; top:-4px; width:5px; }}
 }

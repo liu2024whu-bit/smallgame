@@ -27,7 +27,11 @@
   .quiet-button:hover:not(:disabled) { background: #e9eddf; }
   .text-button { padding: 5px 6px; border-bottom: 1px dotted #a7b29c; color: #687a61; }
   .eyebrow { font: 11px/1.6 Georgia, serif; letter-spacing: .2em; color: #848a7a; }
-  .hand-note { font-size: 15px; color: #818775; margin: 16px 0 0; text-align: center; }
+  .hand-note { font-size: 15px; color: #626e59; margin: 16px 0 0; text-align: center; text-wrap:pretty; }
+  h1,h2,h3 { text-wrap:balance; }
+  .journal-entry p,.birthday-letter,.memory-caption,.encore-letter p { text-wrap:pretty; }
+  ::selection { color:#394c37; background:#dce5c5; }
+  #explore-dialog { scrollbar-color:#b8c0a9 #f3f0e5; scrollbar-width:thin; }
   .raster-sprite { display: inline-block; width: 72px; aspect-ratio: var(--ratio, 1); background-image: var(--sprite); background-repeat: no-repeat; background-size: var(--size-x) var(--size-y); background-position: var(--pos-x) var(--pos-y); flex: 0 0 auto; vertical-align: middle; }
   .motif { width: 46px; }
   .character-art { width: min(230px, 100%); }
