@@ -1,43 +1,66 @@
 @layer puzzles {
-  .puzzle-paper .puzzle-field, .puzzle-paperBack .puzzle-field { background: #f6efe0 url('../assets/illustrations/board.webp') center / cover; }
-  .puzzle-cloud .puzzle-field, .puzzle-cloudGap .puzzle-field { background: #edf1e8; }
-  .puzzle-books .puzzle-field { background: #ece9de; border-bottom: 12px solid #c7b99e; }
-  .puzzle-screen .puzzle-field { background: #eeecf1; }
-  .puzzle-film .puzzle-field { background: #e9e6da; }
-  .puzzle-flowers .puzzle-field { padding: 0 0 20px; background: #f3f0e5; }
-  .puzzle-packing .puzzle-field { background: #eae0cb url('../assets/illustrations/board.webp') center / cover; }
-  .puzzle-drawers .puzzle-field { background: #fbf8e9; }.puzzle-flips .puzzle-field { background: #f0f0dc; }
-  .puzzle-melody .puzzle-field { background: #f2e9da; }
-  .maze-apparatus { position: relative; width: min(370px, 100%); margin: auto; }
-  .maze-apparatus > .character-art { width: 100%; display: block; }
-  .maze-apparatus > .ring-maze { position: absolute; inset: 6% 8% 10%; width: 84%; height: 84%; mix-blend-mode: multiply; }
-  .garden-lift { position: relative; width: 100%; }
-  .garden-lift > .character-art { width: 100%; display: block; }
-  .garden-lift .flower-stands { position: absolute; inset: 22% 26% 26%; padding: 0; gap: 4%; }
-  .garden-lift .flower-column { height: 100%; width: 31%; }
-  .garden-lift .flower-pot { bottom: calc(var(--height) * 16%); width: 100%; left: 0; }
-  .garden-lift .flower-pot::after { content: ''; position: absolute; left: -2%; right: -2%; bottom: -3px; height: 6px; background: #d2bb94 url('../assets/illustrations/board.webp') center / cover; box-shadow: 1px 3px 2px #5a563624; border-radius: 2px; }
-  .garden-lift .flower-pot .motif { width: 100%; }
-  .garden-lift .flower-pot b { bottom: 5%; right: 2%; font-size: 10px; }
-  .garden-lift .height-scale { inset: 0 0 3%; font-size: 9px; }
-  .garden-lift .height-scale span { width: 100%; border-color: #a99b7538; }
-  .garden-lift .flower-column-foot { bottom: -32%; left: -12%; width: 124%; }
-  .garden-lift .flower-column-foot .puzzle-control { font-size: 11px; padding: 2px 5px; background: #fbf6e4e8; }
-  .music-apparatus { position: relative; max-width: 520px; margin: 12px auto; }
-  .music-apparatus > .character-art { display: block; width: 100%; opacity: .65; }
-  .music-apparatus .music-pins { position: absolute; inset: 42% 9% 10%; gap: 1%; margin: 0; }
-  .music-pin-column { flex: 1; min-width: 0; gap: 1px; }
-  .music-pin-track { height: 160px; width: 100%; border-color: #c1b888; }
-  .music-pin { width: 100%; display: grid; justify-items: center; }.music-pin .motif { width: 35px; }
-  .music-brass-pin { display: block; width: 16px; height: 12px; border-radius: 50%; border: 1px solid #9d7f4a; background: radial-gradient(at 35% 25%,#fff2ba,#c3a465 70%,#997a48); box-shadow: 0 2px 2px #5c49364d; margin: 4px; }
-  .music-pin-column .puzzle-control { min-height: 25px; height: 25px; min-width: 25px; font-size: 14px; }
-  .binding-background { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .8; }
-  .binding-pages { inset: 7% 7% 20%; }.binding-page { background: #fffaf080; border-color: #c5bda380; }
-  .binding-page .character-art { opacity: .12; }
+  .world-music-mechanism { position:absolute; left:75.1%; top:57.2%; width:6%; height:3.1%; transform:skewX(15deg); z-index:1; pointer-events:none; mask-image:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent); }
+  .world-music-mechanism>.character-art { position:absolute; inset:0; width:100%; height:100%; }
+  .world-music-mechanism>i { position:absolute; width:2px; height:2px; border-radius:50%; background:#e6c87c; box-shadow:0 .5px .5px #66502e; transform:translate(-50%,-50%); }
+  .world-maze-mechanism { position:absolute; left:66.7%; top:57.4%; width:4.5%; height:3.9%; overflow:hidden; border-radius:50%; z-index:1; pointer-events:none; }
+  .world-maze-mechanism>.character-art { position:absolute; width:118%; height:125%; left:-9%; top:-8%; }
+  .world-maze-mechanism>svg { position:absolute; inset:0; height:100%; width:100%; }
+  .world-maze-mechanism path { fill:none; stroke:#8c7951; stroke-width:8; stroke-linecap:round; }
+  .puzzle-paper .puzzle-field,.puzzle-paperBack .puzzle-field { background:#f6efe0 url('../assets/illustrations/board.webp') center/cover; }
+  .puzzle-cloud .puzzle-field,.puzzle-cloudGap .puzzle-field { background:#edf1e8; }
+  .puzzle-books .puzzle-field { background:#ece9de; border-bottom:12px solid #c7b99e; }
+  .puzzle-screen .puzzle-field { background:#eeecf1; }
+  .puzzle-film .puzzle-field { background:#e9e6da; }
+  .puzzle-flowers .puzzle-field { padding:0 0 20px; background:#f3f0e5; }
+  .puzzle-packing .puzzle-field { background:#eae0cb url('../assets/illustrations/board.webp') center/cover; }
+  .puzzle-drawers .puzzle-field { background:#fbf8e9; }
+  .puzzle-flips .puzzle-field { background:#f0f0dc; }
+  .puzzle-melody .puzzle-field { background:#f7f1e5; }
+  .music-apparatus { position:relative; max-width:760px; margin:12px auto; }
+  .music-apparatus>.character-art { display:block; width:100%; }
+  .music-pin-column { display:contents; }
+  .music-slot-index { position:absolute; top:40%; transform:translate(-50%,-50%); font:clamp(8px,1.25vw,13px) Georgia,serif; color:#8b7851; }
+  .music-pin-track { position:absolute; display:block; border:0; padding:0; background:none; cursor:grab; touch-action:none; }
+  .music-pin { position:absolute; width:17px; height:13px; transform:translate(-50%,-50%); pointer-events:none; }
+  .music-brass-pin { display:block; width:100%; height:100%; border-radius:50%; border:1px solid #9d7f4a; background:radial-gradient(at 35% 25%,#fff2ba,#c3a465 70%,#997a48); box-shadow:0 2px 2px #5c49364d; }
+  .music-pin-column.playing .music-pin { filter:drop-shadow(0 0 7px #e1c963); }
+  .stitch-workbench { position:relative; aspect-ratio:3/2; height:auto; width:min(800px,100%); margin:5px auto; }
+  .binding-background { position:absolute; inset:0; display:block; width:100%; height:100%; }
+  .binding-pages { position:absolute; inset:29% 19% auto; display:flex; pointer-events:none; }
+  .binding-page { flex:1; text-align:center; color:#9caa8c; font:13px Georgia,serif; }
+  .binding-hole { position:absolute; width:20px; height:20px; transform:translate(-50%,-50%); }
+  .binding-hole button { position:relative; width:100%; height:100%; display:block; border:0; background:none; box-shadow:none; padding:0; min-height:0; min-width:0; }
+  .hole-dot { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:8px; height:8px; border:1px solid #ac997b; background:#68583f; border-radius:50%; box-shadow:inset 0 1px 1px #3a281d; }
+  .has-thread .hole-dot { background:#b27966; border-color:#906f51; }
+  .binding-hole small { position:absolute; left:50%; transform:translateX(-50%); font:10px Georgia,serif; color:#a59373; pointer-events:none; }
+  .hole-upper small { top:-14px; }.hole-lower small { top:21px; }
+  .binding-rule { position:absolute; top:20%; width:100%; text-align:center; font-size:13px; color:#a1ac8c; pointer-events:none; }
+  .stitch-lines line { stroke-width:2px; vector-effect:non-scaling-stroke; }
+  .binding-controls { text-align:center; margin:14px auto 0; }
+  .scale-apparatus { position:relative; width:min(450px,100%); aspect-ratio:1; margin:15px auto 0; }
+  .scale-apparatus>.character-art,.scale-moving>.character-art { position:absolute; inset:0; display:block; width:100%; }
+  .scale-fixed { clip-path:polygon(42% 0,58% 0,58% 67%,74% 100%,26% 100%,42% 67%); }
+  .scale-moving { position:absolute; inset:0; transform:rotate(var(--lean)); transform-origin:50% 20%; transition:transform .45s; }
+  .scale-swing { clip-path:polygon(0 15%,100% 15%,100% 74%,60% 74%,58% 27%,42% 27%,40% 74%,0 74%); }
+  .scale-pan { position:absolute; display:flex; justify-content:center; align-items:end; width:34%; height:12%; top:56%; border-radius:0 0 50% 50%; padding-bottom:4%; }
+  .scale-pan>.motif { width:clamp(20px,4vw,40px); transform:rotate(calc(-1 * var(--lean))); }
+  .left-pan { left:.8%; }.right-pan { right:.8%; }
+  .drawer-chest { position:relative; width:min(360px,90%); aspect-ratio:512/544; margin:20px auto; padding:0; }
+  .drawer-unit { position:absolute; margin:0; }
+  .drawer-unit button { position:relative; width:100%; height:100%; display:block; border:0; background:none; box-shadow:none; padding:0; }
+  .drawer-face { position:absolute; inset:0; overflow:hidden; pointer-events:none; }
+  .drawer-face>.character-art { position:absolute; width:150.375%; left:-24.96%; top:var(--face-offset); }
+  .drawer-letter { position:absolute; left:-11%; top:35%; font:12px Georgia,serif; color:#65726d; }
+  .drawer-open::before { content:''; position:absolute; inset:0; background:linear-gradient(#66513b,#8a7356); border:2px solid #86775c; border-radius:2px; }
+  .drawer-open button { transform:translate(1%,9%) scale(1.025); transform-origin:center top; box-shadow:0 -3px 3px #514b3938; }
+  .drawer-handle { position:absolute; left:43%; top:32%; width:14%; height:35%; }
+  .flip-grid { position:absolute; display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,1fr); gap:1.2%; }
+  .flip-grid .puzzle-control { width:100%; height:100%; min-width:0; min-height:0; padding:0; background:#fffcf025; border-color:transparent; }
+  .flip-grid .motif { width:min(65px,75%); }
   @media(max-width:700px) {
-    .left-pan { top: calc(95px - var(--lean) / 1deg * 2px); }.right-pan { top: calc(95px + var(--lean) / 1deg * 2px); }.scale-pan { width: 100px; height: 70px; }
-    .garden-lift .flower-column-foot .puzzle-control { font-size: 9px; min-height: 27px; }.garden-lift .flower-column-foot .item-art { width: 18px; }
-    .music-apparatus { margin-bottom: 45px; }.music-apparatus .music-pins { inset: 35% 8% 0; }.music-pin-track { height: 135px; }.music-pin-column .puzzle-control { min-height: 22px; height: 22px; }.music-pin .motif { width: 27px; }
-    .drawer-chest { padding-top: 32px; }
+    .music-pin { width:12px; height:10px; }
+    .binding-hole { width:16px; height:16px; }.binding-hole small { font-size:8px; }.hole-upper small { top:-11px; }.hole-lower small { top:17px; }
+    .binding-page { font-size:9px; }.binding-rule { font-size:11px; }
+    .drawer-letter { font-size:10px; }
   }
 }

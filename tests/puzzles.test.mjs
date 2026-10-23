@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { RULES } from '../src/puzzles/index.js';
 import { enumeratePermutations } from '../src/puzzles/common.js';
-import { mazePath } from '../src/puzzles/maze.js';
+import { mazePath, mazeEdges, mazeTrial } from '../src/puzzles/maze.js';
 import { FILM_ORDER, filmHeights, PAGE_FACES, replayFilm } from '../src/puzzles/film.js';
 import { pageOrderFits } from '../src/puzzles/album.js';
 import { WITNESSES, solvedProgress } from './witnesses.mjs';
@@ -64,6 +64,16 @@ test('the ring maze accepts exactly its two equivalent legal orientations', () =
   const winners = product(6, 3).filter(turns => RULES.maze.solved({ turns }));
   assert.deepEqual(winners, [[0, 0, 2], [0, 0, 3]]);
   for (const turns of winners) { const path = mazePath(turns); assert.ok(path.includes(8) && path.includes(17)); }
+});
+test('every maze trial follows only the visible grooves and never changes ring angles',()=>{
+  for(const turns of product(6,3)){
+    const before=[...turns],path=mazeTrial(turns),edges=mazeEdges(turns);
+    assert.equal(path[0],0);assert.equal(new Set(path).size,path.length);
+    assert.ok(!path.slice(0,-1).includes(15));
+    for(let i=1;i<path.length;i++)assert.ok(edges.some(([a,b])=>a===path[i-1]&&b===path[i]||b===path[i-1]&&a===path[i]));
+    assert.deepEqual(turns,before);
+    if(mazePath(turns))assert.deepEqual(path,mazePath(turns));
+  }
 });
 test('balance accepts either side, and neither empty pans nor equal counts alone', () => {
   assert.equal(product(3, 4).filter(places => RULES.balance.solved({ places })).length, 2);

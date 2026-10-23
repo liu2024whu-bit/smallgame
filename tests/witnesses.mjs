@@ -1,4 +1,5 @@
 import { RULES } from '../src/puzzles/index.js';
+import { CHOCOLATE_PATTERN } from '../src/data/birthday.js';
 
 function arrange(seed, goal) {
   const order = [...seed], moves = [];
@@ -34,6 +35,8 @@ export const WITNESSES = {
   wordlock: [...'LXYXX'].map(letter => ({ type:'key', value:letter.charCodeAt(0) - 65 })).concat({ type:'submit' }),
   album: [...arrange([0, 1, 2, 3], [1, 3, 0, 2]), ...flip([0, 2])],
   stitch: [0, 4, 1, 5, 2, 6, 3, 7].map(index => ({ type: 'hole', index })),
+  chocolate: CHOCOLATE_PATTERN.flatMap((value,index)=>value?[{type:'mark',index,value:0}]:[]).concat({type:'cover'}),
+  cocoa:[[0,1],[1,2],[2,0],[1,2],[0,1],[1,2],[2,0]].map(([from,to])=>({type:'pour',from,to})),
   maze: turns([3, 4, 0], [0, 0, 2], 6),
   balance: [{ type: 'place', index: 0 }, { type: 'place', index: 3 }, { type: 'place', index: 1 }, { type: 'place', index: 1 }, { type: 'place', index: 2 }, { type: 'place', index: 2 }],
   drawers: [0, 1, 0, 2, 0, 1, 0, 3].map(index => ({ type: 'drawer', index })),

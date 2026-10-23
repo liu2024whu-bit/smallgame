@@ -3,6 +3,8 @@
   .game-shell { width: min(1600px, 100vw, calc((100dvh - 112px) * 1.777)); position: relative; background: #fbfbf5; box-shadow: 0 12px 80px #495b4610; }
   .room-stage { aspect-ratio: 1672 / 941; position: relative; isolation: isolate; }
   .scene-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; user-select: none; pointer-events: none; }
+  .scene-change { position:absolute; inset:0; width:100%; height:100%; object-fit:fill; mask-composite:intersect; user-select:none; pointer-events:none; animation:paint-settles .4s ease-out; }
+  @keyframes paint-settles { from{opacity:0}to{opacity:1} }
   .room-light { position: absolute; inset: 0; pointer-events: none; opacity: 0; background: linear-gradient(125deg, #fff9db15 20%, #fff8df70 45%, transparent 68%); mix-blend-mode: screen; }
   .room-light.light-shifted { opacity: 1; }
   .hotspot-layer { position: absolute; inset: 0; }

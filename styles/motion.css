@@ -9,14 +9,12 @@
   .cloud-layer .motif { transition: transform .45s ease; }
   .inventory-slot.new-item { animation: item-enter .35s ease both; }
   .completion-note { animation: note-enter .5s ease both; }
-  .pet-awake .character-art { animation: pet-stretch .5s ease both; }
   .ending-flower { animation: note-enter 1s .1s ease both; }
   .ending-page > p, .ending-page h2 { animation: note-enter .7s ease both; }
   .ending-page > p:nth-of-type(3) { animation-delay: .15s; }.ending-page > p:nth-of-type(4) { animation-delay: .3s; }.ending-page > p:nth-of-type(5) { animation-delay: .45s; }
   @keyframes room-enter { from { opacity: .65; } to { opacity: 1; } }
   @keyframes item-enter { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes note-enter { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes pet-stretch { 0% { transform: scale(.97) rotate(-2deg); } 70% { transform: scale(1.02) rotate(1deg); } 100% { transform: scale(1) rotate(0); } }
   .reduce-motion *, .reduce-motion *::before, .reduce-motion *::after { animation-duration: .001ms !important; animation-delay: 0ms !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: .001ms !important; animation-delay: 0ms !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }

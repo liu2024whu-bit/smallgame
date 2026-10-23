@@ -12,14 +12,15 @@ const ICONS = {
   full: 'M3 9V3h6m6 0h6v6M3 15v6h6m6 0h6v-6',
   undo: 'm9 5-5 5 5 5M4 10h10a6 6 0 0 1 0 12', check: 'm5 12 4 4L20 5',
   reset: 'M4 10a8 8 0 1 1 1 8M4 4v6h6', download: 'M12 3v12m-4-4 4 4 4-4M4 17v4h16v-4',
+  lock:'M7 11V7a5 5 0 0 1 10 0v4M5 11h14v10H5zM12 15v3',
 };
 
 export function icon(name, className = '') {
   return `<svg class="icon ${escape(className)}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${ICONS[name] ?? ICONS.hint}"/></svg>`;
 }
 
-export function moveButton(label, move, { className = '', disabled = false, key = '' } = {}) {
-  return `<button type="button" class="puzzle-control ${escape(className)}" data-pmove="${escape(JSON.stringify(move))}" data-focus="${escape(key || JSON.stringify(move))}" ${disabled ? 'disabled' : ''}>${label}</button>`;
+export function moveButton(label, move, { className = '', disabled = false, key = '', toolTarget = '' } = {}) {
+  return `<button type="button" class="puzzle-control ${escape(className)}" data-pmove="${escape(JSON.stringify(move))}" data-focus="${escape(key || JSON.stringify(move))}" ${toolTarget?`data-tool-target="${escape(toolTarget)}"`:''} ${disabled ? 'disabled' : ''}>${label}</button>`;
 }
 
 export function atlas(asset, index, { columns = 4, rows = 3, label = '', className = '', style = '' } = {}) {

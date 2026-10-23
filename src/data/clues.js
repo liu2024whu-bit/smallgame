@@ -13,6 +13,8 @@ export const CLUES = Object.freeze({
   wordlock: ['字间', 'LXY · XX。画册的夹层松开了。'],
   album: ['四页', 'B正、D正、A背、C背。托板已经垫好，用书签抵住纸页，就可以穿线了。'],
   stitch: ['画册', '画册装好了。门边那盏年轮灯上，也有一个能装进摇柄的方口，拿过去试试。'],
+  chocolate:['留一颗星','光从拿开的空位穿过去。纸的背面写着：可可分两份，一样多。'],
+  cocoa:['分好了','4格，4格。可以点蜡烛了。'],
 });
 
 export const FLOWERS = Object.freeze([

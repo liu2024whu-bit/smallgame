@@ -61,7 +61,7 @@ test('optional activity records persist without changing puzzles or granting gif
   assert.deepEqual(state.solved, []);
   assert.equal(achievements(state).find(entry => entry.id === 'keepsakes').count, 0);
   assert.equal(canOpenEncore(state), false);
-  assert.deepEqual(normalizeState({ ...serializable(state), activities: [...ACTIVITY_IDS, 'unknown', 'art:color'], achievements: ['keepsakes'] }).activities, ACTIVITY_IDS);
+  assert.deepEqual(normalizeState({ ...serializable(state), activities: [...ACTIVITY_IDS, 'unknown', 'art:color'], achievements: ['keepsakes'] }).activities, ACTIVITY_IDS.filter(id=>id!=='birthday:unwrap'));
   const old = serializable(state); delete old.activities;
   assert.deepEqual(normalizeState(old).activities, []);
 });
@@ -69,11 +69,16 @@ test('optional activity records persist without changing puzzles or granting gif
 test('the extra page requires the birthday, all activities and the real collected gifts', () => {
   let state = reduce(createState(), { type: 'start' });
   for (const id of ['bookmark', 'thread']) state = reduce(state, { type: 'pickup', id });
-  for (const [id, moves] of Object.entries(WITNESSES)) for (const move of moves) state = reduce(state, { type: 'move', id, move });
+  for (const [id, moves] of Object.entries(WITNESSES)) {
+    if(id==='chocolate')state=reduce(state,{type:'use-tool',item:'crank',target:'birthday-door'});
+    for (const move of moves) state = reduce(state, { type: 'move', id, move });
+  }
   for (const id of ACTIVITY_IDS) state = reduce(state, { type: 'activity', id });
-  assert.ok(achievements(state).every(entry => entry.complete));
+  assert.ok(achievements(state).filter(entry=>entry.id!=='birthday').every(entry => entry.complete));
   assert.equal(canOpenEncore(state), false);
   state = reduce(state, { type: 'ending' });
+  assert.equal(canOpenEncore(state),false);
+  state=reduce(state,{type:'activity',id:'birthday:unwrap'});
   assert.equal(canOpenEncore(state), true);
   assert.equal(canOpenEncore(normalizeState(serializable(state))), true);
 });

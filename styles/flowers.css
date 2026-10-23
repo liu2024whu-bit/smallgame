@@ -1,0 +1,33 @@
+@layer puzzles {
+  .puzzle-flowers .puzzle-field { padding:0; background:#f5f0e3; }
+  .garden-lift { position:relative; width:min(820px,100%); margin:auto; }
+  .garden-lift>.character-art { display:block; width:100%; }
+  .flower-column { position:absolute; inset:0; pointer-events:none; }
+  .height-scale { position:absolute; inset:0; font:clamp(7px,1vw,11px) Georgia,serif; color:#a08e6c; pointer-events:none; }
+  .height-scale>span { position:absolute; left:calc(var(--center) - 5%); transform:translateY(-50%); }
+  .flower-pot { position:absolute; left:var(--center); width:12.5%; transform:translateX(-50%); height:0; }
+  .flower-pot>.motif { position:absolute; bottom:2px; left:0; width:100%; transform:translateY(11%); }
+  .flower-platform { display:block; position:absolute; top:0; left:-3%; width:106%; height:8px; background:#d8bd8c url('../assets/illustrations/board.webp') center/500%; border:1px solid #ae946b; border-radius:2px; box-shadow:0 3px 2px #685a3a2b; }
+  .platform-collar { position:absolute; top:7px; left:43%; width:14%; height:9px; border:1px solid #a48e69; background:#c2a779; border-radius:0 0 3px 3px; }
+  .flower-will-move .flower-platform { outline:1px solid #91a67c; outline-offset:2px; }
+  .flower-column-foot { position:absolute; left:var(--center); top:77.9%; width:8%; height:4%; transform:translate(-50%,-50%); pointer-events:auto; }
+  .flower-column-foot .puzzle-control { border:0; box-shadow:none; background:transparent; padding:0; width:100%; height:100%; min-height:0; min-width:0; display:block; }
+  .flower-column-foot .puzzle-control:hover { background:transparent; }
+  .pin-mouth { display:block; width:76%; height:35%; margin:auto; background:#725b3b; border:1px solid #ac9065; border-radius:1px; box-shadow:inset 1px 2px 2px #40331f; }
+  .bookmark-tab { position:absolute; inset:0; display:block; pointer-events:auto; touch-action:none; }
+  .bookmark-tab .item-art { position:absolute; width:80%; left:10%; top:-5%; transform:rotate(74deg); transform-origin:50% 20%; clip-path:polygon(0 0,100% 0,100% 100%,50% 100%,50% 28%,0 28%); filter:drop-shadow(0 1px 1px #51412960); }
+  .garden-lift .bookmark-supply { position:absolute; left:6%; top:56%; width:5.5%; height:auto; margin:0; transform:rotate(-16deg); cursor:grab; touch-action:none; }
+  .garden-lift .bookmark-supply .item-art { display:block; width:100%; }
+  .garden-crank.puzzle-control { position:absolute; top:82.7%; width:7%; height:8%; transform:translate(-50%,-50%); padding:0; border:0; box-shadow:none; background:transparent; }
+  .garden-crank.puzzle-control:hover { background:transparent; }.garden-crank>.item-art { width:100%; display:block; transform-origin:34% 62%; }
+  .linked-pots { position:absolute; top:93%; width:100%; display:flex; justify-content:center; opacity:.7; pointer-events:none; }.linked-pots>.motif { width:27%; }
+  .garden-film { position:absolute; right:2%; top:17%; width:21%; padding:5px 7px; background:#fffcf0eb; border:1px solid #cbbf9f; transform:rotate(4deg); box-shadow:1px 3px 2px #66553a1a; }
+  .garden-film::before { content:''; position:absolute; top:-7px; left:45%; width:7px; height:18px; border:1px solid #b5aa8b; border-radius:5px; }
+  .garden-film>small { display:block; text-align:center; margin-bottom:5px; color:#998c70; font-size:10px; }
+  .garden-film>div { display:flex; gap:5px; }.garden-film>div>span { width:33.333%; display:grid; justify-items:center; }
+  .garden-film b { font:9px Georgia,serif; color:#9c9478; margin-bottom:3px; }
+  .garden-frame { display:block; position:relative; border:2px solid #b6ae96; width:100%; }.garden-frame>.character-art { display:block; width:100%; }.garden-frame>.motif { position:absolute; top:25%; left:10%; width:20%; }
+  .garden-perforations { display:flex; justify-content:center; gap:3px; margin:4px auto; }.garden-perforations i { display:block; height:5px; width:3px; border:1px solid #a99d7c; border-radius:1px; }
+  .garden-film>div>span>.motif { width:19px; }
+  @media(max-width:700px){.flower-platform { height:4px; }.platform-collar { top:3px; height:5px; }.garden-film { top:6%; right:1%; width:25%; padding:3px; }.garden-film>small { font-size:7px; margin-bottom:2px; }.garden-film b { font-size:7px; }.garden-film>div { gap:2px; }.garden-perforations { gap:2px; margin:2px auto; }.garden-perforations i { height:4px; width:2px; }.garden-film>div>span>.motif { width:13px; }.garden-film::before { height:10px; top:-4px; width:5px; }}
+}

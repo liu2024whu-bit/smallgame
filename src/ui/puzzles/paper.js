@@ -19,6 +19,6 @@ export function renderPaperBack(progress) {
     <p class="operation-note">${BACK_OPERATIONS.map(operation => escape(OPERATIONS[operation])).join(' → ')}</p>
     <p class="pencil-label">原来那行</p><div class="stamp-arrangement">${progress.order.map((stamp, index) => `<div class="loose-stamp">${motif(STAMP_MOTIFS[stamp])}${shiftControls(index, 5)}</div>`).join('')}</div>
     <div class="comparison"><div><p class="pencil-label">印出来是这样</p>${stampRow(applyOperations(progress.order, BACK_OPERATIONS))}</div></div>
-    <p class="hand-note">纸背记着针路：正面往下，背面往右上。</p>
+    <p class="hand-note" aria-label="正面往下，背面往右上">正 ↓　背 ↗</p>
   </div>`;
 }

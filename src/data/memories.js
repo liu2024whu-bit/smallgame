@@ -1,14 +1,13 @@
 // A few anchors leave room for the player's own memories.
 export const MEMORIES = Object.freeze({
-  paper: { title: '前桌', text: '那本速写本，还记得。' },
+  paper: { title: '前桌', text: '刚认识那年过生日，你送了我一本速写本。我一直记得。' },
   cloud: { title: '上线啦', text: '熟悉的斗篷，熟悉的人。' },
   calibration: { title: '课间', text: '那时还差不多高。' },
-  postbox: { title: '邮戳', text: '书签和明信片，都收好了。' },
+  postbox: { title: '邮戳', text: '那时候，很想去武汉。' },
   books: { title: '书单', text: '这本，也是你推荐的。' },
   screen: { title: '喜欢的故事', text: '翻开就认得。' },
-  belt: { title: '夏天', text: '又是一份悄悄准备的礼物。' },
+  belt: { title: '夏天', text: '放学以后，再走一会儿。' },
   film: { title: '开场前', text: '那次电影，三个人。' },
-  flowers: { title: '顺路', text: '原来那天，也在挑礼物。' },
   paperBack: { title: '练字', text: '这一页，明晚还你。' },
   cloudGap: { title: '平时', text: '今天也有好多小事想说。' },
   wordlock: { title: '画桌', text: '继续画吧，我很喜欢。' },
@@ -26,6 +25,6 @@ export const INTERESTS = [
 
 export const ENDING = [
   'LXY，20岁生日快乐。',
-  '每一份礼物，我都很喜欢。今天这份，换我来准备。',
-  '愿你有空画画，有好书可读，也有许多轻松开心的日子。下一页，慢慢来。',
+  '刚认识那年，你送我的速写本，我还记得。后来一起练字、玩游戏，日子一晃就到现在了。',
+  '今天，给你留了蛋糕，还有几样小东西。愿你多些时间画画，做喜欢的事，累了也能好好休息。',
 ];

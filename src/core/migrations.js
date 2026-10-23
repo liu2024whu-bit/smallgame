@@ -2,14 +2,14 @@ import { RULES } from '../puzzles/index.js';
 import { PUZZLES } from '../data/puzzles.js';
 import { POSTAL_CODE, LETTER_CODE } from '../data/ciphers.js';
 
-export const CONTENT_REVISION = 3;
+export const CONTENT_REVISION = 4;
 const NEW_GATES = new Set(['postbox', 'wordlock']);
 const OLD_REQUIREMENTS = { books: ['calibration'], album: ['paperBack', 'cloudGap', 'film'] };
 
 // Honor puzzles genuinely completed before these gates existed. Claims alone
 // cannot earn a lock or bypass an unfinished old puzzle.
 export function migrateContent(raw, state) {
-  if ((raw.revision ?? 0) >= CONTENT_REVISION) return;
+  if ((raw.revision ?? 0) >= 3) return;
   const verified = new Set();
   let changed = true;
   while (changed) {

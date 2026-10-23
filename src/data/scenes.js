@@ -39,18 +39,25 @@ export const SCENES = Object.freeze([
     { id: 'dog', kind: 'pet', target: 'dog', label: '打盹的小狗', x: 39.5, y: 76, width: 21, height: 18 },
     { id: 'birthday-gift', kind: 'birthday', label: '10月29日的小礼物', x: 74, y: 50, width: 10, height: 11 },
   ] },
-  { id: 'rain', title: '雨廊', hotspots: [
+  { id: 'rain', title: '雨廊', requires:['calibration'], door:0, closed:'门缝里，还漏着一线光。', unlocked:'玻璃门的搭扣松开了。', hotspots: [
     puzzle('postbox', '邮匣', 68, 52, 16, 48),
     inspect('rain-postcards', '两张明信片', 'cities', 48, 52, 10, 7),
     { id: 'postal-grid', kind: 'evidence', target: 'postal', label: '墙上的分拣格', x: 81.4, y: 21.5, width: 8, height: 18 },
     { id: 'rain-bell', kind: 'ambient', target: 'rain', label: '听雨', x: 23.5, y: 20.5, width: 4, height: 7 },
   ] },
-  { id: 'atelier', title: '画桌', hotspots: [
+  { id: 'atelier', title: '画桌', requires:['flowers'], door:1, closed:'花架后面，好像还有一扇门。', unlocked:'花架后面，露出了一扇窄门。', hotspots: [
     puzzle('wordlock', '五格字匣', 51, 46.5, 19, 19),
     { id: 'alphabet-grid', kind: 'evidence', target: 'alphabet', label: '字表', x: 65.5, y: 53, width: 10, height: 9 },
     inspect('atelier-drawings', '画稿', 'naruto', 13, 48, 20, 46),
     inspect('atelier-sketch', '添点颜色', 'genshin', 33, 43, 10, 13),
   ] },
+  { id:'birthday',title:'生日桌',requires:['stitch'],tool:'birthday-door',door:2,closed:'门边留着一本画册的位置。',unlocked:'里间的门开了，桌上还留着几样东西。',hotspots:[
+    puzzle('chocolate','巧克力盒',37,65,18,13),
+    puzzle('cocoa','分可可',60,61,14,18),
+    {id:'birthday-cake',kind:'ending',label:'生日蛋糕',x:50,y:52,width:14,height:26},
+    {id:'birthday-fries',kind:'birthday-note',target:'fries',label:'拆一包薯条',x:72,y:60,width:9,height:17},
+    {id:'birthday-parcel',kind:'birthday-note',target:'parcel',label:'留给你的',x:81,y:50,width:13,height:29},
+  ]},
 ]);
 
 export const SCENE_BY_ID = Object.freeze(Object.fromEntries(SCENES.map(scene => [scene.id, scene])));

@@ -1,9 +1,8 @@
 import { CLUES, FLOWERS } from '../data/clues.js';
 import { MEMORIES, READING, INTERESTS, ENDING } from '../data/memories.js';
-import { COLLECTIONS } from '../data/assets.js';
+import { COLLECTIONS, ASSETS } from '../data/assets.js';
 import { PUZZLES } from '../data/puzzles.js';
 import { ITEMS } from '../data/items.js';
-import { KEEPSAKES } from '../data/keepsakes.js';
 import { discoveredCollections, keepsakes } from '../core/state.js';
 import { escape, character, itemSprite, motif, icon } from './dom.js';
 import { memoryExhibit } from './exhibits.js';
@@ -25,12 +24,13 @@ export function journalPanel(state, tab = 'clues') {
 
 function collectionIndex(state) {
   const found = discoveredCollections(state);
-  return `<div class="collection-index">${Object.entries(COLLECTIONS).map(([id, c]) => `<button class="collection-link ${found.has(id) ? '' : 'collection-hidden'}" aria-label="${escape(c.title)}" data-action="collection" data-id="${id}" ${found.has(id) ? '' : 'disabled'}>${found.has(id) ? character(c.asset, 0, c.columns, c.rows, c.names[0]) : `<span class="unfound-art">${motif('envelope')}</span>`}<span>${escape(c.title)}</span>${found.has(id) ? '' : '<small>还没找到</small>'}</button>`).join('')}</div><div class="journal-links"><button class="quiet-button" data-action="reading">书与电影</button><button class="quiet-button" data-action="interests">平时</button><button class="quiet-button" data-action="flowers">花</button></div>`;
+  const covers={naruto:'memoryNaruto',genshin:'memoryGenshin',hei:'cinema',cities:'campusWhu'};
+  return `<div class="collection-index">${Object.entries(COLLECTIONS).map(([id, c]) => `<button class="collection-link ${found.has(id) ? '' : 'collection-hidden'}" aria-label="${escape(c.title)}" data-action="collection" data-id="${id}" ${found.has(id) ? '' : 'disabled'}>${found.has(id) ? covers[id]?`<img src="${ASSETS[covers[id]]}" alt="${escape(c.title)}" draggable="false">`:character(c.asset, 0, c.columns, c.rows, c.names[0]) : `<span class="unfound-art">${motif('envelope')}</span>`}<span>${escape(c.title)}</span>${found.has(id) ? '' : '<small>还没找到</small>'}</button>`).join('')}</div><div class="journal-links"><button class="quiet-button" data-action="reading">书与电影</button><button class="quiet-button" data-action="interests">平时</button><button class="quiet-button" data-action="flowers">花</button></div>`;
 }
 
 function giftGallery(state) {
-  const found = new Set(keepsakes(state).map(gift => gift.id));
-  return `<p class="collection-count">${found.size} / ${KEEPSAKES.length}</p><div class="collection-gallery gallery-gifts" style="--gallery-columns:3">${KEEPSAKES.map(gift => found.has(gift.id) ? `<button class="keepsake-card" data-action="keepsake" data-id="${gift.id}" aria-label="${escape(gift.name)}">${character(gift.asset, gift.index, gift.columns, gift.rows, gift.name)}<span>${escape(gift.name)}</span></button>` : `<div class="keepsake-card unfound-gift">${motif('envelope')}<span>还没找到</span></div>`).join('')}</div>`;
+  const found=keepsakes(state);
+  return `<div class="collection-gallery gallery-gifts" style="--gallery-columns:3">${found.map(gift=>`<button class="keepsake-card" data-action="keepsake" data-id="${gift.id}" aria-label="${escape(gift.name)}">${character(gift.asset,gift.index,gift.columns,gift.rows,gift.name)}<span>${escape(gift.name)}</span></button>`).join('')}</div>`;
 }
 
 export function keepsakePanel(id, state) {
@@ -42,7 +42,7 @@ export function keepsakePanel(id, state) {
 export function collectionPanel(id, context) {
   const collection = COLLECTIONS[id];
   if (!collection) return readingPanel();
-  return { title: collection.title, className: `collection-dialog exhibit-${id}`, html: id === 'gifts' ? `${giftGallery(context.state)}<p class="collection-caption">每一份都很喜欢。</p>` : memoryExhibit(id, context) };
+  return { title: collection.title, className: `collection-dialog exhibit-${id}`, html: id === 'gifts' ? giftGallery(context.state) : memoryExhibit(id, context) };
 }
 
 export function readingPanel(state) {
@@ -60,7 +60,7 @@ export function flowersPanel(selected = 'rose') {
 export function itemPanel(id) {
   const item = ITEMS[id];
   const back = ITEM_EVIDENCE[id];
-  return { title: item.name, className: 'inspect-dialog', html: `<div class="item-inspect">${itemSprite(item.sprite)}<p>${escape(item.description)}</p>${back ? `<button class="text-button" data-action="evidence" data-id="${back}">翻过来</button>` : ''}</div>` };
+  return { title: item.name, className: 'inspect-dialog', html: `<div class="item-inspect">${itemSprite(item.sprite)}<p>${escape(item.description)}</p><div class="item-options">${back ? `<button class="text-button" data-action="evidence" data-id="${back}">翻过来</button>` : ''}<button class="text-button" data-action="take-tool" data-id="${id}">拿在手里</button></div></div>` };
 }
 
 export function endingPanel(selected = 'rose') {

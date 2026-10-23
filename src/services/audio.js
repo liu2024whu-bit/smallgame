@@ -61,6 +61,18 @@ export function createAudio() {
     tone(frequency, length, 0.15, 0, kind === 'wood' ? 'triangle' : 'sine');
   }
 
+  function pour() {
+    if(!context||!settings.sound||document.hidden)return;
+    const buffer=context.createBuffer(1,Math.floor(context.sampleRate*.6),context.sampleRate),samples=buffer.getChannelData(0);
+    let smooth=0;
+    for(let i=0;i<samples.length;i++){smooth=(smooth+(Math.random()*2-1)*.08)/1.05;samples[i]=smooth*Math.sin(Math.PI*i/samples.length)*.18;}
+    const source=context.createBufferSource(),filter=context.createBiquadFilter();
+    source.buffer=buffer;filter.type='lowpass';filter.frequency.value=1200;
+    source.connect(filter).connect(master);source.start();
+    source.onended=()=>{source.disconnect();filter.disconnect();};
+    tone(920,.18,.035,.5);
+  }
+
   function success() {
     [523.25, 659.25, 783.99].forEach((note, i) => tone(note, 1.3, 0.11, i * 0.12));
   }
@@ -101,5 +113,5 @@ export function createAudio() {
       timers.add(timer);
     });
   }
-  return { resume, configure, material, success, ambient, melody, stopMelody, previewNote, rain, stopRain };
+  return { resume, configure, material, pour, success, ambient, melody, stopMelody, previewNote, rain, stopRain };
 }

@@ -34,6 +34,21 @@ export function mazePath(turns) {
   return search([0]);
 }
 
+// A trial follows only the current grooves. It never suggests a new ring angle.
+export function mazeTrial(turns) {
+  const complete=mazePath(turns);
+  if(complete)return complete;
+  const edges=mazeEdges(turns);let best=[0],score=-1;
+  function visit(path){
+    const value=path.filter(node=>MAZE_STARS.includes(node)).length*30+path.length;
+    if(value>score){score=value;best=path;}
+    const node=path.at(-1);
+    if(node===15)return;
+    for(const [a,b] of edges){const next=a===node?b:b===node?a:-1;if(next>=0&&!path.includes(next))visit([...path,next]);}
+  }
+  visit([0]);return best;
+}
+
 export const maze = {
   create: () => ({ turns: [3, 4, 0] }),
   valid: state => bounded(state?.turns, 3, 6),

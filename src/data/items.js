@@ -1,5 +1,5 @@
 export const ITEMS = Object.freeze({
-  bookmark: { name: '木书签', sprite: 0, description: '你送的武大书签，棕色穗子还系着。' },
+  bookmark: { name: '木书签', sprite: 0, description: '棕色穗子，还系得好好的。' },
   thread: { name: '棉线', sprite: 1, description: '松松绕着的一卷棉线。' },
   mirror: { name: '小圆镜', sprite: 2, description: '镜框背后，有个小支架。' },
   crank: { name: '摇柄', sprite: 3, description: '黄铜的，底下是个方口。' },

@@ -52,7 +52,7 @@ test('new main gates are required in a new run and a wrong lock cannot grant dow
 
 test('old completed V2 games keep every completion and the ending after the new gates are inserted',()=>{
   const old=start();delete old.revision;
-  const oldIds=MAIN_IDS.filter(id=>!['postbox','wordlock'].includes(id));
+  const oldIds=MAIN_IDS.filter(id=>!['postbox','wordlock','chocolate','cocoa'].includes(id));
   old.solved=[...oldIds,'packing','melody'];oldIds.concat('packing','melody').forEach(id=>{old.progress[id]=solvedProgress(id);});old.ending=true;
   const restored=normalizeState(serializable(old));
   assert.ok(restored.ending);

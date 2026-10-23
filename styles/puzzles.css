@@ -1,6 +1,4 @@
 @layer puzzles {
-  .workbench-intro { max-width: 680px; margin: 0 auto 18px; text-align: left; font-size: 16px; line-height: 1.9; }
-  .workbench-intro p:last-child { margin: 0; }
   .workbench-tools { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 12px; border-bottom: 1px dotted #cbd2c0; padding: 2px 0 12px; margin-bottom: 18px; font-size: 12px; color: #7a866e; }
   .workbench-tools > span { display: flex; align-items: center; gap: 4px; }
   .workbench-tools .item-art { width: 34px; }
@@ -12,17 +10,13 @@
   .shift-controls .puzzle-control { padding: 3px; min-width: 29px; min-height: 29px; }
   .workbench-footer { display: flex; justify-content: space-between; gap: 12px; margin-top: 18px; }
   .workbench-footer > div { display: flex; gap: 8px; }
-  .hint-button small { opacity: .65; font: 11px Georgia, serif; }
   .hint-notes { border-left: 2px solid #a5b493; padding: 5px 16px; background: #edf1e440; margin-top: 22px; font-size: 15px; }
-  .hint-notes p { display: flex; gap: 12px; margin: 8px 0; }
-  .hint-notes span { color: #8b9a79; }
+  .hint-notes p { margin: 10px 0; line-height:1.9; }
   .completion-note { text-align: center; border-top: 1px dotted #c6ccb9; padding-top: 20px; margin-top: 22px; }
   .completion-note h3 { font-size: 22px; color: #657c58; margin-bottom: 12px; }
   .completion-seal { display: inline-grid; place-items: center; width: 34px; height: 34px; color: #7b9566; border: 1px solid #b7c3a2; border-radius: 50%; margin-bottom: 8px; }
-  .completion-note > p, .completion-note details { max-width: 650px; margin: 0 auto 18px; }
-  .completion-note details { font-size: 15px; color: #848a78; }
+  .completion-note > p { max-width: 650px; margin: 0 auto 18px; }
   .completion-note summary { cursor: pointer; text-decoration: underline; text-underline-offset: 5px; margin-bottom: 9px; }
-  .completion-note details p { text-align: left; }
   .reward-items { display: flex; gap: 30px; justify-content: center; margin-bottom: 12px; }
   .reward-items > span { display: grid; justify-items: center; font-size: 13px; }
   .solved-field .puzzle-control:disabled { opacity: .65; }
@@ -86,18 +80,6 @@
   .mechanical-notes p { max-width: 210px; margin: 0; }
   .mechanical-controls { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
   .mechanical-controls .item-art { width: 25px; }
-  .flower-stands { display: flex; justify-content: center; gap: 40px; padding: 20px 0; }
-  .flower-column { position: relative; height: 280px; width: 160px; }
-  .height-scale { position: absolute; display: flex; flex-direction: column; justify-content: space-between; left: 0; top: 40px; bottom: 55px; color: #b1b69f; font: 12px Georgia, serif; }
-  .height-scale span { border-bottom: 1px solid #cdd3bb; width: 150px; }
-  .flower-pot { position: absolute; bottom: calc(45px + var(--height) * 39px); left: 18px; }
-  .flower-pot .motif { width: 135px; }
-  .flower-pot b { font: 12px Georgia, serif; color: #8a9778; position: absolute; right: -4px; bottom: 10px; }
-  .flower-column-foot { position: absolute; bottom: 0; left: 12px; width: 150px; text-align: center; }
-  .flower-column-foot .puzzle-control { font-size: 12px; }
-  .flower-column-foot .item-art { width: 23px; }
-  .pinned { background: #e5edd9; }
-  .target-heights { text-align: center; color: #8a9277; font-size: 14px; margin: 18px 0 0; }
   .album-layout { display: flex; justify-content: center; gap: 15px; margin: 25px 0; }
   .loose-page { width: 22%; max-width: 200px; border: 1px solid #d0d3bf; background: #fffdf7; padding: 8px; text-align: center; position: relative; box-shadow: 2px 3px 1px #bfc5ac1a; }
   .loose-page .character-art { width: 100%; }
@@ -107,51 +89,19 @@
   .loose-page .puzzle-control { font-size: 12px; }
   .page-back { background: #e8eddc; }
   .page-back .character-art { opacity: .35; filter: grayscale(.5); transform: scaleX(-1); }
-  .stitch-workbench { position: relative; height: 350px; max-width: 700px; margin: 5px auto; }
-  .binding-pages { position: absolute; inset: 0 2% 20%; display: flex; }
-  .binding-page { flex: 1; background: #fffdf1; border: 1px solid #d0d4bb; padding: 15px; color: #bcc4ab; }
   .stitch-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
   .stitch-lines line { stroke: #a47f69; stroke-width: .7; }
   .thread-back { stroke-dasharray: 2 1; opacity: .65; }
-  .binding-hole { position: absolute; transform: translate(-50%, -50%); }
-  .binding-hole button { display: grid; border: 0; background: none; box-shadow: none; gap: 7px; padding: 8px; }
-  .hole-dot { width: 14px; height: 14px; border: 2px solid #b5bc9e; background: #f1efdf; border-radius: 50%; }
-  .has-thread .hole-dot { background: #b0967d; border-color: #917b65; }
-  .binding-hole small { font: 11px Georgia, serif; color: #a3ab91; }
-  .binding-rule { position: absolute; top: 45%; width: 100%; text-align: center; font-size: 13px; color: #a1ac8c; pointer-events: none; }
-  .binding-controls { position: absolute; bottom: -10px; width: 100%; text-align: center; }
-  .ring-maze { display: block; width: min(340px, 100%); margin: 0 auto; }
-  .maze-guide { stroke: #d0d6bd; stroke-width: 1; fill: none; stroke-dasharray: 1 7; }
-  .maze-track { stroke: #8e9d76; stroke-width: 7; fill: none; stroke-linecap: round; }
-  .maze-star { fill: #c6aa65; font-size: 24px; stroke: #fbf8df; paint-order: stroke; stroke-width: 5px; }
-  .maze-start, .maze-end { fill: #d0b589; stroke: #f8f5df; stroke-width: 3; }
-  .ring-maze > text { font-family: var(--font); font-size: 14px; fill: #899673; }
   .weight-examples { display: flex; justify-content: center; align-items: center; gap: 10px; }
   .weight-examples p { display: flex; align-items: center; gap: 3px; margin: 0; color: #9da58c; }
   .weight-examples .motif { width: 32px; }
-  .scale-apparatus { position: relative; width: min(420px, 100%); aspect-ratio: 512 / 480; margin: 15px auto 0; }
-  .scale-apparatus > .character-art { position: absolute; inset: 0; display: block; width: 100%; }
-  .scale-fixed { clip-path: polygon(38% 20%,62% 20%,70% 100%,30% 100%); }.scale-swing { clip-path: polygon(0 0,100% 0,100% 74%,66% 74%,63% 28%,37% 28%,34% 74%,0 74%); transform: rotate(var(--lean)); transform-origin: 50% 22%; transition: transform .45s; }
-  .scale-pan { position: absolute; display: flex; justify-content: center; align-items: end; width: 130px; height: 95px; border-radius: 0 0 50% 50%; }
-  .left-pan { left: 0; top: calc(130px - var(--lean) / 1deg * 2px); }.right-pan { right: 0; top: calc(130px + var(--lean) / 1deg * 2px); }
   .weight-tray { display: flex; justify-content: center; gap: 14px; }
   .weight-tray button { display: grid; justify-items: center; font-size: 13px; padding: 8px 12px; }
   .weight-tray small { color: #9da888; font-size: 11px; }
-  .drawer-chest { position: relative; width: min(360px, 90%); aspect-ratio: 512 / 544; margin: 20px auto; padding: 38px 32px 20px; display: grid; grid-template-rows: repeat(4,1fr); }
   .chest-painting { position: absolute; inset: 0; width: 100%; pointer-events: none; }
-  .drawer-unit { position: relative; min-height: 0; margin: 0; }
-  .drawer-unit button { width: 100%; display: flex; justify-content: space-between; padding: 9px 15px; background: #c0d8dd20; border-color: transparent; color: #496274; height: 100%; }
-  .drawer-face { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }.drawer-face > .character-art { position: absolute; width: 122%; left: -11%; top: calc(-52% - var(--drawer) * 100%); }
-  .drawer-unit .drawer-letter, .drawer-unit small { position: relative; z-index: 1; background: #edf2e7c9; padding: 2px 5px; color: #5f756a; }
-  .drawer-open::before { content: ''; position: absolute; inset: 1px; background: #65766b; border-radius: 3px; }.drawer-open button { transform: translate(12px, 4px); box-shadow: -5px 1px 3px #43504638; }
-  .drawer-handle { width: 40px; height: 7px; margin: 8px; }
-  .drawer-unit small { color: #a2a88a; }
   .drawer-clues { text-align: center; font-size: 14px; }
   .drawer-clues p { margin: 0 0 4px; }
   .flip-box { position: relative; width: min(360px, 100%); margin: 15px auto; }.flip-box > .character-art { width: 100%; display: block; }
-  .flip-grid { position: absolute; inset: 9% 11% 18%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
-  .flip-grid .puzzle-control { aspect-ratio: 1; background: #fffcf060; border-color: transparent; }
-  .flip-grid .motif { width: min(65px, 90%); }
   .packing-table { display: flex; justify-content: center; gap: 35px; align-items: center; }
   .packing-grid { display: grid; flex: 0 1 440px; grid-template-columns: repeat(var(--pack-cols), 1fr); width: min(440px, 100%); gap: 0; border: 8px solid #c3b999; background: #ded8c4; }
   .packing-cell { position: relative; aspect-ratio: 1; padding: 0; min-width: 0; min-height: 0; overflow: hidden; border: 0; box-shadow: inset 0 0 0 1px #d6d5ba60; background: #f6f3e2; font-size: 12px; color: #8d977c; border-radius: 1px; }
@@ -175,17 +125,9 @@
   .acrylic-clue > .character-art { width: 125px; opacity: .7; }
   .music-strip { text-align: center; font-size: 14px; color: #8b957a; }
   .music-strip p { margin: 0 0 5px; }
-  .music-pins { display: flex; justify-content: center; gap: 23px; margin: 25px 0; }
-  .music-pin-column { display: grid; gap: 8px; text-align: center; font-size: 12px; color: #9ba785; }
-  .music-pin-track { height: 160px; width: 45px; position: relative; border-left: 1px solid #c9d0b3; background: repeating-linear-gradient(0deg, #d8dec650 0 1px, transparent 1px 32px); }
-  .music-pin { position: absolute; bottom: calc(var(--note) * 30px); width: 46px; left: -1px; }
-  .music-pin .motif { width: 45px; }
-  .music-pin-track small { position: absolute; bottom: 0; right: 0; color: #b4bda3; }
-  .music-pin-column.playing { filter: drop-shadow(0 0 9px #cbb65ba8); transform: translateY(-2px); }
   .melody-workbench > .quiet-button { display: flex; margin: auto; }
   @media (max-width: 700px) {
     .puzzle-field { padding: 16px 8px; }
-    .workbench-intro { font-size: 15px; }
     .workbench-tools { gap: 8px; }
     .puzzle-control { min-width: 33px; min-height: 36px; }
     .stamp-row { gap: 3px; }.stamp { width: 33px; height: 33px; }.stamp .motif { width: 31px; }
@@ -200,12 +142,9 @@
     .book-row { gap: 6px; padding-top: 66px; }.illustrated-spine { width: 46px; height: 170px; font-size: 14px; }.book-slot .shift-controls { gap: 2px; }.book-slot .puzzle-control { min-width: 23px; }.character-bookmark { width: 33px; top: -56px; padding: 3px 3px 7px; }
     .borrow-notes { gap: 8px 15px; font-size: 13px; }
     .accordion-screen { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }.screen-name { font-size: 12px; height: 20px; }.screen-leaf .character-art { width: 74%; margin: auto; }.screen-line { height: 46px; }.screen-leaf .puzzle-control { min-height: 27px; }
-    .flower-stands { gap: 6px; }.flower-column { width: 100px; height: 270px; }.height-scale span { width: 91px; }.flower-pot { left: 7px; }.flower-pot .motif { width: 87px; }.flower-column-foot { left: 0; width: 98px; }.flower-column-foot .puzzle-control { font-size: 10px; padding: 2px 4px; }
     .mechanical-controls { gap: 6px; }.mechanical-controls .puzzle-control { font-size: 12px; }
     .album-layout { gap: 7px; }.loose-page { padding: 4px; width: 24%; }.loose-page p { font-size: 11px; }.loose-page > .puzzle-control { font-size: 10px; padding: 2px; }.page-letter { font-size: 12px; }.loose-page .shift-controls { gap: 1px; }.loose-page .shift-controls .puzzle-control { min-width: 24px; }
-    .binding-rule { font-size: 10px; }.stitch-workbench { height: 290px; }
     .weight-examples { flex-wrap: wrap; gap: 7px; }.weight-examples .motif { width: 28px; }.weight-tray { gap: 7px; }.weight-tray button { padding: 6px; font-size: 11px; }
-    .music-pins { gap: 10px; }.music-pin-track { width: 35px; }.music-pin .motif { width: 35px; }.music-pin { width: 35px; }.music-pin-column .puzzle-control { min-width: 35px; }
     .packing-table { flex-direction: column; gap: 12px; }.packing-grid { flex: none; width: 100%; }.selected-cutout { width: 100%; flex: auto; }.selected-cutout .piece-mini { --unit: 25px; height: 105px; }
     .piece-rack { gap: 5px; }.piece-rack button { min-width: 49px; padding: 5px 3px; }.piece-mini { --unit: 9px; height: 45px; }
     .melody-clue { gap: 10px; }.melody-clue > .character-art { width: 65px; }

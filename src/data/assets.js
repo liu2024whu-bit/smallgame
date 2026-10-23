@@ -5,8 +5,23 @@ export const SCENE_ART = Object.freeze({
   entry: 'assets/scenes/entry.webp',
   rain: 'assets/scenes/rain.webp',
   atelier: 'assets/scenes/atelier.webp',
+  birthday:'assets/scenes/birthday.webp',
 });
 export const ASSETS = Object.freeze({
+  heiCat:'assets/illustrations/hei-cat.webp',
+  musicbox:'assets/illustrations/musicbox.webp',
+  musicMechanism:'assets/illustrations/musicbox.webp',
+  mazeBoard:'assets/illustrations/maze-board.webp',
+  balanceScale:'assets/illustrations/balance-scale.webp',
+  bindingBook:'assets/illustrations/binding-book.webp',
+  deskAfter:'assets/scenes/desk-after.webp',
+  windowAfter:'assets/scenes/window-after.webp',
+  collectionAfter:'assets/scenes/collection-after.webp',
+  entryAfter:'assets/scenes/entry-after.webp',
+  rainAfter:'assets/scenes/rain-after.webp',
+  atelierAfter:'assets/scenes/atelier-after.webp',
+  birthdayAfter:'assets/scenes/birthday-after.webp',
+  birthdayUnwrapped:'assets/scenes/birthday-unwrapped.webp',
   items: 'assets/illustrations/items.webp',
   motifs: 'assets/illustrations/motifs.webp',
   board: 'assets/illustrations/board.webp',
@@ -34,6 +49,13 @@ export const ASSETS = Object.freeze({
   projector: 'assets/illustrations/projector.webp',
   campusWhu: 'assets/illustrations/campus-whu.webp',
   campusNju: 'assets/illustrations/campus-nju.webp',
+  thresholds:'assets/illustrations/thresholds.webp',
+  chocolateBox:'assets/illustrations/chocolate-box.webp',
+  chocolatePiece:'assets/illustrations/chocolate-piece.webp',
+  cocoaJugs:'assets/illustrations/cocoa-jugs.webp',
+  bunnyParcel:'assets/illustrations/bunny-parcel.webp',
+  birthdayLit:'assets/illustrations/birthday-lit.webp',
+  birthdayDetails:'assets/scenes/birthday.webp',
 });
 export const MOTIFS = Object.freeze({ cloud: 0, star: 1, leaf: 2, rose: 3, paw: 4, moon: 5, daisy: 6, tulip: 7, lavender: 8, book: 9, envelope: 10, petal: 11 });
 export const MOTIF_LABELS = Object.freeze({ cloud: '云', star: '星', leaf: '叶', rose: '玫瑰', paw: '猫爪', moon: '月', daisy: '雏菊', tulip: '郁金香', lavender: '薰衣草', book: '书', envelope: '信封', petal: '花瓣' });
@@ -51,6 +73,6 @@ export const COLLECTIONS = Object.freeze({
   hei: { title: '罗小黑战记Ⅱ', asset: 'hei2', columns: 3, rows: 2, names: ['小黑', '无限', '鹿野', '哪吒', '小黑与黑咻', '师徒同行'] },
   prince: { title: '小王子与玫瑰', asset: 'princeHei', columns: 2, rows: 2, names: ['小王子', '玫瑰', '小黑', '无限与小黑'] },
   cities: { title: '明信片', asset: 'campuses', columns: 2, rows: 1, names: ['武汉大学', '南京大学'] },
-  gifts: { title: '礼物', asset: 'bookmarkFull', columns: 1, rows: 1, names: ['武大木书签'] },
+  gifts: { title: '小物', asset: 'bookmarkFull', columns: 1, rows: 1, names: ['武大木书签'] },
 });
 export const COLLECTION_PUZZLES = Object.freeze({ sky: 'cloud', naruto: 'album', hashira: 'screen', genshin: 'books', hei: 'film', prince: 'paper', cities: 'flowers' });

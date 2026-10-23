@@ -1,17 +1,22 @@
 import { createStore } from './core/store.js';
-import { serializable, inventory } from './core/state.js';
+import { serializable, inventory, access } from './core/state.js';
+import { sceneOpen, openScenes, neighborScene, birthdayReady } from './core/exploration.js';
+import { ROOM_TOOL_TARGETS, toolFor } from './data/tool-uses.js';
 import { MAX_SAVE_BYTES, parseSave } from './core/storage.js';
-import { SCENES, SCENE_BY_ID } from './data/scenes.js';
+import { SCENE_BY_ID } from './data/scenes.js';
 import { SCENE_ART } from './data/assets.js';
+import { sceneChanges } from './data/scene-changes.js';
 import { ITEMS } from './data/items.js';
 import { renderRoom, renderHud, renderHome } from './ui/room.js';
 import { renderPanel } from './ui/panels.js';
 import { createDialog } from './ui/dialog.js';
-import { announce } from './ui/dom.js';
+import { announce, itemSprite } from './ui/dom.js';
 import { createAudio } from './services/audio.js';
+import { fitHandle } from './services/tool-motion.js';
 import { bindInteractions } from './ui/interactions/index.js';
 import { viewActions } from './ui/view-actions.js';
 import { blockedMove } from './ui/interactions/feedback.js';
+import { bindInventoryUse } from './ui/interactions/inventory.js';
 
 const app = document.querySelector('#app');
 app.innerHTML = '<div class="game-shell"><div id="room-stage" class="room-stage"></div><div id="hud"></div><div id="home"></div></div><dialog id="explore-dialog" aria-labelledby="dialog-title"></dialog><p id="toast" role="status" class="toast" hidden></p><input id="save-file" type="file" accept=".json,application/json" hidden>';
@@ -22,6 +27,7 @@ const stage = document.querySelector('#room-stage');
 const dialog = createDialog(document.querySelector('#explore-dialog'), closePanel);
 let roomSignature = '', hudSignature = '', toastTimer;
 let disposeInteractions = () => {};
+let fittingHandle=false,greetingTimer;
 
 function context() { return { state: store.get(), view: ui.panel?.view ?? {}, skyPair: ui.skyPair, flower: store.get().settings.flower, petAwake: ui.petAwake, writable: store.writable() }; }
 function activity(id) { store.dispatch({ type: 'activity', id }); }
@@ -31,6 +37,7 @@ function performMove(move) {
   const changed = store.dispatch({ type: 'move', id, move });
   if (changed) {
     if (id === 'melody' && ['note','set-note'].includes(move.type)) audio.previewNote(store.get().progress.melody.notes[move.index]);
+    else if(id==='cocoa')audio.pour();
     else audio.material(id === 'wordlock' ? 'key' : id === 'postbox' || move.type === 'set-turn' ? 'metal' : ['paper', 'paperBack', 'album', 'screen', 'film'].includes(id) ? 'paper' : 'wood');
   }
   return changed;
@@ -44,13 +51,15 @@ function renderDialog(preserveFocus = true) {
   disposeInteractions = bindInteractions(dialog.element, { id, progress: state.progress[id], solved: state.solved.includes(id), move: performMove, activity });
 }
 function render(state) {
-  const signature = `${state.scene}:${state.collected.join()}:${state.solved.includes('flowers')}`;
+  const signature = `${state.scene}:${state.collected.join()}:${sceneChanges(state).map(change=>change.puzzle??change.activity).join()}:${state.solved.includes('flowers')}:${state.ending}`;
   if (signature !== roomSignature) {
     const sameScene = stage.dataset.scene === state.scene;
+    const previousPaint=new Set([...stage.querySelectorAll('[data-world-change]')].map(el=>el.dataset.worldChange));
     stage.innerHTML = renderRoom(state); stage.dataset.scene = state.scene; roomSignature = signature;
     if (sameScene) stage.querySelector('.scene-image').style.animation = 'none';
+    if(sameScene)stage.querySelectorAll('[data-world-change]').forEach(el=>{if(previousPaint.has(el.dataset.worldChange))el.style.animation='none';});
   }
-  const hudKey = JSON.stringify([inventory(state), state.selected, state.solved.length, state.settings.sound, store.writable()]);
+  const hudKey = JSON.stringify([inventory(state), state.selected, state.scene, state.solved.length,state.usedTools, state.settings.sound, store.writable()]);
   if (hudKey !== hudSignature) {
     const owned = new Set([...document.querySelectorAll('.inventory-slot')].map(element => element.dataset.id));
     document.querySelector('#hud').innerHTML = renderHud(state, store.writable()); hudSignature = hudKey;
@@ -83,9 +92,32 @@ function toast(text) {
   announce(text);
 }
 function look(direction) {
-  const position = SCENES.findIndex(scene => scene.id === store.get().scene);
-  store.dispatch({ type: 'scene', id: SCENES[(position + direction + SCENES.length) % SCENES.length].id });
+  store.dispatch({ type: 'scene', id: neighborScene(store.get(),direction) });
   audio.material('paper');
+}
+function closeAllPanels(){ui.stack=[];ui.panel=null;disposeInteractions();audio.stopMelody();audio.stopRain();dialog.hide();}
+function goScene(id){if(!sceneOpen(store.get(),id)){openPanel({type:'passage',id});return;}closeAllPanels();store.dispatch({type:'scene',id});}
+async function useTool(item,target){
+  const state=store.get();
+  if(!inventory(state).includes(item)||toolFor(target)!==item){toast('这里暂时用不上。');return false;}
+  if(target==='birthday-door'){
+    if(fittingHandle)return false;
+    if(!state.solved.includes('stitch')){toast('画册还没有装好。');return false;}
+    fittingHandle=true;
+    try{await fitHandle(document.querySelector('.handle-socket')??document.querySelector('[data-tool-target="birthday-door"]'),itemSprite(3));}finally{fittingHandle=false;}
+    store.dispatch({type:'use-tool',item,target});
+    if(sceneOpen(store.get(),'birthday')){goScene('birthday');audio.material('metal');return true;}
+    toast('画册还没有装好。');return false;
+  }
+  if(target==='postcard-mirror'){
+    store.dispatch({type:'select',id:null});openCollection('cities');ui.panel.view={card:1,back:true,reflected:true};renderDialog(false);audio.material('glass');return true;
+  }
+  const id=target==='chocolate-cover'?'chocolate':'flowers';
+  if(!access(state,id).ready){openPuzzle(id);return false;}
+  if(ui.panel?.type!=='puzzle'||ui.panel.id!==id){closeAllPanels();openPuzzle(id);}
+  const move=id==='chocolate'?{type:'cover'}:{type:'set-pin',index:Number(target.split(':')[1])};
+  if(state.selected)store.dispatch({type:'select',id:null});
+  return performMove(move);
 }
 function openPuzzle(id) { openPanel({ type: 'puzzle', id }); }
 function openCollection(id) { store.dispatch({ type: 'discover', id }); activity(`memory:${id}`); openPanel({ type: 'collection', id }); }
@@ -93,6 +125,8 @@ function hotspot(id) {
   const state = store.get();
   const spot = SCENE_BY_ID[state.scene].hotspots.find(h => h.id === id);
   if (!spot) return;
+  const target=ROOM_TOOL_TARGETS[`${state.scene}:${id}`];
+  if(state.selected&&target){useTool(state.selected,target);return;}
   const handlers = {
     pickup: () => { if (store.dispatch({ type: 'pickup', id: spot.target })) { audio.material('pickup'); toast(`收好${ITEMS[spot.target].name}。`); } },
     puzzle: () => openPuzzle(spot.revisit && state.solved.includes(spot.revisitAfter) ? spot.revisit : spot.target),
@@ -101,7 +135,8 @@ function hotspot(id) {
     evidence: () => { activity(`evidence:${spot.target}`); openPanel({ type: 'evidence', id: spot.target }); },
     ambient: () => { audio.material('glass'); openPanel({ type: 'ambient' }); },
     pet: () => { ui.petAwake = false; openPanel({ type: 'pet', id: spot.target }); },
-    ending: () => { if (state.solved.includes('stitch')) { store.dispatch({ type: 'ending' }); audio.success(); openPanel({ type: 'ending' }); } else openPanel({ type: 'ring-wait' }); },
+    ending: () => { if(state.scene!=='birthday'){goScene('birthday');return;}if(birthdayReady(state)){store.dispatch({type:'ending'});audio.success();openPanel({type:'ending'});}else openPanel({type:'birthday-wait'}); },
+    'birthday-note':()=>{if(spot.target==='fries')activity('birthday:fries');openPanel({type:'birthday-note',id:spot.target});},
   };
   (handlers[spot.kind] ?? (() => openPanel({ type: spot.kind })))();
 }
@@ -122,9 +157,13 @@ const actions = {
   start: async () => { ui.home = false; await audio.resume(); audio.ambient(); store.dispatch({ type: 'start' }); },
   home: () => { ui.home = true; render(store.get()); },
   'scene-prev': () => look(-1), 'scene-next': () => look(1),
-  scene: button => store.dispatch({ type: 'scene', id: button.dataset.id }),
+  scene: button => goScene(button.dataset.id),
   hotspot: button => hotspot(button.dataset.id),
   item: button => { store.dispatch({ type: 'select', id: button.dataset.id }); openPanel({ type: 'item', id: button.dataset.id }); },
+  'take-tool':button=>{store.dispatch({type:'select',id:button.dataset.id});closeAllPanels();},
+  'arm-tool':button=>store.dispatch({type:'select',id:button.dataset.id}),
+  'use-direct':button=>useTool(button.dataset.id,button.dataset.toolTarget),
+  'birthday-unwrap':()=>{if(store.get().ending){activity('birthday:unwrap');audio.material('paper');}},
   close: closePanel,
   journal: () => openPanel({ type: 'journal', tab: 'clues' }),
   'journal-tab': button => { ui.panel = { type: 'journal', tab: button.dataset.tab }; renderDialog(false); },
@@ -141,6 +180,7 @@ const actions = {
   undo: () => currentPuzzle('undo'), 'reset-puzzle': () => currentPuzzle('reset'), hint: () => currentPuzzle('hint'),
   'sky-pair': () => { ui.skyPair = 1 - ui.skyPair; renderDialog(); },
   'pet-touch': () => { ui.petAwake = !ui.petAwake; if (ui.petAwake) activity(`pet:${ui.panel.id}`); renderDialog(); audio.material('pet'); },
+  'hei-greet': button => { window.clearTimeout(greetingTimer);button.classList.remove('hei-greeting');void button.offsetWidth;button.classList.add('hei-greeting');greetingTimer=window.setTimeout(()=>button.classList.remove('hei-greeting'),2200);audio.material('pet'); },
   'play-melody': () => audio.melody(store.get().progress.melody.notes, index => {
     dialog.element.querySelectorAll('.music-pin-column').forEach((el, i) => el.classList.toggle('playing', index === i));
     window.setTimeout(() => dialog.element.querySelectorAll('.playing').forEach(el => el.classList.remove('playing')), 350);
@@ -152,10 +192,11 @@ const actions = {
 };
 
 app.addEventListener('click', async event => {
-  if (Date.now() < Number(dialog.element.dataset.suppressUntil ?? 0)) { event.preventDefault(); return; }
+  if (Date.now() < Math.max(Number(dialog.element.dataset.suppressUntil ?? 0),Number(app.dataset.suppressUntil??0))) { event.preventDefault(); return; }
   const button = event.target.closest('button');
   if (!button || button.disabled) return;
   await audio.resume();
+  if(store.get().selected&&button.dataset.toolTarget&&button.dataset.action!=='use-direct'){useTool(store.get().selected,button.dataset.toolTarget);return;}
   if (button.dataset.pmove && ui.panel?.type === 'puzzle') {
     try {
       const changed = performMove(JSON.parse(button.dataset.pmove));
@@ -184,16 +225,20 @@ document.querySelector('#save-file').addEventListener('change', async event => {
 });
 document.addEventListener('keydown', event => {
   if (ui.panel || ui.home || /INPUT|TEXTAREA|SELECT/.test(event.target.tagName)) return;
+  if(event.key==='Escape'&&store.get().selected){store.dispatch({type:'select',id:null});return;}
   if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') { event.preventDefault(); look(event.key === 'ArrowLeft' ? -1 : 1); }
 });
 store.subscribe((state, previous) => {
   render(state);
+  const revealed=openScenes(state).filter(scene=>!sceneOpen(previous,scene.id));
+  if(revealed.length)toast(revealed[0].unlocked);
   if (state.solved.length > previous.solved.length) {
     audio.success(); announce('解开了。');
     dialog.element.querySelector('.completion-note')?.scrollIntoView({ behavior: state.settings.motion ? 'smooth' : 'instant', block: 'nearest' });
   }
 });
 render(store.get());
+bindInventoryUse(app,{scene:()=>store.get().scene,owns:id=>inventory(store.get()).includes(id),use:useTool});
 if (store.notice) toast(store.notice);
 // Local-only artwork; preload the other views without delaying the first room.
-Object.values(SCENE_ART).slice(1).forEach(src => { const image = new Image(); image.src = src; });
+Object.entries(SCENE_ART).filter(([id])=>sceneOpen(store.get(),id)).forEach(([,src])=>{const image=new Image();image.src=src;});

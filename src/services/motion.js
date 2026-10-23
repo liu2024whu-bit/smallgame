@@ -23,6 +23,10 @@ export function captureMotion(root) {
     screen: [...root.querySelectorAll('.screen-leaf')].map(element => element.classList.contains('back-face')),
     thread: root.querySelector('.active-thread')?.getAttribute('points'),
     stitches: root.querySelectorAll('.stitch-lines line').length,
+    liquid: [...root.querySelectorAll('.cocoa-liquid')].map(el=>getComputedStyle(el).height),
+    pour: [root.dataset.pourFrom,root.dataset.pourTo],
+    bookmark:root.querySelector('.garden-lift')?{pin:Number(root.querySelector('.garden-lift').dataset.flowerPin),box:root.querySelector('[data-bookmark-grab]')?.getBoundingClientRect()}:null,
+    mazeArrived:!!root.querySelector('.maze-arrived'),
   };
 }
 export function playMotion(root, before) {
@@ -48,6 +52,30 @@ export function playMotion(root, before) {
   if (thread && thread.getAttribute('points') !== before.thread) drawLine(thread);
   const stitches = root.querySelectorAll('.stitch-lines line');
   if (stitches.length > before.stitches) drawLine(stitches[stitches.length - 1]);
+  const liquids=[...root.querySelectorAll('.cocoa-liquid')];
+  const garden=root.querySelector('.garden-lift'),pin=Number(garden?.dataset.flowerPin);
+  if(garden&&before.bookmark&&before.bookmark.pin!==pin){
+    const tab=garden.querySelector('.bookmark-tab .item-art');
+    if(tab)tab.animate([{translate:'50px 6px',opacity:.3},{translate:'0 0',opacity:1}],{duration:380,easing:'cubic-bezier(.2,.7,.3,1)'});
+    const free=garden.querySelector('.bookmark-supply'),old=before.bookmark.box;
+    if(free&&old){const next=free.getBoundingClientRect();free.animate([{translate:`${old.x-next.x}px ${old.y-next.y}px`,rotate:'75deg',scale:'.65'},{translate:'0 0',rotate:'0deg',scale:'1'}],{duration:420,easing:'cubic-bezier(.2,.7,.3,1)'});}
+  }
+  const ball=root.querySelector('.maze-arrived');
+  if(ball&&!before.mazeArrived){const points=JSON.parse(ball.dataset.walk);ball.animate(points.map(([x,y])=>({transform:`translate(${x}px,${y}px)`})),{duration:points.length*40,easing:'linear'});}
+  let poured=false;
+  liquids.forEach((liquid,index)=>{
+    const next=getComputedStyle(liquid).height,old=before.liquid[index];
+    if(old!==undefined&&old!==next){poured=true;liquid.animate([{height:old},{height:next}],{duration:650,easing:'ease-in-out'});}
+  });
+  if(poured&&before.pour.every(value=>value!==undefined)){
+    const [from,to]=before.pour.map(Number),stream=root.querySelector('.pour-stream');
+    if(stream){
+      const x=[32,60,82], y=[27,32,37];
+      stream.innerHTML=`<path d="M ${x[from]} ${y[from]} Q ${(x[from]+x[to])/2} ${Math.min(y[from],y[to])-12} ${x[to]-6} ${y[to]+8}"/>`;
+      stream.animate([{opacity:0},{opacity:.8,offset:.2},{opacity:.8,offset:.8},{opacity:0}],{duration:650,fill:'forwards'});
+    }
+  }
+  delete root.dataset.pourFrom;delete root.dataset.pourTo;
 }
 function drawLine(element) {
   const length = element.getTotalLength();

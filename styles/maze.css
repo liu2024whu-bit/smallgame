@@ -1,0 +1,30 @@
+@layer puzzles {
+  .maze-goal { display:flex; align-items:center; justify-content:center; gap:10px; color:#9eaa8e; margin:3px auto 8px; }
+  .maze-goal i { width:11px; height:11px; border-radius:50%; background:radial-gradient(at 30% 25%,#fff1bf,#b2945e); border:1px solid #ad915f; }
+  .maze-goal b { color:#b59554; font-size:19px; font-weight:400; }.maze-goal em { width:13px; height:13px; border:2px solid #a7af90; border-radius:50%; }
+  .maze-apparatus { position:relative; width:min(460px,100%); margin:auto; }
+  .maze-apparatus>.character-art { width:100%; display:block; }
+  .maze-apparatus>.ring-maze { position:absolute; left:8%; top:7.5%; width:84%; height:80%; margin:0; overflow:visible; }
+  .maze-seam { fill:none; stroke:#bca377; stroke-width:1; opacity:.65; pointer-events:none; }
+  .maze-track { fill:none; stroke:#81784e; stroke-width:7; stroke-linecap:round; pointer-events:none; }
+  .maze-grip { stroke:#a48c61; stroke-width:2; opacity:.65; pointer-events:none; }
+  .maze-ring-touch { fill:none; stroke:transparent; stroke-width:45; cursor:grab; touch-action:none; }
+  .maze-ring-touch:hover,.maze-ring-touch:focus-visible { stroke:#f7f0cc25; outline:none; }
+  .is-dragging .maze-ring-touch { cursor:grabbing; }
+  .ring-maze .maze-star { font-size:26px; fill:#ac986c; stroke:#fcf3d5; stroke-width:3px; paint-order:stroke; pointer-events:none; }
+  .ring-maze .star-touched { fill:#d4a244; filter:drop-shadow(0 0 3px #f3d68c); }
+  .maze-end { fill:#eee6c6; stroke:#89936b; stroke-width:3; pointer-events:none; }
+  .maze-end-mark { fill:none; stroke:#a0ac85; stroke-width:1.5; pointer-events:none; }
+  .maze-entry-arrow { fill:none; stroke:#a89363; stroke-width:2; pointer-events:none; }
+  .maze-ball { cursor:pointer; transform-box:view-box; }.maze-ball>circle { pointer-events:none; }.maze-ball .ball-hit { fill:transparent; pointer-events:all; }
+  .maze-ball:focus-visible { outline:none; filter:drop-shadow(0 0 4px #c6a469); }
+  .maze-tested-route { fill:none; stroke:#e2b85c; stroke-width:2; opacity:.8; stroke-linecap:round; pointer-events:none; }
+  .maze-trial-path { pointer-events:none; }
+  .maze-ring-controls { display:flex; justify-content:center; gap:clamp(12px,4vw,40px); margin:4px auto; }
+  .maze-ring-controls>div { display:grid; grid-template-columns:32px 26px 32px; align-items:center; gap:2px; }
+  .maze-ring-controls span { grid-column:1/-1; text-align:center; font-size:12px; color:#8f9b80; margin-bottom:5px; }
+  .maze-ring-controls .puzzle-control { min-width:30px; min-height:30px; padding:5px; background:transparent; border-color:#b7bd9e88; }
+  .ring-turn-mark { text-align:center; font-style:normal; color:#aa9871; font-size:21px; }
+  .balance-goal { text-align:center; color:#939d83; font-size:13px; margin:16px auto 0; }
+  @media(max-width:700px){.maze-ring-controls { gap:9px; }.maze-ring-controls>div { grid-template-columns:28px 18px 28px; }.maze-ring-controls .puzzle-control { min-width:28px; }.maze-goal { gap:7px; }}
+}

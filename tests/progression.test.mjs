@@ -11,11 +11,12 @@ export const memoryStorage = () => {
   return { data, getItem: key => data.get(key) ?? null, setItem: (key, value) => data.set(key, value) };
 };
 function start() { let state = reduce(createState(), { type: 'start' }); for (const id of ['bookmark', 'thread']) state = reduce(state, { type: 'pickup', id }); return state; }
-function finish(state, id) { return WITNESSES[id].reduce((s, move) => reduce(s, { type: 'move', id, move }), state); }
+function finish(state, id) { if(id==='chocolate')state=reduce(state,{type:'use-tool',item:'crank',target:'birthday-door'}); return WITNESSES[id].reduce((s, move) => reduce(s, { type: 'move', id, move }), state); }
 
 test('full main journey reaches the birthday with all reusable tools and no side puzzles', () => {
   let state = start();
   for (const id of MAIN_IDS) {
+    if(id==='chocolate')state=reduce(state,{type:'use-tool',item:'crank',target:'birthday-door'});
     assert.ok(access(state, id).ready, `${id} was unreachable`);
     state = finish(state, id); assert.ok(state.solved.includes(id), id);
     state = parseSave(JSON.stringify(serializable(state))); // Every chapter also survives a reload.

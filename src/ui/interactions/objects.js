@@ -1,25 +1,31 @@
 import { pointerSession, dragGhost } from './pointer.js';
+import { bindMusic } from './music.js';
 
-export function bindObjects(root, id, move) {
+export function bindObjects(root, id, move, progress) {
   if (id === 'balance') return bindWeights(root, move);
-  if (id === 'melody') return bindPins(root, move);
+  if (id === 'melody') return bindMusic(root, progress, move);
   if (id === 'flowers') return bindBookmark(root, move);
   return () => {};
 }
 
 function bindBookmark(root, move) {
-  const zones=[...root.querySelectorAll('.flower-column')];
-  return pointerSession(root,{
+  const zones=[...root.querySelectorAll('.flower-column-foot')],columns=[...root.querySelectorAll('.flower-column')],abort=new AbortController();
+  const clearLinks=()=>columns.forEach(column=>column.classList.remove('flower-will-move'));
+  const showLinks=event=>{const crank=event.target.closest('[data-flower-links]');if(!crank)return;const links=crank.dataset.flowerLinks.split(',').map(Number);columns.forEach((column,i)=>column.classList.toggle('flower-will-move',links.includes(i)&&!column.querySelector('.pinned')));};
+  for(const type of ['pointerover','focusin'])root.addEventListener(type,showLinks,{signal:abort.signal});
+  for(const type of ['pointerout','focusout'])root.addEventListener(type,clearLinks,{signal:abort.signal});
+  const stop=pointerSession(root,{
     pick(event){const source=event.target.closest('[data-bookmark-grab]');return source?{source,index:-1}:null;},
     start(gesture){gesture.ghost=dragGhost(gesture.source,'bookmark-ghost');},
     move(gesture,event){
       gesture.ghost.style.left=`${event.clientX-15}px`;gesture.ghost.style.top=`${event.clientY-35}px`;
-      gesture.index=zones.findIndex(zone=>{const b=zone.getBoundingClientRect();return event.clientX>=b.left&&event.clientX<=b.right&&event.clientY>=b.top&&event.clientY<=b.bottom;});
+      gesture.index=zones.findIndex(zone=>{const b=zone.getBoundingClientRect();return event.clientX>=b.left-12&&event.clientX<=b.right+12&&event.clientY>=b.top-12&&event.clientY<=b.bottom+12;});
       zones.forEach((zone,index)=>zone.classList.toggle('drop-target',index===gesture.index));
     },
     end(gesture,_,cancelled){if(!cancelled)move({type:'set-pin',index:gesture.index});},
     clear(){zones.forEach(zone=>zone.classList.remove('drop-target'));},
   });
+  return ()=>{stop();clearLinks();abort.abort();};
 }
 
 function bindWeights(root, move) {
@@ -37,22 +43,5 @@ function bindWeights(root, move) {
     },
     end(gesture, _, cancelled) { if (!cancelled && gesture.pan !== null) move({ type: 'place', index: gesture.index, pan: gesture.pan }); },
     clear() { zones.forEach(zone => zone.classList.remove('drop-target')); },
-  });
-}
-
-function bindPins(root, move) {
-  const original = [...root.querySelectorAll('.music-pin')].map(pin => [pin, pin.style.getPropertyValue('--note')]);
-  return pointerSession(root, {
-    pick(event) {
-      const track = event.target.closest('.music-pin-track');
-      return track ? { track, index: [...root.querySelectorAll('.music-pin-track')].indexOf(track) } : null;
-    },
-    move(gesture, event) {
-      const box = gesture.track.getBoundingClientRect();
-      gesture.note = Math.min(4, Math.max(0, Math.round((box.bottom - event.clientY - 12) / 30)));
-      gesture.track.querySelector('.music-pin').style.setProperty('--note', gesture.note);
-    },
-    end(gesture, _, cancelled) { if (!cancelled) move({ type: 'set-note', index: gesture.index, note: gesture.note }); },
-    clear() { original.forEach(([pin, note]) => pin.style.setProperty('--note', note)); },
   });
 }

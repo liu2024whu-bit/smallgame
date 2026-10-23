@@ -13,5 +13,7 @@ import { flips } from './flips.js';
 import { packing } from './packing.js';
 import { melody } from './melody.js';
 import { postbox, wordlock } from './locks.js';
+import { chocolate } from './chocolate.js';
+import { cocoa } from './cocoa.js';
 
-export const RULES = Object.freeze({ paper, cloud, calibration, postbox, books, screen, belt, film, flowers, paperBack, cloudGap, wordlock, album, stitch, maze, balance, drawers, flips, packing, melody });
+export const RULES = Object.freeze({ paper, cloud, calibration, postbox, books, screen, belt, film, flowers, paperBack, cloudGap, wordlock, album, stitch, chocolate, cocoa, maze, balance, drawers, flips, packing, melody });

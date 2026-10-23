@@ -3,7 +3,7 @@ import { motif, escape, character } from './dom.js';
 
 export function achievementsPage(state) {
   const entries = achievements(state);
-  return `<div class="little-records">${entries.map(entry => `<article class="little-record ${entry.complete ? 'record-complete' : ''}">${motif(entry.motif)}<div><h3>${escape(entry.title)}</h3><p>${escape(entry.text)}</p></div><small>${entry.count} / ${entry.total}</small></article>`).join('')}</div>${canOpenEncore(state) ? '<button class="encore-envelope" data-action="encore">还有一页，打开看看。</button>' : `<p class="record-footnote">${entries.every(entry => entry.complete) ? '等生日那页翻过，再回来看看。' : '还有些小东西没翻到。'}</p>`}`;
+  return `<div class="little-records">${entries.map(entry => `<article class="little-record ${entry.complete ? 'record-complete' : ''}">${motif(entry.motif)}<div><h3>${escape(entry.title)}</h3><p>${escape(entry.intro)}</p><p class="record-detail">${escape(entry.complete?entry.text:entry.hint)}</p></div><small>${entry.hideCount?(entry.complete?'收好了':'慢慢找'):`${entry.count} / ${entry.total}`}</small></article>`).join('')}</div>${canOpenEncore(state) ? '<button class="encore-envelope" data-action="encore">还有一页，打开看看。</button>' : `<p class="record-footnote">${entries.every(entry => entry.complete) ? '等生日那页翻过，再回来看看。' : '还有些小东西没翻到。'}</p>`}`;
 }
 
 export function encorePanel(state) {

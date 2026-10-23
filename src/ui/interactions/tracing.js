@@ -19,7 +19,8 @@ export function bindTracing(root,id,progress,move) {
       preview=document.createElementNS('http://www.w3.org/2000/svg','svg');preview.setAttribute('viewBox','0 0 100 100');preview.setAttribute('preserveAspectRatio','none');preview.classList.add('gesture-thread');preview.innerHTML='<polyline fill="none"/>';field.append(preview);
     },
     move(gesture,event){
-      const index=buttons.findIndex(button=>{const b=button.getBoundingClientRect();return event.clientX>=b.left-4&&event.clientX<=b.right+4&&event.clientY>=b.top-4&&event.clientY<=b.bottom+4;});
+      const nearby=buttons.map((button,i)=>{const b=button.getBoundingClientRect();return {i,inside:event.clientX>=b.left-4&&event.clientX<=b.right+4&&event.clientY>=b.top-4&&event.clientY<=b.bottom+4,distance:Math.hypot(event.clientX-b.x-b.width/2,event.clientY-b.y-b.height/2)};}).filter(p=>p.inside).sort((a,b)=>a.distance-b.distance);
+      const index=nearby[0]?.i??-1;
       if(index>=0)visit(gesture,index);
       const box=field.getBoundingClientRect(),point=[(event.clientX-box.left)/box.width*100,(event.clientY-box.top)/box.height*100];
       preview.querySelector('polyline').setAttribute('points',[...gesture.state[config.key].map(center),point].map(p=>p.join(',')).join(' '));

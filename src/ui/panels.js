@@ -4,12 +4,16 @@ import { character, icon } from './dom.js';
 import { encorePanel } from './achievements.js';
 import { evidencePanel } from './evidence.js';
 import { campusPanel } from './campus.js';
+import { passagePanel, birthdayNotePanel } from './birthday.js';
 
 export function renderPanel(panel, context) {
   const simple = {
     puzzle: () => puzzlePanel(panel.id, context),
     evidence: () => evidencePanel(panel.id, context),
     campus: () => campusPanel(Number(panel.id), context),
+    passage:()=>passagePanel(panel.id,context),
+    'birthday-note':()=>birthdayNotePanel(panel.id,context),
+    'birthday-wait':()=>({title:'蛋糕',className:'inspect-dialog',html:'<div class="short-note"><p>可可还没有分好。</p><button class="text-button" data-action="close">再看看</button></div>'}),
     ambient: () => ({ title: '雨声', className: 'inspect-dialog', html: '<div class="rain-listening"><p>等一小会儿。</p><p>雨落在窗沿上。</p></div>' }),
     journal: () => journalPanel(context.state, panel.tab),
     collection: () => collectionPanel(panel.id, context),
@@ -23,8 +27,7 @@ export function renderPanel(panel, context) {
     settings: () => settingsPanel(context),
     pet: () => petPanel(panel.id, context.petAwake),
     'how-to': howToPanel,
-    birthday: () => ({ title: '10月29日', className: 'inspect-dialog', html: '<div class="short-note"><h3>生日快乐</h3><p>给你准备了一间书房。桌上的画册还没装好，四张画页，散在房间里。</p><button class="primary-button" data-action="close">知道啦</button><button class="quiet-button" data-action="collection" data-id="gifts">看看礼物</button></div>' }),
-    'ring-wait': () => ({ title: '年轮灯', className: 'inspect-dialog', html: '<div class="short-note"><p>灯座下，留着一本画册的位置。</p><button class="primary-button" data-action="close">回书桌</button></div>' }),
+    birthday: () => ({ title: '10月29日', className: 'inspect-dialog', html: '<div class="short-note"><h3>给你</h3><p>先留着，晚一点再拆。</p><button class="text-button" data-action="close">放回去</button></div>' }),
     restart: () => ({ title: '重新开始', className: 'inspect-dialog', html: '<div class="short-note"><p>重新开始会清掉现在的进度。想留着的话，可以先回设置里保存一份存档，以后再接着玩。</p><button class="primary-button" data-action="confirm-restart">重新开始</button><button class="quiet-button" data-action="close">先不重来</button></div>' }),
   };
   return (simple[panel.type] ?? howToPanel)();
@@ -36,7 +39,7 @@ function howToPanel() {
 
 function petPanel(id, awake) {
   const cat = id === 'cat';
-  return { title: cat ? '小猫' : '小狗', className: 'pet-dialog', html: `<div class="pet-portrait ${awake ? 'pet-awake' : ''}">${character('pets', (cat ? 0 : 2) + (awake ? 1 : 0), 2, 2, cat ? '小猫' : '小狗')}</div><p class="hand-note">${awake ? cat ? '伸个懒腰。' : '尾巴摇起来了。' : '睡得正香。'}</p><button class="primary-button" data-action="pet-touch">${awake ? '再摸一下' : '摸摸'}</button><button class="quiet-button" data-action="flowers">看看花</button>` };
+  return { title: cat ? '小猫' : '小狗', className: 'pet-dialog', html: `<div class="pet-portrait ${awake ? 'pet-awake' : ''}">${character('pets', (cat ? 0 : 2) + (awake ? 1 : 0), 2, 2, cat ? '小猫' : '小狗')}</div><p class="hand-note">${awake ? cat ? '伸个懒腰。' : '朝这边看过来。' : cat?'睡得正香。':'陪它坐一会儿。'}</p><button class="primary-button" data-action="pet-touch">${awake ? '再摸一下' : '摸摸'}</button><button class="quiet-button" data-action="flowers">看看花</button>` };
 }
 
 function settingsPanel(context) {
