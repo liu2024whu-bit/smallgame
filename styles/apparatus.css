@@ -6,7 +6,7 @@
   .puzzle-film .puzzle-field { background: #e9e6da; }
   .puzzle-flowers .puzzle-field { padding: 0 0 20px; background: #f3f0e5; }
   .puzzle-packing .puzzle-field { background: #eae0cb url('../assets/illustrations/board.webp') center / cover; }
-  .puzzle-drawers .puzzle-field { background: #ebf0ef; }.puzzle-flips .puzzle-field { background: #f0f0dc; }
+  .puzzle-drawers .puzzle-field { background: #fbf8e9; }.puzzle-flips .puzzle-field { background: #f0f0dc; }
   .puzzle-melody .puzzle-field { background: #f2e9da; }
   .maze-apparatus { position: relative; width: min(370px, 100%); margin: auto; }
   .maze-apparatus > .character-art { width: 100%; display: block; }

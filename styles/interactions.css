@@ -10,6 +10,7 @@
   .packing-cell.drop-valid { background: #ccd9b0; outline: 2px solid #7f9669; outline-offset: -2px; }
   .packing-cell.drop-invalid { background: #e7c9bd; outline: 2px dashed #b58370; outline-offset: -2px; }
   .reorder-ghost { display: grid; justify-items: center; background: #fcf9ed; border-radius: 3px; padding: 6px; }
+  .reorder-ghost .film-inspect, .reorder-ghost .page-face { visibility:visible; pointer-events:none; }
   .reorder-ghost .character-bookmark { top: -65px; }
   .weight-ghost { width: 75px; display: grid; justify-items: center; padding: 5px; background: #fffcf0; border-radius: 50%; }
   .weight-ghost small, .weight-ghost span:not(.raster-sprite) { display: none; }

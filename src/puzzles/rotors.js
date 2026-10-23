@@ -11,6 +11,7 @@ function makeRotors(seed, target, read) {
     valid: state => bounded(state?.values, 3, 4) && typeof state.back === 'boolean',
     move(state, action) {
       if (action.type === 'view') return { ...state, back: !state.back };
+      if (action.type === 'set-turn' && indexIn(action.index, 3) && indexIn(action.value, 4)) return { ...state, values: state.values.map((v,i) => i === action.index ? action.value : v) };
       if (action.type !== 'turn' || !indexIn(action.index, 3) || ![-1, 1].includes(action.direction)) return state;
       return { ...state, values: state.values.map((v, i) => i === action.index ? mod(v + action.direction, 4) : v) };
     },

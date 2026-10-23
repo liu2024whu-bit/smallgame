@@ -48,7 +48,8 @@ export function shiftControls(index, count) {
 }
 
 export function dial(index, value, label, count = 4) {
-  return `<div class="dial"><span class="dial-name">${escape(label)}</span><div class="dial-controls">${moveButton(icon('left'), { type: 'turn', index, direction: -1 }).replace('<button ', `<button aria-label="${escape(label)}逆转一格" `)}<span class="dial-face" style="--turn:${value * 360 / count}deg">${itemSprite(6)}<b>${value}</b></span>${moveButton(icon('right'), { type: 'turn', index, direction: 1 }).replace('<button ', `<button aria-label="${escape(label)}正转一格" `)}</div></div>`;
+  const face = moveButton(`${itemSprite(6)}<b>${value}</b>`,{type:'turn',index,direction:1},{key:`dial-${index}`,className:'dial-face'}).replace('<button ',`<button aria-label="拖动旋转${escape(label)}，当前${value}" data-dial="${index}" data-count="${count}" style="--turn:${value * 360 / count}deg" `);
+  return `<div class="dial"><span class="dial-name">${escape(label)}</span><div class="dial-controls">${moveButton(icon('left'), { type: 'turn', index, direction: -1 }).replace('<button ', `<button aria-label="${escape(label)}逆转一格" `)}${face}${moveButton(icon('right'), { type: 'turn', index, direction: 1 }).replace('<button ', `<button aria-label="${escape(label)}正转一格" `)}</div></div>`;
 }
 
 export function announce(message) {

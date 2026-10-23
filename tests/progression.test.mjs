@@ -27,7 +27,7 @@ test('full main journey reaches the birthday with all reusable tools and no side
 });
 test('the two branches can be completed in a different order', () => {
   let state = start();
-  for (const id of ['cloud', 'paper', 'calibration', 'screen', 'books', 'belt', 'film', 'flowers', 'cloudGap', 'paperBack', 'album', 'stitch']) state = finish(state, id);
+  for (const id of ['cloud', 'paper', 'calibration', 'screen', 'postbox', 'books', 'belt', 'film', 'flowers', 'cloudGap', 'paperBack', 'wordlock', 'album', 'stitch']) state = finish(state, id);
   assert.ok(state.solved.includes('stitch'));
 });
 test('optional puzzles can all be completed before touching the main chain', () => {

@@ -4,6 +4,7 @@ import { RULES } from '../puzzles/index.js';
 import { COLLECTIONS, COLLECTION_PUZZLES } from '../data/assets.js';
 import { KEEPSAKES } from '../data/keepsakes.js';
 import { ACTIVITY_IDS } from '../data/activities.js';
+import { CONTENT_REVISION, migrateContent } from './migrations.js';
 
 export const SAVE_VERSION = 2;
 export const PICKUPS = ['bookmark', 'thread'];
@@ -11,7 +12,7 @@ const DEFAULT_SETTINGS = { sound: true, volume: 0.35, motion: true, hotspots: fa
 const OPTIONS = { skyCapeLeft: ['bat', 'kizuna'], skyCapeRight: ['bat', 'kizuna'], skyMask: ['chibi', 'innocence'], flower: ['daisy', 'tulip', 'lavender', 'rose'] };
 
 export function createState() {
-  return { version: SAVE_VERSION, begun: false, scene: 'desk', collected: [], discovered: [], activities: [], solved: [], progress: Object.fromEntries(PUZZLES.map(p => [p.id, RULES[p.id].create()])), hints: {}, history: {}, selected: null, ending: false, settings: { ...DEFAULT_SETTINGS } };
+  return { version: SAVE_VERSION, revision: CONTENT_REVISION, begun: false, scene: 'desk', collected: [], discovered: [], activities: [], solved: [], progress: Object.fromEntries(PUZZLES.map(p => [p.id, RULES[p.id].create()])), hints: {}, history: {}, selected: null, ending: false, settings: { ...DEFAULT_SETTINGS } };
 }
 
 export function inventory(state) {
@@ -49,6 +50,7 @@ export function normalizeState(raw) {
     const count = raw.hints?.[puzzle.id];
     if (Number.isInteger(count) && count > 0) state.hints[puzzle.id] = Math.min(count, 3);
   }
+  migrateContent(raw, state);
   // Rebuild completion in dependency order. Claims alone never grant pages or tools.
   let changed = true;
   while (changed) {
@@ -62,6 +64,8 @@ export function normalizeState(raw) {
     }
   }
   const settings = raw.settings ?? {};
+  const completed = new Set(state.solved);
+  state.solved = PUZZLES.filter(puzzle => completed.has(puzzle.id)).map(puzzle => puzzle.id);
   for (const key of ['sound', 'motion', 'hotspots']) if (typeof settings[key] === 'boolean') state.settings[key] = settings[key];
   for (const [key, values] of Object.entries(OPTIONS)) if (values.includes(settings[key])) state.settings[key] = settings[key];
   if (Number.isFinite(settings.volume)) state.settings.volume = Math.min(1, Math.max(0, settings.volume));

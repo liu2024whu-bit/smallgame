@@ -60,15 +60,7 @@
   .sky-stamp .motif { display: block; width: 100%; }
   .sky-tag { top: 30%; }.tag-0 { left: 14.5%; }.tag-1 { left: 86%; }.tag-2 { left: 86%; top: 25%; }
   .sky-window { top: 82%; width: 5%; }.window-0 { left: 28.6%; }.window-1 { left: 71.3%; }.window-2 { left: 50%; top: 68.5%; }
-  .negative-space .sky-window { opacity: .76; }
   .cloud-view-controls { display: flex; justify-content: center; align-items: center; gap: 28px; margin: 13px auto 0; font-size: 13px; }
-  .calibration-clues { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; text-align: center; margin: 25px 10px; }
-  .calibration-clues p { font-size: 14px; margin: 15px 0 0; }
-  .ruler, .mirror-mark { display: flex; justify-content: center; gap: 15px; font: 19px Georgia, serif; height: 60px; align-items: center; border-bottom: 1px solid #a8aa8d; }
-  .ruler span, .mirror-mark span { padding: 5px; }
-  .ruler-mark, .mirror-mark .etched { color: #667f58; outline: 1px solid #a4b08f; }
-  .shade-mark { font-size: 26px; height: 60px; display: grid; align-items: center; }
-  .projected-lines { width: 180px; height: 45px; margin: 22px auto 0; background: repeating-linear-gradient(90deg, #dce4bc80 0 2px, transparent 2px 15px); transform: translateX(var(--offset)) rotate(var(--rotation)); opacity: calc(var(--aperture) / 4); }
   .books-workbench { position: relative; }
   .borrow-notes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 28px; max-width: 650px; margin: 0 auto 20px; font-size: 15px; }
   .borrow-notes p { border-bottom: 1px dotted #b5c09e; padding: 4px 0; margin: 0; }
@@ -90,15 +82,6 @@
   .screen-line text { fill: #879973; font: 11px Georgia, serif; }
   .screen-leaf .puzzle-control { font-size: 12px; min-width: 0; padding: 3px 7px; }
   .screen-workbench > .text-button { display: block; margin: 18px auto 0; font-size: 13px; }
-  .belt-diagram { position: relative; height: 290px; width: 100%; }
-  .belt-diagram > svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-  .belt-diagram line { stroke: #c2c8af; stroke-width: .4; }
-  .active-thread { stroke: #c19a82; stroke-width: 1.1; fill: none; stroke-linejoin: round; }
-  .pulley-node { position: absolute; transform: translate(-50%, -50%); width: 72px; }
-  .pulley-node .puzzle-control { border-color: transparent; background: transparent; box-shadow: none; padding: 0; width: 100%; display: grid; gap: 0; justify-items: center; }
-  .pulley-node .item-art { width: 60px; }
-  .pulley-node small { white-space: nowrap; font-size: 12px; }
-  .pulley-node.threaded .item-art { filter: drop-shadow(0 0 3px #cca07699); }
   .mechanical-notes { display: flex; justify-content: center; gap: 18px; font-size: 13px; border-top: 1px dotted #c4cbb0; padding-top: 12px; }
   .mechanical-notes p { max-width: 210px; margin: 0; }
   .mechanical-controls { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
@@ -115,22 +98,6 @@
   .flower-column-foot .item-art { width: 23px; }
   .pinned { background: #e5edd9; }
   .target-heights { text-align: center; color: #8a9277; font-size: 14px; margin: 18px 0 0; }
-  .film-strip { display: flex; gap: 20px; justify-content: center; }
-  .film-frame { flex: 1; max-width: 175px; padding: 10px; background: #fffdf4; border: 1px solid #c6cdb4; position: relative; }
-  .frame-number { position: absolute; top: 5px; left: 9px; z-index: 1; color: #a9b097; }
-  .film-still { position: relative; height: 245px; display: flex; justify-content: center; align-items: end; }
-  .film-still .character-art { height: 100%; width: auto; }
-  .falling-petal { position: absolute; left: 10%; }
-  .falling-petal .motif { width: 30px; }
-  .film-frame > p { font-size: 13px; min-height: 45px; padding-top: 10px; margin: 0; text-align: center; }
-  .film-opening { text-align: center; font-size: 14px; color: #85916f; margin: 0 0 18px; }
-  .film-perforations { display: flex; justify-content: center; gap: 9px; padding: 10px 0 2px; }
-  .film-perforations i { width: 8px; height: 8px; border: 1px solid #9b9d83; border-radius: 50%; background: #eee9d4; box-shadow: inset 1px 1px 1px #a6a08430; }
-  .film-margin-note { max-width: 620px; margin: 20px auto 0; font-size: 14px; line-height: 1.9; color: #8a947a; }
-  .face-selectors { display: flex; justify-content: center; gap: 15px; margin: 20px; }
-  .face-selectors .puzzle-control { padding: 7px 14px; }
-  .face-selectors b { font: 16px Georgia, serif; color: #84936e; }
-  .flipped-paper { background: #e9efdd; }
   .album-layout { display: flex; justify-content: center; gap: 15px; margin: 25px 0; }
   .loose-page { width: 22%; max-width: 200px; border: 1px solid #d0d3bf; background: #fffdf7; padding: 8px; text-align: center; position: relative; box-shadow: 2px 3px 1px #bfc5ac1a; }
   .loose-page .character-art { width: 100%; }
@@ -143,7 +110,6 @@
   .stitch-workbench { position: relative; height: 350px; max-width: 700px; margin: 5px auto; }
   .binding-pages { position: absolute; inset: 0 2% 20%; display: flex; }
   .binding-page { flex: 1; background: #fffdf1; border: 1px solid #d0d4bb; padding: 15px; color: #bcc4ab; }
-  .binding-page .character-art { display: block; width: 100%; opacity: .35; }
   .stitch-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
   .stitch-lines line { stroke: #a47f69; stroke-width: .7; }
   .thread-back { stroke-dasharray: 2 1; opacity: .65; }
@@ -231,15 +197,11 @@
     .dial-controls .puzzle-control { min-width: 26px; padding: 2px; min-height: 32px; }
     .appearance-controls { gap: 3px 10px; font-size: 10px; }
     .turn-scene { font-size: 12px; }
-    .calibration-clues { grid-template-columns: 1fr; gap: 12px; }.calibration-clues > div { display: grid; grid-template-columns: 75px 1fr; align-items: center; }
-    .calibration-clues p { grid-column: 1 / -1; margin: 3px; }.ruler, .mirror-mark, .shade-mark { height: 40px; }
     .book-row { gap: 6px; padding-top: 66px; }.illustrated-spine { width: 46px; height: 170px; font-size: 14px; }.book-slot .shift-controls { gap: 2px; }.book-slot .puzzle-control { min-width: 23px; }.character-bookmark { width: 33px; top: -56px; padding: 3px 3px 7px; }
     .borrow-notes { gap: 8px 15px; font-size: 13px; }
     .accordion-screen { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }.screen-name { font-size: 12px; height: 20px; }.screen-leaf .character-art { width: 74%; margin: auto; }.screen-line { height: 46px; }.screen-leaf .puzzle-control { min-height: 27px; }
-    .belt-diagram { height: 260px; }.pulley-node { width: 51px; }.pulley-node .item-art { width: 47px; }.pulley-node small { font-size: 9px; }.mechanical-notes { gap: 8px; font-size: 11px; }
     .flower-stands { gap: 6px; }.flower-column { width: 100px; height: 270px; }.height-scale span { width: 91px; }.flower-pot { left: 7px; }.flower-pot .motif { width: 87px; }.flower-column-foot { left: 0; width: 98px; }.flower-column-foot .puzzle-control { font-size: 10px; padding: 2px 4px; }
     .mechanical-controls { gap: 6px; }.mechanical-controls .puzzle-control { font-size: 12px; }
-    .film-strip { gap: 8px; }.film-frame { padding: 6px 4px; }.film-still { height: 122px; }.film-frame > p { font-size: 11px; min-height: 60px; }.face-selectors { gap: 7px; margin: 15px 0; }.face-selectors .puzzle-control { padding: 5px 8px; font-size: 12px; }
     .album-layout { gap: 7px; }.loose-page { padding: 4px; width: 24%; }.loose-page p { font-size: 11px; }.loose-page > .puzzle-control { font-size: 10px; padding: 2px; }.page-letter { font-size: 12px; }.loose-page .shift-controls { gap: 1px; }.loose-page .shift-controls .puzzle-control { min-width: 24px; }
     .binding-rule { font-size: 10px; }.stitch-workbench { height: 290px; }
     .weight-examples { flex-wrap: wrap; gap: 7px; }.weight-examples .motif { width: 28px; }.weight-tray { gap: 7px; }.weight-tray button { padding: 6px; font-size: 11px; }

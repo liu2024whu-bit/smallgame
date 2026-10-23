@@ -33,6 +33,12 @@ export const stitch = {
   valid: state => Array.isArray(state?.path) && state.path.length <= 8 && state.path.every(v => indexIn(v, 8)) && new Set(state.path).size === state.path.length,
   move(state, action) {
     if (action.type === 'undo') return { path: state.path.slice(0, -1) };
+    if (action.type === 'trace') {
+      if (!Array.isArray(action.nodes) || !action.nodes.length || action.nodes.length > 8) return state;
+      let next = state;
+      for (const index of action.nodes) { const step = stitch.move(next,{type:'hole',index}); if (step === next) return state; next = step; }
+      return next;
+    }
     if (action.type !== 'hole' || !indexIn(action.index, 8) || state.path.includes(action.index)) return state;
     if (!state.path.length && action.index !== 0) return state;
     return { path: [...state.path, action.index] };

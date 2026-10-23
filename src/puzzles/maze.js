@@ -37,6 +37,9 @@ export function mazePath(turns) {
 export const maze = {
   create: () => ({ turns: [3, 4, 0] }),
   valid: state => bounded(state?.turns, 3, 6),
-  move: (state, action) => action.type === 'turn' && indexIn(action.index, 3) && [-1, 1].includes(action.direction) ? { turns: state.turns.map((v, i) => i === action.index ? mod(v + action.direction, 6) : v) } : state,
+  move(state, action) {
+    if (action.type === 'set-turn' && indexIn(action.index, 3) && indexIn(action.value, 6)) return { turns:state.turns.map((v,i) => i === action.index ? action.value : v) };
+    return action.type === 'turn' && indexIn(action.index, 3) && [-1,1].includes(action.direction) ? { turns:state.turns.map((v,i) => i === action.index ? mod(v + action.direction,6) : v) } : state;
+  },
   solved: state => Boolean(mazePath(state.turns)),
 };

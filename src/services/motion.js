@@ -39,6 +39,7 @@ export function playMotion(root, before) {
     if (old === undefined || old === next) return;
     const delta = ((old - next + 540) % 360) - 180;
     element.querySelector('.item-art')?.animate([{ transform: `rotate(${next + delta}deg)` }, { transform: `rotate(${next}deg)` }], { duration: 340, easing: 'cubic-bezier(.2,.7,.3,1)' });
+    if(element.closest('.light-console'))element.animate([{transform:`rotate(${next+delta}deg)`},{transform:`rotate(${next}deg)`}],{duration:340,easing:'ease-out',pseudoElement:'::before'});
   });
   root.querySelectorAll('.screen-leaf').forEach((element, index) => {
     if (before.screen[index] !== undefined && before.screen[index] !== element.classList.contains('back-face')) element.animate([{ transform: 'rotateY(20deg)', opacity: .45 }, { transform: 'rotateY(0deg)', opacity: 1 }], { duration: 290, easing: 'ease-out' });

@@ -10,6 +10,8 @@
   .hotspot:hover, .hotspot:focus-visible { outline: none; background: #fffad51a; border: 1px dashed #a5b198b8; box-shadow: 0 0 22px #f8f5c139; }
   .hotspot-caption { position: absolute; opacity: 0; pointer-events: none; bottom: -32px; left: 50%; transform: translateX(-50%); white-space: nowrap; font-size: clamp(11px, 1.1vw, 15px); background: #fffef3ed; border: 1px solid #d0d6bd; padding: 3px 12px; border-radius: 3px; z-index: 2; }
   .hotspot:hover .hotspot-caption, .hotspot:focus-visible .hotspot-caption { opacity: 1; }
+  .caption-inward-right .hotspot-caption { left:auto; right:0; transform:none; }
+  .caption-inward-left .hotspot-caption { left:0; transform:none; }
   .pickup-hotspot { z-index: 3; }
   .pickup-hotspot > .raster-sprite { width: 100%; height: 100%; aspect-ratio: auto; }
   .show-hotspots .hotspot { border-color: #869a77a6; border-style: dashed; background: #ecf1c82b; }

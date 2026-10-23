@@ -8,6 +8,12 @@ export const belt = {
   create: () => ({ route: [], crossed: false, ratio: 0 }),
   valid: state => Array.isArray(state?.route) && state.route.length <= 7 && new Set(state.route).size === state.route.length && state.route.every(v => indexIn(v, 7)) && typeof state.crossed === 'boolean' && indexIn(state.ratio, 3),
   move(state, action) {
+    if (action.type === 'trace') {
+      if (!Array.isArray(action.nodes) || !action.nodes.length || action.nodes.length > 7) return state;
+      let next = state;
+      for (const index of action.nodes) { const step = belt.move(next,{type:'node',index}); if (step === next) return state; next = step; }
+      return next;
+    }
     if (action.type === 'undo') return { ...state, route: state.route.slice(0, -1) };
     if (action.type === 'cross') return { ...state, crossed: !state.crossed };
     if (action.type === 'ratio') return { ...state, ratio: (state.ratio + 1) % 3 };

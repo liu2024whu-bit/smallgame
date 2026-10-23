@@ -3,6 +3,8 @@ export const SCENE_ART = Object.freeze({
   window: 'assets/scenes/window.webp',
   collection: 'assets/scenes/collection.webp',
   entry: 'assets/scenes/entry.webp',
+  rain: 'assets/scenes/rain.webp',
+  atelier: 'assets/scenes/atelier.webp',
 });
 export const ASSETS = Object.freeze({
   items: 'assets/illustrations/items.webp',
@@ -22,10 +24,16 @@ export const ASSETS = Object.freeze({
   memoryNaruto: 'assets/illustrations/memory-naruto.webp',
   bookmarkFull: 'assets/illustrations/bookmark-full.webp',
   garden: 'assets/illustrations/puzzle-garden.webp',
-  filmScenes: 'assets/illustrations/film-scenes.webp',
   puppyParcel: 'assets/illustrations/puppy-parcel.webp',
   packingPicture: 'assets/illustrations/packing-picture.webp',
   apparatus: 'assets/illustrations/puzzle-props.webp',
+  postbox: 'assets/illustrations/postbox.webp',
+  keyboard: 'assets/illustrations/keyboard.webp',
+  cinema: 'assets/illustrations/cinema.webp',
+  lightbench: 'assets/illustrations/lightbench.webp',
+  projector: 'assets/illustrations/projector.webp',
+  campusWhu: 'assets/illustrations/campus-whu.webp',
+  campusNju: 'assets/illustrations/campus-nju.webp',
 });
 export const MOTIFS = Object.freeze({ cloud: 0, star: 1, leaf: 2, rose: 3, paw: 4, moon: 5, daisy: 6, tulip: 7, lavender: 8, book: 9, envelope: 10, petal: 11 });
 export const MOTIF_LABELS = Object.freeze({ cloud: '云', star: '星', leaf: '叶', rose: '玫瑰', paw: '猫爪', moon: '月', daisy: '雏菊', tulip: '郁金香', lavender: '薰衣草', book: '书', envelope: '信封', petal: '花瓣' });

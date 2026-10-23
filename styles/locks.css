@@ -1,0 +1,75 @@
+@layer puzzles {
+  .puzzle-postbox .puzzle-field, .puzzle-wordlock .puzzle-field { padding: 0; background: transparent; }
+  .postal-lock, .letter-lock { position: relative; isolation: isolate; }
+  .lock-painting { display: block; width: 100%; }
+  .postal-wheels { position: absolute; left: 40.5%; top: 45.8%; width: 19.1%; height: 17.2%; display: grid; grid-template-columns: repeat(4,1fr); }
+  .number-wheel { position: relative; display: flex; flex-direction: column; min-width: 0; height: 100%; text-align: center; }
+  .wheel-sign { position: absolute; top: -18%; width: 100%; font-size: clamp(10px,1.3vw,14px); color: #5d5b46; }
+  .number-wheel .puzzle-control { background: transparent; border: 0; box-shadow: none; min-width: 0; min-height: 0; padding: 0; border-radius: 0; }
+  .number-wheel > .puzzle-control:not(.wheel-drum) { height: 25%; font: 18px/1 Georgia,serif; color: #655e42; }
+  .number-wheel .wheel-drum { position: relative; height: 50%; color: #f7e7b8; overflow: hidden; display: grid; place-items: center; cursor: ns-resize; touch-action: none; }
+  .wheel-drum b { font: 500 clamp(16px,2.5vw,28px)/1 Georgia,serif; text-shadow: 0 1px 2px #171813; }
+  .wheel-previous, .wheel-next { position: absolute; font: 10px/1 Georgia,serif; opacity: .28; }
+  .wheel-previous { top: -3px; }.wheel-next { bottom: -3px; }
+  .postal-latch.puzzle-control { position: absolute; left: 65%; top: 50.6%; width: 8%; height: 17%; background: transparent; border: 0; box-shadow: none; border-radius: 40%; }
+  .postal-latch:hover { filter: drop-shadow(0 0 3px #fdf0b5); background: #ffe7a81f; }
+  .lock-reply { position: absolute; bottom: 4%; margin: 0; width: 100%; text-align: center; color: #5c6658; font-size: 15px; pointer-events: none; }
+  .input-note { margin: 9px auto 0; text-align: center; color: #8c8b7b; font-size: 12px; }
+  .letter-windows { position: absolute; left: 33.65%; top: 30.7%; width: 34.1%; height: 7.9%; display: grid; grid-template-columns: repeat(5,1fr); gap: 5.8%; }
+  .letter-windows .puzzle-control { min-width: 0; min-height: 0; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; font: clamp(15px,2.7vw,30px)/1 Georgia,serif; color: #5e6356; position: relative; }
+  .letter-windows .letter-cursor::after { content: ''; height: 1px; background: #6c7a65; position: absolute; left: 30%; right: 30%; bottom: 12%; }
+  .letter-windows .puzzle-control:hover:not(:disabled), .number-wheel .puzzle-control:hover:not(:disabled) { background:transparent; }
+  .slot-placeholder { opacity: .3; }
+  .type-keys { position: absolute; inset: 52% 14.2% 22.8%; display: flex; flex-direction: column; gap: 5%; padding: 1%; background: #3f403bf2; border-radius: 4px; box-shadow: inset 0 0 3px #1115; }
+  .type-row { display: flex; justify-content: center; flex: 1; gap: 1.4%; }
+  .type-row .puzzle-control { min-width: 0; min-height: 0; width: 8.5%; background: #6a6b62; color: #e7e6cc; border: 1px solid #858276; box-shadow: 1px 2px 0 #2d302c; padding: 0; border-radius: 3px 4px 2px 2px; font: clamp(10px,1.5vw,16px)/1 Georgia,serif; }
+  .type-row .puzzle-control:hover { color: #fff8d4; background: #7b8476; }
+  .type-row .puzzle-control:active { translate: 0 2px; box-shadow: none; }
+  .type-special { position: absolute; bottom: 18%; left: 46%; right: 16%; display: flex; justify-content: space-between; }
+  .type-special .puzzle-control { font-size: 12px; min-height: 25px; background: #5a5d51; color: #f5ecd4; border-color: #5a5d51; box-shadow: 0 2px 1px #303b2c50; padding: 2px 12px; }
+  .type-special .icon { width: 16px; height: 16px; }
+  .letter-lock .lock-reply { bottom: 6%; }
+  .lock-open .lock-painting { filter: brightness(1.03); }
+  .lock-open .lock-reply { font-size: 20px; color: #4c6854; }
+  .lock-rattle { animation: lock-rattle .32s ease-out; }
+  .tools-fold { font-size: 12px; color: #8b9381; margin: 0 0 10px; }
+  .tools-fold summary { cursor: pointer; width: fit-content; margin: auto; }
+  .tools-fold .workbench-tools { margin-top: 10px; }
+  @keyframes lock-rattle { 0%,100% { translate:0 0; } 25%,70% { translate:-3px 0; } 45%,85% { translate:3px 0; } }
+  @media(max-width:700px) {
+    .postal-wheels { top:44%; height:21%; }.wheel-sign { top:-10%; font-size:10px; }
+    .number-wheel > .puzzle-control:not(.wheel-drum) { font-size:14px; }
+    .letter-lock { padding-bottom:70px; }.letter-lock > .lock-painting { width:100%; }
+    .letter-windows { top:calc((100% - 70px) * .307); height:calc((100% - 70px) * .079); }
+    .type-keys { inset:auto 0 20px; height:108px; padding:5px; }
+    .type-row .puzzle-control { font-size:12px; }
+    .type-special { bottom:0; left:30%; right:0; }.type-special .puzzle-control { min-height:28px; }
+    .letter-lock .lock-reply { bottom:137px; font-size:12px; }.lock-reply { font-size:12px; }
+  }
+}
+@layer notebook {
+  .evidence-dialog { max-width:740px !important; }
+  .evidence-dialog .dialog-body { background: #f2ede1; padding:25px 35px; }
+  .evidence-sheet { max-width:420px; margin:5px auto; padding:25px 28px 15px; background:#fffdf4; box-shadow:2px 4px 10px #5b56451c; transform:rotate(-1deg); border-top:1px solid #e1ddce; }
+  .alphabet-sheet { transform:rotate(1deg); }.evidence-heading { display:block; text-align:center; color:#828874; font-size:15px; margin-bottom:15px; }
+  .cipher-grid { border-collapse:collapse; width:100%; table-layout:fixed; font:22px/1.7 Georgia,serif; color:#5d6658; text-align:center; }
+  .cipher-grid td { border:1px solid #b8bdaa; height:49px; }.cipher-grid th { color:#98a087; font-size:14px; font-weight:normal; }
+  .cipher-grid th:first-child { width:30px; }.cipher-grid thead td { border:0; }
+  .cipher-grid td:hover { background:#e8ecd9; }.sheet-foot { display:block; margin:18px 0 0; text-align:right; color:#9c9d88; font-size:12px; }
+  .postmark-pair { display:flex; justify-content:space-around; gap:10px; transition:transform .5s; }
+  .postal-mark { border:2px double #8b9a816e; border-radius:48%; width:75px; height:75px; display:grid; place-content:center; text-align:center; color:#71816c; font-size:16px; transform:rotate(-9deg); position:relative; }
+  .postal-mark b { font-weight:normal; }.postal-mark > span { font:17px/1.4 Georgia,serif; }
+  .postal-mark::after { content:''; position:absolute; left:65%; right:-20px; top:40%; height:10px; border-block:1px solid #9ba68f60; transform:rotate(-10deg); }
+  .reverse-ink { transform:scaleX(-1); }
+  .strips-desk { max-width:520px; margin:auto; display:grid; gap:25px; }
+  .punched-strip { position:relative; padding:18px 25px; background:#e8dcbc; border-block:1px dashed #b4a98f; box-shadow:2px 4px 5px #796e5030; transform:rotate(-2deg); }
+  .strip-reversed { transform:rotate(2deg); }.strip-label { position:absolute; left:10px; top:13px; font-weight:normal; font-size:12px; color:#96846a; }
+  .punch-columns { display:flex; justify-content:space-between; gap:12px; }.punch-column { display:grid; justify-items:center; gap:6px; }
+  .punch-column > small { font-size:11px; color:#9b896c; }.punch-hole { position:relative; width:24px; height:24px; display:grid; place-items:center; border:1px solid #b8a98a68; border-radius:50%; }
+  .punch-hole em { font:9px Georgia,serif; color:#a4977a; }.punch-hole.punched { background:#8c8c7866; box-shadow:inset 1px 2px 3px #766c5080; }.punch-hole.punched em { color:#fbf7e4; }
+  .strip-notch { position:absolute; top:-1px; left:-1px; width:18px; height:18px; background:#f2ede1; clip-path:polygon(0 0,100% 0,0 100%); }.strip-reversed .strip-notch { left:auto; right:-1px; transform:scaleX(-1); }
+  .strip-arrow { display:block; text-align:center; height:16px; color:#b29a70; }.strip-flip { width:fit-content; justify-self:center; }
+  .found-evidence { display:flex; justify-content:center; flex-wrap:wrap; gap:15px; margin-bottom:25px; padding:15px; border-bottom:1px dotted #bdc5b0; font-size:14px; }
+  .rain-listening { padding:35px 20px; text-align:center; color:#7b8d83; }
+  @media(max-width:700px) { .evidence-dialog .dialog-body { padding:18px 12px; }.evidence-sheet { padding:18px 12px; }.cipher-grid { font-size:20px; }.cipher-grid td { height:39px; }.punched-strip { padding:18px 16px; }.punch-columns { gap:6px; }.punch-hole { width:21px; height:21px; } }
+}

@@ -10,7 +10,8 @@ import { createDialog } from './ui/dialog.js';
 import { announce } from './ui/dom.js';
 import { createAudio } from './services/audio.js';
 import { bindInteractions } from './ui/interactions/index.js';
-import { memoryActions } from './ui/memory-actions.js';
+import { viewActions } from './ui/view-actions.js';
+import { blockedMove } from './ui/interactions/feedback.js';
 
 const app = document.querySelector('#app');
 app.innerHTML = '<div class="game-shell"><div id="room-stage" class="room-stage"></div><div id="hud"></div><div id="home"></div></div><dialog id="explore-dialog" aria-labelledby="dialog-title"></dialog><p id="toast" role="status" class="toast" hidden></p><input id="save-file" type="file" accept=".json,application/json" hidden>';
@@ -28,13 +29,17 @@ function performMove(move) {
   if (ui.panel?.type !== 'puzzle') return false;
   const id = ui.panel.id;
   const changed = store.dispatch({ type: 'move', id, move });
-  if (changed) audio.material(['paper', 'paperBack', 'album', 'screen', 'film'].includes(id) ? 'paper' : 'wood');
+  if (changed) {
+    if (id === 'melody' && ['note','set-note'].includes(move.type)) audio.previewNote(store.get().progress.melody.notes[move.index]);
+    else audio.material(id === 'wordlock' ? 'key' : id === 'postbox' || move.type === 'set-turn' ? 'metal' : ['paper', 'paperBack', 'album', 'screen', 'film'].includes(id) ? 'paper' : 'wood');
+  }
   return changed;
 }
 function renderDialog(preserveFocus = true) {
   disposeInteractions();
   if (!ui.panel) return;
   dialog.show(renderPanel(ui.panel, context()), { preserveFocus });
+  if (ui.panel.type === 'ambient') audio.rain(); else audio.stopRain();
   const state = store.get(), id = ui.panel.type === 'puzzle' ? ui.panel.id : null;
   disposeInteractions = bindInteractions(dialog.element, { id, progress: state.progress[id], solved: state.solved.includes(id), move: performMove, activity });
 }
@@ -66,6 +71,7 @@ function openPanel(panel, push = true) {
 function closePanel() {
   disposeInteractions();
   audio.stopMelody();
+  audio.stopRain();
   ui.panel = ui.stack.pop() ?? null;
   if (ui.panel) renderDialog(false); else dialog.hide();
 }
@@ -92,6 +98,8 @@ function hotspot(id) {
     puzzle: () => openPuzzle(spot.revisit && state.solved.includes(spot.revisitAfter) ? spot.revisit : spot.target),
     album: () => openPuzzle(state.solved.includes('album') ? 'stitch' : 'album'),
     collection: () => openCollection(spot.target),
+    evidence: () => { activity(`evidence:${spot.target}`); openPanel({ type: 'evidence', id: spot.target }); },
+    ambient: () => { audio.material('glass'); openPanel({ type: 'ambient' }); },
     pet: () => { ui.petAwake = false; openPanel({ type: 'pet', id: spot.target }); },
     ending: () => { if (state.solved.includes('stitch')) { store.dispatch({ type: 'ending' }); audio.success(); openPanel({ type: 'ending' }); } else openPanel({ type: 'ring-wait' }); },
   };
@@ -110,7 +118,7 @@ function exportSave() {
   toast('存档已保存。');
 }
 const actions = {
-  ...memoryActions({ panel: () => ui.panel, render: renderDialog, activity }),
+  ...viewActions({ panel: () => ui.panel, render: renderDialog, activity }),
   start: async () => { ui.home = false; await audio.resume(); audio.ambient(); store.dispatch({ type: 'start' }); },
   home: () => { ui.home = true; render(store.get()); },
   'scene-prev': () => look(-1), 'scene-next': () => look(1),
@@ -121,6 +129,8 @@ const actions = {
   journal: () => openPanel({ type: 'journal', tab: 'clues' }),
   'journal-tab': button => { ui.panel = { type: 'journal', tab: button.dataset.tab }; renderDialog(false); },
   collection: button => openCollection(button.dataset.id),
+  evidence: button => { activity(`evidence:${button.dataset.id}`); openPanel({ type: 'evidence', id: button.dataset.id }); },
+  campus: button => openPanel({ type:'campus', id:Number(button.dataset.index) }),
   keepsake: button => openPanel({ type: 'keepsake', id: button.dataset.id }),
   encore: () => openPanel({ type: 'encore' }),
   reading: () => openPanel({ type: 'reading' }), interests: () => openPanel({ type: 'interests' }),
@@ -149,7 +159,7 @@ app.addEventListener('click', async event => {
   if (button.dataset.pmove && ui.panel?.type === 'puzzle') {
     try {
       const changed = performMove(JSON.parse(button.dataset.pmove));
-      if (!changed) announce(ui.panel.id === 'stitch' ? '这个孔现在穿不过去。' : ui.panel.id === 'belt' ? '线到不了这一轮。' : '这一步没有挪动。');
+      if (!changed) { blockedMove(button); announce(ui.panel.id === 'drawers' ? '木销挡着。' : ui.panel.id === 'stitch' ? '这一针没有穿过去。' : ui.panel.id === 'belt' ? '线到不了这一轮。' : '这一步没有挪动。'); }
     } catch { toast('没放好，再试试。'); }
     return;
   }

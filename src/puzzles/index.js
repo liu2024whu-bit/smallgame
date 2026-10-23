@@ -12,5 +12,6 @@ import { drawers } from './drawers.js';
 import { flips } from './flips.js';
 import { packing } from './packing.js';
 import { melody } from './melody.js';
+import { postbox, wordlock } from './locks.js';
 
-export const RULES = Object.freeze({ paper, cloud, calibration, books, screen, belt, film, flowers, paperBack, cloudGap, album, stitch, maze, balance, drawers, flips, packing, melody });
+export const RULES = Object.freeze({ paper, cloud, calibration, postbox, books, screen, belt, film, flowers, paperBack, cloudGap, wordlock, album, stitch, maze, balance, drawers, flips, packing, melody });

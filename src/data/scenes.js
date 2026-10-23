@@ -27,7 +27,6 @@ export const SCENES = Object.freeze([
     puzzle('melody', '钉轮音乐盒', 79, 58, 10, 16),
     inspect('naruto-board', '带土与卡卡西', 'naruto', 21.4, 34.5, 14, 32),
     inspect('genshin-prints', '魈与流浪者', 'genshin', 61.2, 14, 8, 18),
-    inspect('genshin-second', '流浪者与魈的立牌', 'genshin', 83.5, 14, 10, 18),
     inspect('hei-tickets', '罗小黑战记Ⅱ票夹', 'hei', 85.5, 34, 11, 15),
     { id: 'reading-list', kind: 'reading', label: '推荐过的书与电影', x: 54.5, y: 18, width: 10, height: 16 },
     { id: 'interests', kind: 'interests', label: '游戏与小小的日常', x: 87, y: 57, width: 12, height: 16 },
@@ -39,6 +38,18 @@ export const SCENES = Object.freeze([
     { id: 'ring-lamp', kind: 'ending', label: '年轮灯', x: 60, y: 44, width: 15, height: 26 },
     { id: 'dog', kind: 'pet', target: 'dog', label: '打盹的小狗', x: 39.5, y: 76, width: 21, height: 18 },
     { id: 'birthday-gift', kind: 'birthday', label: '10月29日的小礼物', x: 74, y: 50, width: 10, height: 11 },
+  ] },
+  { id: 'rain', title: '雨廊', hotspots: [
+    puzzle('postbox', '邮匣', 68, 52, 16, 48),
+    inspect('rain-postcards', '两张明信片', 'cities', 48, 52, 10, 7),
+    { id: 'postal-grid', kind: 'evidence', target: 'postal', label: '墙上的分拣格', x: 81.4, y: 21.5, width: 8, height: 18 },
+    { id: 'rain-bell', kind: 'ambient', target: 'rain', label: '听雨', x: 23.5, y: 20.5, width: 4, height: 7 },
+  ] },
+  { id: 'atelier', title: '画桌', hotspots: [
+    puzzle('wordlock', '五格字匣', 51, 46.5, 19, 19),
+    { id: 'alphabet-grid', kind: 'evidence', target: 'alphabet', label: '字表', x: 65.5, y: 53, width: 10, height: 9 },
+    inspect('atelier-drawings', '画稿', 'naruto', 13, 48, 20, 46),
+    inspect('atelier-sketch', '添点颜色', 'genshin', 33, 43, 10, 13),
   ] },
 ]);
 

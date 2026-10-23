@@ -2,10 +2,15 @@ import { puzzlePanel } from './workbench.js';
 import { journalPanel, collectionPanel, keepsakePanel, readingPanel, interestsPanel, flowersPanel, itemPanel, endingPanel } from './notebook.js';
 import { character, icon } from './dom.js';
 import { encorePanel } from './achievements.js';
+import { evidencePanel } from './evidence.js';
+import { campusPanel } from './campus.js';
 
 export function renderPanel(panel, context) {
   const simple = {
     puzzle: () => puzzlePanel(panel.id, context),
+    evidence: () => evidencePanel(panel.id, context),
+    campus: () => campusPanel(Number(panel.id), context),
+    ambient: () => ({ title: '雨声', className: 'inspect-dialog', html: '<div class="rain-listening"><p>等一小会儿。</p><p>雨落在窗沿上。</p></div>' }),
     journal: () => journalPanel(context.state, panel.tab),
     collection: () => collectionPanel(panel.id, context),
     keepsake: () => keepsakePanel(panel.id, context.state),

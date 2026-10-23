@@ -1,8 +1,11 @@
 import { READING } from './memories.js';
+import { EVIDENCE_IDS } from './ciphers.js';
 
 export const MEMORY_IDS = ['sky', 'naruto', 'hashira', 'genshin', 'hei', 'prince', 'cities'];
 export const ACTIVITY_IDS = Object.freeze([
   'pet:cat', 'pet:dog', 'art:color', 'cinema:play',
+  ...EVIDENCE_IDS.map(id => `evidence:${id}`),
+  'campus:whu', 'campus:nju',
   ...[0, 1, 2].map(index => `art:detail:${index}`),
   ...['rose', 'daisy', 'tulip', 'lavender'].map(id => `flower:${id}`),
   ...READING.map((_, index) => `reading:${index}`),
@@ -10,6 +13,7 @@ export const ACTIVITY_IDS = Object.freeze([
 ]);
 
 export const ACHIEVEMENTS = Object.freeze([
+  { id:'campuses', title:'两枚邮戳', text:'两张折页，都盖好印了。', keys:['campus:whu','campus:nju'], motif:'envelope' },
   { id: 'pets', title: '都摸摸', text: '猫和狗都醒过一小会儿。', keys: ['pet:cat', 'pet:dog'], motif: 'paw' },
   { id: 'flowers', title: '一小束', text: '四朵花，各有一句祝福。', keys: ['rose', 'daisy', 'tulip', 'lavender'].map(id => `flower:${id}`), motif: 'daisy' },
   { id: 'reading', title: '下一本', text: '推荐过的名字，都翻到了。', keys: READING.map((_, index) => `reading:${index}`), motif: 'book' },

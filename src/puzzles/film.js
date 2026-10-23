@@ -23,7 +23,7 @@ export const film = {
   move(state, action) {
     if (action.type === 'reorder') return { ...state, order: reorder(state.order, action.from, action.to) };
     if (action.type === 'shift') return { ...state, order: moveAdjacent(state.order, action.index, action.direction) };
-    if (action.type === 'frame') return { ...state, frame: (state.frame + 1) % 3 };
+    if (action.type === 'frame') return { ...state, frame: indexIn(action.index,3) ? action.index : (state.frame + 1) % 3 };
     if (action.type === 'flip' && indexIn(action.index, 4)) return { ...state, faces: state.faces.map((v, i) => i === action.index ? 1 - v : v) };
     return state;
   },

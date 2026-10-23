@@ -9,7 +9,9 @@ import { escape, icon, itemSprite, motif, character } from './dom.js';
 
 const WAITING = {
   calibration: '灯座上，还空着两个槽。',
-  books: '书脊上的字太浅了。',
+  postbox: '字轮藏在暗处。',
+  wordlock: '压纸的夹层还没有松开。',
+  books: '书脊间，还缺一张借阅签。',
   screen: '侧光没有照过来。',
   belt: '轮子和摇柄还没装上。',
   film: '胶片轮还没动。',
@@ -27,7 +29,7 @@ export function puzzlePanel(id, context) {
   const completed = state.solved.includes(id);
   if (!availability.ready) return { title: definition.title, className: 'inspect-dialog', html: `<div class="locked-object">${motif('leaf')}<p>${escape(WAITING[id] ?? '还少点东西。')}</p>${availability.missing.length ? `<div class="missing-tools">${availability.missing.map(tool => `<span>${escape(ITEMS[tool].name)}</span>`).join('')}</div>` : ''}<button class="primary-button" data-action="close">再找找</button></div>` };
   const hintCount = state.hints[id] ?? 0;
-  return { title: definition.title, className: `workbench-dialog puzzle-${id} ${completed ? 'puzzle-complete' : ''}`, html: `<div class="workbench-intro"><p>${escape(definition.instruction)}</p></div>${definition.tools.length ? `<div class="workbench-tools" aria-label="手边的物件">${definition.tools.map(tool => `<span title="${escape(ITEMS[tool].description)}">${itemSprite(ITEMS[tool].sprite)}${escape(ITEMS[tool].name)}</span>`).join('')}</div>` : ''}<div class="puzzle-field ${completed ? 'solved-field' : ''}">${PUZZLE_VIEWS[id](state.progress[id], context)}</div>${completed ? completion(id) : `<div class="workbench-footer"><div><button class="quiet-button" data-action="undo" ${state.history[id]?.length ? '' : 'disabled'}>${icon('undo')}退一步</button><button class="quiet-button" data-action="reset-puzzle">${icon('reset')}重来</button></div><button class="quiet-button hint-button" data-action="hint">${icon('hint')}${hintCount ? '再看一点' : '提示'}<small>${hintCount} / 3</small></button></div>`}${hintCount && !completed ? `<aside class="hint-notes">${definition.hints.slice(0, hintCount).map((hint, index) => `<p><span>${index + 1}</span>${escape(hint)}</p>`).join('')}</aside>` : ''}` };
+  return { title: definition.title, className: `workbench-dialog puzzle-${id} ${completed ? 'puzzle-complete' : ''}`, html: `<div class="workbench-intro"><p>${escape(definition.instruction)}</p></div>${definition.tools.length ? `<details class="tools-fold"><summary>手边</summary><div class="workbench-tools" aria-label="手边的物件">${definition.tools.map(tool => `<span title="${escape(ITEMS[tool].description)}">${itemSprite(ITEMS[tool].sprite)}${escape(ITEMS[tool].name)}</span>`).join('')}</div></details>` : ''}<div class="puzzle-field ${completed ? 'solved-field' : ''}">${PUZZLE_VIEWS[id](state.progress[id], context)}</div>${completed ? completion(id) : `<div class="workbench-footer"><div><button class="quiet-button" data-action="undo" ${state.history[id]?.length ? '' : 'disabled'}>${icon('undo')}退一步</button><button class="quiet-button" data-action="reset-puzzle">${icon('reset')}重来</button></div><button class="quiet-button hint-button" data-action="hint">${icon('hint')}${hintCount ? '再看一点' : '提示'}<small>${hintCount} / 3</small></button></div>`}${hintCount && !completed ? `<aside class="hint-notes">${definition.hints.slice(0, hintCount).map((hint, index) => `<p><span>${index + 1}</span>${escape(hint)}</p>`).join('')}</aside>` : ''}` };
 }
 
 function completion(id) {

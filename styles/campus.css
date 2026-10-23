@@ -1,0 +1,21 @@
+@layer notebook {
+  .campus-dialog .dialog-body { padding:18px; background:#f5f1e6; }
+  .campus-foldout { background:#fffdf5; padding:9px 9px 0; box-shadow:2px 5px 8px #74674c1c; }
+  .campus-painting { position:relative; overflow:hidden; }
+  .campus-painting > img { width:100%; display:block; transition:scale 1s, transform-origin 1s; }
+  .campus-whu .campus-looked img { scale:1.16; transform-origin:29% 45%; }
+  .campus-nju .campus-looked img { scale:1.15; transform-origin:50% 35%; }
+  .paper-fold { position:absolute; top:0; bottom:0; width:1px; background:#fdfcf296; box-shadow:-3px 0 4px #5e685022,3px 0 3px #fff9e963; pointer-events:none; }
+  .fold-one { left:33.3%; }.fold-two { left:66.6%; }
+  .campus-landmark { position:absolute; width:20%; height:35%; transform:translate(-50%,-50%); border:0; background:transparent; }
+  .campus-landmark span { position:absolute; bottom:-17%; left:0; right:0; font-size:13px; color:#4d6150; opacity:0; background:#fff8e4cf; width:fit-content; margin:auto; padding:3px 9px; transition:opacity .25s; white-space:nowrap; }
+  .campus-landmark:hover span, .campus-landmark:focus-visible span, .campus-looked .campus-landmark span { opacity:1; }
+  .whu-plaque { position:absolute; left:27.4%; top:30.3%; width:6.9%; height:3.5%; color:#695943; font-size:clamp(8px,1vw,12px); line-height:1; display:grid; place-content:center; letter-spacing:.15em; transform:rotate(10deg); pointer-events:none; }
+  .campus-looked .whu-plaque { opacity:0; }
+  .campus-margin { display:flex; align-items:center; justify-content:space-between; padding:17px 20px; min-height:98px; color:#7e8874; }
+  .campus-margin > span { font-size:15px; }.campus-stamp { padding:8px 10px; min-width:160px; min-height:60px; color:#8d977d; border-bottom:1px dotted #adb29f; font-size:13px; }
+  .campus-stamp .postal-mark { width:57px; height:57px; font-size:12px; border-color:#a287796e; color:#9a7c6a; }.campus-stamp .postal-mark > span { font-size:13px; }
+  .stamp-pressed { border:0; rotate:-3deg; animation:stamp-land .35s ease-out; }
+  @keyframes stamp-land { from { scale:1.25; opacity:.25; } to { scale:1; opacity:1; } }
+  @media(max-width:700px) { .campus-dialog .dialog-body { padding:10px; }.campus-margin { padding:10px 5px; }.campus-margin > span { font-size:12px; }.campus-stamp { min-width:130px; }.whu-plaque { font-size:5px; } }
+}

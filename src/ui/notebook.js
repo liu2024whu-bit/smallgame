@@ -8,12 +8,14 @@ import { discoveredCollections, keepsakes } from '../core/state.js';
 import { escape, character, itemSprite, motif, icon } from './dom.js';
 import { memoryExhibit } from './exhibits.js';
 import { achievementsPage } from './achievements.js';
+import { EVIDENCE_TITLES } from './evidence.js';
+import { ITEM_EVIDENCE } from '../data/ciphers.js';
 
 export function journalPanel(state, tab = 'clues') {
   const tabs = [['clues', '线索'], ['memories', '以前'], ['collections', '收藏'], ['activities', '小记']];
   const entries = state.solved.filter(id => CLUES[id]);
   const body = {
-    clues: `${entries.length ? entries.map(id => `<article class="journal-entry"><span class="entry-leaf">${motif('leaf')}</span><h3>${escape(CLUES[id][0])}</h3><p>${escape(CLUES[id][1])}</p></article>`).join('') : '<p class="empty-note">先看看桌上的书签和棉线。</p>'}<div class="progress-garden">${PUZZLES.filter(p => p.optional).map(p => `<span class="${state.solved.includes(p.id) ? 'bloomed' : ''}" title="${escape(p.title)}">${motif(state.solved.includes(p.id) ? 'daisy' : 'leaf')}</span>`).join('')}<small>柜里的小玩意</small></div>`,
+    clues: `<div class="found-evidence">${Object.entries(EVIDENCE_TITLES).filter(([id]) => state.activities.includes(`evidence:${id}`)).map(([id,title]) => `<button class="text-button" data-action="evidence" data-id="${id}">${title}</button>`).join('')}</div>${entries.length ? entries.map(id => `<article class="journal-entry"><h3>${escape(CLUES[id][0])}</h3><p>${escape(CLUES[id][1])}</p></article>`).join('') : '<p class="empty-note">还没记下什么。</p>'}<div class="progress-garden">${PUZZLES.filter(p => p.optional).map(p => `<span class="${state.solved.includes(p.id) ? 'bloomed' : ''}" title="${escape(p.title)}">${motif(state.solved.includes(p.id) ? 'daisy' : 'leaf')}</span>`).join('')}<small>柜里的小玩意</small></div>`,
     memories: entries.filter(id => MEMORIES[id]).map(id => `<article class="journal-entry"><h3>${escape(MEMORIES[id].title)}</h3><p>${escape(MEMORIES[id].text)}</p></article>`).join('') || '<p class="empty-note">还没写到这里。</p>',
     collections: collectionIndex(state),
     activities: achievementsPage(state),
@@ -57,7 +59,8 @@ export function flowersPanel(selected = 'rose') {
 
 export function itemPanel(id) {
   const item = ITEMS[id];
-  return { title: item.name, className: 'inspect-dialog', html: `<div class="item-inspect">${itemSprite(item.sprite)}<p>${escape(item.description)}</p></div>` };
+  const back = ITEM_EVIDENCE[id];
+  return { title: item.name, className: 'inspect-dialog', html: `<div class="item-inspect">${itemSprite(item.sprite)}<p>${escape(item.description)}</p>${back ? `<button class="text-button" data-action="evidence" data-id="${back}">翻过来</button>` : ''}</div>` };
 }
 
 export function endingPanel(selected = 'rose') {

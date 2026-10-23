@@ -3,7 +3,23 @@ import { pointerSession, dragGhost } from './pointer.js';
 export function bindObjects(root, id, move) {
   if (id === 'balance') return bindWeights(root, move);
   if (id === 'melody') return bindPins(root, move);
+  if (id === 'flowers') return bindBookmark(root, move);
   return () => {};
+}
+
+function bindBookmark(root, move) {
+  const zones=[...root.querySelectorAll('.flower-column')];
+  return pointerSession(root,{
+    pick(event){const source=event.target.closest('[data-bookmark-grab]');return source?{source,index:-1}:null;},
+    start(gesture){gesture.ghost=dragGhost(gesture.source,'bookmark-ghost');},
+    move(gesture,event){
+      gesture.ghost.style.left=`${event.clientX-15}px`;gesture.ghost.style.top=`${event.clientY-35}px`;
+      gesture.index=zones.findIndex(zone=>{const b=zone.getBoundingClientRect();return event.clientX>=b.left&&event.clientX<=b.right&&event.clientY>=b.top&&event.clientY<=b.bottom;});
+      zones.forEach((zone,index)=>zone.classList.toggle('drop-target',index===gesture.index));
+    },
+    end(gesture,_,cancelled){if(!cancelled)move({type:'set-pin',index:gesture.index});},
+    clear(){zones.forEach(zone=>zone.classList.remove('drop-target'));},
+  });
 }
 
 function bindWeights(root, move) {

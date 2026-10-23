@@ -9,7 +9,8 @@ export function bindReorder(root, id, move) {
   pieces.forEach((piece, index) => { piece.dataset.reorder = index; piece.classList.add('can-drag'); });
   return pointerSession(root, {
     pick(event) {
-      if (event.target.closest('button')) return null;
+      const button=event.target.closest('button');
+      if (button && !button.matches('.film-inspect, .page-face')) return null;
       const source = event.target.closest('[data-reorder]');
       return source ? { source, from: Number(source.dataset.reorder) } : null;
     },

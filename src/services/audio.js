@@ -3,9 +3,11 @@ export function createAudio() {
   let context, master, ambientTimer;
   let settings = { sound: true, volume: 0.35 };
   const timers = new Set();
+  let rainSource;
 
   function configure(next) {
     settings = next;
+    if (!settings.sound) stopRain();
     if (master) master.gain.setTargetAtTime(settings.sound ? settings.volume * 0.4 : 0, context.currentTime, 0.08);
   }
 
@@ -54,7 +56,7 @@ export function createAudio() {
 
   function material(kind = 'wood') {
     if (kind === 'paper') return paper();
-    const notes = { wood: [260, 0.09], glass: [940, 0.65], pet: [390, 0.22], pickup: [520, 0.4] };
+    const notes = { wood: [260, 0.09], glass: [940, 0.65], pet: [390, 0.22], pickup: [520, 0.4], key:[155,.045], metal:[720,.065] };
     const [frequency, length] = notes[kind] ?? notes.wood;
     tone(frequency, length, 0.15, 0, kind === 'wood' ? 'triangle' : 'sine');
   }
@@ -77,6 +79,16 @@ export function createAudio() {
   }
 
   function stopMelody() { for (const timer of timers) window.clearTimeout(timer); timers.clear(); }
+  function previewNote(note) { const frequencies=[261.63,293.66,329.63,392,440]; if(frequencies[note])tone(frequencies[note],.5,.18); }
+  function stopRain() { if(!rainSource)return;rainSource.source.stop();rainSource.source.disconnect();rainSource.filter.disconnect();rainSource=null; }
+  function rain() {
+    if(rainSource || !context || !settings.sound || document.hidden)return;
+    const buffer=context.createBuffer(1,context.sampleRate*4,context.sampleRate),samples=buffer.getChannelData(0);
+    for(let i=0;i<samples.length;i++)samples[i]=(Math.random()*2-1)*.035;
+    const source=context.createBufferSource(),filter=context.createBiquadFilter();source.buffer=buffer;source.loop=true;
+    filter.type='lowpass';filter.frequency.value=1800;source.connect(filter).connect(master);source.start();rainSource={source,filter};
+  }
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)stopRain();});
   function melody(notes, illuminate) {
     stopMelody();
     const frequencies = [261.63, 293.66, 329.63, 392, 440];
@@ -89,5 +101,5 @@ export function createAudio() {
       timers.add(timer);
     });
   }
-  return { resume, configure, material, success, ambient, melody, stopMelody };
+  return { resume, configure, material, success, ambient, melody, stopMelody, previewNote, rain, stopRain };
 }

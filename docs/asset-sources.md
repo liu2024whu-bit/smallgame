@@ -1,6 +1,6 @@
 # 画面与参考
 
-运行时的图片全部随仓库提供，不依赖远程热链。四幅完整书房场景、机关物件、猫狗和角色同人插画由图像生成工具绘制，再以 WebP 导出；图片本身不是用CSS或矢量图形拼出来的场景。源码中的小图标、连线和轨道只承担界面与规则表达。
+运行时的图片全部随仓库提供，不依赖远程热链。六幅完整书房场景、机关物件、猫狗和角色同人插画由图像生成工具绘制，再以 WebP 导出；图片本身不是用CSS或矢量图形拼出来的场景。源码中的小图标、连线和轨道只承担界面与规则表达。
 
 游戏使用的新绘画面不等同于原作官方素材，也不等同于收礼者的真实画作。代码的MIT许可不覆盖第三方角色与作品的原有权利。此项目未取得这些角色的商业授权，不对素材目录作此授权声明。
 
@@ -12,6 +12,8 @@
 | `assets/scenes/window.webp` | 双面云景、联动花架、玫瑰与明信片 |
 | `assets/scenes/collection.webp` | 软木板中的带土/卡卡西画稿，书架上的魈/流浪者立牌，与柜中机械摆件；角色作为场景内物件整合绘制 |
 | `assets/scenes/entry.webp` | 门边、礼物、狗和年轮灯 |
+| `assets/scenes/rain.webp` | 雨廊、邮匣、两张明信片与分拣格纸件 |
+| `assets/scenes/atelier.webp` | 画桌、五格字匣、机械键盘、字表与孔带 |
 | `assets/illustrations/items.webp` | 12件可重复使用的工具与画页；木书签按描述的实物外观重绘，刻尺纸套是游戏虚构 |
 | `assets/illustrations/motifs.webp` | 云、星、叶、玫瑰、猫爪、月、三盆花、书、信封与花瓣 |
 | `assets/illustrations/board.webp` | 可放大机关的纸面工作台，不参与判断答案 |
@@ -30,10 +32,16 @@
 | `assets/illustrations/puppy-parcel.webp` | 小狗包装礼物单独绘制并完整留边，避免图集右边缘压住盒角 |
 | `assets/illustrations/memory-genshin.webp` | 原创同人绘画跨页，作为添色互动，非她本人画作 |
 | `assets/illustrations/memory-naruto.webp` | 共同视角中的稿本、明信片与挂件，不重现已有漫画分镜，非她本人画作 |
-| `assets/illustrations/film-scenes.webp` | 以官方角色图核对小黑绿袖宽裤、无限深色长发与灰青袍、鹿野银色偏分短发与裤装；弃用白发无限/长角鹿野的错误稿 |
+| `assets/illustrations/cinema.webp` | 横向完整石桥画面，小黑绿袖宽裤、无限深色长发灰青袍、鹿野银色偏分短发裤装按官方角色图核对；替换三张窄竖幅电影图，旧文件已移除 |
 | `assets/illustrations/puzzle-garden.webp` | 同原书房笔触与浅色调的花架近景；可动花盆独立叠在支架上 |
 | `assets/illustrations/puzzle-props.webp` | 迷宫木盒、天平、音乐盒、抽屉柜、翻片盒、装订稿本；不同机关采用各自的实物画面 |
 | `assets/illustrations/packing-picture.webp` | 专门为五块木片制作完整画面，替代孤立角色白底切片 |
+| `assets/illustrations/postbox.webp` | 四轮邮匣近景，动态字轮与锁扣对齐原画位置 |
+| `assets/illustrations/keyboard.webp` | 五格字匣与键盘近景，文字由界面排印，保留可输入操作 |
+| `assets/illustrations/lightbench.webp` | 透片灯台、镜子、刻尺与三个旋钮，投影随真实机关状态改变 |
+| `assets/illustrations/projector.webp` | 打开放映机侧板；轮心按实际图像重新定位，动态棉线独立连入 |
+| `assets/illustrations/campus-whu.webp` | 武大老斋舍折页，以公开实景照片的石砌入口、红色平开窗和屋檐为依据，日字斋牌文字由HTML排印 |
+| `assets/illustrations/campus-nju.webp` | 南大鼓楼校区北大楼折页，核对灰瓦屋脊、中央方塔、红星、藤蔓、台阶与正门 |
 
 最新绘制/修饰的提示词与参考角色对应关系保存在 [art-prompts.json](art-prompts.json)。使用内置图像工具；Pillow仅用于WebP编码转换，没有用程序图形替代场景，也未将私人原照或信件发送给绘图工具。
 
@@ -64,3 +72,7 @@ V1中的三张既有WebP在仓库历史中已经截断，无法正常解码；V2
 ## 动效实现依据
 
 核对了 [Motion](https://github.com/motiondivision/motion) 与 [Anime.js](https://github.com/juliangarnier/anime) 的项目说明。当前位移、旋转、描线与减少动态效果可用浏览器原生动画接口完成，因此未引入额外运行库或克隆依赖。只动画实际被操作的对象，省去常驻粒子、全屏发光与持续漂浮。开源库目录没有新增安装。
+
+## V2.2校园核对边界
+
+校园折页是依实景绘制的插画，不充当测绘地图或官方导览。名称和可辨识建筑细节使用两校公开资料：[武汉大学老斋舍实景](https://news.whu.edu.cn/info/1002/46686.htm)、[南京大学北大楼官方介绍](https://www.nju.edu.cn/info/4041/422051.htm)。没有添加未经确认的就读学校、同行游览、校史、路线、官方纪念章或校内编号。游戏中的邮戳、格号与密码只在纸件边缘出现，属于本作机关。

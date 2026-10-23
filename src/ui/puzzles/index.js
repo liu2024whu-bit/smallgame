@@ -7,13 +7,16 @@ import { renderAlbum, renderStitch } from './assembly.js';
 import { renderMaze, renderBalance, renderDrawers, renderFlips } from './toys.js';
 import { renderPacking } from './packing.js';
 import { renderMelody } from './melody.js';
+import { renderPostbox, renderWordlock } from './locks.js';
+import { renderNegative } from './negative.js';
 
 export const PUZZLE_VIEWS = Object.freeze({
   paper: renderPaper, cloud: renderCloud, calibration: renderCalibration,
   books: renderBooks, screen: renderScreen, belt: renderBelt,
   film: renderFilm, flowers: renderFlowers, paperBack: renderPaperBack,
-  cloudGap: (progress, context) => renderCloud(progress, context, true),
+  cloudGap: renderNegative,
   album: renderAlbum, stitch: renderStitch, maze: renderMaze,
   balance: renderBalance, drawers: renderDrawers, flips: renderFlips,
   packing: renderPacking, melody: renderMelody,
+  postbox: renderPostbox, wordlock: renderWordlock,
 });
