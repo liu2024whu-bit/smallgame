@@ -47,6 +47,9 @@
   .short-note { padding: 20px 18px; text-align: center; }
   .short-note p { margin-bottom: 24px; }
   .short-note .quiet-button { margin: 12px; }
+  .keyboard-note { margin:0 auto 24px; max-width:440px; text-align:left; color:#66725e; font-size:14px; }
+  .keyboard-note summary { cursor:pointer; width:fit-content; margin:0 auto; border-bottom:1px dotted #a7b29c; }
+  .keyboard-note p { margin:12px 0 0; }
   .locked-object { text-align: center; padding: 20px; }
   .locked-object > .motif { width: 80px; margin-bottom: 14px; }
   .locked-object p { max-width: 460px; margin: 0 auto 20px; }

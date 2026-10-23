@@ -35,7 +35,7 @@ export function bindReorder(root, id, move) {
         piece.style.translate = `${destination.left - gesture.boxes[index].left}px 0`;
       });
     },
-    end(gesture, _, cancelled) { if (!cancelled && gesture.to !== null) move({ type: 'reorder', from: gesture.from, to: gesture.to }); },
+    end(gesture, _, cancelled) { if (!cancelled && gesture.to !== null) move({ type: 'reorder', from: gesture.from, to: gesture.to }); else gesture.returnToSource=true; },
     clear() { pieces.forEach(piece => { piece.classList.remove('drag-source', 'drop-target'); piece.style.removeProperty('translate'); }); },
   });
 }

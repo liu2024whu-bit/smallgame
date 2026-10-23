@@ -10,7 +10,7 @@ const FACES = [
 const faces = root => new Map(FACES.flatMap(([selector,value])=>[...root.querySelectorAll(selector)].map((el,i)=>[`${selector}:${el.dataset.focus??i}`,value(el)])));
 const digits = root => [...root.querySelectorAll('.wheel-drum b, .letter-windows button')].map(el => el.textContent);
 export const paperMotion = {
-  capture: root => ({ faces: faces(root), thread: root.querySelector('.active-thread')?.getAttribute('points'), stitches: root.querySelectorAll('.stitch-lines line').length, digits: digits(root), attempt: root.querySelector('.lock-reply')?.textContent, prints: root.querySelector('.comparison')?.innerHTML, opened: !!root.querySelector('.lock-open'), campus:root.querySelector('[data-campus-stop]')?.dataset.campusStop, wind:parseFloat(root.querySelector('.encore-handle')?.style.getPropertyValue('--wind')) }),
+  capture: root => ({ faces: faces(root), thread: root.querySelector('.active-thread')?.getAttribute('points'), stitches: root.querySelectorAll('.stitch-lines line').length, digits: digits(root), attempts: Number(root.querySelector('[data-password-lock]')?.dataset.attempts), prints: root.querySelector('.comparison')?.innerHTML, opened: !!root.querySelector('.lock-open'), campus:root.querySelector('[data-campus-stop]')?.dataset.campusStop, wind:parseFloat(root.querySelector('.encore-handle')?.style.getPropertyValue('--wind')) }),
   play(root, before) {
     for (const [selector,value] of FACES) root.querySelectorAll(selector).forEach((el, i) => {
       const old=before.faces.get(`${selector}:${el.dataset.focus??i}`);
@@ -19,7 +19,11 @@ export const paperMotion = {
     root.querySelectorAll('.wheel-drum b, .letter-windows button').forEach((el, i) => {
       if (before.digits[i] !== undefined && before.digits[i] !== el.textContent) el.animate([{ translate: '0 -25%', opacity: .3 }, { translate: '0 0', opacity: 1 }], { duration: 150, easing: 'ease-out' });
     });
-    if (before.attempt !== undefined && before.attempt !== root.querySelector('.lock-reply')?.textContent) root.querySelector('.postal-latch, .type-special')?.animate([{ translate: '0 0' }, { translate: '0 4px', offset: .4 }, { translate: '0 0' }], { duration: 240 });
+    const lock=root.querySelector('[data-password-lock]');
+    if(lock&&Number(lock.dataset.attempts)>before.attempts&&!lock.classList.contains('lock-open')){
+      lock.animate([{translate:'0px'},{translate:'-3px'},{translate:'3px'},{translate:'0px'}],{duration:240});
+      root.querySelector('.postal-latch, .type-special')?.animate([{ translate: '0 0' }, { translate: '0 4px', offset: .4 }, { translate: '0 0' }], { duration: 240 });
+    }
     if (!before.opened && root.querySelector('.lock-open')) root.querySelector('.lock-painting')?.animate([{ filter: 'brightness(1)' }, { filter: 'brightness(1.13)', offset: .5 }, { filter: 'brightness(1)' }], { duration: 600 });
     const thread = root.querySelector('.active-thread');
     if (thread && thread.getAttribute('points') !== before.thread) drawLine(thread);

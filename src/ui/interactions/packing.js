@@ -62,7 +62,7 @@ export function bindPacking(root, progress, move) {
       if (cancelled) return;
       if (gesture.valid) move({ type: 'drop', id: gesture.id, ...gesture.position });
       else if (!gesture.inside && gesture.fromBoard) move({ type: 'unplace', id: gesture.id });
-      else { announce('这里放不下。'); if (motionAllowed()) board.animate([{ translate: '-3px' }, { translate: '3px' }, { translate: '0' }], { duration: 180 }); }
+      else { gesture.returnToSource=true;announce('好像挤不进去。'); if (motionAllowed()) board.animate([{ translate: '-3px' }, { translate: '3px' }, { translate: '0' }], { duration: 180 }); }
     },
     clear,
   });

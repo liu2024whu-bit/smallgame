@@ -6,7 +6,7 @@ const PAGE_ART = [['princeHei', 0, 2, 2, '小王子'], ['skyClouds', 0, 1, 3, '�
 const PAGE_WORDS = ['玫瑰', '云', '画稿', '石桥'];
 
 export function renderAlbum(progress) {
-  return `<div class="album-workbench"><div class="album-layout">${progress.order.map((page, index) => `<div class="loose-page ${progress.faces[page] ? 'page-back' : ''}"><span class="page-letter">${String.fromCharCode(65 + page)}</span><span class="page-mark">${motif(PAGE_MARKS[page])}</span>${moveButton(`<span class="page-illustration">${character(...PAGE_ART[page])}</span><small>${progress.faces[page] ? '背' : '正'}</small>`, {type:'flip',index:page}, {key:`album-face-${page}`,className:'page-face'}).replace('<button ',`<button aria-label="翻动画页${String.fromCharCode(65+page)}，${escape(PAGE_WORDS[page])}" `)}${shiftControls(index, 4)}</div>`).join('')}</div><p class="input-note">拖动换位 · 点画页翻面</p></div>`;
+  return `<div class="album-workbench"><div class="album-layout">${progress.order.map((page, index) => `<div class="loose-page ${progress.faces[page] ? 'page-back' : ''}"><span class="page-letter">${String.fromCharCode(65 + page)}</span><span class="page-mark">${motif(PAGE_MARKS[page])}</span>${moveButton(`<span class="page-illustration">${character(...PAGE_ART[page])}</span><small>${progress.faces[page] ? '背' : '正'}</small>`, {type:'flip',index:page}, {key:`album-face-${page}`,className:'page-face'}).replace('<button ',`<button aria-label="翻动画页${String.fromCharCode(65+page)}，${escape(PAGE_WORDS[page])}" `)}${shiftControls(index, 4)}</div>`).join('')}</div><p class="input-note">画页能换位，也能翻面。</p></div>`;
 }
 
 export function renderStitch(progress) {

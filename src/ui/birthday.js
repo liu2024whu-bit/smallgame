@@ -9,7 +9,7 @@ export function passagePanel(id,context) {
 }
 
 export function birthdayNotePanel(id,context) {
-  if(id==='fries')return {title:'脆脆的',className:'birthday-note-dialog',html:`<div class="birthday-note-art">${character('birthdayDetails',0,2,1,'拆开的薯条纸袋')}</div><p class="memory-caption">咔嚓。先吃一点，慢慢想。</p><p class="recipe-slip">倒到空，或倒到满。<br>不添，也不倒掉。</p><button class="text-button" data-action="close">放在手边</button>`};
+  if(id==='fries')return {title:'脆脆的',className:'birthday-note-dialog',html:`<div class="birthday-note-art">${character('birthdayDetails',0,2,1,'拆开的薯条纸袋')}</div><p class="memory-caption">咔嚓。脑袋还在想，手已经伸过去了。</p><p class="recipe-slip">倒到空，或倒到满。<br>不添，也不倒掉。</p><button class="text-button" data-action="close">放在手边</button>`};
   const open=context.state.activities.includes('birthday:unwrap');
   return {title:open?'给你的小兔':'留给你',className:'birthday-note-dialog',html:`<div class="birthday-note-art ${open?'parcel-open':'parcel-wrapped'}">${open?`<img src="${ASSETS.bunnyParcel}" alt="为这次生日准备的米色Yummy甜美小兔" draggable="false">`:character('birthdayDetails',1,2,1,'尚未拆开的礼物袋')}</div><p class="memory-caption">${open?'今年给你准备的，米色小兔。':'还有一份，留给你。'}</p>${!open&&context.state.ending?'<button class="text-button" data-action="birthday-unwrap">拆开看看</button>':'<button class="text-button" data-action="close">先放在这儿</button>'}`};
 }

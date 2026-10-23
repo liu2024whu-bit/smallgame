@@ -19,7 +19,7 @@ export function loadSave(storage) {
       if (backup) return { state: parseSave(backup), notice: '已恢复上一份存档。' };
       return { state: createState(), notice: '存档打不开了。如果留过备份，可以在设置里读进来。' };
     }
-  } catch { return { state: createState(), notice: '这次没能自动保存。离开前，记得在设置里保存一份。' }; }
+  } catch { return { state: createState(), notice: '自动保存这次没跟上，设置里的「保存一份」还能留住进度。' }; }
 }
 
 export function writeSave(storage, state) {

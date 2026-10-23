@@ -13,7 +13,7 @@ function sketch(context) {
 
 function artist(context) {
   const focus = context.view.focus ?? 0;
-  return `<div class="artist-table detail-${focus}">${art('memoryNaruto', '带土与卡卡西的稿本、明信片和挂件')}</div><div class="memory-tabs">${['稿本', '明信片', '挂件'].map((label, index) => `<button class="text-button ${focus === index ? 'memory-active' : ''}" data-action="memory-detail" data-index="${index}" aria-pressed="${focus === index}">${label}</button>`).join('')}</div><p class="memory-caption">${['又画了好多。', '好好收着。', '继续画吧。'][focus]}</p>`;
+  return `<div class="artist-table detail-${focus}">${art('memoryNaruto', '带土与卡卡西的稿本、明信片和挂件')}</div><div class="memory-tabs">${['稿本', '明信片', '挂件'].map((label, index) => `<button class="text-button ${focus === index ? 'memory-active' : ''}" data-action="memory-detail" data-index="${index}" aria-pressed="${focus === index}">${label}</button>`).join('')}</div><p class="memory-caption">${['又画了好多。', '一直留着呢。', '小小一只，也认得出。'][focus]}</p>`;
 }
 
 function cinema(context) {
@@ -35,7 +35,7 @@ function prince(context) {
 function postcards(context) {
   const back = context.view.back ?? false;
   const index = context.view.card ?? 0;
-  return `<div class="postcard-desk"><button class="postcard ${back ? 'postcard-back' : ''}" data-action="memory-postcard" aria-label="翻看明信片">${back ? `<div class="postcard-writing"><span>${index ? '南京' : '武汉'}</span>${postalMarks(index, context.view.reflected)}<p>${index ? '南京，真不错。' : '好好留着。'}</p><small>L.</small></div>` : character('campuses', index, 2, 1, index ? '南京大学' : '武汉大学')}</button><span class="postcard-thread">${motif('leaf')}</span></div><div class="memory-tabs">${['武汉', '南京'].map((name, card) => `<button class="text-button" data-action="memory-card" data-index="${card}" aria-pressed="${index === card}">${name}</button>`).join('')}<button class="text-button" data-action="campus" data-index="${index}">展开折页</button>${back && index === 1 && inventory(context.state).includes('mirror') ? `<button class="text-button" data-action="memory-mirror" aria-pressed="${!!context.view.reflected}">${context.view.reflected ? '移开镜子' : '照一照'}</button>` : ''}</div>`;
+  return `<div class="postcard-desk"><button class="postcard ${back ? 'postcard-back' : ''}" data-action="memory-postcard" aria-label="翻看明信片">${back ? `<div class="postcard-writing"><span>${index ? '南京' : '武汉'}</span>${postalMarks(index, context.view.reflected)}<p>${index ? '南京，真不错。' : '武汉，留在这一页。'}</p><small>L.</small></div>` : character('campuses', index, 2, 1, index ? '南京大学' : '武汉大学')}</button><span class="postcard-thread">${motif('leaf')}</span></div><div class="memory-tabs">${['武汉', '南京'].map((name, card) => `<button class="text-button" data-action="memory-card" data-index="${card}" aria-pressed="${index === card}">${name}</button>`).join('')}<button class="text-button" data-action="campus" data-index="${index}">展开折页</button>${back && index === 1 && inventory(context.state).includes('mirror') ? `<button class="text-button" data-action="memory-mirror" aria-pressed="${!!context.view.reflected}">${context.view.reflected ? '移开镜子' : '照一照'}</button>` : ''}</div>`;
 }
 
 export function memoryExhibit(id, context) {

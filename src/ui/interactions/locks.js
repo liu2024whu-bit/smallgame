@@ -1,11 +1,15 @@
 import { pointerSession } from './pointer.js';
-import { motionAllowed } from '../../services/motion.js';
 
 export function bindLocks(root, progress, move) {
   const apparatus = root.querySelector('[data-password-lock]');
   if (!apparatus) return () => {};
   const kind = apparatus.dataset.passwordLock;
   const drums = [...root.querySelectorAll('[data-lock-digit]')];
+  const paint=(button,value)=>{
+    button.querySelector('b').textContent=value;
+    button.querySelector('.wheel-previous').textContent=(value+9)%10;
+    button.querySelector('.wheel-next').textContent=(value+1)%10;
+  };
   const abort = new AbortController();
   root.addEventListener('keydown', event => {
     if (event.ctrlKey || event.metaKey || event.altKey || /INPUT|TEXTAREA|SELECT/.test(event.target.tagName)) return;
@@ -24,10 +28,9 @@ export function bindLocks(root, progress, move) {
   }, { signal:abort.signal });
   const stop = kind === 'number' ? pointerSession(root, {
     pick(event) { const source = event.target.closest('[data-lock-digit]'); return source ? { source, index:Number(source.dataset.lockDigit) } : null; },
-    move(gesture,event) { const step = Math.round((gesture.y - event.clientY) / 22); gesture.value = (progress.values[gesture.index] + step % 10 + 10) % 10; gesture.source.querySelector('b').textContent = gesture.value; },
+    move(gesture,event) { const step = Math.round((gesture.y - event.clientY) / 22); gesture.value = (progress.values[gesture.index] + step % 10 + 10) % 10; paint(gesture.source,gesture.value); },
     end(gesture,_,cancelled) { if (!cancelled && gesture.value !== undefined) move({type:'set',index:gesture.index,value:gesture.value}); },
-    clear() { drums.forEach(button => { button.querySelector('b').textContent = progress.values[Number(button.dataset.lockDigit)]; }); },
+    clear() { drums.forEach(button => paint(button,progress.values[Number(button.dataset.lockDigit)])); },
   }) : () => {};
-  if (progress.attempts && !progress.opened && motionAllowed()) apparatus.animate([{translate:'0px'},{translate:'-3px'},{translate:'3px'},{translate:'0px'}], {duration:270});
   return () => { stop(); abort.abort(); };
 }

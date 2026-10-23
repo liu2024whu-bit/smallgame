@@ -28,13 +28,15 @@ const stage = document.querySelector('#room-stage');
 const dialog = createDialog(document.querySelector('#explore-dialog'), closePanel);
 let roomSignature = '', hudSignature = '', toastTimer;
 let disposeInteractions = () => {};
-let fittingHandle=false,greetingTimer;
+let fittingHandle=false,greetingTimer,completionTimer;
+const preloadedScenes = new Set();
 
 function context() { return { state: store.get(), view: ui.panel?.view ?? {}, skyPair: ui.skyPair, flower: store.get().settings.flower, petAwake: ui.petAwake, writable: store.writable() }; }
-function activity(id) { store.dispatch({ type: 'activity', id }); }
+function activity(id) { return store.dispatch({ type: 'activity', id }); }
 function performMove(move) {
   if (ui.panel?.type !== 'puzzle') return false;
   const id = ui.panel.id;
+  if(id==='melody')audio.stopMelody();
   const changed = store.dispatch({ type: 'move', id, move });
   if (changed) {
     if (id === 'melody' && ['note','set-note'].includes(move.type)) audio.previewNote(store.get().progress.melody.notes[move.index]);
@@ -43,10 +45,10 @@ function performMove(move) {
   }
   return changed;
 }
-function renderDialog(preserveFocus = true) {
+function renderDialog(preserveFocus = true, restore = null) {
   disposeInteractions();
   if (!ui.panel) return;
-  dialog.show(renderPanel(ui.panel, context()), { preserveFocus });
+  dialog.show(renderPanel(ui.panel, context()), { preserveFocus, restore });
   if (ui.panel.type === 'ambient') audio.rain(); else audio.stopRain();
   const state = store.get(), id = ui.panel.type === 'puzzle' ? ui.panel.id : null;
   disposeInteractions = bindInteractions(dialog.element, { id, progress: state.progress[id], solved: state.solved.includes(id), move: performMove, activity, changeView: patch => { ui.panel.view = {...ui.panel.view,...patch}; renderDialog(); } });
@@ -72,18 +74,22 @@ function render(state) {
   document.documentElement.classList.toggle('reduce-motion', !state.settings.motion);
   audio.configure(state.settings);
   renderDialog();
+  preloadScenes(state);
 }
 function openPanel(panel, push = true) {
-  if (push && ui.panel) ui.stack.push(ui.panel);
+  window.clearTimeout(completionTimer);
+  audio.stopMelody();
+  if (push && ui.panel) { ui.panel.presentation=dialog.capture(); ui.stack.push(ui.panel); }
   ui.panel = panel;
   renderDialog(false);
 }
 function closePanel() {
+  window.clearTimeout(completionTimer);
   disposeInteractions();
   audio.stopMelody();
   audio.stopRain();
   ui.panel = ui.stack.pop() ?? null;
-  if (ui.panel) renderDialog(false); else dialog.hide();
+  if (ui.panel) renderDialog(false, ui.panel.presentation); else dialog.hide();
 }
 function toast(text) {
   const element = document.querySelector('#toast');
@@ -96,7 +102,7 @@ function look(direction) {
   store.dispatch({ type: 'scene', id: neighborScene(store.get(),direction) });
   audio.material('paper');
 }
-function closeAllPanels(){ui.stack=[];ui.panel=null;disposeInteractions();audio.stopMelody();audio.stopRain();dialog.hide();}
+function closeAllPanels(){window.clearTimeout(completionTimer);ui.stack=[];ui.panel=null;disposeInteractions();audio.stopMelody();audio.stopRain();dialog.hide();}
 function goScene(id){if(!sceneOpen(store.get(),id)){openPanel({type:'passage',id});return;}closeAllPanels();store.dispatch({type:'scene',id});}
 async function useTool(item,target){
   const state=store.get();
@@ -129,7 +135,7 @@ function hotspot(id) {
   const target=ROOM_TOOL_TARGETS[`${state.scene}:${id}`];
   if(state.selected&&target){useTool(state.selected,target);return;}
   const handlers = {
-    pickup: () => { if (store.dispatch({ type: 'pickup', id: spot.target })) { audio.material('pickup'); toast(`收好${ITEMS[spot.target].name}。`); } },
+    pickup: () => { if (store.dispatch({ type: 'pickup', id: spot.target })) { audio.material('pickup'); toast(`${ITEMS[spot.target].name}，放在手边了。`); } },
     puzzle: () => openPuzzle(spot.revisit && state.solved.includes(spot.revisitAfter) ? spot.revisit : spot.target),
     album: () => openPuzzle(state.solved.includes('album') ? 'stitch' : 'album'),
     collection: () => openCollection(spot.target),
@@ -179,14 +185,23 @@ const actions = {
   'wish-flower': button => { setting('flower', button.dataset.id); activity(`flower:${button.dataset.id}`); audio.material('glass'); },
   settings: () => openPanel({ type: 'settings' }), 'how-to': () => openPanel({ type: 'how-to' }),
   sound: async () => { setting('sound', !store.get().settings.sound); await audio.resume(); if (store.get().begun) audio.ambient(); },
-  undo: () => currentPuzzle('undo'), 'reset-puzzle': () => currentPuzzle('reset'), hint: () => currentPuzzle('hint'),
+  undo: () => currentPuzzle('undo'), 'reset-puzzle': () => currentPuzzle('reset'), hint: () => {
+    currentPuzzle('hint');
+    const note=dialog.element.querySelector('.hint-notes p:last-child');
+    note?.scrollIntoView({block:'nearest',behavior:motionAllowed()?'smooth':'instant'});
+    if(note)announce(note.textContent);
+  },
   'sky-pair': () => { ui.skyPair = 1 - ui.skyPair; renderDialog(); },
-  'pet-touch': () => { ui.petAwake = !ui.petAwake; if (ui.petAwake) activity(`pet:${ui.panel.id}`); renderDialog(); audio.material('pet'); },
+  'pet-touch': () => { ui.petAwake = true; if(!activity(`pet:${ui.panel.id}`))renderDialog(); audio.material('pet'); },
   'hei-greet': button => { window.clearTimeout(greetingTimer);button.classList.remove('hei-greeting');void button.offsetWidth;button.classList.add('hei-greeting');greetingTimer=window.setTimeout(()=>button.classList.remove('hei-greeting'),2200);audio.material('pet'); },
-  'play-melody': () => audio.melody(store.get().progress.melody.notes, index => {
-    dialog.element.querySelectorAll('.music-pin-column').forEach((el, i) => el.classList.toggle('playing', index === i));
-    window.setTimeout(() => dialog.element.querySelectorAll('.playing').forEach(el => el.classList.remove('playing')), 350);
-  }),
+  'play-melody': () => {
+    const field=dialog.element.querySelector('.music-apparatus');
+    audio.melody(store.get().progress.melody.notes, index => {
+      if(!field?.isConnected)return;
+      field.querySelectorAll('.music-pin-column').forEach((el, i) => el.classList.toggle('playing', index === i));
+      window.setTimeout(() => field.querySelectorAll('.playing').forEach(el => el.classList.remove('playing')), 350);
+    });
+  },
   export: exportSave, import: () => document.querySelector('#save-file').click(),
   fullscreen: async () => { try { if (document.fullscreenElement) await document.exitFullscreen(); else await document.documentElement.requestFullscreen(); } catch { toast('也可以使用浏览器的全屏功能。'); } },
   restart: () => openPanel({ type: 'restart' }),
@@ -203,7 +218,7 @@ app.addEventListener('click', async event => {
     try {
       const changed = performMove(JSON.parse(button.dataset.pmove));
       if (!changed) { blockedMove(button); announce(ui.panel.id === 'drawers' ? '木销挡着。' : ui.panel.id === 'stitch' ? '这一针没有穿过去。' : ui.panel.id === 'belt' ? '线到不了这一轮。' : '这一步没有挪动。'); }
-    } catch { toast('没放好，再试试。'); }
+    } catch { toast('刚才没接住，东西还在。'); }
     return;
   }
   await actions[button.dataset.action]?.(button);
@@ -235,12 +250,21 @@ store.subscribe((state, previous) => {
   const revealed=openScenes(state).filter(scene=>!sceneOpen(previous,scene.id));
   if(revealed.length)toast(revealed[0].unlocked);
   if (state.solved.length > previous.solved.length) {
-    audio.success(); announce('解开了。');
-    dialog.element.querySelector('.completion-note')?.scrollIntoView({ behavior: motionAllowed() ? 'smooth' : 'instant', block: 'nearest' });
+    audio.success();
+    const id=ui.panel?.id;
+    window.clearTimeout(completionTimer);
+    completionTimer=window.setTimeout(()=>{
+      if(ui.panel?.type==='puzzle'&&ui.panel.id===id)dialog.element.querySelector('.completion-note')?.scrollIntoView({ behavior: motionAllowed() ? 'smooth' : 'instant', block: 'nearest' });
+    },motionAllowed()?240:0);
   }
 });
+function preloadScenes(state) {
+  for(const [id,src] of Object.entries(SCENE_ART)) {
+    if(preloadedScenes.has(id)||!sceneOpen(state,id))continue;
+    preloadedScenes.add(id);
+    const image=new Image();image.decoding='async';image.src=src;
+  }
+}
 render(store.get());
 bindInventoryUse(app,{scene:()=>store.get().scene,owns:id=>inventory(store.get()).includes(id),use:useTool});
 if (store.notice) toast(store.notice);
-// Local-only artwork; preload the other views without delaying the first room.
-Object.entries(SCENE_ART).filter(([id])=>sceneOpen(store.get(),id)).forEach(([,src])=>{const image=new Image();image.src=src;});

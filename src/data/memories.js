@@ -9,7 +9,7 @@ export const MEMORIES = Object.freeze({
   film: { title: '开场前', text: '那次电影，三个人。' },
   paperBack: { title: '练字', text: '你教我练字的时候。' },
   cloudGap: { title: '平时', text: '今天也有好多小事想说。' },
-  wordlock: { title: '画桌', text: '继续画吧，我很喜欢。' },
+  wordlock: { title: '画桌', text: '你画的，我一直很喜欢。' },
   album: { title: '留白', text: '还有好多，没写在这里。' },
 });
 

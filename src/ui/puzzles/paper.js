@@ -10,7 +10,7 @@ export function renderPaper(progress) {
   return `<div class="paper-workbench">
     <div class="sample-prints"><p class="pencil-label">三张试印</p>${OPERATIONS.map((label, index) => `<div class="print-example"><span>${escape(label)}</span>${stampRow(PAPER_SEED)}<span class="thin-arrow">→</span>${stampRow(operate(PAPER_SEED, index))}</div>`).join('')}</div>
     <div class="operation-strip">${progress.order.map((operation, index) => `<div class="operation-piece"><small>${index + 1}</small><strong>${escape(OPERATIONS[operation])}</strong>${shiftControls(index, 3)}</div>`).join('')}</div>
-    <div class="comparison"><div><p class="pencil-label">这次印的</p>${stampRow(applyOperations(PAPER_SEED, progress.order))}</div><div><p class="pencil-label">照这行印</p>${stampRow(PAPER_TARGET)}</div></div>
+    <div class="comparison"><div><p class="pencil-label">这次印的</p>${stampRow(applyOperations(PAPER_SEED, progress.order))}</div><div><p class="pencil-label">留下的印样</p>${stampRow(PAPER_TARGET)}</div></div>
   </div>`;
 }
 
