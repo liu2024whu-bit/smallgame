@@ -7,11 +7,13 @@ import { ACTIVITY_IDS } from '../data/activities.js';
 import { CONTENT_REVISION, migrateContent } from './migrations.js';
 import { sceneOpen, birthdayReady } from './exploration.js';
 import { PERSISTENT_TOOL_USES, PUZZLE_TOOL_INPUTS } from '../data/tool-uses.js';
+import { MUSIC_BY_ID } from '../data/music.js';
 
 export const SAVE_VERSION = 2;
 export const PICKUPS = ['bookmark', 'thread'];
-const DEFAULT_SETTINGS = { sound: true, volume: 0.35, motion: true, hotspots: false, skyCapeLeft: 'bat', skyCapeRight: 'bat', skyMask: 'chibi', flower: 'rose' };
-const OPTIONS = { skyCapeLeft: ['bat', 'kizuna'], skyCapeRight: ['bat', 'kizuna'], skyMask: ['chibi', 'innocence'], flower: ['daisy', 'tulip', 'lavender', 'rose'] };
+const DEFAULT_SETTINGS = { sound: true, volume: 0.35, music:true, musicVolume:.65, effectsVolume:1, musicTrack:'window',musicOrder:'cycle',motion: true, hotspots: false, skyCapeLeft: 'bat', skyCapeRight: 'bat', skyMask: 'chibi', flower: 'rose' };
+const LEVELS=['volume','musicVolume','effectsVolume'];
+const OPTIONS = { musicTrack:Object.keys(MUSIC_BY_ID),musicOrder:['cycle','repeat'],skyCapeLeft: ['bat', 'kizuna'], skyCapeRight: ['bat', 'kizuna'], skyMask: ['chibi', 'innocence'], flower: ['daisy', 'tulip', 'lavender', 'rose'] };
 
 export function createState() {
   return { version: SAVE_VERSION, revision: CONTENT_REVISION, begun: false, scene: 'desk', collected: [], discovered: [], activities: [], usedTools:[], solved: [], progress: Object.fromEntries(PUZZLES.map(p => [p.id, RULES[p.id].create()])), hints: {}, history: {}, selected: null, ending: false, settings: { ...DEFAULT_SETTINGS } };
@@ -82,9 +84,9 @@ export function normalizeState(raw) {
     state.progress[id]={...state.progress[id],opened:false,fitted:state.progress[id].fitted.map((value,index)=>value&&inventory(state).includes(inputs[index]))};
   }
   if(!sceneOpen(state,state.scene))state.scene='desk';
-  for (const key of ['sound', 'motion', 'hotspots']) if (typeof settings[key] === 'boolean') state.settings[key] = settings[key];
+  for (const key of ['sound', 'music','motion', 'hotspots']) if (typeof settings[key] === 'boolean') state.settings[key] = settings[key];
   for (const [key, values] of Object.entries(OPTIONS)) if (values.includes(settings[key])) state.settings[key] = settings[key];
-  if (Number.isFinite(settings.volume)) state.settings.volume = Math.min(1, Math.max(0, settings.volume));
+  for(const key of LEVELS)if(Number.isFinite(settings[key]))state.settings[key]=Math.min(1,Math.max(0,settings[key]));
   state.ending = raw.ending === true && state.solved.includes('stitch') && state.usedTools.includes('birthday-door');
   if(!state.ending)state.activities=state.activities.filter(id=>id!=='birthday:unwrap');
   return state;
@@ -103,8 +105,8 @@ export function reduce(state, action) {
   }
   if (action.type === 'select') return action.id === null || inventory(state).includes(action.id) ? { ...state, selected: action.id } : state;
   if (action.type === 'setting' && Object.hasOwn(DEFAULT_SETTINGS, action.key)) {
-    const value = action.key === 'volume' ? Math.min(1, Math.max(0, Number(action.value))) : action.value;
-    const valid = OPTIONS[action.key] ? OPTIONS[action.key].includes(value) : action.key === 'volume' ? Number.isFinite(value) : typeof value === 'boolean';
+    const value = LEVELS.includes(action.key) ? Math.min(1, Math.max(0, Number(action.value))) : action.value;
+    const valid = OPTIONS[action.key] ? OPTIONS[action.key].includes(value) : LEVELS.includes(action.key) ? Number.isFinite(value) : typeof value === 'boolean';
     if (!valid) return state;
     return { ...state, settings: { ...state.settings, [action.key]: value } };
   }

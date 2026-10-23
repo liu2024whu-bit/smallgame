@@ -1,0 +1,56 @@
+@layer room {
+  body.at-welcome { overflow-y:hidden; background:#f9f4e9; }
+  .welcome { position:fixed; inset:0; z-index:10; overflow:auto; overscroll-behavior:contain; isolation:isolate; background:#f9f4e9; }
+  .welcome-painting { position:absolute; top:0; right:0; width:150dvh; max-width:none; height:100%; object-fit:contain; pointer-events:none; user-select:none; z-index:-1; mask-image:linear-gradient(90deg,transparent,black 12%,black 98%,transparent); }
+  .welcome-content { min-height:100%; width:min(630px,49vw); padding:7svh 0 6svh 7.5vw; display:grid; align-content:center; }
+  .welcome-date { display:flex; align-items:center; gap:11px; font:12px/1.7 Georgia,serif; color:#697767; letter-spacing:.12em; margin:0 0 33px; }
+  .welcome-date .icon { width:17px; height:17px; color:#a48b57; }
+  .welcome-date>span { margin-left:9px; font-size:10px; letter-spacing:.08em; }
+  .welcome-dedication { font-size:15px; color:#66765f; letter-spacing:.06em; margin:0 0 16px; }
+  .welcome-title h1 { color:#4e6558; font-size:clamp(36px,4.3vw,68px); line-height:1.4; letter-spacing:.075em; white-space:nowrap; }
+  .welcome-subtitle { margin:15px 0 35px; color:#687964; font-size:18px; letter-spacing:.12em; }
+  .welcome-start { display:flex; gap:24px; align-items:center; min-height:73px; }
+  .welcome-start>.primary-button { min-width:142px; background:#fffdf4ce; }
+  .welcome-bookmark { display:flex; align-items:center; gap:8px; font-size:13px; color:#62725e; line-height:1.8; margin:0; }
+  .welcome-bookmark>.icon { width:16px; height:16px; color:#9e926f; }
+  .welcome-bookmark small { display:block; font-size:11px; color:#73816d; }
+  .welcome-links { display:flex; gap:25px; margin-top:28px; width:max-content; border-top:1px solid #a7b09870; padding-top:13px; }
+  .welcome-links button { display:flex; align-items:center; gap:7px; min-height:44px; padding:2px 0; color:#576e5d; font-size:15px; border-bottom:1px solid transparent; }
+  .welcome-links button:hover { border-bottom-color:#9ea890; }
+  .welcome-links .icon { width:17px; height:17px; }
+  .welcome-colophon { margin:26px 0 0; color:#727b69; font-size:11px; letter-spacing:.08em; }
+  .invitation { padding:0 0 20px; }
+  .invitation h1 { font-size:clamp(24px,2.1vw,35px); line-height:1.6; color:#52695a; margin:0 0 30px; letter-spacing:.04em; }
+  .invitation-copy { color:#5c6a56; font-size:clamp(16px,1.38vw,21px); line-height:2.2; margin:0 0 33px; text-wrap:pretty; }
+  .invitation-copy p { margin-bottom:23px; }
+  .welcome-back { display:block; font-size:13px; margin:25px 0 0; min-height:44px; }
+  .about-dialog { max-width:720px !important; }
+  .about-page { padding:14px 12px 20px; text-align:center; color:#5d6e59; }
+  .about-page h3 { font-size:34px; letter-spacing:.1em; margin:18px 0 8px; }
+  .about-dedication { font-size:14px; margin:0 0 30px; }
+  .about-page>p:not(.eyebrow) { line-height:2.1; }
+  .about-chapters { display:flex; gap:24px; justify-content:center; flex-wrap:wrap; margin:28px 0; border-block:1px solid #d7dacb; padding:23px 0; }
+  .about-chapters span { display:grid; gap:8px; justify-items:center; font-size:13px; }
+  .about-chapters .icon { width:20px; height:20px; color:#9a956e; }
+  .about-links { display:flex; gap:14px; justify-content:center; }
+  .about-credits { margin-top:30px; font-size:12px; color:#737a6b; text-align:left; }
+  .about-credits summary { width:fit-content; cursor:pointer; border-bottom:1px dotted #b3b7a3; margin:auto; }
+  .about-credits p { margin:18px 0 0; line-height:1.9; }
+  @media (max-width:1000px) and (min-width:701px) { .welcome-content { padding-left:5vw; width:51vw; }.welcome-start { gap:15px; }.welcome-links { gap:22px; } }
+  @media (max-width:1100px) and (orientation:portrait) {
+    .welcome-painting { position:relative; display:block; height:auto; width:100%; object-fit:contain; mask-image:linear-gradient(black 85%,transparent); }
+    .welcome-content { width:100%; min-height:0; padding:0 9vw 30px; margin-top:-7vw; }
+    .welcome-title h1 { font-size:clamp(34px,10vw,52px); letter-spacing:.07em; }
+    .welcome-date { margin-bottom:20px; }.welcome-dedication { font-size:14px; margin-bottom:10px; }
+    .welcome-subtitle { margin:9px 0 22px; font-size:16px; }.welcome-start { min-height:62px; gap:20px; }
+    .welcome-links { margin-top:19px; gap:25px; }.welcome-colophon { margin-top:18px; }
+    .invitation h1 { font-size:25px; margin-bottom:21px; }.invitation-copy { font-size:16px; line-height:2.1; margin-bottom:23px; }
+    .invitation .welcome-date { margin-bottom:18px; }.invitation { padding-bottom:4px; }
+  }
+  @media (max-height:520px) and (orientation:landscape) {
+    .welcome-content { padding-top:24px; padding-bottom:24px; }.welcome-date { margin-bottom:12px; }
+    .welcome-dedication { margin-bottom:6px; }.welcome-title h1 { font-size:36px; }.welcome-subtitle { margin:5px 0 16px; font-size:15px; }
+    .welcome-links { margin-top:10px; padding-top:3px; }.welcome-colophon { margin-top:8px; }.welcome-start { min-height:54px; }
+    .invitation h1 { margin-bottom:15px; font-size:24px; }.invitation-copy { line-height:1.9; margin-bottom:18px; }.invitation-copy p { margin-bottom:15px; }.welcome-back { margin-top:13px; }
+  }
+}

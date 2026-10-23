@@ -1,15 +1,26 @@
-// Original, quietly synthesized material sounds. Audio starts only after a gesture.
-export function createAudio() {
-  let context, master, ambientTimer;
-  let settings = { sound: true, volume: 0.35 };
+import { createMusicPlayer } from './music-player.js';
+
+// Independent music/effect buses. The first gesture unlocks audio, never page load.
+export function createAudio({advance}={}) {
+  let context, master, musicBus, duckTimer;
+  let settings = { sound: true, volume: 0.35, music:true, musicVolume:.65, effectsVolume:1, musicTrack:'window',musicOrder:'cycle' };
   const timers = new Set();
   let rainSource;
+  let ducked=false;
+  const music=createMusicPlayer({context:()=>context,destination:()=>musicBus,advance});
 
   function configure(next) {
     settings = next;
     if (!settings.sound) stopRain();
-    if (master) master.gain.setTargetAtTime(settings.sound ? settings.volume * 0.4 : 0, context.currentTime, 0.08);
+    levels();music.configure(settings);
   }
+  function levels(){
+    if(!master)return;
+    const enabled=settings.sound&&!document.hidden,volume=enabled?settings.volume:0;
+    master.gain.setTargetAtTime(volume*settings.effectsVolume*.4,context.currentTime,.08);
+    musicBus.gain.setTargetAtTime(volume*settings.musicVolume*(ducked?.2:1),context.currentTime,.12);
+  }
+  function duck(value){ducked=value;levels();}
 
   async function resume() {
     if (!context) {
@@ -17,10 +28,13 @@ export function createAudio() {
       if (!Audio) return;
       context = new Audio();
       master = context.createGain();
+      musicBus=context.createGain();
       master.connect(context.destination);
+      musicBus.connect(context.destination);
       configure(settings);
     }
     if (context.state === 'suspended') await context.resume().catch(() => {});
+    levels();music.engage();
   }
 
   function tone(frequency, duration = 0.25, volume = 0.18, delay = 0, type = 'sine') {
@@ -77,20 +91,7 @@ export function createAudio() {
     [523.25, 659.25, 783.99].forEach((note, i) => tone(note, 1.3, 0.11, i * 0.12));
   }
 
-  function ambient() {
-    if (ambientTimer) return;
-    let bar = 0;
-    const chords = [[261.63, 329.63, 392], [220, 293.66, 349.23], [246.94, 329.63, 392], [196, 293.66, 392]];
-    const play = () => {
-      const chord = chords[bar++ % chords.length];
-      chord.forEach((note, i) => tone(note, 4.5, 0.025, i * 0.35));
-      [0, 2, 1, 2].forEach((index, i) => tone(chord[index] * 2, 1.5, 0.024, 2.8 + i * 1.1));
-    };
-    play();
-    ambientTimer = window.setInterval(play, 11000);
-  }
-
-  function stopMelody() { for (const timer of timers) window.clearTimeout(timer); timers.clear(); }
+  function stopMelody() { for (const timer of timers) window.clearTimeout(timer); timers.clear();window.clearTimeout(duckTimer);duck(false); }
   function previewNote(note) { const frequencies=[261.63,293.66,329.63,392,440]; if(frequencies[note])tone(frequencies[note],.5,.18); }
   function stopRain() { if(!rainSource)return;rainSource.source.stop();rainSource.source.disconnect();rainSource.filter.disconnect();rainSource=null; }
   function rain() {
@@ -100,9 +101,10 @@ export function createAudio() {
     const source=context.createBufferSource(),filter=context.createBiquadFilter();source.buffer=buffer;source.loop=true;
     filter.type='lowpass';filter.frequency.value=1800;source.connect(filter).connect(master);source.start();rainSource={source,filter};
   }
-  document.addEventListener('visibilitychange',()=>{if(document.hidden)stopRain();});
+  document.addEventListener('visibilitychange',()=>{if(document.hidden){stopRain();stopMelody();}levels();});
   function melody(notes, illuminate) {
     stopMelody();
+    duck(true);duckTimer=window.setTimeout(()=>duck(false),notes.length*480+700);
     const frequencies = [261.63, 293.66, 329.63, 392, 440];
     notes.forEach((note, index) => {
       const timer = window.setTimeout(() => {
@@ -113,5 +115,5 @@ export function createAudio() {
       timers.add(timer);
     });
   }
-  return { resume, configure, material, pour, success, ambient, melody, stopMelody, previewNote, rain, stopRain };
+  return { resume, configure, material, pour, success, music, melody, stopMelody, previewNote, rain, stopRain };
 }

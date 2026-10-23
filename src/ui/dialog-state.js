@@ -1,5 +1,6 @@
 function selectorFor(target, root) {
   if (!target || !root.contains(target)) return null;
+  if(target.hasAttribute('data-music-seek'))return '[data-music-seek]';
   for (const key of ['focus', 'setting', 'action']) {
     if (target.dataset[key] === undefined) continue;
     const keys = key === 'action' ? [key, ...['side', 'id', 'index', 'tab'].filter(name => target.dataset[name] !== undefined)] : [key];

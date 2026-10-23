@@ -6,11 +6,11 @@ export function createStore(storage) {
   let state = loaded.state;
   let writable = true;
   const listeners = new Set();
-  function update(next) {
+  function update(next,options) {
     if (next === state) return false;
     const previous = state;
     state = next;
-    writable = writeSave(storage, state);
+    writable = writeSave(storage, state,options);
     for (const listener of listeners) listener(state, previous);
     return true;
   }
@@ -20,7 +20,7 @@ export function createStore(storage) {
     writable: () => writable,
     dispatch: action => update(reduce(state, action)),
     replace: raw => update(normalizeState(raw)),
-    restart: () => update(createState()),
+    restart: () => update({...createState(),settings:{...state.settings}},{fresh:true}),
     subscribe(listener) { listeners.add(listener); return () => listeners.delete(listener); },
   };
 }

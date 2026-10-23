@@ -1,0 +1,15 @@
+{
+  "tool": "built-in image_gen",
+  "output": "assets/scenes/welcome.webp",
+  "decodedSize": [
+    1536,
+    1024
+  ],
+  "encoding": "WebP quality 91; encoding only, no pixel repainting",
+  "references": [
+    "assets/scenes/desk.webp",
+    "assets/scenes/entry.webp"
+  ],
+  "prompt": "Use case: illustration-story. Asset type: final title-screen environment for an existing gentle Chinese birthday puzzle game, landscape 3:2 1536x1024. Input reference images: the two existing game-room illustrations are STYLE AND MATERIAL references only. Primary request: paint a beautiful complete quiet sunlit entrance to the very same cozy illustrated world, elegant and understated like a lovingly drawn independent point-and-click game. Warm ivory plaster wall occupies the entire left half with quiet softly graded empty space for game title and real HTML menu. On the right half, a slightly open pale sage wooden door gives a glimpse of the familiar light wooden writing desk, open sketchbook, a small warm desk lamp, pale blue window sky and soft green climbing leaves inside the room. A small cream ceramic bell with a linen string hangs beside the door. A small ginger cat dozes naturally at the lower right on a woven cushion. At far lower right a few restrained daisies in a ceramic pot, no big bouquet. The composition should feel like stepping into a private birthday afternoon, warm, tasteful, peaceful, inviting, faintly curious. Hand-drawn thin soft brown pencil outlines, restrained transparent watercolor, matte paper grain, clean surfaces, delicate light and soft organic shadows, clear believable perspective and construction, matching the reference images' exact quiet palette and simple scale; no glossy rendering. Keep important right-hand architecture and the complete cat within x=55%-90%, y=10%-90% of canvas. Lower left remains mostly softly lit wall / muted floor with no strong linework; no furniture or framed drawings in left half. Avoid over-detail, exaggerated anime props, collage, scrapbook borders, pasted stock pictures, white cutout edges, fake handwriting, photorealism, ornate fantasy, excessive blooms, strong orange sunset, 3D toy look. Text: none at all, no logo, no UI, no symbols or numbers. References must not be copied as pasted rectangular objects.",
+  "usage": "完整入口环境，标题、献词、菜单均为原生HTML。竖屏先显示完整画面再排文字，横屏保留比例并在图片实际边缘柔和过渡。没有使用私人通信或原始个人照片。"
+}

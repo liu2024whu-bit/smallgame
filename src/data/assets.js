@@ -9,6 +9,7 @@ export const SCENE_ART = Object.freeze({
   party:'assets/scenes/party.webp',
 });
 export const ASSETS = Object.freeze({
+  welcome:'assets/scenes/welcome.webp',
   party:'assets/scenes/party.webp',
   sweetsTable:'assets/scenes/party.webp',
   partyOpen:'assets/scenes/party-open.webp',

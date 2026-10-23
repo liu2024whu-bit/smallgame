@@ -1,39 +1,47 @@
 import { createStore } from './core/store.js';
-import { serializable, inventory, access } from './core/state.js';
+import { inventory, access } from './core/state.js';
 import { sceneOpen, openScenes, neighborScene, birthdayReady } from './core/exploration.js';
 import { roomToolTarget, toolFor, puzzleToolUse } from './data/tool-uses.js';
-import { MAX_SAVE_BYTES, parseSave } from './core/storage.js';
 import { SCENE_BY_ID } from './data/scenes.js';
 import { SCENE_ART } from './data/assets.js';
 import { sceneChanges } from './data/scene-changes.js';
 import { BLOCKED_LINES } from './data/feedback.js';
 import { ITEMS } from './data/items.js';
-import { renderRoom, renderHud, renderHome } from './ui/room.js';
+import { renderRoom, renderHud } from './ui/room.js';
 import { renderPanel } from './ui/panels.js';
 import { createDialog } from './ui/dialog.js';
 import { announce, itemSprite } from './ui/dom.js';
 import { createAudio } from './services/audio.js';
 import { fitHandle } from './services/tool-motion.js';
-import { motionAllowed } from './services/motion.js';
+import { motionAllowed,watchMotionPreferences } from './services/motion.js';
 import { roomPainting, transitionRoom } from './services/room-transition.js';
 import { bindInteractions } from './ui/interactions/index.js';
 import { viewActions } from './ui/view-actions.js';
 import { blockedMove } from './ui/interactions/feedback.js';
 import { bindInventoryUse } from './ui/interactions/inventory.js';
+import { createWelcome } from './services/welcome-flow.js';
+import { bindSaveTransfer } from './services/save-transfer.js';
+import { bindMusicControls } from './ui/music-controls.js';
+import { bindMusicProgress } from './ui/music.js';
+import { audioOnlyUpdate } from './core/presentation-updates.js';
 
 const app = document.querySelector('#app');
-app.innerHTML = '<div class="game-shell"><div id="room-stage" class="room-stage"></div><div id="hud"></div><div id="home"></div></div><dialog id="explore-dialog" aria-labelledby="dialog-title"></dialog><p id="toast" role="status" class="toast" hidden></p><input id="save-file" type="file" accept=".json,application/json" hidden>';
-const store = createStore({ getItem: key => window.localStorage.getItem(key), setItem: (key, value) => window.localStorage.setItem(key, value) });
-const audio = createAudio();
-const ui = { panel: null, stack: [], home: !store.get().begun, skyPair: 0, petAwake: false };
+app.innerHTML = '<div class="game-shell"><div id="room-stage" class="room-stage"></div><div id="hud"></div></div><section id="welcome" class="welcome" aria-labelledby="welcome-heading"></section><dialog id="explore-dialog" aria-labelledby="dialog-title"></dialog><p id="toast" role="status" class="toast" hidden></p><input id="save-file" type="file" accept=".json,application/json" hidden><input id="music-file" type="file" accept="audio/*,.mp3,.m4a,.ogg,.wav,.flac,.aac,.opus" hidden>';
+const store = createStore({ getItem: key => window.localStorage.getItem(key), setItem: (key, value) => window.localStorage.setItem(key, value),removeItem:key=>window.localStorage.removeItem(key) });
+const audio = createAudio({advance:id=>setting('musicTrack',id)});
+const ui = { panel: null, stack: [], home: true, skyPair: 0, petAwake: false };
 const stage = document.querySelector('#room-stage');
 const dialog = createDialog(document.querySelector('#explore-dialog'), closePanel);
 let roomSignature = '', hudSignature = '', toastTimer;
-let disposeInteractions = () => {};
+let disposeInteractions = () => {},disposeMusic=()=>{};
 let fittingHandle=false,greetingTimer,completionTimer;
 const preloadedScenes = new Set();
+const settleMotion=watchMotionPreferences(app);
+const welcome=createWelcome(document.querySelector('#welcome'),{getState:()=>store.get(),onReveal:()=>{document.querySelector('.game-shell').hidden=false;},onEnter:()=>{ui.home=false;if(!store.get().begun)store.dispatch({type:'start'});else render(store.get());document.querySelector('.wordmark')?.focus({preventScroll:true});}});
+const transfers=bindSaveTransfer(document.querySelector('#save-file'),{store,loaded:()=>showWelcome(),toast});
+const musicActions=bindMusicControls(document.querySelector('#music-file'),{player:audio.music,store,setting,openPanel,closePanel,toast});
 
-function context() { return { state: store.get(), view: ui.panel?.view ?? {}, skyPair: ui.skyPair, flower: store.get().settings.flower, petAwake: ui.petAwake, writable: store.writable() }; }
+function context() { return { state: store.get(), view: ui.panel?.view ?? {}, skyPair: ui.skyPair, flower: store.get().settings.flower, petAwake: ui.petAwake, writable: store.writable(),music:audio.music.snapshot() }; }
 function activity(id) { return store.dispatch({ type: 'activity', id }); }
 function performMove(move) {
   if (ui.panel?.type !== 'puzzle') return false;
@@ -48,14 +56,15 @@ function performMove(move) {
   return changed;
 }
 function renderDialog(preserveFocus = true, restore = null) {
-  disposeInteractions();
+  disposeInteractions();disposeMusic();
   if (!ui.panel) return;
   dialog.show(renderPanel(ui.panel, context()), { preserveFocus, restore });
   if (ui.panel.type === 'ambient') audio.rain(); else audio.stopRain();
   const state = store.get(), id = ui.panel.type === 'puzzle' ? ui.panel.id : null;
   disposeInteractions = bindInteractions(dialog.element, { id, progress: state.progress[id], solved: state.solved.includes(id), move: performMove, activity, changeView: patch => { ui.panel.view = {...ui.panel.view,...patch}; renderDialog(); } });
+  disposeMusic=bindMusicProgress(dialog.element,audio.music);
 }
-function render(state) {
+function render(state,previous=null) {
   const signature = `${state.scene}:${state.collected.join()}:${sceneChanges(state).map(change=>change.puzzle??change.activity).join()}:${state.solved.includes('flowers')}:${state.ending}:${state.scene==='party'?JSON.stringify([state.progress.sweets,state.progress.ribbons,state.progress.birthdayLock]):''}`;
   if (signature !== roomSignature) {
     const sameScene = stage.dataset.scene === state.scene;
@@ -71,12 +80,15 @@ function render(state) {
     document.querySelector('#hud').innerHTML = renderHud(state, store.writable()); hudSignature = hudKey;
     document.querySelectorAll('.inventory-slot').forEach(element => { if (!owned.has(element.dataset.id)) element.classList.add('new-item'); });
   }
-  document.querySelector('#home').innerHTML = ui.home ? renderHome(state) : '';
-  document.querySelector('.game-shell').classList.toggle('at-home', ui.home);
+  const shell=document.querySelector('.game-shell');shell.hidden=ui.home;shell.inert=ui.home;
+  document.body.classList.toggle('at-welcome',ui.home);if(ui.home)welcome.render(state);
   document.documentElement.classList.toggle('show-hotspots', state.settings.hotspots);
   document.documentElement.classList.toggle('reduce-motion', !state.settings.motion);
+  settleMotion();
   audio.configure(state.settings);
-  renderDialog();
+  const audioOnly=audioOnlyUpdate(previous,state);
+  const visibleSettingsChanged=ui.panel?.type==='settings'&&['sound','volume','musicVolume','effectsVolume'].some(key=>previous?.settings[key]!==state.settings[key]);
+  if(!audioOnly||ui.panel?.type==='music'||visibleSettingsChanged)renderDialog();
   preloadScenes(state);
 }
 function openPanel(panel, push = true) {
@@ -88,7 +100,7 @@ function openPanel(panel, push = true) {
 }
 function closePanel() {
   window.clearTimeout(completionTimer);
-  disposeInteractions();
+  disposeInteractions();disposeMusic();
   audio.stopMelody();
   audio.stopRain();
   ui.panel = ui.stack.pop() ?? null;
@@ -105,7 +117,8 @@ function look(direction) {
   store.dispatch({ type: 'scene', id: neighborScene(store.get(),direction) });
   audio.material('paper');
 }
-function closeAllPanels(){window.clearTimeout(completionTimer);ui.stack=[];ui.panel=null;disposeInteractions();audio.stopMelody();audio.stopRain();dialog.hide();}
+function closeAllPanels(){window.clearTimeout(completionTimer);ui.stack=[];ui.panel=null;disposeInteractions();disposeMusic();audio.stopMelody();audio.stopRain();dialog.hide();}
+function showWelcome(phase='title'){closeAllPanels();ui.home=true;welcome.show(phase);render(store.get());}
 function goScene(id){if(!sceneOpen(store.get(),id)){openPanel({type:'passage',id});return;}closeAllPanels();store.dispatch({type:'scene',id});}
 async function useTool(item,target){
   const state=store.get();
@@ -154,18 +167,11 @@ function currentPuzzle(action) {
   if (ui.panel?.type === 'puzzle') store.dispatch({ type: action, id: ui.panel.id });
 }
 function setting(key, value) { store.dispatch({ type: 'setting', key, value }); }
-function exportSave() {
-  const blob = new Blob([JSON.stringify(serializable(store.get()), null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const anchor = document.createElement('a');
-  anchor.href = url; anchor.download = 'smallgame-1029-save.json'; anchor.click();
-  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
-  toast('存档已保存。');
-}
 const actions = {
   ...viewActions({ panel: () => ui.panel, render: renderDialog, activity }),
-  start: async () => { ui.home = false; await audio.resume(); audio.ambient(); store.dispatch({ type: 'start' }); },
-  home: () => { ui.home = true; render(store.get()); },
+  ...transfers,...musicActions,
+  start:()=>welcome.begin(),'welcome-enter':()=>welcome.enter(),'welcome-back':()=>welcome.show(),
+  home:()=>showWelcome(),intro:()=>showWelcome('intro'),about:()=>openPanel({type:'about'}),
   'scene-prev': () => look(-1), 'scene-next': () => look(1),
   scene: button => goScene(button.dataset.id),
   hotspot: button => hotspot(button.dataset.id),
@@ -197,7 +203,7 @@ const actions = {
   flowers: () => openPanel({ type: 'flowers' }),
   'wish-flower': button => { setting('flower', button.dataset.id); activity(`flower:${button.dataset.id}`); audio.material('glass'); },
   settings: () => openPanel({ type: 'settings' }), 'how-to': () => openPanel({ type: 'how-to' }),
-  sound: async () => { setting('sound', !store.get().settings.sound); await audio.resume(); if (store.get().begun) audio.ambient(); },
+  sound: () => setting('sound', !store.get().settings.sound),
   undo: () => currentPuzzle('undo'), 'reset-puzzle': () => currentPuzzle('reset'), hint: () => {
     currentPuzzle('hint');
     const note=dialog.element.querySelector('.hint-notes p:last-child');
@@ -215,10 +221,9 @@ const actions = {
       window.setTimeout(() => field.querySelectorAll('.playing').forEach(el => el.classList.remove('playing')), 350);
     });
   },
-  export: exportSave, import: () => document.querySelector('#save-file').click(),
   fullscreen: async () => { try { if (document.fullscreenElement) await document.exitFullscreen(); else await document.documentElement.requestFullscreen(); } catch { toast('也可以使用浏览器的全屏功能。'); } },
   restart: () => openPanel({ type: 'restart' }),
-  'confirm-restart': () => { ui.stack = []; ui.panel = null; dialog.hide(); ui.home = true; store.restart(); },
+  'confirm-restart': () => { closeAllPanels();ui.home=true;welcome.show();store.restart(); },
 };
 
 app.addEventListener('click', async event => {
@@ -242,24 +247,20 @@ app.addEventListener('change', event => {
     setting(input.dataset.setting, input.type === 'checkbox' ? input.checked : Number(input.value));
   }
 });
-document.querySelector('#save-file').addEventListener('change', async event => {
-  const file = event.target.files[0];
-  event.target.value = '';
-  if (!file) return;
-  try {
-    if (file.size > MAX_SAVE_BYTES) throw new Error('这份文件太大，不像是书房存档。');
-    const saved = parseSave(await file.text());
-    store.replace(saved); ui.home = !saved.begun; ui.stack = []; ui.panel = null; dialog.hide(); render(store.get());
-    toast('存档已读入。');
-  } catch { toast('这份存档打不开，原来的进度还在。'); }
+app.addEventListener('input',event=>{
+  const key=event.target.dataset.setting;
+  if(!['volume','musicVolume','effectsVolume'].includes(key))return;
+  const value=Number(event.target.value);audio.configure({...store.get().settings,[key]:value});
+  dialog.element.querySelector(`[data-level="${key}"]`).textContent=`${Math.round(value*100)}%`;
 });
 document.addEventListener('keydown', event => {
-  if (ui.panel || ui.home || /INPUT|TEXTAREA|SELECT/.test(event.target.tagName)) return;
-  if(event.key==='Escape'&&store.get().selected){store.dispatch({type:'select',id:null});return;}
+  if(ui.panel||/INPUT|TEXTAREA|SELECT/.test(event.target.tagName))return;
+  if(ui.home){if(event.key==='Escape'&&welcome.phase==='intro')showWelcome();return;}
+  if(event.key==='Escape'){if(store.get().selected)store.dispatch({type:'select',id:null});else showWelcome();return;}
   if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') { event.preventDefault(); look(event.key === 'ArrowLeft' ? -1 : 1); }
 });
 store.subscribe((state, previous) => {
-  render(state);
+  render(state,previous);
   const revealed=openScenes(state).filter(scene=>!sceneOpen(previous,scene.id));
   if(revealed.length)toast(revealed[0].unlocked);
   if (state.solved.length > previous.solved.length) {
@@ -279,5 +280,6 @@ function preloadScenes(state) {
   }
 }
 render(store.get());
+audio.music.subscribe(()=>{if(ui.panel?.type==='music')renderDialog();});
 bindInventoryUse(app,{scene:()=>store.get().scene,owns:id=>inventory(store.get()).includes(id),use:useTool});
 if (store.notice) toast(store.notice);

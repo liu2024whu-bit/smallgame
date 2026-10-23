@@ -51,18 +51,6 @@
   .pet-portrait .character-art { width: min(330px, 100%); }
   .pet-dialog .primary-button { margin: 22px auto 15px; }
   .pet-dialog .quiet-button { display: flex; margin: 0 auto; font-size: 14px; }
-  .settings-controls { padding: 10px 15px; }
-  .setting-toggle, .setting-volume { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px dotted #d1d8c1; padding: 16px 0; }
-  .setting-toggle>span,.setting-volume>span { display:flex; align-items:center; gap:12px; }.setting-toggle .icon,.setting-volume .icon { width:18px; height:18px; color:#8d987f; }
-  .setting-toggle input { appearance:none; position:relative; width:48px; height:26px; flex:0 0 48px; margin:0; border:1px solid #c4c6b2; border-radius:20px; background:#e7e6d8; box-shadow:inset 0 1px 3px #7779511c; cursor:pointer; transition:background .2s,border-color .2s; }
-  .setting-toggle input::before { content:''; position:absolute; left:3px; top:3px; width:18px; height:18px; border:1px solid #b0ae93; border-radius:50%; background:#fffdf2; box-shadow:0 1px 2px #71725433; transition:translate .2s; }
-  .setting-toggle input:checked { background:#829878; border-color:#788d6e; }.setting-toggle input:checked::before { translate:21px 0; border-color:#e1e5d0; }
-  .setting-toggle input::after { content:'✧'; position:absolute; top:0; left:8px; line-height:24px; font-size:14px; color:#f7f3d9; opacity:0; }.setting-toggle input:checked::after { opacity:1; }
-  .setting-volume input { appearance:none; width:160px; height:4px; background:#d2d8c1; border:0; border-radius:4px; cursor:pointer; }
-  .setting-volume input::-webkit-slider-thumb { appearance:none; width:16px; height:16px; border:1px solid #809472; border-radius:50%; background:#faf8e7; box-shadow:0 1px 2px #67704433; }.setting-volume input::-moz-range-thumb { width:14px; height:14px; border:1px solid #809472; border-radius:50%; background:#faf8e7; }
-  .save-actions { display: flex; gap: 10px; justify-content: center; margin: 25px auto; flex-wrap: wrap; }
-  .restart-link { display: block; margin: 20px auto; font-size: 14px; color: #ac9684; }
-  .credits-note { margin: 28px 0 0; font-size: 11px; color: #a9ae99; text-align: center; line-height: 1.9; }
   .ending-dialog { max-width: 760px !important; }
   .ending-page { text-align: center; padding: 15px 25px 30px; }
   .ending-flower .motif { width: 135px; margin: 10px; }
@@ -81,7 +69,6 @@
     .reading-shelf { grid-template-columns: 1fr; gap: 10px; }
     .interest-notes { padding: 7px; gap: 16px; }.interest-notes h3 { font-size: 18px; }.interest-notes p { font-size: 13px; }
     .wish-flower { font-size: 12px; }.flower-wish { font-size: 16px; padding-left: 8px; padding-right: 8px; }
-    .settings-controls { padding: 8px; }
     .ending-page { padding: 12px 5px; }.ending-page h2 { font-size: 32px; }.ending-page h2 span { font-size: 40px; }
   }
 }

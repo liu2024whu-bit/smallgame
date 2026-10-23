@@ -1,6 +1,7 @@
 import { SWEET_CROP, BOX_CROP, OPEN_BOX_CROP } from './birthday-workshop.js';
 // Source-pixel frames follow the actual edges of each illustration.
 export const ASSET_LAYOUTS = Object.freeze({
+  welcome:{width:1536,height:1024},
   party:{width:1536,height:1024},
   partyOpen:{width:1536,height:1024},
   ribbonBoxOpen:{width:1536,height:1024,frames:[OPEN_BOX_CROP]},

@@ -22,11 +22,12 @@ export function loadSave(storage) {
   } catch { return { state: createState(), notice: '自动保存这次没跟上，设置里的「保存一份」还能留住进度。' }; }
 }
 
-export function writeSave(storage, state) {
+export function writeSave(storage, state, {fresh=false}={}) {
   try {
     const previous = storage.getItem(SAVE_KEY);
-    if (previous) { try { parseSave(previous); storage.setItem(BACKUP_KEY, previous); } catch { /* Keep the last readable backup. */ } }
+    if (previous&&!fresh) { try { parseSave(previous); storage.setItem(BACKUP_KEY, previous); } catch { /* Keep the last readable backup. */ } }
     storage.setItem(SAVE_KEY, JSON.stringify(serializable(state)));
+    if(fresh)storage.removeItem?.(BACKUP_KEY);
     return true;
   } catch { return false; }
 }
