@@ -21,7 +21,7 @@ export function createDialog(element, onClose) {
       if (!element.open) returnFocus = document.activeElement;
       element.className = panel.className;
       element.innerHTML = `<header class="dialog-header"><h2 id="dialog-title">${escape(panel.title)}</h2><div><button class="icon-button" data-action="journal" aria-label="查看手账">${icon('book')}</button><button class="icon-button close-dialog" data-action="close" aria-label="返回">${icon('close')}</button></div></header><div class="dialog-body">${panel.html}</div>`;
-      element.querySelectorAll('.solved-field [data-pmove]').forEach(button => { button.disabled = true; });
+      element.querySelectorAll('.solved-field [data-pmove],.solved-field [data-sugar-cut],.solved-field [data-music-track],.solved-field [data-vessel]').forEach(button => { button.disabled = true; });
       if (!element.open) element.showModal();
       if (!reading?.focus) element.querySelector('.close-dialog')?.focus({ preventScroll: true });
       restoreDialogState(element, reading);

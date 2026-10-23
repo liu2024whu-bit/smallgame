@@ -1,0 +1,41 @@
+{
+  "tool": "built-in image_gen",
+  "kind": "accepted prompt briefs and composition constraints",
+  "assets": [
+    {
+      "asset": "assets/scenes/party.webp",
+      "references": [
+        "assets/illustrations/campus-desk.webp",
+        "assets/scenes/birthday.webp"
+      ],
+      "brief": "A true overhead 3:2 birthday crafting table in the same restrained warm watercolor and pencil style. Preserve fine paper grain and soft sunlight. Left: a blank cream birthday card with an outlined rectangular panel and four empty small dessert plates. Right: a sage stationery box with a blank lid and four empty brass number-lock windows. A small 20 pennant, daisies and gingham paper at the edges. No movable ribbons, preset sugars, passwords, digital UI, cropped props or extra text."
+    },
+    {
+      "asset": "assets/illustrations/birthday-props.webp",
+      "references": [
+        "assets/scenes/party.webp"
+      ],
+      "brief": "One transparent regular 3-by-3 companion sprite sheet with generous cell margins, fine warm watercolor edges. Star cookie, strawberry-heart macaron, spiral chocolate, cherry with stem, daisy meringue, sage bow, ivory crescent birthday card, gingham paper strip, unlit dotted candle in a brass flower holder. Complete silhouettes and no lettering. Used the source-measured object frames rather than assuming square cells; candle, full card and ribbon remain complete."
+    },
+    {
+      "asset": "assets/scenes/party-open.webp",
+      "references": [
+        "assets/scenes/party.webp",
+        "assets/illustrations/birthday-props.webp"
+      ],
+      "brief": "Edit only the sage box on the existing overhead scene. Keep canvas, camera, left card, four plates, garland 20, desk objects and sunlight consistent. Open the same box in its existing footprint, with a dimensional lid propped behind the base, cream tissue, an unlit dotted ivory candle in a brass flower holder and a folded small star card. Preserve actual paper edges and shadows. No digital panels, flat replacement rectangles, new words or unrelated illustrations. The lock moves with the lid."
+    }
+  ],
+  "runtime": [
+    "Original generated PNGs are preserved outside the repository; WebP copies are the game assets.",
+    "Pillow is used only to encode WebP and inspect pixels, dimensions and transparency; it does not paint or retouch images.",
+    "The scene uses its natural 3:2 ratio. Close-ups and live room parts share source rectangles.",
+    "Interactive cut lines, paper holes, printed digits and band connections are generated from the rules, rather than baked into artwork.",
+    "The opened box is a complete matched painting, not a rectangular color patch over the closed lid."
+  ],
+  "boundaries": [
+    "No private correspondence or personal photos.",
+    "No new claims about actual gift receipt, school events or relationships.",
+    "The birthday mechanisms are fictional game props."
+  ]
+}

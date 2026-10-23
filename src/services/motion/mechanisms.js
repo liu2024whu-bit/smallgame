@@ -1,7 +1,9 @@
 import { ease, turnDelta } from './shared.js';
+import { settleDial } from './dials.js';
+import { playMazeRoute } from './maze.js';
 
 const turns = root => [...root.querySelectorAll('.dial-face')].map(el => parseFloat(el.style.getPropertyValue('--turn')) || 0);
-const rings = root => [...root.querySelectorAll('[data-maze-rotor]')].map(el => Number(el.getAttribute('transform')?.match(/rotate\((\d+)/)?.[1] ?? 0));
+const rings = root => [...root.querySelectorAll('[data-maze-rotor]')].map(el => Number(el.getAttribute('transform')?.match(/rotate\((-?[\d.]+)/)?.[1] ?? 0));
 export const mechanismMotion = {
   capture: root => ({ dials: turns(root), rings: rings(root), lean: root.querySelector('.scale-apparatus')?.style.getPropertyValue('--lean'), heights: [...root.querySelectorAll('.flower-pot')].map(el => el.style.top), arrived: !!root.querySelector('.maze-arrived') }),
   play(root, before) {
@@ -9,9 +11,7 @@ export const mechanismMotion = {
     root.querySelectorAll('.dial-face').forEach((el, i) => {
       const next = nextTurns[i], old = before.dials[i];
       if (old === undefined || next === old) return;
-      const frames = [{ transform: `rotate(${next + turnDelta(old, next)}deg)` }, { transform: `rotate(${next}deg)` }];
-      el.querySelector('.item-art')?.animate(frames, { duration: 320, easing: ease });
-      if (el.closest('.light-console')) el.animate(frames, { duration: 320, easing: ease, pseudoElement: '::before' });
+      settleDial(el, old, next);
     });
     root.querySelectorAll('[data-maze-rotor]').forEach((el, i) => {
       const next = nextRings[i], old = before.rings[i];
@@ -26,8 +26,7 @@ export const mechanismMotion = {
     if (before.heights.length && heights.some((h, i) => h !== before.heights[i])) root.querySelectorAll('.garden-crank:focus .item-art').forEach(el => el.animate([{ rotate: '0deg' }, { rotate: '360deg' }], { duration: 400, easing: ease }));
     const ball = root.querySelector('.maze-arrived');
     if (ball && !before.arrived) {
-      const walk = JSON.parse(ball.dataset.walk);
-      ball.animate(walk.map(([x, y]) => ({ transform: `translate(${x}px,${y}px)` })), { duration: walk.length * 40, easing: 'linear' });
+      playMazeRoute(root, JSON.parse(ball.dataset.walk));
     }
   },
 };

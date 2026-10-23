@@ -16,6 +16,7 @@ export const ACTIVITY_IDS = Object.freeze([
 ]);
 
 export const ACHIEVEMENTS = Object.freeze([
+  {id:'party',title:'偷偷准备的',intro:'一点甜，一点小心思。',hint:'准备台的两边，都还留着小机关。',text:'生日匣也打开了。',puzzles:['sweets','ribbons','birthdayLock'],motif:'star'},
   { id:'xianlin', title:'课本之外', intro:'书看到这儿，窗外也刚好有光。', hint:'仙林的折页里，还夹着一张拓纸。', text:'窗边多了一张拓印。', keys:['campus:duxia','campus:plum','campus:desk'], motif:'leaf' },
   { id:'campuses', title:'两枚邮戳', intro:'纸上也能逛校园。', hint:'两张折页里，还有地方没走到。', text:'两张折页，都盖好印了。', keys:['campus:whu','campus:nju'], motif:'envelope' },
   { id:'pets', title:'毛茸茸的', intro:'解谜先歇会儿？这边有毛茸茸的。', hint:'屋里还睡着另一只。', text:'猫和狗都醒过一小会儿。', keys:['pet:cat','pet:dog'], motif:'paw' },

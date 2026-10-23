@@ -1,5 +1,13 @@
+import { SWEET_CROP, BOX_CROP, OPEN_BOX_CROP } from './birthday-workshop.js';
 // Source-pixel frames follow the actual edges of each illustration.
 export const ASSET_LAYOUTS = Object.freeze({
+  party:{width:1536,height:1024},
+  partyOpen:{width:1536,height:1024},
+  ribbonBoxOpen:{width:1536,height:1024,frames:[OPEN_BOX_CROP]},
+  birthdayPaper:{width:1536,height:1024,frames:[[340,390,320,128]]},
+  sweetsTable:{width:1536,height:1024,frames:[SWEET_CROP]},
+  ribbonBox:{width:1536,height:1024,frames:[BOX_CROP]},
+  birthdayProps:{width:1536,height:1024,frames:[[100,36,360,300],[600,30,330,300],[1100,45,330,285],[120,380,340,260],[600,375,320,275],[1050,390,410,265],[150,660,300,330],[530,740,470,170],[1150,650,250,340]]},
   campusXianlin:{width:1672,height:941},
   campusPlum:{width:1672,height:941},
   recordsFolio:{width:1536,height:1024},
@@ -23,6 +31,8 @@ export const ASSET_LAYOUTS = Object.freeze({
   birthday:{width:1672,height:941},
   birthdayLit:{width:1672,height:941},
   birthdayDetails:{width:1672,height:941,frames:[[1090,505,240,145],[1210,300,270,330]]},
+  candleTable:{width:1672,height:941,frames:[[575,285,560,380]]},
+  candleFlames:{width:1672,height:941,frames:[[575,285,560,380]]},
   thresholds:{width:1536,height:1024,frames:[[16,16,472,991],[529,16,479,991],[1047,16,474,991]]},
   chocolateBox:{width:1536,height:1024},
   chocolatePiece:{width:1254,height:1254,frames:[[280,310,690,670]]},

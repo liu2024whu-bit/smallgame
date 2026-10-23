@@ -3,6 +3,11 @@ import { motionAllowed } from '../services/motion.js';
 export function viewActions({ panel, render, activity }) {
   const change = patch => { const current = panel(); current.view = { ...current.view, ...patch }; render(); };
   return {
+    'workbench-look':()=>{
+      const closeLook=!panel().view?.closeLook;change({closeLook});
+      const viewport=document.querySelector('.puzzle-viewport');
+      if(closeLook&&viewport)viewport.scrollLeft=(viewport.scrollWidth-viewport.clientWidth)/2;
+    },
     'memory-detail': button => { const focus = Number(button.dataset.index); change({ focus }); activity(`art:detail:${focus}`); },
     'memory-cinema': () => { change({ playing: !panel().view?.playing }); activity('cinema:play'); },
     'memory-figure': button => change({ figure: Number(button.dataset.index) }),
@@ -23,6 +28,7 @@ export function viewActions({ panel, render, activity }) {
     },
     'campus-stamp': button => activity(`campus:${button.dataset.id}`),
     'mechanism-back': () => change({ back:!panel().view?.back }),
+    'paper-turn':()=>change({turned:!panel().view?.turned}),
     'reading-book': button => activity(`reading:${Number(button.dataset.index)}`),
   };
 }

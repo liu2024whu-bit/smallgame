@@ -12,6 +12,9 @@ import { renderMelody } from './melody.js';
 import { renderPostbox, renderWordlock } from './locks.js';
 import { renderNegative } from './negative.js';
 import { renderChocolate, renderCocoa } from './birthday.js';
+import { renderSweets } from './sweets.js';
+import { renderRibbons } from './ribbons.js';
+import { renderBirthdayLock } from './birthday-lock.js';
 
 export const PUZZLE_VIEWS = Object.freeze({
   paper: renderPaper, cloud: renderCloud, calibration: renderCalibration,
@@ -23,4 +26,5 @@ export const PUZZLE_VIEWS = Object.freeze({
   packing: renderPacking, melody: renderMelody,
   postbox: renderPostbox, wordlock: renderWordlock,
   chocolate:renderChocolate,cocoa:renderCocoa,
+  sweets:renderSweets,ribbons:renderRibbons,birthdayLock:renderBirthdayLock,
 });

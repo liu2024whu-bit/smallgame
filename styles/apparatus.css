@@ -7,6 +7,7 @@
   .world-maze-mechanism>svg { position:absolute; inset:0; height:100%; width:100%; }
   .world-maze-mechanism path { fill:none; stroke:#8c7951; stroke-width:8; stroke-linecap:round; }
   .puzzle-paper .puzzle-field,.puzzle-paperBack .puzzle-field { background:#f6efe0 url('../assets/illustrations/board.webp') center/cover; }
+  .puzzle-paper .puzzle-field,.puzzle-paperBack .puzzle-field { padding-top:52px; }
   .puzzle-cloud .puzzle-field,.puzzle-cloudGap .puzzle-field { background:#edf1e8; }
   .puzzle-books .puzzle-field { background:#ece9de; border-bottom:12px solid #c7b99e; }
   .puzzle-screen .puzzle-field { background:#eeecf1; }
@@ -26,7 +27,7 @@
   .music-pin-column.playing .music-pin { filter:drop-shadow(0 0 7px #e1c963); }
   .stitch-workbench { position:relative; aspect-ratio:3/2; height:auto; width:min(800px,100%); margin:5px auto; }
   .binding-background { position:absolute; inset:0; display:block; width:100%; height:100%; }
-  .binding-pages { position:absolute; inset:29% 19% auto; display:flex; pointer-events:none; }
+  .binding-pages { position:absolute; inset:27% 19% auto; display:flex; pointer-events:none; }
   .binding-page { flex:1; text-align:center; color:#9caa8c; font:13px Georgia,serif; }
   .binding-hole { position:absolute; width:20px; height:20px; transform:translate(-50%,-50%); }
   .binding-hole button { position:relative; width:100%; height:100%; display:block; border:0; background:none; box-shadow:none; padding:0; min-height:0; min-width:0; }
@@ -40,7 +41,7 @@
   .scale-apparatus { position:relative; width:min(450px,100%); aspect-ratio:1; margin:15px auto 0; }
   .scale-apparatus>.character-art,.scale-moving>.character-art { position:absolute; inset:0; display:block; width:100%; }
   .scale-fixed { clip-path:polygon(42% 0,58% 0,58% 67%,74% 100%,26% 100%,42% 67%); }
-  .scale-moving { position:absolute; inset:0; transform:rotate(var(--lean)); transform-origin:50% 20%; transition:transform .45s; }
+  .scale-moving { position:absolute; inset:0; transform:rotate(var(--lean)); transform-origin:50% 20%; }
   .scale-swing { clip-path:polygon(0 15%,100% 15%,100% 74%,60% 74%,58% 27%,42% 27%,40% 74%,0 74%); }
   .scale-pan { position:absolute; display:flex; justify-content:center; align-items:end; width:34%; height:12%; top:56%; border-radius:0 0 50% 50%; padding-bottom:4%; }
   .scale-pan>.motif { width:clamp(20px,4vw,40px); transform:rotate(calc(-1 * var(--lean))); }
@@ -58,6 +59,7 @@
   .flip-grid .puzzle-control { width:100%; height:100%; min-width:0; min-height:0; padding:0; background:#fffcf025; border-color:transparent; }
   .flip-grid .motif { width:min(65px,75%); }
   @media(max-width:700px) {
+    .puzzle-paper .puzzle-field,.puzzle-paperBack .puzzle-field { padding-top:60px; }
     .music-pin { width:12px; height:10px; }
     .binding-hole { width:16px; height:16px; }.binding-hole small { font-size:8px; }.hole-upper small { top:-11px; }.hole-lower small { top:17px; }
     .binding-page { font-size:9px; }.binding-rule { font-size:11px; }

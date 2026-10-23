@@ -11,6 +11,8 @@ export const ITEMS = Object.freeze({
   pageC: { name: '画页 C', sprite: 9, description: '页角有一朵雏菊。' },
   pageD: { name: '画页 D', sprite: 10, description: '页角有颗星。' },
   board: { name: '装订托板', sprite: 11, description: '四列小孔，刚好托住画页。' },
+  birthdayCard: {name:'贺卡',sprite:{asset:'birthdayProps',index:6},description:'正面一弯月亮。背面，好像还有字。'},
+  birthdayRibbon: {name:'孔带',sprite:{asset:'birthdayProps',index:7},description:'从匣子上抽下来的纸带，留着四个透光的小孔。'},
 });
 
 export const ITEM_IDS = Object.freeze(Object.keys(ITEMS));

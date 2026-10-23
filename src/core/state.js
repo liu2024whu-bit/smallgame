@@ -6,7 +6,7 @@ import { KEEPSAKES } from '../data/keepsakes.js';
 import { ACTIVITY_IDS } from '../data/activities.js';
 import { CONTENT_REVISION, migrateContent } from './migrations.js';
 import { sceneOpen, birthdayReady } from './exploration.js';
-import { PERSISTENT_TOOL_USES } from '../data/tool-uses.js';
+import { PERSISTENT_TOOL_USES, PUZZLE_TOOL_INPUTS } from '../data/tool-uses.js';
 
 export const SAVE_VERSION = 2;
 export const PICKUPS = ['bookmark', 'thread'];
@@ -19,6 +19,11 @@ export function createState() {
 
 export function inventory(state) {
   return [...new Set([...state.collected, ...state.solved.flatMap(id => PUZZLE_BY_ID[id]?.rewards ?? [])])];
+}
+
+function inputsOwned(state,id,progress) {
+  const inputs=PUZZLE_TOOL_INPUTS[id];
+  return !inputs||inputs.every((item,index)=>!progress.fitted[index]||inventory(state).includes(item));
 }
 
 export function keepsakes(state) {
@@ -62,7 +67,7 @@ export function normalizeState(raw) {
     changed = false;
     for (const puzzle of PUZZLES) {
       if (state.solved.includes(puzzle.id) || !Array.isArray(raw.solved) || !raw.solved.includes(puzzle.id)) continue;
-      if (access(state, puzzle.id).ready && RULES[puzzle.id].solved(state.progress[puzzle.id])) {
+      if (access(state, puzzle.id).ready && inputsOwned(state,puzzle.id,state.progress[puzzle.id]) && RULES[puzzle.id].solved(state.progress[puzzle.id])) {
         state.solved.push(puzzle.id);
         restoreUses();
         changed = true;
@@ -72,6 +77,10 @@ export function normalizeState(raw) {
   const settings = raw.settings ?? {};
   const completed = new Set(state.solved);
   state.solved = PUZZLES.filter(puzzle => completed.has(puzzle.id)).map(puzzle => puzzle.id);
+  for(const [id,inputs] of Object.entries(PUZZLE_TOOL_INPUTS)) {
+    if(inputsOwned(state,id,state.progress[id]))continue;
+    state.progress[id]={...state.progress[id],opened:false,fitted:state.progress[id].fitted.map((value,index)=>value&&inventory(state).includes(inputs[index]))};
+  }
   if(!sceneOpen(state,state.scene))state.scene='desk';
   for (const key of ['sound', 'motion', 'hotspots']) if (typeof settings[key] === 'boolean') state.settings[key] = settings[key];
   for (const [key, values] of Object.entries(OPTIONS)) if (values.includes(settings[key])) state.settings[key] = settings[key];
@@ -112,7 +121,7 @@ export function reduce(state, action) {
   if (action.type !== 'move') return state;
   const previous = state.progress[id];
   const next = RULES[id].move(previous, action.move ?? {});
-  if (!RULES[id].valid(next) || JSON.stringify(next) === JSON.stringify(previous)) return state;
+  if (!RULES[id].valid(next) || !inputsOwned(state,id,next) || JSON.stringify(next) === JSON.stringify(previous)) return state;
   const completed = RULES[id].solved(next);
   return {
     ...state,

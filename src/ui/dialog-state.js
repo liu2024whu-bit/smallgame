@@ -11,10 +11,12 @@ function selectorFor(target, root) {
 
 // Returning from a clue restores only the reading position, never game progress.
 export function captureDialogState(element) {
+  const viewport=element.querySelector('.puzzle-viewport');
   return {
     scroll: element.scrollTop,
     focus: selectorFor(document.activeElement, element),
     folds: [...element.querySelectorAll('details[data-fold]')].map(fold => [fold.dataset.fold, fold.open]),
+    pan:viewport ? {x:viewport.scrollLeft,y:viewport.scrollTop} : null,
   };
 }
 
@@ -27,4 +29,6 @@ export function restoreDialogState(element, saved) {
   if (focus && !focus.disabled) focus.focus({ preventScroll: true });
   if (!element.contains(document.activeElement)) element.querySelector('.close-dialog')?.focus({ preventScroll: true });
   element.scrollTop = saved?.scroll ?? 0;
+  const viewport=element.querySelector('.puzzle-viewport');
+  if(viewport&&saved?.pan){viewport.scrollLeft=saved.pan.x;viewport.scrollTop=saved.pan.y;}
 }

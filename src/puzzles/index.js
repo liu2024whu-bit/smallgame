@@ -15,5 +15,8 @@ import { melody } from './melody.js';
 import { postbox, wordlock } from './locks.js';
 import { chocolate } from './chocolate.js';
 import { cocoa } from './cocoa.js';
+import { sweets } from './sweets.js';
+import { ribbons } from './ribbons.js';
+import { birthdayLock } from './birthday-lock.js';
 
-export const RULES = Object.freeze({ paper, cloud, calibration, postbox, books, screen, belt, film, flowers, paperBack, cloudGap, wordlock, album, stitch, chocolate, cocoa, maze, balance, drawers, flips, packing, melody });
+export const RULES = Object.freeze({ paper, cloud, calibration, postbox, books, screen, belt, film, flowers, paperBack, cloudGap, wordlock, album, stitch, chocolate, cocoa, sweets, ribbons, birthdayLock, maze, balance, drawers, flips, packing, melody });

@@ -3,20 +3,21 @@ import { SCENE_ART, ASSETS } from '../data/assets.js';
 import { ITEMS } from '../data/items.js';
 import { inventory } from '../core/state.js';
 import { sceneOpen } from '../core/exploration.js';
-import { ROOM_TOOL_TARGETS } from '../data/tool-uses.js';
+import { roomToolTarget } from '../data/tool-uses.js';
 import { sceneChanges, paintMask } from '../data/scene-changes.js';
 import { cabinetMechanisms } from './miniatures.js';
+import { partyRoom } from './party-room.js';
 import { escape, icon, itemSprite, character } from './dom.js';
 
 export function renderRoom(state) {
   const scene = SCENE_BY_ID[state.scene];
   const visible = scene.hotspots.filter(h => h.kind !== 'pickup' || !state.collected.includes(h.target));
-  const art=scene.id==='birthday'&&state.ending?ASSETS.birthdayLit:SCENE_ART[scene.id];
-  return `<img class="scene-image" src="${art}" alt="${scene.title}" draggable="false">${sceneChanges(state).map(change=>`<img class="scene-change" data-world-change="${change.puzzle??change.activity}" src="${ASSETS[change.asset]}" alt="${change.alt}" style="mask-image:${paintMask(change.region)}" draggable="false">`).join('')}${cabinetMechanisms(state)}<div class="room-light ${state.solved.includes('flowers') ? 'light-shifted' : ''}"></div><div class="hotspot-layer">${visible.map(h=>hotspotButton(h,scene.id)).join('')}</div>${scene.id==='collection'?`<button class="room-mascot" data-action="hei-greet" aria-label="和罗小黑打个招呼">${[0,1,2,3].map(frame=>character('heiCat',frame,2,2,'',`mascot-frame frame-${frame}`)).join('')}</button>`:''}<button class="scene-arrow previous" data-action="scene-prev" aria-label="向左看">${icon('left')}</button><button class="scene-arrow next" data-action="scene-next" aria-label="向右看">${icon('right')}</button><div class="scene-caption"><span>${escape(scene.title)}</span></div>`;
+  const art=scene.id==='birthday'&&state.ending?ASSETS.birthdayLit:scene.id==='party'&&state.solved.includes('birthdayLock')?ASSETS.partyOpen:SCENE_ART[scene.id];
+  return `<img class="scene-image" src="${art}" alt="${scene.title}" draggable="false">${sceneChanges(state).map(change=>`<img class="scene-change" data-world-change="${change.puzzle??change.activity}" src="${ASSETS[change.asset]}" alt="${change.alt}" style="mask-image:${paintMask(change.region)}" draggable="false">`).join('')}${cabinetMechanisms(state)}${partyRoom(state)}<div class="room-light ${state.solved.includes('flowers') ? 'light-shifted' : ''}"></div><div class="hotspot-layer">${visible.map(h=>hotspotButton(h,scene.id)).join('')}</div>${scene.id==='collection'?`<button class="room-mascot" data-action="hei-greet" aria-label="和罗小黑打个招呼">${[0,1,2,3].map(frame=>character('heiCat',frame,2,2,'',`mascot-frame frame-${frame}`)).join('')}</button>`:''}<button class="scene-arrow previous" data-action="scene-prev" aria-label="向左看">${icon('left')}</button><button class="scene-arrow next" data-action="scene-next" aria-label="向右看">${icon('right')}</button><div class="scene-caption"><span>${escape(scene.title)}</span></div>`;
 }
 
 function hotspotButton(h,scene){
-  const target=ROOM_TOOL_TARGETS[`${scene}:${h.id}`]??'';
+  const target=roomToolTarget(scene,h.id)??'';
   return `<button type="button" class="hotspot ${h.sprite?'pickup-hotspot':''} ${h.kind==='pet'?'pet-hotspot':''} ${h.x>80?'caption-inward-right':h.x<20?'caption-inward-left':''}" data-action="hotspot" data-id="${h.id}" ${target?`data-tool-target="${target}"`:''} aria-label="${escape(h.label)}" style="left:${h.x}%;top:${h.y}%;width:${h.width}%;height:${h.height}%">${h.sprite?itemSprite(ITEMS[h.target].sprite):''}<span class="hotspot-caption">${escape(h.label)}</span></button>`;
 }
 
@@ -26,5 +27,5 @@ export function renderHud(state, writable) {
 }
 
 export function renderHome(state) {
-  return `<section class="home-panel"><p class="eyebrow">10 / 29</p><h1>第20圈以前</h1><p class="home-copy">给 LXY</p><button class="primary-button" data-action="start">${state.begun ? '继续' : '进来看看'}${icon('right')}</button><div class="home-links"><button class="text-button" data-action="settings">设置</button><button class="text-button" data-action="how-to">怎么玩</button></div></section>`;
+  return `<section class="home-panel"><p class="eyebrow home-date">${icon('moon')}10 / 29<span>✧</span></p><h1>第20圈以前</h1><p class="home-copy">给 LXY</p><button class="primary-button" data-action="start">${icon('rainbow','button-stamp')}${state.begun ? '继续' : '进来看看'}${icon('right')}</button><div class="home-links"><button class="text-button" data-action="settings">设置</button><button class="text-button" data-action="how-to">怎么玩</button></div></section>`;
 }

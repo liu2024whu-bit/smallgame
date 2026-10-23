@@ -58,6 +58,10 @@ export const SCENES = Object.freeze([
     {id:'birthday-fries',kind:'birthday-note',target:'fries',label:'拆一包薯条',x:72,y:60,width:9,height:17},
     {id:'birthday-parcel',kind:'birthday-note',target:'parcel',label:'留给你的',x:81,y:50,width:13,height:29},
   ]},
+  {id:'party',title:'准备台',requires:['stitch'],tool:'birthday-door',door:2,closed:'里间还有一张小桌。',unlocked:'桌边的纸带还没有理好。',hotspots:[
+    puzzle('sweets','二十颗糖',33,51,43,61),
+    puzzle('ribbons','缎带下的生日匣',74,50,38,61,{revisit:'birthdayLock',revisitAfter:'ribbons'}),
+  ]},
 ]);
 
 export const SCENE_BY_ID = Object.freeze(Object.fromEntries(SCENES.map(scene => [scene.id, scene])));

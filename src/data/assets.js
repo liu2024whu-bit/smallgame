@@ -6,8 +6,16 @@ export const SCENE_ART = Object.freeze({
   rain: 'assets/scenes/rain.webp',
   atelier: 'assets/scenes/atelier.webp',
   birthday:'assets/scenes/birthday.webp',
+  party:'assets/scenes/party.webp',
 });
 export const ASSETS = Object.freeze({
+  party:'assets/scenes/party.webp',
+  sweetsTable:'assets/scenes/party.webp',
+  partyOpen:'assets/scenes/party-open.webp',
+  ribbonBoxOpen:'assets/scenes/party-open.webp',
+  ribbonBox:'assets/scenes/party.webp',
+  birthdayProps:'assets/illustrations/birthday-props.webp',
+  birthdayPaper:'assets/scenes/party.webp',
   heiCat:'assets/illustrations/hei-cat.webp',
   musicbox:'assets/illustrations/musicbox.webp',
   musicMechanism:'assets/illustrations/musicbox.webp',
@@ -62,6 +70,8 @@ export const ASSETS = Object.freeze({
   bunnyParcel:'assets/illustrations/bunny-parcel.webp',
   birthdayLit:'assets/illustrations/birthday-lit.webp',
   birthdayDetails:'assets/scenes/birthday.webp',
+  candleTable:'assets/scenes/birthday-after.webp',
+  candleFlames:'assets/illustrations/birthday-lit.webp',
 });
 export const MOTIFS = Object.freeze({ cloud: 0, star: 1, leaf: 2, rose: 3, paw: 4, moon: 5, daisy: 6, tulip: 7, lavender: 8, book: 9, envelope: 10, petal: 11 });
 export const MOTIF_LABELS = Object.freeze({ cloud: '云', star: '星', leaf: '叶', rose: '玫瑰', paw: '猫爪', moon: '月', daisy: '雏菊', tulip: '郁金香', lavender: '薰衣草', book: '书', envelope: '信封', petal: '花瓣' });

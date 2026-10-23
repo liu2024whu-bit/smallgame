@@ -24,4 +24,5 @@ function lock(code, count, seed) {
 }
 
 export const postbox = lock(POSTAL_CODE, 10, 0);
+export const numberLock = code => lock(code, 10, 0);
 export const wordlock = lock(LETTER_CODE.map(letter => letter.charCodeAt(0) - 65), 26, 26);

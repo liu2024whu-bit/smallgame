@@ -57,6 +57,15 @@
   .birthday-note-art.parcel-wrapped .character-art { width:min(220px,calc(var(--ratio)*300px)); }
   .birthday-note-art img { display:block; width:min(100%,600px); height:auto; }
   .birthday-note-dialog .memory-caption { margin:22px auto; color:#8a806d; }
+  .candle-dialog { max-width:840px!important; }.candle-dialog .dialog-body { padding:18px 22px 26px; }
+  .candle-table { position:relative; isolation:isolate; max-width:760px; margin:auto; border-radius:45% 45% 4px 4px / 8% 8% 4px 4px; overflow:hidden; }
+  .candle-base { display:block; width:100%; }.candle-light { position:absolute; inset:0; pointer-events:none; animation:candle-breath 3.2s ease-in-out infinite alternate; }.candle-light>.character-art { display:block; width:100%; }
+  .candle-light.flame-0 { mask-image:radial-gradient(ellipse 4% 8% at 42.86% 31.58%,#000 40%,transparent 100%); }.candle-light.flame-1 { mask-image:radial-gradient(ellipse 4% 8% at 51.25% 31.58%,#000 40%,transparent 100%); animation-delay:-1.7s; }
+  .candle-wick { position:absolute; top:37%; width:12%; height:28%; translate:-50% -50%; padding:0; border-radius:50%; }.wick-0 { left:42.86%; }.wick-1 { left:51.25%; }
+  .wick-ring { position:absolute; left:50%; top:31%; width:25px; height:25px; translate:-50% -50%; border:1px dashed #b8a16a; border-radius:50%; opacity:0; }.candle-wick:hover .wick-ring,.candle-wick:focus-visible .wick-ring { opacity:.8; }.candle-wick:focus-visible { outline:none; }.candle-wick[aria-pressed="true"] .wick-ring { opacity:0; }.candle-wick[aria-pressed="true"]:focus-visible .wick-ring { opacity:.65; }
+  .candle-wick[aria-pressed="true"] { cursor:default; }.candles-ready { box-shadow:0 4px 28px #d3af5e1c; }
+  .candle-afterword { text-align:center; min-height:110px; padding-top:18px; }.candle-afterword p { font-size:16px; color:#87795e; margin:0 0 16px; }
+  @keyframes candle-breath { from { filter:brightness(1); } to { filter:brightness(1.05); } }
   .workbench-tools button { display:flex; align-items:center; gap:8px; padding:4px 12px; font-size:14px; }
   .workbench-tools .tool-armed { background:#e6ebdb; border-radius:5px; }
   .inventory-ghost { width:90px; height:90px; display:grid; place-items:center; }

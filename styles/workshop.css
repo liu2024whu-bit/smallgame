@@ -1,0 +1,48 @@
+@layer puzzles {
+.sweets-table,.ribbon-box,.birthday-decoder{position:relative;width:min(100%,710px);margin:auto;isolation:isolate;color:#5e533d}
+.workshop-painting{display:block;width:100%;pointer-events:none}
+.sugar-grid{position:absolute;background:repeating-linear-gradient(90deg,transparent 0,transparent calc(12.5% - 1px),#9c896b29 calc(12.5% - 1px),#9c896b29 12.5%),repeating-linear-gradient(0deg,transparent 0,transparent calc(12.5% - 1px),#9c896b29 calc(12.5% - 1px),#9c896b29 12.5%)}
+.sugar-piece{position:absolute;width:9%;height:10%;translate:-50% -50%;display:grid;place-items:center;pointer-events:none;filter:drop-shadow(0 1px 1px #75563724)}
+.sugar-piece .character-art{width:100%;height:100%;aspect-ratio:1}
+.sugar-guides{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;filter:drop-shadow(1px 2px 1px #6b4d4d40)}
+.sugar-guides path{stroke:#9d7770;stroke-width:2;vector-effect:non-scaling-stroke;stroke-dasharray:3 1;stroke-linecap:round}
+.sugar-grip{position:absolute;z-index:2;display:grid;place-items:center;width:36px;height:36px;min-width:0;border:1px solid #a9885c;background:#e7d1a1;border-radius:50% 45% 48% 42%;box-shadow:1px 2px 3px #5e46372b;touch-action:none}
+.sugar-grip-0{left:-28px;translate:-50% -50%;cursor:ns-resize}.sugar-grip-1{top:-28px;translate:-50% -50%;cursor:ew-resize}.sugar-grip .icon{width:16px;height:16px;rotate:90deg}
+.sweet-share{position:absolute;translate:-50% -50%;width:12%;height:12%;display:flex;justify-content:center;align-content:center;gap:1%;flex-wrap:wrap;padding:1.6%;transition:filter .2s}
+.share-sugar{position:relative;display:grid;place-items:center;width:32%;height:47%}.share-sugar .character-art{width:100%;height:100%;aspect-ratio:1}.share-missing{opacity:.23;filter:grayscale(1)}.share-sugar small{position:absolute;bottom:-2px;right:-3px;font:10px Georgia;color:#fff;background:#88695b;border-radius:50%;min-width:12px;text-align:center}.share-even{filter:drop-shadow(0 0 3px #ddc783)}
+.sweet-card-tab{position:absolute;left:48%;bottom:6%;font:17px Georgia;display:flex;gap:7px;align-items:center;color:#9d835a}
+.workshop-caption{text-align:center;font-size:14px;color:#706552;min-height:1.7em;margin:16px 8px 0}.workshop-turn{display:flex;justify-content:center;margin-top:12px}
+.ribbon-box,.birthday-decoder{width:min(100%,570px)}
+.ribbon-field{position:absolute}.ribbon-connections{width:100%;height:100%;position:absolute;inset:0;overflow:visible}
+.ribbon-shadow{fill:none;stroke:#58473360;stroke-width:5.6;transform:translate(.3px,.6px)}.ribbon-cloth{fill:none;stroke:var(--ribbon);stroke-width:5;stroke-linecap:butt}.ribbon-stitch{fill:none;stroke:#fff8df8c;stroke-width:.36;stroke-dasharray:.6 .8}
+.ribbon-tail,.ribbon-loop{position:absolute;translate:-50% -50%;width:40px;height:40px;min-width:0;border:0;border-radius:2px;background:var(--ribbon);box-shadow:1px 2px 3px #493a3a46;display:grid;place-items:center;padding:6px}
+.ribbon-tail{touch-action:none;cursor:grab;transition:translate 140ms ease;clip-path:polygon(0 0,100% 0,100% 100%,50% 82%,0 100%)}.is-dragging .ribbon-tail{transition:none}.ribbon-tail .character-art,.ribbon-loop .character-art{width:100%;height:100%;aspect-ratio:1;filter:drop-shadow(0 1px #fff8)}.ribbon-loop{width:25px;height:25px;border:3px solid var(--ribbon);background:#e0d4b1;border-radius:50%;box-shadow:inset 1px 1px 3px #69583c88;padding:3px;opacity:.9}
+.box-side-label{position:absolute;bottom:7%;left:12%;font-size:12px;color:#fff2d3;letter-spacing:.3em}.box-verso .workshop-painting{filter:brightness(.95) saturate(.75)}.ribbon-pockets{display:flex;gap:7px;position:absolute;left:12%;bottom:14%;height:26px}.ribbon-pockets .character-art{width:26px;height:26px;aspect-ratio:1;opacity:.65}
+.decoder-card{position:absolute;left:16%;top:20%;width:67%;height:24%;filter:drop-shadow(1px 3px 2px #5e51313b)}
+.decoder-card-outline{display:grid;place-items:center;position:absolute;inset:0;border:1px dashed #8e83694d;border-radius:3px;color:#8e83695e}.decoder-card-outline .icon{width:35px;height:35px}
+.birthday-card-front{position:relative;width:100%;height:100%;border:1px solid #a6946e;background:#f7efd9;overflow:hidden}.birthday-card-front>.character-art{position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto}.birthday-card-front .card-moon,.birthday-card-front .card-star{position:absolute;inset:auto;width:20%;height:55%;left:32%;top:22%;aspect-ratio:auto}.birthday-card-front .card-star{left:53%;top:36%;width:12%;height:28%}
+.birthday-card-back{position:relative;width:100%;height:100%;border:1px solid #a6946e;border-radius:2px;background:#f7efd9;overflow:hidden}.birthday-card-back>.character-art{position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto}.birthday-number-grid{position:absolute;inset:0;width:100%;height:100%;overflow:visible}.birthday-number-grid text{font:24px Georgia;fill:#5a5745;text-anchor:middle;dominant-baseline:central}
+.decoder-notch,.ribbon-notch{position:absolute;top:1%;left:3%;color:#a88744;font:16px Georgia;z-index:1}.ribbon-notch{top:0;left:2%;color:#f4eac8;text-shadow:0 0 2px #755b2e}.notch-turned{top:auto;left:auto;bottom:0;right:2%}
+.decoder-strip{position:absolute;inset:0;filter:drop-shadow(1px 2px 1px #5d532b40)}.birthday-hole-sheet{display:block;width:100%;height:100%;overflow:visible}
+.decoder-mirror{position:absolute;left:13%;top:48%;width:29%;height:25%;opacity:.24}.decoder-mirror.mirror-fitted{opacity:1}.decoder-mirror>.item-art{width:100%;height:100%;aspect-ratio:auto}.mirror-code{position:absolute;display:flex;gap:4%;justify-content:center;align-items:center;top:33%;left:16%;width:62%;height:22%;color:#515e5d;font:clamp(12px,2vw,20px) Georgia;transform:rotate(-10deg)}.mirror-code b{font-weight:400}
+.birthday-wheel{position:absolute;z-index:3}.birthday-wheel .wheel-drum{width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;border:0;border-radius:3px;padding:0;background:linear-gradient(#695d42,#e2d3a0 27%,#f2e5bc 52%,#dcc89b 74%,#63563e);box-shadow:inset 1px 0 3px #2c291c70;touch-action:none;min-width:0;overflow:hidden;color:#494331;font:clamp(10px,1.8vw,22px) Georgia}.birthday-wheel b{font-weight:400;line-height:1.2}.birthday-wheel .wheel-previous,.birthday-wheel .wheel-next{font-size:.7em;line-height:1;opacity:.5}
+.birthday-lock-latch{position:absolute;background:transparent;border:0;min-width:0;z-index:4;border-radius:6px;padding:0}.birthday-lock-latch:hover{box-shadow:0 0 0 2px #f9eac966}
+.decoder-tool-slots{display:flex;justify-content:center;gap:20px;margin:12px auto 0}.decoder-slot{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;width:92px;padding:4px 8px 8px;border:1px dashed #b6ad92;background:#f6f2e8;border-radius:12px 12px 4px 4px;font-size:13px;touch-action:none}.decoder-slot .item-art{width:48px;height:48px;aspect-ratio:auto}.decoder-slot:disabled{opacity:.5}.decoder-slot.slot-filled{border-style:solid;background:#ebe9da}.decoder-slot.slot-filled .item-art{opacity:.35}.decoder-manipulate{min-height:44px;display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:8px}.decoder-manipulate .text-button{font-size:14px;padding:8px 12px}
+
+.party-details{position:absolute;inset:0;pointer-events:none}.party-details .sugar-grid{background:none}.party-details .ribbon-field{pointer-events:none}.party-details .ribbon-connections{opacity:.95}.party-card-found{position:absolute;left:31%;top:66%;width:5%;height:10%;rotate:-14deg}.party-card-found .character-art{width:100%;height:100%;aspect-ratio:auto}
+@media(max-width:600px){.puzzle-sweets .puzzle-field,.puzzle-ribbons .puzzle-field,.puzzle-birthdayLock .puzzle-field{padding:0;background:#eee7d8}.sugar-grip{width:29px;height:29px}.sugar-grip-0{left:-18px}.sugar-grip-1{top:-18px}.ribbon-tail{width:30px;height:30px;padding:4px}.ribbon-loop{width:20px;height:20px}.sweet-card-tab{font-size:12px}.sweet-card-tab .icon{width:14px;height:14px}.decoder-slot{width:78px}.decoder-tool-slots{gap:8px}.mirror-code{font-size:13px}.close-look .mirror-code{font-size:20px}.close-look .sugar-grip{width:36px;height:36px}.close-look .ribbon-tail{width:40px;height:40px}.sugar-grip .icon{width:12px;height:12px}.decoder-notch,.ribbon-notch{font-size:12px}}
+
+.birthday-tool-inspect{position:relative;width:min(100%,420px);height:168px;margin:50px auto 30px}.inspect-hole-ribbon{background:#f2eddc}.birthday-tool-inspect+.workshop-caption+.item-options{display:flex;justify-content:center;gap:16px;margin:24px 0}
+
+.sugar-grip-1 .icon{rotate:0deg}
+
+.birthday-decoder{width:min(100%,460px)}
+.decoder-card-outline{border-color:#81765a88;background:#e2dcc426}.decoder-strip-outline{position:absolute;left:57%;top:53%;width:25%;height:8%;border:1px dashed #84765a77;background:repeating-linear-gradient(90deg,#9b967715 0 9px,#efe6ce22 9px 18px);color:#9b885d}.decoder-strip-outline span{position:absolute;top:0;left:3%;font:14px Georgia}
+.decoder-slot[data-inventory-drag]{cursor:grab}.decoder-card,.decoder-strip-outline,.decoder-mirror{border-radius:3px}
+.ribbon-exit{position:fixed;pointer-events:none;z-index:60;overflow:visible}.ribbon-exit .ribbon-connections{width:100%;height:100%}
+
+
+.decoder-card,.birthday-tool-inspect{container-type:inline-size}
+
+.open-lock-number{position:absolute;display:grid;place-items:center;container-type:size;rotate:5deg;border-radius:2px;background:linear-gradient(#9e8e68,#ead9ad 30%,#ecdfba 55%,#b6a078);box-shadow:inset 1px 1px 2px #55472966;color:#4d4939}.open-lock-number b{font:70cqh/1 Georgia;font-weight:400;text-shadow:0 1px #f7ebc8}
+}

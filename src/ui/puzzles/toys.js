@@ -17,5 +17,5 @@ export function renderDrawers(progress,context) {
 }
 
 export function renderFlips(progress) {
-  return `<div class="flips-workbench"><div class="flip-box">${character('apparatus', 4, 3, 2, '翻片木盒')}<div class="flip-grid" style="left:${FLIP_RECT[0]}%;top:${FLIP_RECT[1]}%;width:${FLIP_RECT[2]}%;height:${FLIP_RECT[3]}%">${progress.tiles.map((tile, index) => moveButton(tile ? motif('leaf') : motif('rose'), { type: 'flip', index }, { className: `flip-tile ${tile ? 'tile-back' : 'tile-flower'}`, key: `flip-${index}` }).replace('<button ', `<button aria-label="翻动第${index + 1}格，并带动相邻格" data-neighbors="${flipNeighbors(index).join(',')}" `)).join('')}</div></div><p class="hand-note">让九格都开花。</p></div>`;
+  return `<div class="flips-workbench"><div class="flip-box">${character('apparatus', 4, 3, 2, '翻片木盒')}<div class="flip-grid" style="left:${FLIP_RECT[0]}%;top:${FLIP_RECT[1]}%;width:${FLIP_RECT[2]}%;height:${FLIP_RECT[3]}%">${progress.tiles.map((tile, index) => moveButton(tile ? motif('leaf') : motif('rose'), { type: 'flip', index }, { className: `flip-tile ${tile ? 'tile-back' : 'tile-flower'}`, key: `flip-${index}` }).replace('<button ', `<button aria-label="翻动第${index + 1}格，并带动相邻格" data-neighbors="${flipNeighbors(index).join(',')}" `)).join('')}</div></div><p class="hand-note">九朵花，还差几朵呢？</p></div>`;
 }

@@ -12,6 +12,7 @@ function memento(kind) {
     charm:()=>character('giftsMore',7,3,3,'小黑猫挂件'),
     ticket:()=>'<span class="record-ticket"><small>再放一遍</small><b>Ⅱ</b><i>入场</i></span>',
     bookmark:()=>itemSprite(0),
+    birthdayCard:()=>character('birthdayProps',6,3,3,'生日贺卡'),
     sketch:()=>`<span class="record-sketch">${motif('leaf')}<i></i></span>`,
   };
   return art[kind]?.()??motif(kind);

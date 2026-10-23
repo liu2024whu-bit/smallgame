@@ -1,11 +1,12 @@
 import { createStore } from './core/store.js';
 import { serializable, inventory, access } from './core/state.js';
 import { sceneOpen, openScenes, neighborScene, birthdayReady } from './core/exploration.js';
-import { ROOM_TOOL_TARGETS, toolFor } from './data/tool-uses.js';
+import { roomToolTarget, toolFor, puzzleToolUse } from './data/tool-uses.js';
 import { MAX_SAVE_BYTES, parseSave } from './core/storage.js';
 import { SCENE_BY_ID } from './data/scenes.js';
 import { SCENE_ART } from './data/assets.js';
 import { sceneChanges } from './data/scene-changes.js';
+import { BLOCKED_LINES } from './data/feedback.js';
 import { ITEMS } from './data/items.js';
 import { renderRoom, renderHud, renderHome } from './ui/room.js';
 import { renderPanel } from './ui/panels.js';
@@ -14,6 +15,7 @@ import { announce, itemSprite } from './ui/dom.js';
 import { createAudio } from './services/audio.js';
 import { fitHandle } from './services/tool-motion.js';
 import { motionAllowed } from './services/motion.js';
+import { roomPainting, transitionRoom } from './services/room-transition.js';
 import { bindInteractions } from './ui/interactions/index.js';
 import { viewActions } from './ui/view-actions.js';
 import { blockedMove } from './ui/interactions/feedback.js';
@@ -54,13 +56,14 @@ function renderDialog(preserveFocus = true, restore = null) {
   disposeInteractions = bindInteractions(dialog.element, { id, progress: state.progress[id], solved: state.solved.includes(id), move: performMove, activity, changeView: patch => { ui.panel.view = {...ui.panel.view,...patch}; renderDialog(); } });
 }
 function render(state) {
-  const signature = `${state.scene}:${state.collected.join()}:${sceneChanges(state).map(change=>change.puzzle??change.activity).join()}:${state.solved.includes('flowers')}:${state.ending}`;
+  const signature = `${state.scene}:${state.collected.join()}:${sceneChanges(state).map(change=>change.puzzle??change.activity).join()}:${state.solved.includes('flowers')}:${state.ending}:${state.scene==='party'?JSON.stringify([state.progress.sweets,state.progress.ribbons,state.progress.birthdayLock]):''}`;
   if (signature !== roomSignature) {
     const sameScene = stage.dataset.scene === state.scene;
+    const previousArt=roomPainting(stage);
     const previousPaint=new Set([...stage.querySelectorAll('[data-world-change]')].map(el=>el.dataset.worldChange));
     stage.innerHTML = renderRoom(state); stage.dataset.scene = state.scene; roomSignature = signature;
-    if (sameScene) stage.querySelector('.scene-image').style.animation = 'none';
     if(sameScene)stage.querySelectorAll('[data-world-change]').forEach(el=>{if(previousPaint.has(el.dataset.worldChange))el.style.animation='none';});
+    transitionRoom(stage,previousArt);
   }
   const hudKey = JSON.stringify([inventory(state), state.selected, state.scene, state.solved.length,state.usedTools, state.settings.sound, store.writable()]);
   if (hudKey !== hudSignature) {
@@ -119,10 +122,10 @@ async function useTool(item,target){
   if(target==='postcard-mirror'){
     store.dispatch({type:'select',id:null});openCollection('cities');ui.panel.view={card:1,back:true,reflected:true};renderDialog(false);audio.material('glass');return true;
   }
-  const id=target==='chocolate-cover'?'chocolate':'flowers';
+  const effect=puzzleToolUse(target);if(!effect)return false;
+  const {id,move}=effect;
   if(!access(state,id).ready){openPuzzle(id);return false;}
   if(ui.panel?.type!=='puzzle'||ui.panel.id!==id){closeAllPanels();openPuzzle(id);}
-  const move=id==='chocolate'?{type:'cover'}:{type:'set-pin',index:Number(target.split(':')[1])};
   if(state.selected)store.dispatch({type:'select',id:null});
   return performMove(move);
 }
@@ -132,7 +135,7 @@ function hotspot(id) {
   const state = store.get();
   const spot = SCENE_BY_ID[state.scene].hotspots.find(h => h.id === id);
   if (!spot) return;
-  const target=ROOM_TOOL_TARGETS[`${state.scene}:${id}`];
+  const target=roomToolTarget(state.scene,id,state.selected);
   if(state.selected&&target){useTool(state.selected,target);return;}
   const handlers = {
     pickup: () => { if (store.dispatch({ type: 'pickup', id: spot.target })) { audio.material('pickup'); toast(`${ITEMS[spot.target].name}，放在手边了。`); } },
@@ -142,7 +145,7 @@ function hotspot(id) {
     evidence: () => { activity(`evidence:${spot.target}`); openPanel({ type: 'evidence', id: spot.target }); },
     ambient: () => { audio.material('glass'); openPanel({ type: 'ambient' }); },
     pet: () => { ui.petAwake = false; openPanel({ type: 'pet', id: spot.target }); },
-    ending: () => { if(state.scene!=='birthday'){goScene('birthday');return;}if(birthdayReady(state)){store.dispatch({type:'ending'});audio.success();openPanel({type:'ending'});}else openPanel({type:'birthday-wait'}); },
+    ending: () => { if(state.scene!=='birthday'){goScene('birthday');return;}if(state.ending)openPanel({type:'ending'});else if(birthdayReady(state))openPanel({type:'candles'});else openPanel({type:'birthday-wait'}); },
     'birthday-note':()=>{if(spot.target==='fries')activity('birthday:fries');openPanel({type:'birthday-note',id:spot.target});},
   };
   (handlers[spot.kind] ?? (() => openPanel({ type: spot.kind })))();
@@ -171,6 +174,16 @@ const actions = {
   'arm-tool':button=>store.dispatch({type:'select',id:button.dataset.id}),
   'use-direct':button=>useTool(button.dataset.id,button.dataset.toolTarget),
   'birthday-unwrap':()=>{if(store.get().ending){activity('birthday:unwrap');audio.material('paper');}},
+  'candle-light':button=>{
+    if(ui.panel?.type!=='candles'||!birthdayReady(store.get())||store.get().ending)return;
+    const index=Number(button.dataset.index);if(![0,1].includes(index))return;
+    const candles=ui.panel.view?.candles??0;if(candles&(1<<index))return;
+    ui.panel.view={...ui.panel.view,candles:candles|(1<<index)};renderDialog();audio.material('glass');
+  },
+  'birthday-wish':()=>{
+    if(ui.panel?.type!=='candles'||ui.panel.view?.candles!==3||!birthdayReady(store.get()))return;
+    store.dispatch({type:'ending'});audio.success();openPanel({type:'ending'},false);
+  },
   close: closePanel,
   journal: () => openPanel({ type: 'journal', tab: 'clues' }),
   'journal-tab': button => { ui.panel = { type: 'journal', tab: button.dataset.tab }; renderDialog(false); },
@@ -217,7 +230,7 @@ app.addEventListener('click', async event => {
   if (button.dataset.pmove && ui.panel?.type === 'puzzle') {
     try {
       const changed = performMove(JSON.parse(button.dataset.pmove));
-      if (!changed) { blockedMove(button); announce(ui.panel.id === 'drawers' ? '木销挡着。' : ui.panel.id === 'stitch' ? '这一针没有穿过去。' : ui.panel.id === 'belt' ? '线到不了这一轮。' : '这一步没有挪动。'); }
+      if (!changed) { blockedMove(button); announce(BLOCKED_LINES[ui.panel.id]??'这一步没有挪动。'); }
     } catch { toast('刚才没接住，东西还在。'); }
     return;
   }

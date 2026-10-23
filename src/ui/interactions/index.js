@@ -13,6 +13,8 @@ import { bindMaze } from './maze.js';
 import { bindEncore } from './encore.js';
 import { bindRubbing } from './rubbing.js';
 import { bindDrawers } from './drawers.js';
+import { bindSweets } from './sweets.js';
+import { bindRibbons } from './ribbons.js';
 
 export function bindInteractions(root, { id, progress, solved, move, activity, changeView }) {
   const cleanup = [];
@@ -31,6 +33,8 @@ export function bindInteractions(root, { id, progress, solved, move, activity, c
     if(id==='cocoa')cleanup.push(bindPouring(root,progress,move));
     if(id==='maze')cleanup.push(bindMaze(root,progress,move));
     if(id==='drawers')cleanup.push(bindDrawers(root,progress,move));
+    if(id==='sweets')cleanup.push(bindSweets(root,progress,move));
+    if(id==='ribbons')cleanup.push(bindRibbons(root,progress,move));
   }
   const pencil = root.querySelector('[data-color-drawing]');
   if (pencil) {

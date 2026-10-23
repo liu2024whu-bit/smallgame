@@ -4,8 +4,9 @@ import { character, icon } from './dom.js';
 import { encorePanel } from './achievements.js';
 import { evidencePanel } from './evidence.js';
 import { campusPanel } from './campus.js';
-import { passagePanel, birthdayNotePanel } from './birthday.js';
+import { passagePanel, birthdayNotePanel, candlePanel } from './birthday.js';
 import { flowerNotePanel } from './puzzles/flowers.js';
+import { birthdayToolPanel } from './birthday-tools.js';
 
 export function renderPanel(panel, context) {
   const simple = {
@@ -15,7 +16,8 @@ export function renderPanel(panel, context) {
     'flower-note':()=>flowerNotePanel(context.state),
     passage:()=>passagePanel(panel.id,context),
     'birthday-note':()=>birthdayNotePanel(panel.id,context),
-    'birthday-wait':()=>({title:'蛋糕',className:'inspect-dialog',html:'<div class="short-note"><p>可可还没有分好。</p><button class="text-button" data-action="close">再看看</button></div>'}),
+    candles:()=>candlePanel(context),
+    'birthday-wait':()=>({title:'蛋糕',className:'inspect-dialog',html:`<div class="short-note"><p>${!context.state.solved.includes('cocoa')?'可可还没分好，隔壁也还热闹着。':!context.state.solved.includes('sweets')?'准备台上，那张贺卡还没收好。':'隔壁的生日匣，还留着一点小秘密。'}</p><button class="text-button" data-action="close">再看看</button></div>`}),
     ambient: () => ({ title: '雨声', className: 'inspect-dialog', html: '<div class="rain-listening"><p>雨落在窗沿上。</p></div>' }),
     journal: () => journalPanel(context.state, panel.tab, context.view),
     collection: () => collectionPanel(panel.id, context),
@@ -24,7 +26,7 @@ export function renderPanel(panel, context) {
     encore: () => encorePanel(context),
     interests: interestsPanel,
     flowers: () => flowersPanel(context.flower),
-    item: () => itemPanel(panel.id),
+    item: () => birthdayToolPanel(panel.id,context)??itemPanel(panel.id),
     ending: () => endingPanel(context.flower),
     settings: () => settingsPanel(context),
     pet: () => petPanel(panel.id, context.petAwake),
@@ -46,5 +48,5 @@ function petPanel(id, awake) {
 
 function settingsPanel(context) {
   const settings = context.state.settings;
-  return { title: '设置', className: 'settings-dialog', html: `<div class="settings-controls">${[['sound', '声音'], ['motion', '动画'], ['hotspots', '标出可点物件']].map(([key, label]) => `<label class="setting-toggle"><span>${label}</span><input type="checkbox" data-setting="${key}" ${settings[key] ? 'checked' : ''}></label>`).join('')}<label class="setting-volume"><span>音量</span><input type="range" min="0" max="1" step="0.05" value="${settings.volume}" data-setting="volume"></label><p class="hand-note">${context.writable ? '进度会自动保存。' : '自动保存这次没跟上，「保存一份」还能留住进度。'}</p><div class="save-actions"><button class="quiet-button" data-action="export">保存一份</button><button class="quiet-button" data-action="import">读取存档</button><button class="quiet-button" data-action="fullscreen">${icon('full')}全屏</button></div><button class="text-button restart-link" data-action="restart">重新开始</button><p class="credits-note">同人创作，角色版权归各作品的权利人所有。</p></div>` };
+  return { title: '设置', className: 'settings-dialog', html: `<div class="settings-controls">${[['sound', '声音','sound'], ['motion', '动画','feather'], ['hotspots', '标出可点物件','star']].map(([key, label, mark]) => `<label class="setting-toggle"><span>${icon(mark)}${label}</span><input type="checkbox" role="switch" data-setting="${key}" ${settings[key] ? 'checked' : ''}></label>`).join('')}<label class="setting-volume"><span>${icon('moon')}音量</span><input type="range" min="0" max="1" step="0.05" value="${settings.volume}" data-setting="volume"></label><p class="hand-note">${context.writable ? '进度会自动保存。' : '自动保存这次没跟上，「保存一份」还能留住进度。'}</p><div class="save-actions"><button class="quiet-button" data-action="export">${icon('download')}保存一份</button><button class="quiet-button" data-action="import">${icon('upload')}读取存档</button><button class="quiet-button" data-action="fullscreen">${icon('full')}全屏</button></div><button class="text-button restart-link" data-action="restart">重新开始</button><p class="credits-note">同人创作，角色版权归各作品的权利人所有。</p></div>` };
 }
