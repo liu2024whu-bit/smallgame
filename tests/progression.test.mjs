@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createState, reduce, inventory, keepsakes, discoveredCollections, access, normalizeState, serializable } from '../src/core/state.js';
-import { MAIN_IDS } from '../src/data/puzzles.js';
+import { MAIN_IDS, PUZZLES } from '../src/data/puzzles.js';
 import { createStore } from '../src/core/store.js';
 import { SAVE_KEY, BACKUP_KEY, parseSave, loadSave, writeSave } from '../src/core/storage.js';
 import { WITNESSES, solvedProgress } from './witnesses.mjs';
@@ -34,7 +34,7 @@ test('the two branches can be completed in a different order', () => {
 test('optional puzzles can all be completed before touching the main chain', () => {
   let state = start();
   for (const id of Object.keys(WITNESSES).filter(id => !MAIN_IDS.includes(id))) { assert.ok(access(state, id).ready); state = finish(state, id); assert.ok(state.solved.includes(id), id); }
-  assert.equal(state.solved.length, 6);
+  assert.equal(state.solved.length, PUZZLES.filter(p=>p.optional).length);
 });
 test('locked and already completed puzzles cannot advance or issue rewards twice', () => {
   let state = start();

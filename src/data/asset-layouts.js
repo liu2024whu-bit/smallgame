@@ -1,6 +1,11 @@
 import { SWEET_CROP, BOX_CROP, OPEN_BOX_CROP } from './birthday-workshop.js';
 // Source-pixel frames follow the actual edges of each illustration.
 export const ASSET_LAYOUTS = Object.freeze({
+  campusMarks:{width:1536,height:1024,frames:[[55,228,668,620],[760,221,752,615]]},
+  gardenBody:{width:1536,height:1024,frames:[[0,0,1536,1024]]},
+  gardenBookmark:{width:1254,height:1254,frames:[[64,341,1158,774]]},
+  gardenCrank:{width:1254,height:1254,frames:[[0,0,1254,1254]]},
+  calendar:{width:1536,height:1024},
   welcome:{width:1536,height:1024},
   party:{width:1536,height:1024},
   partyOpen:{width:1536,height:1024},
@@ -15,6 +20,7 @@ export const ASSET_LAYOUTS = Object.freeze({
   encoreTheatre:{width:1536,height:1024},
   campusDesk:{width:1536,height:1024},
   campusRubbing:{width:1448,height:1086},
+  heiGreeting:{width:1536,height:1024,frames:[[80,23,420,483],[542,22,441,484],[1015,18,450,488],[63,515,455,486],[542,518,451,483],[1071,523,412,478]],anchors:[.465,.487,.466,.473,.455,.461]},
   heiCat:{width:1312,height:1199,frames:[[80,20,560,580],[690,20,560,580],[80,600,560,580],[690,600,560,580]]},
   musicbox:{width:1536,height:1024},
   musicMechanism:{width:1536,height:1024,frames:[[465,448,615,260]]},
@@ -68,7 +74,7 @@ export const ASSET_LAYOUTS = Object.freeze({
   "genshin": {"width":1536,"height":1024,"frames":[[0,0,746,1024],[746,0,790,1024]]},
   "hashira": {"width":1254,"height":1254,"frames":[[0,0,418,418],[418,0,418,418],[836,0,418,418],[0,418,418,418],[418,418,418,418],[836,418,418,418],[0,836,418,418],[418,836,418,418],[836,836,418,418]]},
   "princeHei": {"width":1254,"height":1254,"frames":[[0,0,610,700],[645,0,609,638],[0,700,615,554],[615,630,639,624]]},
-  "pets": {"width":1536,"height":1024,"frames":[[80,90,688,390],[800,0,700,480],[150,480,590,520],[800,490,700,510]]},
+  petCorners:{width:1536,height:1024,frames:[[0,0,768,512],[768,0,768,512],[0,512,768,512],[768,512,768,512]]},
   "campuses": {"width":1536,"height":1024,"frames":[[0,0,768,1024],[768,0,768,1024]]},
   "gifts": {"width":1536,"height":1024,"frames":[[20,0,415,520],[430,140,690,320],[1120,0,416,540],[0,520,510,504],[530,520,540,504],[1080,520,456,504]],"clips":{"2":"polygon(0 0, 100% 0, 100% 92.5%, 35% 92.5%, 35% 100%, 0 100%)"}},
   giftsMore: {width:1254,height:1254,frames:[[0,60,520,357],[490,45,370,370],[872,5,350,438],[40,415,390,400],[434,435,445,380],[884,442,345,366],[12,782,400,462],[432,810,386,424],[822,806,432,426]],clips:{0:'polygon(0 0,25% 0,100% 40%,100% 100%,0 100%)',1:'polygon(0 0,100% 0,100% 100%,30% 100%,20% 55%,0 40%)',3:'polygon(0 0,100% 0,100% 100%,95% 100%,0 78%)',4:'polygon(0 0,100% 0,100% 100%,48% 100%,48% 97%,30% 97%,30% 100%,0 100%)',6:'polygon(0 14%,72% .5%,78% 12%,100% 75%,100% 100%,0 100%)',7:'polygon(0 0,60% 0,60% 2%,67% 2%,67% 0,100% 0,100% 100%,0 100%)'}}

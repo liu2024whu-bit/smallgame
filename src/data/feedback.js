@@ -1,5 +1,6 @@
 // Small reactions belong to the object; they do not reveal the next solution.
 export const FINISH_REACTIONS = Object.freeze({
+  calendar:['九月，藏在这里。','moon'],
   paper: ['这回印上了。', 'leaf'],
   cloud: ['云停在这里了。', 'cloud'],
   calibration: ['有光了。', 'star'],

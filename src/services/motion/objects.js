@@ -8,7 +8,6 @@ const OBJECTS = [
   ['.film-frame', el => `film:${el.querySelector('.frame-number')?.textContent}`],
   ['.drawer-unit button', (_, i) => `drawer:${i}`],
   ['.music-pin', (_, i) => `pin:${i}`],
-  ['.flower-pot', (_, i) => `flower:${i}`],
   ['.scale-pan [data-weight], .weight-tray [data-weight]:not(.weight-away)', el => `weight:${el.dataset.weight}`],
 ];
 const objects = root => OBJECTS.flatMap(([selector, key]) => [...root.querySelectorAll(selector)].map((el, i) => [key(el, i), el]));

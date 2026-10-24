@@ -5,7 +5,7 @@ import { playMazeRoute } from './maze.js';
 const turns = root => [...root.querySelectorAll('.dial-face')].map(el => parseFloat(el.style.getPropertyValue('--turn')) || 0);
 const rings = root => [...root.querySelectorAll('[data-maze-rotor]')].map(el => Number(el.getAttribute('transform')?.match(/rotate\((-?[\d.]+)/)?.[1] ?? 0));
 export const mechanismMotion = {
-  capture: root => ({ dials: turns(root), rings: rings(root), lean: root.querySelector('.scale-apparatus')?.style.getPropertyValue('--lean'), heights: [...root.querySelectorAll('.flower-pot')].map(el => el.style.top), arrived: !!root.querySelector('.maze-arrived') }),
+  capture: root => ({ dials: turns(root), rings: rings(root), lean: root.querySelector('.scale-apparatus')?.style.getPropertyValue('--lean'), arrived: !!root.querySelector('.maze-arrived') }),
   play(root, before) {
     const nextTurns = turns(root), nextRings = rings(root);
     root.querySelectorAll('.dial-face').forEach((el, i) => {
@@ -22,8 +22,6 @@ export const mechanismMotion = {
     });
     const scale = root.querySelector('.scale-moving'), lean = root.querySelector('.scale-apparatus')?.style.getPropertyValue('--lean');
     if (scale && before.lean !== undefined && before.lean !== lean) scale.animate([{ transform: `rotate(${before.lean})` }, { transform: `rotate(${lean})` }], { duration: 620, easing: 'cubic-bezier(.3,1.45,.5,1)' });
-    const heights = [...root.querySelectorAll('.flower-pot')].map(el => el.style.top);
-    if (before.heights.length && heights.some((h, i) => h !== before.heights[i])) root.querySelectorAll('.garden-crank:focus .item-art').forEach(el => el.animate([{ rotate: '0deg' }, { rotate: '360deg' }], { duration: 400, easing: ease }));
     const ball = root.querySelector('.maze-arrived');
     if (ball && !before.arrived) {
       playMazeRoute(root, JSON.parse(ball.dataset.walk));

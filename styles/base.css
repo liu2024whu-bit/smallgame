@@ -44,7 +44,7 @@
   .toast { position: fixed; z-index: 100; bottom: 122px; left: 50%; transform: translateX(-50%); background: #fbfaf0f5; padding: 10px 24px; border: 1px solid #c2cab6; box-shadow: 0 5px 22px #58624c18; border-radius: 4px; font-size: 15px; max-width: min(90vw, 540px); text-align: center; pointer-events: none; }
   #explore-dialog { margin: auto; width: min(1040px, calc(100vw - 48px)); max-width: 1200px; max-height: calc(100dvh - 48px); padding: 0; border: 1px solid #c8c9b9; border-radius: 7px 4px 6px 3px; background: var(--paper); color: var(--ink); box-shadow: 0 20px 100px #3f49382b; overscroll-behavior: contain; }
   #explore-dialog::backdrop { background: #50594f60; backdrop-filter: blur(4px); }
-  .dialog-header { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; padding: 14px 22px; background: #fcfaf4f5; border-bottom: 1px solid #d9ddce; }
+  .dialog-header { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; padding: 14px 22px; background: #fcfaf4; border-bottom: 1px solid #d9ddce; }
   .dialog-header h2 { font-size: 23px; letter-spacing: .06em; }
   .dialog-header > div { display: flex; align-items: center; }
   .dialog-body { padding: 22px 30px 28px; }

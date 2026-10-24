@@ -53,7 +53,7 @@
   .passage-return { margin:8px 0; }
   .birthday-note-dialog { max-width:760px!important; text-align:center; }
   .birthday-note-art { display:flex; justify-content:center; align-items:center; min-height:180px; }
-  .birthday-note-art .character-art { width:min(330px,calc(var(--ratio)*300px)); }
+  .birthday-note-art .character-art { width:min(100%,330px,calc(var(--ratio)*300px)); }
   .birthday-note-art.parcel-wrapped .character-art { width:min(220px,calc(var(--ratio)*300px)); }
   .birthday-note-art img { display:block; width:min(100%,600px); height:auto; }
   .birthday-note-dialog .memory-caption { margin:22px auto; color:#8a806d; }

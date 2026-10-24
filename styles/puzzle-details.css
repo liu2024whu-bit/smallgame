@@ -69,8 +69,6 @@
   .drawer-link > p { grid-column:1/-1; margin:0; font-size:13px; color:#89836b; }
   .drawer-goal { display:flex; justify-content:center; gap:20px; font:17px Georgia,serif; color:#839073; }.drawer-goal > span { display:grid; justify-items:center; gap:5px; }.drawer-goal small { font:12px var(--font); }
   .drawer-turn { display:block; width:fit-content; margin:18px auto 0; font-size:13px; }
-  .bookmark-supply { display:block; width:40px; margin:20px auto 0; cursor:grab; touch-action:none; transform:rotate(8deg); }.bookmark-supply .item-art { width:100%; }
-  [data-bookmark-grab] { touch-action:none; cursor:grab; }.bookmark-ghost { width:35px; }.bookmark-ghost .item-art { width:100%; }
   .backlit-paper { box-shadow:inset 0 0 70px #fff8c6a6; }
   .negative-board { position:relative; max-width:640px; margin:auto; }.negative-board > .character-art { width:100%; display:block; filter:saturate(.7); }
   .negative-windows { position:absolute; inset:16% 9% 14%; display:flex; justify-content:space-around; align-items:center; gap:15px; background:#ecebd994; box-shadow:inset 0 0 35px #fffbe2bc; }

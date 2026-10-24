@@ -22,6 +22,7 @@
   .progress-settings legend { margin-bottom:13px; }
   .save-place { display:flex; align-items:center; gap:13px; color:#5b7057; margin:0; }
   .save-place .icon { width:28px; height:28px; color:#919a7d; }.save-place small { display:block; font-size:12px; color:#78836d; margin-top:2px; }
+  .export-receipt { margin:15px 0 4px; padding:12px 13px; background:#f4f1e2; border-left:2px solid #b3c09a; border-radius:0 4px 4px 0; }.export-receipt small { display:block; color:#92977f; font-size:11px; }.saved-filename { display:block; font-size:12px; line-height:1.8; overflow-wrap:anywhere; color:#65745a; margin-top:5px; }.export-receipt p,.export-note { font-size:12px; line-height:1.9; color:#8b917b; margin:7px 0 0; }.export-receipt .text-button { margin-top:8px; font-size:12px; }
   .settings-save-note { margin:14px 0 0; color:#6c7663; font-size:13px; }
   .save-actions { display:flex; gap:13px; margin:16px 0 0; flex-wrap:wrap; font-size:14px; }
   .restart-link { display:block; margin:18px 0 0; color:#8e7564; font-size:13px; }

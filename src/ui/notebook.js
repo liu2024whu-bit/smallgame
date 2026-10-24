@@ -1,5 +1,5 @@
 import { CLUES, FLOWERS } from '../data/clues.js';
-import { MEMORIES, READING, INTERESTS, ENDING } from '../data/memories.js';
+import { MEMORIES, READING, INTERESTS } from '../data/memories.js';
 import { COLLECTIONS, ASSETS } from '../data/assets.js';
 import { PUZZLES } from '../data/puzzles.js';
 import { ITEMS } from '../data/items.js';
@@ -61,9 +61,4 @@ export function itemPanel(id) {
   const item = ITEMS[id];
   const back = ITEM_EVIDENCE[id];
   return { title: item.name, className: 'inspect-dialog', html: `<div class="item-inspect">${itemSprite(item.sprite)}<p>${escape(item.description)}</p><div class="item-options">${back ? `<button class="text-button" data-action="evidence" data-id="${back}">翻过来</button>` : ''}<button class="text-button" data-action="take-tool" data-id="${id}">拿在手里</button></div></div>` };
-}
-
-export function endingPanel(selected = 'rose') {
-  const wish = FLOWERS.find(f => f.id === selected) ?? FLOWERS[3];
-  return { title: '生日快乐', className: 'ending-dialog', html: `<div class="ending-page"><p class="eyebrow">2006 — 2026 · 10 / 29</p><div class="ending-flower">${motif(wish.id)}</div><h2>Happy birthday,<br><span>LXY.</span></h2>${ENDING.map(line => `<p class="birthday-letter">${escape(line)}</p>`).join('')}<p class="ending-wish">${escape(wish.wish)}</p><span class="unfinished-page">下一页<br>________________</span><button class="quiet-button" data-action="flowers">换一朵</button><button class="primary-button" data-action="close">再坐一会儿${icon('right')}</button></div>` };
 }

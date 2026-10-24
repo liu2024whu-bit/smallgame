@@ -9,6 +9,11 @@ export const SCENE_ART = Object.freeze({
   party:'assets/scenes/party.webp',
 });
 export const ASSETS = Object.freeze({
+  campusMarks:'assets/illustrations/campus-marks.webp',
+  gardenBody:'assets/illustrations/garden-body.webp',
+  gardenBookmark:'assets/illustrations/garden-bookmark.webp',
+  gardenCrank:'assets/illustrations/garden-crank.webp',
+  calendar:'assets/illustrations/calendar.webp',
   welcome:'assets/scenes/welcome.webp',
   party:'assets/scenes/party.webp',
   sweetsTable:'assets/scenes/party.webp',
@@ -17,6 +22,7 @@ export const ASSETS = Object.freeze({
   ribbonBox:'assets/scenes/party.webp',
   birthdayProps:'assets/illustrations/birthday-props.webp',
   birthdayPaper:'assets/scenes/party.webp',
+  heiGreeting:'assets/illustrations/hei-greeting.webp',
   heiCat:'assets/illustrations/hei-cat.webp',
   musicbox:'assets/illustrations/musicbox.webp',
   musicMechanism:'assets/illustrations/musicbox.webp',
@@ -35,7 +41,7 @@ export const ASSETS = Object.freeze({
   motifs: 'assets/illustrations/motifs.webp',
   board: 'assets/illustrations/board.webp',
   skyClouds: 'assets/illustrations/sky-clouds.webp',
-  pets: 'assets/illustrations/pets.webp',
+  petCorners: 'assets/illustrations/pet-corners.webp',
   genshin: 'assets/illustrations/genshin.webp',
   hashira: 'assets/illustrations/hashira.webp',
   princeHei: 'assets/illustrations/prince-hei.webp',

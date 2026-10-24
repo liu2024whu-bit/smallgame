@@ -3,6 +3,7 @@ const inspect = (id, label, target, x, y, width, height) => ({ id, kind: 'collec
 
 export const SCENES = Object.freeze([
   { id: 'desk', title: '书桌', hotspots: [
+    puzzle('calendar','日历',18.3,52.8,6.8,10.8),
     { id: 'take-bookmark', kind: 'pickup', target: 'bookmark', label: '木书签', x: 60.7, y: 56.4, width: 5.8, height: 6.5, sprite: true },
     { id: 'take-thread', kind: 'pickup', target: 'thread', label: '一卷棉线', x: 55.3, y: 54.3, width: 4.2, height: 6.5, sprite: true },
     puzzle('paper', '纸盒', 52.7, 51.8, 12.8, 15, { revisit: 'paperBack', revisitAfter: 'flowers' }),

@@ -1,13 +1,15 @@
+import {createFoley} from './foley.js';
 import { createMusicPlayer } from './music-player.js';
 
 // Independent music/effect buses. The first gesture unlocks audio, never page load.
-export function createAudio({advance}={}) {
-  let context, master, musicBus, duckTimer;
+export function createAudio({advance,library}={}) {
+  let context, master, duckTimer;
   let settings = { sound: true, volume: 0.35, music:true, musicVolume:.65, effectsVolume:1, musicTrack:'window',musicOrder:'cycle' };
+  const foley=createFoley({context:()=>context,output:()=>master,enabled:()=>settings.sound&&!document.hidden&&settings.effectsVolume>0&&settings.volume>0});
   const timers = new Set();
   let rainSource;
   let ducked=false;
-  const music=createMusicPlayer({context:()=>context,destination:()=>musicBus,advance});
+  const music=createMusicPlayer({context:()=>context,advance,library});
 
   function configure(next) {
     settings = next;
@@ -18,7 +20,7 @@ export function createAudio({advance}={}) {
     if(!master)return;
     const enabled=settings.sound&&!document.hidden,volume=enabled?settings.volume:0;
     master.gain.setTargetAtTime(volume*settings.effectsVolume*.4,context.currentTime,.08);
-    musicBus.gain.setTargetAtTime(volume*settings.musicVolume*(ducked?.2:1),context.currentTime,.12);
+    music.level(volume*settings.musicVolume*(ducked?.2:1));
   }
   function duck(value){ducked=value;levels();}
 
@@ -28,9 +30,7 @@ export function createAudio({advance}={}) {
       if (!Audio) return;
       context = new Audio();
       master = context.createGain();
-      musicBus=context.createGain();
       master.connect(context.destination);
-      musicBus.connect(context.destination);
       configure(settings);
     }
     if (context.state === 'suspended') await context.resume().catch(() => {});
@@ -115,5 +115,5 @@ export function createAudio({advance}={}) {
       timers.add(timer);
     });
   }
-  return { resume, configure, material, pour, success, music, melody, stopMelody, previewNote, rain, stopRain };
+  return { resume, configure, material, foley, pour, success, music, melody, stopMelody, previewNote, rain, stopRain };
 }

@@ -1,6 +1,6 @@
 // A few anchors leave room for the player's own memories.
 export const MEMORIES = Object.freeze({
-  paper: { title: '前桌', text: '刚认识那年过生日，你送了我一本速写本。我一直记得。' },
+  paper: { title: '前桌', text: '第一次生日，你送我的那本速写本。一直留着。' },
   cloud: { title: '上线啦', text: '熟悉的斗篷，熟悉的人。' },
   postbox: { title: '邮戳', text: '那时候，很想去武汉。' },
   books: { title: '书单', text: '这本，也是你推荐的。' },
@@ -23,7 +23,7 @@ export const INTERESTS = [
 ];
 
 export const ENDING = [
-  'LXY，20岁生日快乐。',
-  '刚认识那年，你送我的速写本，我还记得。后来一起练字、玩游戏，日子一晃就到现在了。',
-  '画册收好了，灯也亮了。给你留的蛋糕，总算等到了。愿你常有时间画画，做喜欢的事，偶尔偷懒也能心安理得。',
+  '速写本的下一页，还留着呢。',
+  '愿你有时间画画，做喜欢的事。偶尔偷个懒，也能心安理得。',
+  '二十岁，慢慢来。',
 ];

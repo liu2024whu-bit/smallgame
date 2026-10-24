@@ -1,14 +1,8 @@
 import { ease } from './shared.js';
 
 export const materialMotion = {
-  capture: root => ({ liquid: [...root.querySelectorAll('.cocoa-liquid')].map(el => getComputedStyle(el).height), pour: [root.dataset.pourFrom, root.dataset.pourTo], bookmark: root.querySelector('.garden-lift') ? { pin: Number(root.querySelector('.garden-lift').dataset.flowerPin), box: root.querySelector('[data-bookmark-grab]')?.getBoundingClientRect() } : null, chocolate: [...root.querySelectorAll('[data-chocolate-cell]')].map(el => el.className), packing: [...root.querySelectorAll('[data-pack-cell]')].map(el => el.dataset.packId) }),
+  capture: root => ({ liquid: [...root.querySelectorAll('.cocoa-liquid')].map(el => getComputedStyle(el).height), pour: [root.dataset.pourFrom, root.dataset.pourTo], chocolate: [...root.querySelectorAll('[data-chocolate-cell]')].map(el => el.className), packing: [...root.querySelectorAll('[data-pack-cell]')].map(el => el.dataset.packId) }),
   play(root, before) {
-    const garden = root.querySelector('.garden-lift'), pin = Number(garden?.dataset.flowerPin);
-    if (garden && before.bookmark && before.bookmark.pin !== pin) {
-      garden.querySelector('.bookmark-tab .item-art')?.animate([{ translate: '50px 6px', opacity: .3 }, { translate: '0 0', opacity: 1 }], { duration: 380, easing: ease });
-      const free = garden.querySelector('.bookmark-supply'), old = before.bookmark.box;
-      if (free && old) { const next = free.getBoundingClientRect(); free.animate([{ translate: `${old.x - next.x}px ${old.y - next.y}px`, rotate: '75deg', scale: '.65' }, { translate: '0 0', rotate: '0deg', scale: '1' }], { duration: 420, easing: ease }); }
-    }
     root.querySelectorAll('[data-chocolate-cell]').forEach((el, i) => {
       if (before.chocolate[i] !== undefined && before.chocolate[i] !== el.className) el.animate([{ opacity: .2, scale: '.9' }, { opacity: 1, scale: '1' }], { duration: 220, easing: ease });
     });

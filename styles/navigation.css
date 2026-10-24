@@ -1,0 +1,42 @@
+@layer base {
+  #dialog-title:focus,#welcome-heading:focus { outline:none; }
+  .icon-button:focus-visible { outline:1.5px solid #829775; outline-offset:2px; }
+  .icon-button .icon { transition:rotate .25s ease,scale .2s ease; }
+  .icon-button:hover .icon { scale:1.06; }.icon-button[data-action="settings"]:hover .icon { rotate:20deg; }
+  .icon-button:active { background:#dfe5d3; }.text-button .icon { transition:translate .2s; }.text-button:hover .icon-right { translate:2px 0; }
+}
+@layer room {
+  .scene-caption .icon { width:14px; height:14px; color:#7e8b70; }.scene-caption:hover { background:#fffdf2e8; }
+  .scene-dots button { position:relative; width:24px; height:26px; }
+  .scene-dot-label { position:absolute; bottom:31px; left:50%; translate:-50% 2px; padding:4px 8px; color:#63705b; background:#fffdf0ed; border:1px solid #c9d0b8; border-radius:3px; white-space:nowrap; font-size:12px; opacity:0; pointer-events:none; transition:opacity .2s,translate .2s; }
+  .scene-dots button:is(:hover,:focus-visible) .scene-dot-label { opacity:1; translate:-50% 0; }
+  .scene-dots button:first-child .scene-dot-label { left:0;translate:0 0; }.scene-dots button:last-child .scene-dot-label { left:auto;right:0;translate:0 0; }
+}
+@layer notebook {
+  .navigation-dialog { max-width:790px !important; }
+  .room-folio { padding:5px 9px 10px; }
+  .navigation-chapter { text-align:center; font-size:13px; color:#879274; margin:3px 0 24px; }
+  .room-route { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:20px 17px; position:relative; }
+  .room-route::before { content:''; position:absolute; left:10%; right:10%; top:50%; border-top:1px dashed #bdc6aa; pointer-events:none; }
+  .room-route-stop { position:relative; display:grid; justify-items:center; align-content:center; gap:7px; padding:14px 10px 9px; border:1px solid #d1d6c0; border-radius:3px 9px 3px 6px; background:#f8f6eaf2; box-shadow:1px 3px 0 #d5d7c439; color:#617359; }
+  .room-route-stop>b { font-size:17px; font-weight:400; }.room-route-stop>small { min-height:18px; font-size:11px; color:#92977d; }.room-route-stop>i { position:absolute; right:8px; top:6px; font:9px Georgia,serif; color:#acaa91; }
+  .route-marker { display:grid; place-items:center; width:42px; height:42px; border:1px solid #d4d5bb; border-radius:50%; color:#8b9772; background:#fffbe7; }.route-marker .icon { width:24px; height:24px; }
+  .route-current { border-color:#91a584; background:#edf1e2; }.route-current .route-marker { border-color:#a1b18e; color:#6d835e; }
+  .route-closed { background:#eeeee3; }.route-closed .route-marker { background:#e6e7db; color:#9b9e87; }
+  .room-route-stop:hover { translate:0 -2px; border-color:#a7b69a; transition:translate .2s,border-color .2s; }
+  .navigation-whisper { text-align:center; color:#68785e; font-size:16px; line-height:1.9; margin:26px 0 20px; }
+  .navigation-objects { display:flex; justify-content:center; align-items:center; flex-wrap:wrap; gap:8px 16px; padding-top:17px; border-top:1px solid #dcdfd0; font-size:13px; color:#8d967e; }
+  .navigation-objects .text-button { font-size:14px; }.navigation-objects .icon { width:13px; height:13px; margin-left:5px; }
+  @media(max-width:700px) {
+    .room-route { gap:12px 9px; }.room-route-stop { padding:14px 4px 7px; }.room-route-stop>b { font-size:14px; }.route-marker { width:34px; height:34px; }.route-marker .icon { width:20px; height:20px; }.room-folio { padding-inline:0; }
+    .navigation-whisper { font-size:15px; }.navigation-objects { gap:6px 12px; }
+  }
+  @media(max-width:360px) { .room-route { grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; } }
+}
+@layer puzzles {
+  .completion-afterword { max-width:30em; text-align:center; margin:4px auto 16px; color:#758368; font-size:15px; line-height:1.9; }
+}
+@layer motion {
+  .reduce-motion .room-route-stop:hover { translate:none; }.reduce-motion .icon-button .icon,.reduce-motion .text-button .icon,.reduce-motion .scene-dot-label { transition:none; }
+  @media(prefers-reduced-motion:reduce) { .room-route-stop:hover { translate:none; }.icon-button .icon,.text-button .icon,.scene-dot-label { transition:none; } }
+}

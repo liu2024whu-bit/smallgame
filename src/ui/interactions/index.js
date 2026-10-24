@@ -1,3 +1,4 @@
+import {bindGarden} from './garden.js';
 import { bindPacking } from './packing.js';
 import { bindReorder } from './reorder.js';
 import { bindObjects } from './objects.js';
@@ -16,7 +17,7 @@ import { bindDrawers } from './drawers.js';
 import { bindSweets } from './sweets.js';
 import { bindRibbons } from './ribbons.js';
 
-export function bindInteractions(root, { id, progress, solved, move, activity, changeView }) {
+export function bindInteractions(root, { id, progress, solved, move, activity, changeView, feedback=()=>{} }) {
   const cleanup = [];
   cleanup.push(bindEncore(root,changeView));
   cleanup.push(bindRubbing(root,activity));
@@ -32,6 +33,7 @@ export function bindInteractions(root, { id, progress, solved, move, activity, c
     if(id==='chocolate')cleanup.push(bindChocolate(root,progress,move));
     if(id==='cocoa')cleanup.push(bindPouring(root,progress,move));
     if(id==='maze')cleanup.push(bindMaze(root,progress,move));
+    if(id==='flowers')cleanup.push(bindGarden(root,progress,move,feedback));
     if(id==='drawers')cleanup.push(bindDrawers(root,progress,move));
     if(id==='sweets')cleanup.push(bindSweets(root,progress,move));
     if(id==='ribbons')cleanup.push(bindRibbons(root,progress,move));

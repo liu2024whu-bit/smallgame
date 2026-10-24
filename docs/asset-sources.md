@@ -1,6 +1,6 @@
 # 画面与参考
 
-运行时的图片全部随仓库提供，不依赖远程热链。七幅完整书房场景、机关物件、猫狗和角色同人插画由图像生成工具绘制，再以 WebP 导出；图片本身不是用CSS或矢量图形拼出来的场景。源码中的小图标、连线和轨道只承担界面与规则表达。
+运行时的图片全部随仓库提供，不依赖远程热链。八幅完整书房场景、机关物件、猫狗和角色同人插画由图像生成工具绘制，再以 WebP 导出；图片本身不是用CSS或矢量图形拼出来的场景。源码中的小图标、连线和轨道只承担界面与规则表达。
 
 游戏使用的新绘画面不等同于原作官方素材，也不等同于收礼者的真实画作。代码的MIT许可不覆盖第三方角色与作品的原有权利。此项目未取得这些角色的商业授权，不对素材目录作此授权声明。
 
@@ -23,7 +23,7 @@
 | `assets/illustrations/genshin.webp` | 魈、流浪者 |
 | `assets/illustrations/hashira.webp` | 九位柱，顺序与角色标签一致 |
 | `assets/illustrations/prince-hei.webp` | 小王子、玫瑰与小黑相关图案；小王子收藏只使用前两格 |
-| `assets/illustrations/pets.webp` | 猫与狗各两种姿态 |
+| `assets/illustrations/pet-corners.webp` | 猫与金毛各两种完整角落；替换旧孤立图集 |
 | `assets/illustrations/campuses.webp` | 武大老斋舍、南大北大楼，依据公开照片新绘 |
 | `assets/illustrations/gifts.webp` | 根据已描述的实物外观新绘，未提交原始照片；使用单独裁切框避免宽物件被精灵格切掉 |
 
@@ -115,10 +115,46 @@ V2.3 的机关重绘、场景校正与四帧角色提示词另见 [v23-art-promp
 换景过渡由原生动画在图片解码后短暂交叠；构图比例不同时仅淡入新画，避免旧画被拉伸。删除原先重复的scene-image淡入规则，减少动画模式下跳过过渡。没有新增依赖、动画素材包或技能安装。
 
 
-## V2.7 入口与唱片
+## V2.7 入口与唱片（历史方案，已由下述V2.8更新）
 
 `assets/scenes/welcome.webp` 为内置 ImageGen 生成的1536×1024入口环境。仅引用项目现有 desk.webp 与 entry.webp 的风格、材料和空间，不引用个人原照或信件。画面没有生成文字或按钮；献词和菜单原生排版在留白处。横屏按画面真实边界柔化，竖屏保留整张画，门、猫和风铃不按固定卡片裁掉。原始提示词及最终文件记录见 [v27-art-prompts.json](v27-art-prompts.json)。Pillow只负责WebP编码。
 
 窗边、慢慢翻页、晚一点的星光是为小屋写的三段原创合成短曲，没有借用六首歌的旋律。六首名称是按用户提供的信息保留的歌单位，仓库不附录音、不抓取付费音源、不上传本地音频。两首剧本杀用曲没有擅自匹配同名歌手版本，按用户指认的剧本标注，实际录音由用户选择。
 
 曲目核对仅用于名称与来源，不代表取得录音分发授权：[孙燕姿《遇见》的平台收录](https://music.apple.com/us/playlist/%E5%AD%99%E7%87%95%E5%A7%BF%E4%BB%A3%E8%A1%A8%E4%BD%9C/pl.542bacdd2b87490183a2257e139cc22d?l=zh-Hans-CN)、[邓垚《诀别书》的官方发行录音信息](https://www.youtube.com/watch?v=4kRT0g137i0)。没有下载这些平台的音频。
+
+## V2.8：花架、住客、日历与图章
+
+本轮接入画面的提示方向摘要见 [v28-art-prompts.json](v28-art-prompts.json)。使用原书房统一纸色、轮廓和日光；文字、密码、开孔与高低由真实数据绘制。第一轮花架仅留在对照页，不进入运行资源。
+
+| 资源 | 处理与核对 |
+| --- | --- |
+| `scenes/desk.webp` | 原书桌加入小日历；日期与机关位置对齐，保留1672×941 |
+| `scenes/window.webp` | 保留木凳上的小王子；去掉右侧固定花架，独立木架、花盆和摇柄按真实状态呈现 |
+| `illustrations/puzzle-garden.webp` | 第二轮近景，去掉冲突的贯通轴、固定平台和直接泄题的目标虚线 |
+| `illustrations/garden-body.webp` | 透明完整木架，远景按实际透视单独标定立柱、轴心和槽口 |
+| `illustrations/garden-crank.webp` | 正视摇柄，保留完整轴心与握把，不按默认图集切格 |
+| `illustrations/garden-bookmark.webp` | 侧面书签与完整棕穗；按透明边界取框，入槽和抽出使用同一部件 |
+| `illustrations/pet-corners.webp` | 猫、金毛各自睡着／醒着的完整角落，替换旧孤立动物图集 |
+| `illustrations/hei-greeting.webp` | 参照既有已核对造型补六帧过渡，脚下锚点与眨眼帧一致 |
+| `illustrations/calendar.webp` | 木座台历；29日、三张纸签与六位字轮由界面排印 |
+| `illustrations/campus-marks.webp` | 小蓝鲸与小狐狸珞珞、珈珈彩墨图章；完整耳尖、尾巴和花朵，只印在纸面 |
+
+学校形象参照：[南京大学小蓝鲸发布](https://www.nju.edu.cn/info/3191/185201.htm)、[南大文创形象参考](https://hnc.nju.edu.cn/info/1305/35791.htm)、[南大记忆特许纪念品店](https://hqjt.nju.edu.cn/gmgs/1e/3b/c1642a138811/page.htm)、[武汉大学出版社“珞珈印象”官方文创](https://www.wdp.com.cn/creative/)。
+
+小狐狸保留官方商品一粉一橙的配色、耳尖、白围脖与樱花。图章是重新绘制的彩墨诠释，**不是学校发行的真实印章，也不意味着学校参与本游戏**。商品照片仅用于核对，没有复制进发布目录。专业页仍是虚构窗边书桌，不声称是真实课堂或个人笔记。
+
+农历九月初八与2026年10月29日不是同一天，夹页保留农历表达。日期依据：[香港天文台2026年公历与农历对照](https://www.hko.gov.hk/tc/gts/astron2026/files/HKO_almanac_2026.pdf)。
+
+## V2.8：实际备好的声音
+
+- `assets/audio/window.mp3`、`pages.mp3`、`starlight.mp3`：项目原创琴声。`tools/render-audio.py`保留生成方式，没有引用歌单歌曲旋律。
+- `assets/audio/birthday.mp3`：公共领域《生日快乐》旋律的本项目八音盒录音。
+- `assets/audio/birthday-whistle.mp3`：Joseph SARDIN 原创口哨录音，来源以CC0分享：[BigSoundBank — Happy Birthday, whistling](https://bigsoundbank.com/happy-birthday-whistling-s2193.html)。
+- `src/services/foley.js`：木齿、摩擦、书签入槽／抽出、端点轻碰和盖章声，使用滤波噪声与短共振。没有下载音效包。`review/flowers/sounds.mp3`是音色小样，试听放大3倍；游戏中随独立音效音量调整。
+
+在线录音通过官方公开媒体入口播放，未复制到仓库：[孙燕姿《遇见》2010垦丁现场](https://music.163.com/song?id=34200629)、[Lia《鸟之诗》AIR / Ornithopter](https://music.163.com/song?id=761594)、[严艺丹《等你的季节》请服仙丹现场](https://music.163.com/song?id=3392065663)、[金海心《阳光下的星星》创作自选集](https://music.163.com/song?id=1353159923)、[邓垚《诀别书》](https://music.163.com/song?id=2038191895)。
+
+《等你的季节》标为另备的作曲者现场版，不冒充《季风2》现场剪辑。[田馥甄《无人知晓》](https://music.163.com/song?id=1481929839)保留官方入口；没有可用完整公开外链，没有下载或绕过账号／付费限制。平台曲目可使用仅存当前设备的本地覆盖，音频不进存档导出。
+
+`review/flowers/playthrough.mp4`约18秒，为真实鼠标操作录像，配本项目原创《窗边》。录像不含指定商业歌曲，也未宣称录下浏览器原生音效，音色小样单独提供。

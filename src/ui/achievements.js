@@ -1,12 +1,13 @@
 import { achievements, canOpenEncore } from '../core/achievements.js';
+import {campusInk} from './campus-marks.js';
 import { RECORD_DISPLAY } from '../data/record-display.js';
 import { ASSETS } from '../data/assets.js';
 import { ENCORE_HANDLE } from '../data/mechanism-layouts.js';
 import { motif, escape, character, itemSprite } from './dom.js';
 
-function memento(kind) {
+function memento(kind,state) {
   const art={
-    postcards:()=>`<span class="record-postcards">${character('campuses',0,2,1,'武汉折页')}${character('campuses',1,2,1,'南京折页')}</span>`,
+    postcards:()=>`<span class="record-postcards">${['whu','nju'].map((key,i)=>`<span class="record-card">${character('campuses',i,2,1,i?'南京折页':'武汉折页')}${state.activities.includes(`campus:${key}`)?campusInk(key):''}</span>`).join('')}</span>`,
     xianlin:()=>`<span class="record-campus"><img src="${ASSETS.campusXianlin}" alt="杜厦图书馆" draggable="false"></span>`,
     flowers:()=>`<span class="record-flowers">${['daisy','tulip','lavender'].map(id=>motif(id)).join('')}</span>`,
     charm:()=>character('giftsMore',7,3,3,'小黑猫挂件'),
@@ -25,7 +26,7 @@ function destination(entry) {
 export function achievementsPage(state, view={}) {
   const entries=achievements(state),selected=entries.find(entry=>entry.id===view.record);
   const detail=selected?`<div class="record-inscription" aria-live="polite"><h3>${escape(selected.title)}</h3><p>${escape(selected.complete?selected.text:selected.intro+' '+selected.hint)}</p><div><small>${selected.hideCount?(selected.complete?'收好了':'慢慢找'):`${selected.count} / ${selected.total}`}</small>${destination(selected)}</div></div>`:'<p class="record-caption">随手夹着，慢慢翻。</p>';
-  return `<div class="records-folio ${view.recordSide==='right'?'records-right':''}"><img src="${ASSETS.recordsFolio}" alt="夹着小物的手账" draggable="false">${entries.map(entry=>{const d=RECORD_DISPLAY[entry.id];return `<button class="record-token ${entry.complete?'record-complete':''} ${selected?.id===entry.id?'record-selected':''}" data-action="record-detail" data-id="${entry.id}" data-focus="record-${entry.id}" aria-pressed="${selected?.id===entry.id}" aria-label="${entry.title}，${entry.complete?'已收好':'还有没翻到的'}" data-record-page="${d.x>50?'right':'left'}" style="--x:${d.x};--y:${d.y}%;--tilt:${d.angle}deg"><span class="record-object">${memento(d.kind)}</span><span class="record-label">${escape(entry.title)}</span>${entry.complete?'<i class="record-stitch" aria-hidden="true"></i>':''}</button>`;}).join('')}</div><nav class="record-pagination" aria-label="小记翻页">${['left','right'].map((side,i)=>`<button data-action="record-page" data-id="${side}" data-focus="record-page-${side}" aria-pressed="${(view.recordSide??'left')===side}">${i?'后页':'前页'}</button>`).join('')}</nav>${detail}${canOpenEncore(state)?`<button class="encore-envelope" data-action="encore">${motif('envelope')}<span>还有一页</span></button>`:entries.every(entry=>entry.complete)?'<p class="record-footnote">等生日那页翻过，再回来看看。</p>':''}`;
+  return `<div class="records-folio ${view.recordSide==='right'?'records-right':''}"><img src="${ASSETS.recordsFolio}" alt="夹着小物的手账" draggable="false">${entries.map(entry=>{const d=RECORD_DISPLAY[entry.id];return `<button class="record-token ${entry.complete?'record-complete':''} ${selected?.id===entry.id?'record-selected':''}" data-action="record-detail" data-id="${entry.id}" data-focus="record-${entry.id}" aria-pressed="${selected?.id===entry.id}" aria-label="${entry.title}，${entry.complete?'已收好':'还有没翻到的'}" data-record-page="${d.x>50?'right':'left'}" style="--x:${d.x};--y:${d.y}%;--tilt:${d.angle}deg"><span class="record-object">${memento(d.kind,state)}</span><span class="record-label">${escape(entry.title)}</span>${entry.complete?'<i class="record-stitch" aria-hidden="true"></i>':''}</button>`;}).join('')}</div><nav class="record-pagination" aria-label="小记翻页">${['left','right'].map((side,i)=>`<button data-action="record-page" data-id="${side}" data-focus="record-page-${side}" aria-pressed="${(view.recordSide??'left')===side}">${i?'后页':'前页'}</button>`).join('')}</nav>${detail}${canOpenEncore(state)?`<button class="encore-envelope" data-action="encore">${motif('envelope')}<span>还有一页</span></button>`:entries.every(entry=>entry.complete)?'<p class="record-footnote">等生日那页翻过，再回来看看。</p>':''}`;
 }
 export function encorePanel(context) {
   if(!canOpenEncore(context.state))return {title:'这一页',className:'inspect-dialog',html:'<p class="empty-note">还没翻到这里。</p>'};

@@ -11,7 +11,7 @@ import { MUSIC_BY_ID } from '../data/music.js';
 
 export const SAVE_VERSION = 2;
 export const PICKUPS = ['bookmark', 'thread'];
-const DEFAULT_SETTINGS = { sound: true, volume: 0.35, music:true, musicVolume:.65, effectsVolume:1, musicTrack:'window',musicOrder:'cycle',motion: true, hotspots: false, skyCapeLeft: 'bat', skyCapeRight: 'bat', skyMask: 'chibi', flower: 'rose' };
+const DEFAULT_SETTINGS = { sound: true, volume: 0.35, music:true, musicVolume:.65, effectsVolume:1, musicTrack:'window',musicOrder:'cycle',motion: true, clearText:false, hotspots: false, skyCapeLeft: 'bat', skyCapeRight: 'bat', skyMask: 'chibi', flower: 'rose' };
 const LEVELS=['volume','musicVolume','effectsVolume'];
 const OPTIONS = { musicTrack:Object.keys(MUSIC_BY_ID),musicOrder:['cycle','repeat'],skyCapeLeft: ['bat', 'kizuna'], skyCapeRight: ['bat', 'kizuna'], skyMask: ['chibi', 'innocence'], flower: ['daisy', 'tulip', 'lavender', 'rose'] };
 
@@ -84,7 +84,7 @@ export function normalizeState(raw) {
     state.progress[id]={...state.progress[id],opened:false,fitted:state.progress[id].fitted.map((value,index)=>value&&inventory(state).includes(inputs[index]))};
   }
   if(!sceneOpen(state,state.scene))state.scene='desk';
-  for (const key of ['sound', 'music','motion', 'hotspots']) if (typeof settings[key] === 'boolean') state.settings[key] = settings[key];
+  for (const key of ['sound', 'music','motion','clearText', 'hotspots']) if (typeof settings[key] === 'boolean') state.settings[key] = settings[key];
   for (const [key, values] of Object.entries(OPTIONS)) if (values.includes(settings[key])) state.settings[key] = settings[key];
   for(const key of LEVELS)if(Number.isFinite(settings[key]))state.settings[key]=Math.min(1,Math.max(0,settings[key]));
   state.ending = raw.ending === true && state.solved.includes('stitch') && state.usedTools.includes('birthday-door');

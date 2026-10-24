@@ -1,3 +1,4 @@
+import {renderCalendar} from './calendar.js';
 import { renderPaper, renderPaperBack } from './paper.js';
 import { renderCloud, renderCalibration } from './light.js';
 import { renderBooks, renderScreen } from './collection.js';
@@ -17,7 +18,7 @@ import { renderRibbons } from './ribbons.js';
 import { renderBirthdayLock } from './birthday-lock.js';
 
 export const PUZZLE_VIEWS = Object.freeze({
-  paper: renderPaper, cloud: renderCloud, calibration: renderCalibration,
+  calendar:renderCalendar, paper: renderPaper, cloud: renderCloud, calibration: renderCalibration,
   books: renderBooks, screen: renderScreen, belt: renderBelt,
   film: renderFilm, flowers: renderFlowers, paperBack: renderPaperBack,
   cloudGap: renderNegative,

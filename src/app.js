@@ -1,3 +1,5 @@
+import { createCompanions } from './services/companions.js';
+import { birthdayActions } from './services/birthday-flow.js';
 import { createStore } from './core/store.js';
 import { inventory, access } from './core/state.js';
 import { sceneOpen, openScenes, neighborScene, birthdayReady } from './core/exploration.js';
@@ -25,32 +27,38 @@ import { bindMusicControls } from './ui/music-controls.js';
 import { bindMusicProgress } from './ui/music.js';
 import { audioOnlyUpdate } from './core/presentation-updates.js';
 
+export function mountGame({storage,library}={}) {
 const app = document.querySelector('#app');
 app.innerHTML = '<div class="game-shell"><div id="room-stage" class="room-stage"></div><div id="hud"></div></div><section id="welcome" class="welcome" aria-labelledby="welcome-heading"></section><dialog id="explore-dialog" aria-labelledby="dialog-title"></dialog><p id="toast" role="status" class="toast" hidden></p><input id="save-file" type="file" accept=".json,application/json" hidden><input id="music-file" type="file" accept="audio/*,.mp3,.m4a,.ogg,.wav,.flac,.aac,.opus" hidden>';
-const store = createStore({ getItem: key => window.localStorage.getItem(key), setItem: (key, value) => window.localStorage.setItem(key, value),removeItem:key=>window.localStorage.removeItem(key) });
-const audio = createAudio({advance:id=>setting('musicTrack',id)});
-const ui = { panel: null, stack: [], home: true, skyPair: 0, petAwake: false };
+const store = createStore(storage??{ getItem: key => window.localStorage.getItem(key), setItem: (key, value) => window.localStorage.setItem(key, value),removeItem:key=>window.localStorage.removeItem(key) });
+const audio = createAudio({advance:id=>setting('musicTrack',id),library});
+const ui = { panel: null, stack: [], home: true, skyPair: 0 };
 const stage = document.querySelector('#room-stage');
 const dialog = createDialog(document.querySelector('#explore-dialog'), closePanel);
 let roomSignature = '', hudSignature = '', toastTimer;
 let disposeInteractions = () => {},disposeMusic=()=>{};
-let fittingHandle=false,greetingTimer,completionTimer;
+let fittingHandle=false,completionTimer;
 const preloadedScenes = new Set();
 const settleMotion=watchMotionPreferences(app);
 const welcome=createWelcome(document.querySelector('#welcome'),{getState:()=>store.get(),onReveal:()=>{document.querySelector('.game-shell').hidden=false;},onEnter:()=>{ui.home=false;if(!store.get().begun)store.dispatch({type:'start'});else render(store.get());document.querySelector('.wordmark')?.focus({preventScroll:true});}});
-const transfers=bindSaveTransfer(document.querySelector('#save-file'),{store,loaded:()=>showWelcome(),toast});
+const engageAudio=()=>audio.resume().catch(()=>{});
+app.addEventListener('pointerdown',engageAudio,{capture:true});app.addEventListener('keydown',engageAudio,{capture:true});
+const transfers=bindSaveTransfer(document.querySelector('#save-file'),{store,loaded:()=>showWelcome(),toast,refresh:()=>{if(ui.panel?.type==='settings')renderDialog();},remember:storage?null:{getItem:key=>window.sessionStorage.getItem(key),setItem:(key,value)=>window.sessionStorage.setItem(key,value)}});
+const companions=createCompanions({panel:()=>ui.panel,activity,audio,toast});
 const musicActions=bindMusicControls(document.querySelector('#music-file'),{player:audio.music,store,setting,openPanel,closePanel,toast});
 
-function context() { return { state: store.get(), view: ui.panel?.view ?? {}, skyPair: ui.skyPair, flower: store.get().settings.flower, petAwake: ui.petAwake, writable: store.writable(),music:audio.music.snapshot() }; }
+function context() { return { state: store.get(), view: ui.panel?.view ?? {}, skyPair: ui.skyPair, flower: store.get().settings.flower, petAwake: Boolean(ui.panel?.view?.petAwake), writable: store.writable(),saveTransfer:transfers.summary(),music:audio.music.snapshot() }; }
 function activity(id) { return store.dispatch({ type: 'activity', id }); }
 function performMove(move) {
   if (ui.panel?.type !== 'puzzle') return false;
   const id = ui.panel.id;
   if(id==='melody')audio.stopMelody();
+  const previous=store.get().progress[id];
   const changed = store.dispatch({ type: 'move', id, move });
   if (changed) {
     if (id === 'melody' && ['note','set-note'].includes(move.type)) audio.previewNote(store.get().progress.melody.notes[move.index]);
     else if(id==='cocoa')audio.pour();
+    else if(id==='flowers'){const next=store.get().progress.flowers;audio.foley(move.type==='crank'?'turn':next.pin>=0?'wedge-in':'wedge-out');if(move.type==='crank'&&previous.pin>=0&&next.pin<0)audio.foley('wedge-out',.16);}
     else audio.material(id === 'wordlock' ? 'key' : id === 'postbox' || move.type === 'set-turn' ? 'metal' : ['paper', 'paperBack', 'album', 'screen', 'film'].includes(id) ? 'paper' : 'wood');
   }
   return changed;
@@ -61,11 +69,12 @@ function renderDialog(preserveFocus = true, restore = null) {
   dialog.show(renderPanel(ui.panel, context()), { preserveFocus, restore });
   if (ui.panel.type === 'ambient') audio.rain(); else audio.stopRain();
   const state = store.get(), id = ui.panel.type === 'puzzle' ? ui.panel.id : null;
-  disposeInteractions = bindInteractions(dialog.element, { id, progress: state.progress[id], solved: state.solved.includes(id), move: performMove, activity, changeView: patch => { ui.panel.view = {...ui.panel.view,...patch}; renderDialog(); } });
+  disposeInteractions = bindInteractions(dialog.element, { id, progress: state.progress[id], solved: state.solved.includes(id), move: performMove, activity, feedback:kind=>audio.foley(kind), changeView: patch => { ui.panel.view = {...ui.panel.view,...patch}; renderDialog(); } });
+  const unbindPuzzle=disposeInteractions,unbindPet=companions.bind(dialog.element);disposeInteractions=()=>{unbindPuzzle();unbindPet();};
   disposeMusic=bindMusicProgress(dialog.element,audio.music);
 }
 function render(state,previous=null) {
-  const signature = `${state.scene}:${state.collected.join()}:${sceneChanges(state).map(change=>change.puzzle??change.activity).join()}:${state.solved.includes('flowers')}:${state.ending}:${state.scene==='party'?JSON.stringify([state.progress.sweets,state.progress.ribbons,state.progress.birthdayLock]):''}`;
+  const signature = `${state.scene}:${state.collected.join()}:${sceneChanges(state).map(change=>change.puzzle??change.activity).join()}:${state.scene==='window'?JSON.stringify(state.progress.flowers):''}:${state.solved.includes('flowers')}:${state.solved.includes('calendar')}:${state.ending}:${state.scene==='party'?JSON.stringify([state.progress.sweets,state.progress.ribbons,state.progress.birthdayLock]):''}`;
   if (signature !== roomSignature) {
     const sameScene = stage.dataset.scene === state.scene;
     const previousArt=roomPainting(stage);
@@ -84,10 +93,11 @@ function render(state,previous=null) {
   document.body.classList.toggle('at-welcome',ui.home);if(ui.home)welcome.render(state);
   document.documentElement.classList.toggle('show-hotspots', state.settings.hotspots);
   document.documentElement.classList.toggle('reduce-motion', !state.settings.motion);
+  document.documentElement.classList.toggle('clear-text',state.settings.clearText);
   settleMotion();
   audio.configure(state.settings);
   const audioOnly=audioOnlyUpdate(previous,state);
-  const visibleSettingsChanged=ui.panel?.type==='settings'&&['sound','volume','musicVolume','effectsVolume'].some(key=>previous?.settings[key]!==state.settings[key]);
+  const visibleSettingsChanged=ui.panel?.type==='settings'&&['sound','music','volume','musicVolume','effectsVolume'].some(key=>previous?.settings[key]!==state.settings[key]);
   if(!audioOnly||ui.panel?.type==='music'||visibleSettingsChanged)renderDialog();
   preloadScenes(state);
 }
@@ -157,7 +167,7 @@ function hotspot(id) {
     collection: () => openCollection(spot.target),
     evidence: () => { activity(`evidence:${spot.target}`); openPanel({ type: 'evidence', id: spot.target }); },
     ambient: () => { audio.material('glass'); openPanel({ type: 'ambient' }); },
-    pet: () => { ui.petAwake = false; openPanel({ type: 'pet', id: spot.target }); },
+    pet: () => openPanel({ type: 'pet', id: spot.target }),
     ending: () => { if(state.scene!=='birthday'){goScene('birthday');return;}if(state.ending)openPanel({type:'ending'});else if(birthdayReady(state))openPanel({type:'candles'});else openPanel({type:'birthday-wait'}); },
     'birthday-note':()=>{if(spot.target==='fries')activity('birthday:fries');openPanel({type:'birthday-note',id:spot.target});},
   };
@@ -168,9 +178,9 @@ function currentPuzzle(action) {
 }
 function setting(key, value) { store.dispatch({ type: 'setting', key, value }); }
 const actions = {
-  ...viewActions({ panel: () => ui.panel, render: renderDialog, activity }),
-  ...transfers,...musicActions,
-  start:()=>welcome.begin(),'welcome-enter':()=>welcome.enter(),'welcome-back':()=>welcome.show(),
+  ...viewActions({ panel: () => ui.panel, render: renderDialog, activity,foley:audio.foley }),
+  ...transfers.actions,...musicActions,
+  start:()=>welcome.begin(),'welcome-enter':()=>welcome.enter(),'intro-unfold':()=>welcome.unfold(),'intro-next':()=>welcome.next(),'welcome-back':()=>welcome.show(),
   home:()=>showWelcome(),intro:()=>showWelcome('intro'),about:()=>openPanel({type:'about'}),
   'scene-prev': () => look(-1), 'scene-next': () => look(1),
   scene: button => goScene(button.dataset.id),
@@ -179,17 +189,8 @@ const actions = {
   'take-tool':button=>{store.dispatch({type:'select',id:button.dataset.id});closeAllPanels();},
   'arm-tool':button=>store.dispatch({type:'select',id:button.dataset.id}),
   'use-direct':button=>useTool(button.dataset.id,button.dataset.toolTarget),
-  'birthday-unwrap':()=>{if(store.get().ending){activity('birthday:unwrap');audio.material('paper');}},
-  'candle-light':button=>{
-    if(ui.panel?.type!=='candles'||!birthdayReady(store.get())||store.get().ending)return;
-    const index=Number(button.dataset.index);if(![0,1].includes(index))return;
-    const candles=ui.panel.view?.candles??0;if(candles&(1<<index))return;
-    ui.panel.view={...ui.panel.view,candles:candles|(1<<index)};renderDialog();audio.material('glass');
-  },
-  'birthday-wish':()=>{
-    if(ui.panel?.type!=='candles'||ui.panel.view?.candles!==3||!birthdayReady(store.get()))return;
-    store.dispatch({type:'ending'});audio.success();openPanel({type:'ending'},false);
-  },
+  ...birthdayActions({store,panel:()=>ui.panel,render:renderDialog,audio,openPanel,activity}),
+  ...companions.actions,
   close: closePanel,
   journal: () => openPanel({ type: 'journal', tab: 'clues' }),
   'journal-tab': button => { ui.panel = { type: 'journal', tab: button.dataset.tab }; renderDialog(false); },
@@ -202,6 +203,7 @@ const actions = {
   reading: () => openPanel({ type: 'reading' }), interests: () => openPanel({ type: 'interests' }),
   flowers: () => openPanel({ type: 'flowers' }),
   'wish-flower': button => { setting('flower', button.dataset.id); activity(`flower:${button.dataset.id}`); audio.material('glass'); },
+  rooms:()=>openPanel({type:'rooms'}),puzzle:button=>openPuzzle(button.dataset.id),
   settings: () => openPanel({ type: 'settings' }), 'how-to': () => openPanel({ type: 'how-to' }),
   sound: () => setting('sound', !store.get().settings.sound),
   undo: () => currentPuzzle('undo'), 'reset-puzzle': () => currentPuzzle('reset'), hint: () => {
@@ -211,8 +213,6 @@ const actions = {
     if(note)announce(note.textContent);
   },
   'sky-pair': () => { ui.skyPair = 1 - ui.skyPair; renderDialog(); },
-  'pet-touch': () => { ui.petAwake = true; if(!activity(`pet:${ui.panel.id}`))renderDialog(); audio.material('pet'); },
-  'hei-greet': button => { window.clearTimeout(greetingTimer);button.classList.remove('hei-greeting');void button.offsetWidth;button.classList.add('hei-greeting');greetingTimer=window.setTimeout(()=>button.classList.remove('hei-greeting'),2200);audio.material('pet'); },
   'play-melody': () => {
     const field=dialog.element.querySelector('.music-apparatus');
     audio.melody(store.get().progress.melody.notes, index => {
@@ -283,3 +283,6 @@ render(store.get());
 audio.music.subscribe(()=>{if(ui.panel?.type==='music')renderDialog();});
 bindInventoryUse(app,{scene:()=>store.get().scene,owns:id=>inventory(store.get()).includes(id),use:useTool});
 if (store.notice) toast(store.notice);
+
+return {resetPresentation:()=>{ui.skyPair=0;clearTimeout(toastTimer);document.querySelector('#toast').hidden=true;},store,openPanel,closeAllPanels,showWelcome,enter:()=>welcome.enter(),panel:()=>ui.panel,audio};
+}

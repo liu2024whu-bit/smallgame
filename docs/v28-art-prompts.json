@@ -1,0 +1,72 @@
+{
+  "version": "2.8",
+  "recordType": "accepted image directions; summaries, not verbatim prompts",
+  "notes": [
+    "第一轮花架作为淘汰方案，只保留对照截图。",
+    "绘图工具负责画面与透明图集；Pillow仅转换编码、检查alpha及尺寸。",
+    "维持旧书房暖纸色、细线条、水彩颗粒、柔和日光。文字、数字和机关状态由代码排印。",
+    "没有使用私人通信、信件或原始个人照片作绘图输入。"
+  ],
+  "assets": [
+    {
+      "asset": "assets/illustrations/pet-corners.webp",
+      "generatedFile": "exec-21fcedd2-6601-449c-b971-2fe4a7184ccb.png",
+      "intent": "2×2完整猫狗角落。猫和金毛各有睡着、醒来一帧，身体、垫子、地板与日光一致，不使用孤立剪贴。"
+    },
+    {
+      "asset": "assets/illustrations/calendar.webp",
+      "generatedFile": "exec-0e6804c0-dd4a-46c4-b384-ced358c9e96a.png",
+      "intent": "暖木台历近景、六个字轮、三张纸签，净纸面留给真实日期和文字，不画假的数字线索。"
+    },
+    {
+      "asset": "assets/scenes/desk.webp",
+      "generatedFile": "exec-7a7b17cb-b960-4396-a3e3-46d1f018600e.png",
+      "intent": "保留原书桌构图、物件与光照，左侧自然加入小台历，位置与热区对应。"
+    },
+    {
+      "asset": "assets/illustrations/hei-greeting.webp",
+      "generatedFile": "exec-db2fe99e-98f2-45cd-9564-2355f59c7fb1.png",
+      "intent": "沿用既有小黑造型补六帧招呼、抬手及收手，完整发梢、手指、脚；透明底、同轮廓与比例，脚下锚点不跳。"
+    },
+    {
+      "asset": "assets/illustrations/puzzle-garden.webp",
+      "generatedFile": "exec-3eaa4dac-9915-4672-8d3e-3138122e1a6f.png",
+      "intent": "同旧书房色调的三根等高木轨、三组独立成对机构、底部窄槽；无固定花盆、贯通轴、目标虚线或生成文字。"
+    },
+    {
+      "asset": "assets/illustrations/garden-bookmark.webp",
+      "generatedFile": "exec-509f8c89-bf58-40df-8c03-0e0e244c00c3.png",
+      "intent": "真实薄侧面木书签、略斜楔端和完整棕穗，透明底，能自然抵入窄槽，不以旋转正面图冒充。"
+    },
+    {
+      "asset": "assets/illustrations/garden-crank.webp",
+      "generatedFile": "exec-c4045dad-820e-4be5-a234-7b81e44ed658.png",
+      "intent": "正视木摇柄，黄铜轴心与木握把，完整运动周界、透明底、细铅笔轮廓。"
+    },
+    {
+      "asset": "assets/illustrations/garden-body.webp",
+      "generatedFile": "exec-7aafd74b-7741-404b-aaa1-009154a4d98f.png",
+      "intent": "远景用透明完整花架，三根等高立柱和独立轴心；无预画平台、盆栽和贯通轴，供同状态部件使用。"
+    },
+    {
+      "asset": "assets/scenes/window.webp",
+      "generatedFile": "exec-b42f9b49-c88e-45f4-a739-e65705483ac7.png",
+      "intent": "保持窗景、玫瑰、纸景与坐木凳的小王子，只清空右侧旧架子，让独立木架进入真实地板透视。"
+    },
+    {
+      "asset": "assets/illustrations/campus-marks.webp",
+      "generatedFile": "exec-0cd8269b-4abf-4b13-8d78-b0c34fb44422.png",
+      "intent": "两个分开的透明彩墨印迹。左：参照官方形象的青蓝小鲸鱼，白肚、星冠、完整鳍尾。右：参照官方文创的一粉一橙小狐狸，白脸围脖、对应耳尖、怀抱樱花。完整身体、安全留白，水彩破墨边，不画相纸、卡片、权威印章或文字。"
+    }
+  ],
+  "publicReferences": [
+    "https://hnc.nju.edu.cn/info/1305/35791.htm",
+    "https://www.wdp.com.cn/creative/"
+  ],
+  "rejected": [
+    {
+      "generatedFile": "exec-bbd879fb-24d9-4c46-b896-e01fe99d6fb3.png",
+      "reason": "贯通轴与成对联动不符，目标虚线太直接，只保留第一轮实际页面截图。"
+    }
+  ]
+}

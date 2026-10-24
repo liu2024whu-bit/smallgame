@@ -6,7 +6,7 @@ export const MAX_SAVE_BYTES = 200_000;
 
 export function parseSave(text) {
   if (typeof text !== 'string' || text.length > MAX_SAVE_BYTES) throw new Error('存档文件过大或无法读取');
-  return normalizeState(JSON.parse(text));
+  return normalizeState(JSON.parse(text.replace(/^\uFEFF/,'')));
 }
 
 export function loadSave(storage) {

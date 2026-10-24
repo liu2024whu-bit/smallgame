@@ -1,6 +1,8 @@
+import {navigationPanel} from './navigation.js';
+import { endingPanel } from './ending.js';
 import { puzzlePanel } from './workbench.js';
-import { journalPanel, collectionPanel, keepsakePanel, readingPanel, interestsPanel, flowersPanel, itemPanel, endingPanel } from './notebook.js';
-import { character, icon } from './dom.js';
+import { journalPanel, collectionPanel, keepsakePanel, readingPanel, interestsPanel, flowersPanel, itemPanel } from './notebook.js';
+import { petPanel } from './pets.js';
 import { encorePanel } from './achievements.js';
 import { evidencePanel } from './evidence.js';
 import { campusPanel } from './campus.js';
@@ -11,7 +13,7 @@ import { settingsPanel } from './settings.js';
 import { aboutPanel } from './welcome.js';
 import { musicPanel } from './music.js';
 import { MUSIC_BY_ID } from '../data/music.js';
-import { escape } from './dom.js';
+import { escape,icon } from './dom.js';
 
 export function renderPanel(panel, context) {
   const simple = {
@@ -32,7 +34,8 @@ export function renderPanel(panel, context) {
     interests: interestsPanel,
     flowers: () => flowersPanel(context.flower),
     item: () => birthdayToolPanel(panel.id,context)??itemPanel(panel.id),
-    ending: () => endingPanel(context.flower),
+    ending: () => endingPanel(context.flower,context.view),
+    rooms:()=>navigationPanel(context),
     settings: () => settingsPanel(context),
     music:()=>musicPanel(context),
     about:aboutPanel,
@@ -47,9 +50,4 @@ export function renderPanel(panel, context) {
 
 function howToPanel() {
   return { title: '怎么玩', className: 'inspect-dialog', html: `<div class="short-note"><p>屋里的小东西都能凑近看，左右箭头通往另一边。收下的物件会在手边，用完也还在，说不定不只派一次用场。</p><p>线索留在手账里，忘了还有它记着。卡住时，「一点提醒」会多聊一句；想反悔，也有「退一步」。声音、动画和存档都在设置里。</p><details class="keyboard-note" data-fold="keyboard"><summary>键盘也有一份</summary><p>Tab 选物件，Enter 打开；房间里的左右方向键可以转身。能拖动的物件，也留了按钮或方向键的走法。</p></details><button class="primary-button" data-action="close">大概懂了${icon('right')}</button></div>` };
-}
-
-function petPanel(id, awake) {
-  const cat = id === 'cat';
-  return { title: cat ? '小猫' : '小狗', className: 'pet-dialog', html: `<div class="pet-portrait ${awake ? 'pet-awake' : ''}">${character('pets', (cat ? 0 : 2) + (awake ? 1 : 0), 2, 2, cat ? '小猫' : '小狗')}</div><p class="hand-note">${awake ? cat ? '伸个懒腰。' : '朝这边看过来。' : cat?'睡得正香。':'这位也在打盹呢。'}</p><button class="primary-button" data-action="pet-touch">${awake ? '再摸一下' : '摸摸'}</button><button class="quiet-button" data-action="flowers">看看花</button>` };
 }

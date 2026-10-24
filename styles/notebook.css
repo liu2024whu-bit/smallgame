@@ -48,9 +48,6 @@
   .wish-flower.chosen-flower { border-color: #92a67b; background: linear-gradient(transparent, #ebf0e050); }
   .flower-wish { padding:26px 15px 5px; text-align:center; color:#657b55; min-height:100px; line-height:2; }
   .pet-dialog .dialog-body { text-align: center; }
-  .pet-portrait .character-art { width: min(330px, 100%); }
-  .pet-dialog .primary-button { margin: 22px auto 15px; }
-  .pet-dialog .quiet-button { display: flex; margin: 0 auto; font-size: 14px; }
   .ending-dialog { max-width: 760px !important; }
   .ending-page { text-align: center; padding: 15px 25px 30px; }
   .ending-flower .motif { width: 135px; margin: 10px; }

@@ -1,3 +1,4 @@
+import {CHAPTER_NOTES} from '../data/story-notes.js';
 import { PUZZLE_BY_ID } from '../data/puzzles.js';
 import { ITEMS } from '../data/items.js';
 import { access, inventory } from '../core/state.js';
@@ -22,7 +23,7 @@ const WAITING = {
   birthdayLock:'纸带还压着匣盖呢。',
 };
 
-const CLOSE_LOOK = new Set(['calibration','postbox','wordlock','belt','flowers','chocolate','stitch','maze','melody','sweets','ribbons','birthdayLock']);
+const CLOSE_LOOK = new Set(['calibration','postbox','wordlock','belt','flowers','chocolate','stitch','maze','melody','sweets','ribbons','birthdayLock','calendar']);
 
 export function puzzlePanel(id, context) {
   const { state, view = {} } = context;
@@ -46,5 +47,5 @@ function footer(state,id,hintCount) {
 function completion(id) {
   const definition = PUZZLE_BY_ID[id];
   const [line, mark] = FINISH_REACTIONS[id];
-  return `<section class="completion-note finish-${definition.scene}" aria-live="polite"><div class="finish-caption">${motif(mark)}<h3>${escape(line)}</h3></div>${definition.rewards.length ? `<div class="reward-items">${definition.rewards.map(item => `<span>${itemSprite(ITEMS[item].sprite)}${escape(ITEMS[item].name)}</span>`).join('')}</div>` : ''}<button class="text-button finish-return" data-action="close">再逛逛${icon('right')}</button></section>`;
+  return `<section class="completion-note finish-${definition.scene}" aria-live="polite"><div class="finish-caption">${motif(mark)}<h3>${escape(line)}</h3></div>${CHAPTER_NOTES[id]?`<p class="completion-afterword">${escape(CHAPTER_NOTES[id])}</p>`:''}${definition.rewards.length ? `<div class="reward-items">${definition.rewards.map(item => `<span>${itemSprite(ITEMS[item].sprite)}${escape(ITEMS[item].name)}</span>`).join('')}</div>` : ''}<button class="text-button finish-return" data-action="close">再逛逛${icon('right')}</button></section>`;
 }

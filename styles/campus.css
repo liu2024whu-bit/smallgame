@@ -11,7 +11,7 @@
   .campus-dialog .dialog-body { padding:18px; background:#f5f1e6; }
   .campus-foldout { background:#fffdf5; padding:9px 9px 0; box-shadow:2px 5px 8px #74674c1c; }
   .campus-painting { position:relative; overflow:hidden; }
-  .campus-painting > img { width:100%; display:block; transition:scale 1s, transform-origin 1s; }
+  .campus-painting > img { width:100%; height:auto; display:block; transition:scale 1s, transform-origin 1s; }
   .campus-looked .campus-painting > img { scale:1.15; transform-origin:var(--look-x) var(--look-y); }
   .campus-ribbon { display:flex; gap:22px; padding:5px 8px 15px; flex-wrap:wrap; }
   .campus-ribbon button { color:#5c6f54; border-bottom:1px dotted transparent; padding:3px 0; }
@@ -25,9 +25,13 @@
   .whu-plaque { position:absolute; left:27.4%; top:30.3%; width:6.9%; height:3.5%; color:#695943; font-size:clamp(8px,1vw,12px); line-height:1; display:grid; place-content:center; letter-spacing:.15em; transform:rotate(10deg); pointer-events:none; }
   .campus-looked .whu-plaque { opacity:0; }
   .campus-margin { display:flex; align-items:center; justify-content:space-between; padding:17px 20px; min-height:98px; color:#63705a; }
-  .campus-margin > span { font-size:15px; }.campus-stamp { padding:8px 10px; min-width:160px; min-height:60px; color:#8d977d; border-bottom:1px dotted #adb29f; font-size:13px; }
-  .campus-stamp .postal-mark { width:57px; height:57px; font-size:12px; border-color:#a287796e; color:#9a7c6a; }.campus-stamp .postal-mark > span { font-size:13px; }
-  .stamp-pressed { border:0; rotate:-3deg; animation:stamp-land .35s ease-out; }
+  .campus-margin > span { font-size:15px; }
+  .campus-ink { display:block; mix-blend-mode:multiply; opacity:.88; filter:saturate(.72); }
+  .campus-stamp { display:grid; justify-items:center; align-content:center; gap:4px; padding:5px 12px; min-width:138px; min-height:94px; color:#829075; font-size:12px; }
+  .campus-stamp .campus-ink { width:91px; }.campus-stamp .ink-whu { width:110px; }
+  .campus-stamp small { font-size:11px; letter-spacing:.08em; }.stamp-place { display:grid; place-items:center; width:58px; height:58px; border:1px dashed #a7b197; border-radius:50%; color:#a6ad8e; font-size:22px; }
+  .campus-stamp:active { translate:0 2px; }
+  .stamp-pressed { rotate:-3deg; animation:stamp-land .35s ease-out; }
   @keyframes stamp-land { from { scale:1.25; opacity:.25; } to { scale:1; opacity:1; } }
-  @media(max-width:700px) { .campus-dialog .dialog-body { padding:10px; }.campus-margin { padding:10px 5px; }.campus-margin > span { font-size:12px; }.campus-stamp { min-width:130px; }.whu-plaque { font-size:5px; }.campus-ribbon { gap:13px; font-size:12px; }.study-book-label { font-size:6px; }.rubbing-tools { padding:6px; font-size:12px; } }
+  @media(max-width:700px) { .campus-dialog .dialog-body { padding:10px; }.campus-margin { padding:10px 5px; }.campus-margin > span { font-size:12px; }.campus-stamp { min-width:105px; padding:5px; }.campus-stamp .campus-ink { width:70px; }.campus-stamp .ink-whu { width:89px; }.whu-plaque { font-size:5px; }.campus-ribbon { gap:13px; font-size:12px; }.study-book-label { font-size:6px; }.rubbing-tools { padding:6px; font-size:12px; } }
 }

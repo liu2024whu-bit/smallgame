@@ -90,11 +90,13 @@ function playerHarness(overrides={}){
   const doc=new EventTarget();doc.hidden=false;
   const voices=[],context={state:'running',currentTime:0,createGain:()=>({gain:{value:0,setTargetAtTime(){},cancelScheduledValues(){}},connect(){},disconnect(){}})};
   const library={list:async()=>[],get:async()=>new Blob([1]),put:async()=>true,remove:async()=>{},close:async()=>{}};
-  const score=(_context,_destination,index,offset,ended)=>{
-    const deck={index,time:offset,duration:60,stopped:false,ended,stop(){this.stopped=true;}};voices.push(deck);return deck;
+  const media=async(source,offset,ended,onError,options)=>{
+    if(overrides.media&&!(typeof source==='string'&&source.startsWith('assets/')))return overrides.media(source,offset,ended,onError,options);
+    const deck={source,time:offset,duration:60,stopped:false,ended,volume:0,stop(){this.stopped=true;}};voices.push(deck);return deck;
   };
   let player,settings={...createState().settings};
-  player=createMusicPlayer({context:()=>context,destination:()=>({}),library,score,document:doc,advance:id=>set({musicTrack:id}),...overrides});
+  const {media:custom,...rest}=overrides;
+  player=createMusicPlayer({context:()=>context,library,document:doc,advance:id=>set({musicTrack:id}),...rest,media});
   const set=patch=>{settings={...settings,...patch};player.configure(settings);};
   set({});return {player,voices,doc,set};
 }
@@ -139,5 +141,27 @@ test('failed media and rejected imports do not claim playback or retain an inval
   const h=playerHarness({media:async()=>{throw new Error('Unreadable media');},probe:async()=>{throw new Error('Invalid audio');},library:{list:async()=>[],get:async()=>new Blob([1]),put:async()=>{put++;},close:async()=>{}}});
   await h.player.engage();h.set({musicTrack:'encounter'});await settle();assert.equal(h.player.snapshot().status,'error');assert.equal(h.player.snapshot().playing,false);
   await assert.rejects(h.player.add('encounter',new File([1],'broken.wav',{type:'audio/wav'})));assert.equal(put,0);
-  assert.equal(h.player.snapshot().available.includes('encounter'),false);await h.player.dispose();
+  assert.equal(h.player.snapshot().imported.includes('encounter'),false);await h.player.dispose();
+});
+
+test('birthday music plays once and restores the previous song position without changing its preference',async()=>{
+  const h=playerHarness();await h.player.engage();h.voices[0].time=24;
+  await h.player.playOnce('birthday');assert.equal(h.player.snapshot().id,'birthday');
+  const birthday=h.voices.at(-1);birthday.ended();await settle();
+  assert.equal(h.player.snapshot().id,'window');assert.equal(h.voices.at(-1).time,24);assert.equal(h.player.snapshot().playing,true);
+  await h.player.dispose();
+});
+test('muting before the wish never starts an interlude, and switching songs cancels its return point',async()=>{
+  const h=playerHarness();await h.player.engage();h.set({music:false});
+  await h.player.playOnce('birthday');assert.equal(h.voices.length,1);assert.equal(h.player.snapshot().id,'window');
+  h.set({music:true});await settle();await h.player.playOnce('birthday');
+  const birthday=h.voices.at(-1);h.set({musicTrack:'pages'});await settle();birthday.ended();await settle();
+  assert.equal(h.player.snapshot().id,'pages');assert.equal(h.voices.at(-1).time,0);
+  await h.player.dispose();
+});
+test('new readability preference has a safe default and survives normal save validation',()=>{
+  const raw=serializable(createState());delete raw.settings.clearText;
+  assert.equal(normalizeState(raw).settings.clearText,false);
+  assert.equal(normalizeState({...raw,settings:{...raw.settings,clearText:true}}).settings.clearText,true);
+  assert.equal(normalizeState({...raw,settings:{...raw.settings,clearText:'true'}}).settings.clearText,false);
 });

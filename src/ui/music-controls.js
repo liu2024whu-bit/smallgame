@@ -4,6 +4,7 @@ export function bindMusicControls(input,{player,store,setting,openPanel,closePan
   let importing=false;
   function chooseFile(id){if(!MUSIC_BY_ID[id]||importing)return;input.dataset.track=id;input.click();}
   function play(id){setting('musicTrack',id);setting('sound',true);setting('music',true);player.engage();}
+  input.closest('#app').addEventListener('click',event=>{if(event.target.closest('.track-source'))setting('music',false);});
   input.addEventListener('change',async()=>{
     const file=input.files[0],id=input.dataset.track;input.value='';if(!file||importing)return;
     importing=true;
@@ -13,6 +14,7 @@ export function bindMusicControls(input,{player,store,setting,openPanel,closePan
   });
   return {
     music:()=>openPanel({type:'music'}),
+    'music-import':button=>chooseFile(button.dataset.id),
     'music-choose':button=>{const id=button.dataset.id,s=player.snapshot();if(!s.available.includes(id))chooseFile(id);else if(id===s.id&&s.playing)setting('music',false);else play(id);},
     'music-toggle':()=>{
       const snapshot=player.snapshot();

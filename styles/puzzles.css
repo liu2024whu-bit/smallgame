@@ -108,6 +108,7 @@
   .drawer-clues p { margin: 0 0 4px; }
   .flip-box { position: relative; width: min(360px, 100%); margin: 15px auto; }.flip-box > .character-art { width: 100%; display: block; }
   .packing-table { display: flex; justify-content: center; gap: 35px; align-items: center; }
+  .puzzle-complete.puzzle-packing :is(.selected-cutout,.piece-rack,.mechanical-controls,.hand-note) { display:none; }
   .packing-grid { display: grid; flex: 0 1 440px; grid-template-columns: repeat(var(--pack-cols), 1fr); width: min(440px, 100%); gap: 0; border: 8px solid #c3b999; background: #ded8c4; }
   .packing-cell { position: relative; aspect-ratio: 1; padding: 0; min-width: 0; min-height: 0; overflow: hidden; border: 0; box-shadow: inset 0 0 0 1px #d6d5ba60; background: #f6f3e2; font-size: 12px; color: #8d977c; border-radius: 1px; }
   .printed-cell { background: #fffdf8; box-shadow: none; }.printed-cell::after { content: ''; position: absolute; inset: 0; pointer-events: none; border: 0 solid #a99a79; }.cut-top::after { border-top-width: 1px; }.cut-right::after { border-right-width: 1px; }.cut-bottom::after { border-bottom-width: 1px; }.cut-left::after { border-left-width: 1px; }.puzzle-complete .printed-cell::after, .puzzle-complete .packing-cell > small { display: none; }
@@ -145,6 +146,11 @@
     .comparison { flex-wrap: wrap; gap: 10px; }.stamp-arrangement { gap: 6px; }.loose-stamp > .motif { width: 44px; }
     .dial-row { gap: 8px; }.dial-controls { gap: 2px; }.dial-face, .dial-face .item-art { width: 43px; }.dial-name { font-size: 11px; }
     .dial-controls .puzzle-control { min-width: 26px; padding: 2px; min-height: 32px; }
+    .cloud-workbench .dial-row { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px; }
+    .cloud-workbench .dial { min-width:0; }.cloud-workbench .dial-controls { display:grid; grid-template-columns:1fr 1fr; gap:4px; }
+    .cloud-workbench .dial-face { grid-area:1/1/2/3; justify-self:center; }.cloud-workbench .dial-controls>.puzzle-control:first-child { grid-area:2/1; }.cloud-workbench .dial-controls>.puzzle-control:last-child { grid-area:2/2; }
+    .cloud-workbench .dial-controls>.puzzle-control:not(.dial-face) { min-width:0; min-height:35px; }
+
     .appearance-controls { gap: 3px 10px; font-size: 10px; }
     .turn-scene { font-size: 12px; }
     .book-row { gap: 6px; padding-top: 66px; }.illustrated-spine { width: 46px; height: 170px; font-size: 14px; }.book-slot .shift-controls { gap: 2px; }.book-slot .puzzle-control { min-width: 23px; }.character-bookmark { width: 33px; top: -56px; padding: 3px 3px 7px; }
@@ -157,5 +163,12 @@
     .piece-rack { gap: 5px; }.piece-rack button { min-width: 49px; padding: 5px 3px; }.piece-mini { --unit: 9px; height: 45px; }
     .melody-clue { gap: 10px; }.melody-clue > .character-art { width: 65px; }
     .workbench-footer { gap: 6px; }.workbench-footer .quiet-button { font-size: 12px; padding: 6px; }.workbench-footer .icon { width: 17px; }.workbench-footer > div { gap: 4px; }
+  }
+}
+@layer puzzles {
+  @media(max-width:360px) {
+    .puzzle-paperBack .stamp-arrangement { gap:5px; }.puzzle-paperBack .loose-stamp { min-width:0; flex:1; }
+    .puzzle-paperBack .shift-controls { gap:1px; width:100%; justify-content:center; }.puzzle-paperBack .shift-controls .puzzle-control { min-width:0; width:20px; padding:2px; min-height:34px; }
+    .puzzle-paperBack .shift-controls .icon { width:14px; height:14px; }
   }
 }

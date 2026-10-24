@@ -2,7 +2,7 @@ import { RULES } from '../puzzles/index.js';
 import { PUZZLES } from '../data/puzzles.js';
 import { POSTAL_CODE, LETTER_CODE } from '../data/ciphers.js';
 
-export const CONTENT_REVISION = 5;
+export const CONTENT_REVISION = 6;
 const NEW_GATES = new Set(['postbox', 'wordlock']);
 const OLD_REQUIREMENTS = { books: ['calibration'], album: ['paperBack', 'cloudGap', 'film'] };
 

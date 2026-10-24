@@ -1,3 +1,6 @@
+import {DATE_CODE} from '../data/calendar.js';
+import {numberLock} from './locks.js';
+const calendar=numberLock(DATE_CODE);
 import { paper, paperBack } from './paper.js';
 import { cloud, cloudGap, calibration } from './rotors.js';
 import { books } from './books.js';
@@ -19,4 +22,4 @@ import { sweets } from './sweets.js';
 import { ribbons } from './ribbons.js';
 import { birthdayLock } from './birthday-lock.js';
 
-export const RULES = Object.freeze({ paper, cloud, calibration, postbox, books, screen, belt, film, flowers, paperBack, cloudGap, wordlock, album, stitch, chocolate, cocoa, sweets, ribbons, birthdayLock, maze, balance, drawers, flips, packing, melody });
+export const RULES = Object.freeze({ calendar, paper, cloud, calibration, postbox, books, screen, belt, film, flowers, paperBack, cloudGap, wordlock, album, stitch, chocolate, cocoa, sweets, ribbons, birthdayLock, maze, balance, drawers, flips, packing, melody });

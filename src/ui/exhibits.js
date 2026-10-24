@@ -29,7 +29,7 @@ function fan(context) {
 
 function prince(context) {
   const open = context.view.open ?? false;
-  return `<div class="prince-keepsake ${open ? 'prince-open' : ''}"><div class="prince-cover">${character('gifts', 2, 3, 2, '小王子笔记本')}</div><div class="prince-page">${character('princeHei', 0, 2, 2, '小王子和玫瑰')}<p>“On ne voit bien qu’avec le cœur.”</p></div></div><div class="memory-tabs"><button class="text-button" data-action="memory-open">${open ? '合上' : '翻开'}</button></div><p class="memory-caption">你的笔记本，我送的书和画。<br>好多礼物里，都有小王子。</p>`;
+  return `<div class="prince-keepsake ${open ? 'prince-open' : ''}"><div class="prince-cover">${character('gifts', 2, 3, 2, '小王子笔记本')}</div><div class="prince-page">${character('princeHei', 0, 2, 2, '小王子和玫瑰')}<p>“On ne voit bien qu’avec le cœur.”</p></div></div><div class="memory-tabs"><button class="text-button" data-action="memory-open">${open ? '合上' : '翻开'}</button></div><p class="memory-caption">看见小王子，就想起你。</p>`;
 }
 
 function postcards(context) {

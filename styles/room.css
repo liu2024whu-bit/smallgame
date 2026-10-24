@@ -5,13 +5,13 @@
   .room-stage[data-scene="party"] { aspect-ratio:1.5; }
   .room-stage { aspect-ratio: 1672 / 941; position: relative; isolation: isolate; }
   .scene-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; user-select: none; pointer-events: none; }
-  .scene-transition { position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none;user-select:none; }
+  .scene-transition { z-index:2;position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none;user-select:none; }
   .scene-change { position:absolute; inset:0; width:100%; height:100%; object-fit:fill; mask-composite:intersect; user-select:none; pointer-events:none; animation:paint-settles .4s ease-out; }
   @keyframes paint-settles { from{opacity:0}to{opacity:1} }
   .room-light { position: absolute; inset: 0; pointer-events: none; opacity: 0; background: linear-gradient(125deg, #fff9db15 20%, #fff8df70 45%, transparent 68%); mix-blend-mode: screen; }
   .room-light.light-shifted { opacity: 1; }
-  .hotspot-layer { position: absolute; inset: 0; }
-  .hotspot { position: absolute; transform: translate(-50%, -50%); border-radius: 30% 34% 28% 33%; padding: 0; border: 1px solid transparent; }
+  .hotspot-layer { z-index:3;position: absolute; inset: 0; pointer-events:none; }
+  .hotspot { pointer-events:auto; position: absolute; transform: translate(-50%, -50%); border-radius: 30% 34% 28% 33%; padding: 0; border: 1px solid transparent; }
   .hotspot:hover, .hotspot:focus-visible { outline: none; background: #fffad51a; border: 1px dashed #a5b198b8; box-shadow: 0 0 22px #f8f5c139; }
   .hotspot-caption { position: absolute; opacity: 0; pointer-events: none; bottom: -32px; left: 50%; transform: translateX(-50%); white-space: nowrap; font-size: clamp(11px, 1.1vw, 15px); background: #fffef3ed; border: 1px solid #d0d6bd; padding: 3px 12px; border-radius: 3px; z-index: 2; }
   .hotspot:hover .hotspot-caption, .hotspot:focus-visible .hotspot-caption { opacity: 1; }
@@ -24,7 +24,7 @@
   .scene-arrow:hover { background: #fffef5eb; }
   .scene-arrow.previous { left: 12px; }
   .scene-arrow.next { right: 12px; }
-  .scene-caption { position: absolute; left: 27px; bottom: 18px; display: grid; pointer-events: none; color: #63715c; text-shadow: 0 1px 10px #fff; }
+  .scene-caption { position: absolute; left: 27px; bottom: 18px; display: inline-flex;align-items:center;gap:7px;padding:3px 7px;border-radius:3px 7px;background:#fffdf3a1;z-index:3;pointer-events:auto; color: #63715c; text-shadow: 0 1px 10px #fff; }
   .scene-caption span { letter-spacing: .2em; font-size: 18px; }
   .scene-caption small { font-size: 13px; opacity: .82; }
   .hud-top { position: absolute; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; align-items: flex-start; padding: 21px 27px; pointer-events: none; }
