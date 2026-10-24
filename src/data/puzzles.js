@@ -2,9 +2,9 @@ const main = (id, title, scene, requires, tools, rewards, instruction, hints) =>
 const extra = (id, title, scene, instruction, hints) => ({ id, title, scene, requires: [], tools: [], rewards: [], instruction, hints, optional: true });
 
 export const PUZZLES = Object.freeze([
-  main('paper', '试印', 'desk', [], ['bookmark'], ['transparency'],
-    '三张试印压在纸下。哪一种顺序，能印出下面这行？',
-    ['咦，试印里的月亮，翻面后跑到另一头去了。', '三张纸上的动作一样，换个先后，印出来却不一样。最左边那枚，也能从另一头回来。', '翻面 → 左移一格 → 交换第2和第4枚。这一回，三道工序刚好接上。']),
+  {...main('paper', '试印', 'desk', [], ['bookmark'], ['transparency'],
+    '夹扣下，留着一条窄缝。',
+    ['木书签很薄，夹扣下的缝也很窄。', '版片上的记号，和试纸上的是一套。每张纸，都只试过其中一块。', '三角、圆圈、方框，从左到右。压下木柄，才会留下一张新的。']),inspectWithoutTools:true},
   main('cloud', '两面的云', 'window', [], ['thread'], ['mirror', 'crank'],
     '正反两面，各有挂签。云片都拴在同一组绳上。',
     ['云的背面，也挂着一张签。', '一根绳动了，两处都会跟着走。绕过四格，又回到原处。', '三根绳从左到右是3、2、2格时，背面的挂签也对得上。']),

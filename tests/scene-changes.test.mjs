@@ -4,7 +4,7 @@ import { SCENE_CHANGES, sceneChanges, paintMask } from '../src/data/scene-change
 import { SCENE_BY_ID } from '../src/data/scenes.js';
 import { PUZZLE_BY_ID } from '../src/data/puzzles.js';
 import { ASSETS } from '../src/data/assets.js';
-import { createState } from '../src/core/state.js';
+import { createState,reduce } from '../src/core/state.js';
 import { renderRoom } from '../src/ui/room.js';
 
 test('painted changes refer to real scenes, puzzles and complete bounded object regions',()=>{
@@ -19,8 +19,9 @@ test('painted changes refer to real scenes, puzzles and complete bounded object 
 test('one solved object never reveals another object from the same painted source',()=>{
   const base=createState();
   assert.deepEqual(sceneChanges(base),[]);
-  const paper={...base,solved:['paper']};
-  assert.deepEqual(sceneChanges(paper).map(c=>c.puzzle),['paper']);
+  let paper=reduce(reduce(base,{type:'start'}),{type:'pickup',id:'bookmark'});
+  for(const move of [{type:'open'},{type:'reorder',from:0,to:2},{type:'print'}])paper=reduce(paper,{type:'move',id:'paper',move});
+  assert.deepEqual(sceneChanges(paper),[]);
   const html=renderRoom(paper);
   assert.match(html,/data-world-change="paper"/);assert.doesNotMatch(html,/data-world-change="stitch"/);
   assert.doesNotMatch(renderRoom({...paper,scene:'entry'}),/scene-change/);

@@ -3,10 +3,10 @@ import { itemSprite } from '../dom.js';
 import { ITEMS } from '../../data/items.js';
 import { roomToolTarget, toolFor } from '../../data/tool-uses.js';
 
-export function bindInventoryUse(root,{scene,owns,use}) {
+export function bindInventoryUse(root,{getState,owns,use}) {
   let target;
   const clear=()=>{target?.classList.remove('tool-drop-ready','tool-drop-wrong');target=null;};
-  const destination=(element,item)=>element?.dataset.toolTarget||roomToolTarget(scene(),element?.dataset.id,item);
+  const destination=(element,item)=>element?.dataset.toolTarget||roomToolTarget(getState(),element?.dataset.id,item);
   return pointerSession(root,{
     pick(event){const source=event.target.closest('[data-inventory-drag]');const id=source?.dataset.inventoryDrag;return id&&owns(id)?{source,id}:null;},
     start(gesture){gesture.ghost=dragGhost(itemSprite(ITEMS[gesture.id].sprite),'inventory-ghost');},

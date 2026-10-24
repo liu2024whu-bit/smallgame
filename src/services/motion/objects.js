@@ -1,7 +1,6 @@
 import { ease } from './shared.js';
 
 const OBJECTS = [
-  ['.operation-piece', el => `operation:${el.querySelector('strong')?.textContent}`],
   ['.book-slot', el => `book:${el.querySelector('.illustrated-spine > span')?.textContent}`],
   ['.loose-stamp', el => `stamp:${el.querySelector('.motif')?.getAttribute('aria-label')}`],
   ['.loose-page', el => `page:${el.querySelector('.page-letter')?.textContent}`],

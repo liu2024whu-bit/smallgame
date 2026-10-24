@@ -6,6 +6,8 @@ import {RULES} from '../src/puzzles/index.js';
 import {createState,reduce,normalizeState,serializable,access} from '../src/core/state.js';
 import {previewState,REVIEW_CASES} from '../src/demo/fixtures.js';
 import {WITNESSES} from './witnesses.mjs';
+import {PUZZLE_BY_ID} from '../src/data/puzzles.js';
+import {sceneOpen} from '../src/core/exploration.js';
 
 test('story day and weekday are real; an undated first meeting and lunar birthday never get a fabricated year',()=>{
   assert.equal(GAME_DATE.iso,'2026-10-29');
@@ -30,7 +32,7 @@ test('the new calendar is independent, reversible before opening and does not in
 test('every preview fixture is validated by the actual core and keeps its selected puzzle reachable',()=>{
   for(const spec of REVIEW_CASES){
     const state=normalizeState(serializable(previewState(spec)));
-    if(spec.puzzle){assert.ok(access(state,spec.puzzle).ready,spec.id);assert.equal(state.solved.includes(spec.puzzle),Boolean(spec.completed),spec.id);}
+    if(spec.puzzle){const availability=access(state,spec.puzzle);assert.ok(availability.ready||PUZZLE_BY_ID[spec.puzzle].inspectWithoutTools&&!availability.waiting.length&&sceneOpen(state,PUZZLE_BY_ID[spec.puzzle].scene),spec.id);assert.equal(state.solved.includes(spec.puzzle),Boolean(spec.completed),spec.id);}
     if(spec.full)assert.equal(state.ending,true,spec.id);
   }
 });

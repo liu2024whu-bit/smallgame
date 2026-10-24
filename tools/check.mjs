@@ -32,6 +32,8 @@ for (const [id, path] of Object.entries({ ...ASSETS, ...SCENE_ART })) {
   }
 }
 for(const track of MUSIC){if(track.file){const bytes=await readFile(resolve(root,track.file));if(bytes.length<10000)throw new Error('Missing prepared music: '+track.id);}}
+const styles=html=>[...html.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(match=>match[1]);
+if(JSON.stringify(styles(await readFile(resolve(root,'index.html'),'utf8')))!==JSON.stringify(styles(await readFile(resolve(root,'review-frame.html'),'utf8'))))throw new Error('The review must use the same style sheets and order as the actual game.');
 for (const puzzle of PUZZLES) {
   if (!RULES[puzzle.id] || !PUZZLE_VIEWS[puzzle.id] || !puzzle.instruction || puzzle.hints.length !== 3) throw new Error(`Incomplete puzzle: ${puzzle.id}`);
   if (!RULES[puzzle.id].valid(RULES[puzzle.id].create())) throw new Error(`Invalid initial state: ${puzzle.id}`);

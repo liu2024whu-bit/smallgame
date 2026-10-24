@@ -1,8 +1,10 @@
 import { motionAllowed } from '../services/motion.js';
+export const afterPuzzleAction=(view={},action)=>['undo','reset'].includes(action)?{...view,pressProof:false}:view;
 // Transient presentation choices stay out of the save and puzzle rule modules.
 export function viewActions({ panel, render, activity,foley=()=>{} }) {
   const change = patch => { const current = panel(); current.view = { ...current.view, ...patch }; render(); };
   return {
+    'press-proof':button=>change({pressProof:button.dataset.open==='true'}),
     'settings-page':button=>{if(['sound','picture','save'].includes(button.dataset.id))change({section:button.dataset.id});},
     'calendar-note':button=>change({dateNote:Number(button.dataset.index)}),
     'ending-page':button=>{

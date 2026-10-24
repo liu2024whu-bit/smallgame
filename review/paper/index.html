@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>一张试纸 · 改版对照</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f6f3e9;color:#53634d;font:15px/1.9 "Microsoft YaHei","PingFang SC",sans-serif}main{max-width:1320px;margin:auto;padding:35px 5vw 60px}header{display:flex;align-items:center;justify-content:space-between;gap:20px}h1,h2{font-family:KaiTi,serif;font-weight:400}h1{font-size:32px;margin:0}header p{font:11px Georgia,serif;letter-spacing:.1em;color:#8c967d;margin:0}a{color:inherit;text-underline-offset:5px}header a{font-size:13px}.lead{max-width:52em;font-size:14px;color:#7b856e;margin:23px 0}.controls{display:flex;flex-wrap:wrap;align-items:center;gap:12px 23px}select,button{font:inherit;color:inherit;background:#fffdf6;border:1px solid #cad2b9;border-radius:3px 7px 3px 4px;padding:7px 15px}button{cursor:pointer}button:focus-visible,a:focus-visible,select:focus-visible{outline:2px solid #8aa177;outline-offset:4px}nav{display:flex;flex-wrap:wrap;gap:9px}button[aria-selected=true]{background:#e7edda;border-color:#9faf8e}.viewer{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:26px;align-items:start;margin:22px 0}.picture{display:block;padding:0;width:100%;cursor:zoom-in;line-height:0}.picture img{width:100%;max-height:800px;object-fit:contain;display:block;height:auto}.notes h2{font-size:24px;line-height:1.6;margin:4px 0 15px}.notes p{font-size:13px;color:#78826b}.film{margin-top:35px}.film h2{font-size:25px}.film video{display:block;width:min(100%,1100px);background:#efeddf;border:1px solid #d4dac7;border-radius:4px}.film p,footer{max-width:65em;color:#858d77;font-size:12px}footer{border-top:1px solid #d7dccc;margin-top:35px;padding-top:20px}dialog{padding:8px;width:min(95vw,1600px);max-height:94vh;border:1px solid #b9c4aa;background:#fffdf5}dialog img{display:block;max-width:100%;max-height:87vh;margin:auto}dialog button{position:absolute;right:15px;top:15px}dialog::backdrop{background:#35442ca6}[hidden]{display:none!important}@media(max-width:850px){main{padding:24px 17px 45px}header{display:block}header>a{display:inline-block;margin-top:15px}h1{font-size:28px}.viewer{grid-template-columns:1fr}.controls{gap:12px}}
+</style>
+<main><header><div><p>BEFORE THE TWENTIETH ORBIT</p><h1>一张试纸 · 改版对照</h1></div><a href="../../admin.html?page=paper-unfound">实际试玩 ↗</a></header>
+<p class="lead">三张试纸，一只小盒子。换个顺序，再印一次。这里留下了旧稿、第一轮和当前版，也可以看试印前后的细节。</p>
+<div class="controls"><select id="view" aria-label="想看哪一处"><option value="compare">改版对照</option><option value="unfound">还没拾起书签</option><option value="closed">夹扣</option><option value="wrong">刚印过的</option><option value="detail">拿近比较</option><option value="done">抽屉开了</option><option value="room">回到书桌</option><option value="phone">手机里的样子</option><option value="phoneProof">手机拿近看</option></select><nav role="tablist" aria-label="比较版本"><button role="tab" data-version="0">旧版</button><button role="tab" data-version="1">第一轮</button><button role="tab" data-version="2">当前版</button></nav></div>
+<section class="viewer"><button class="picture" aria-label="放大当前画面"><img id="picture" alt=""></button><aside class="notes"><h2 id="title"></h2><p id="change"></p><p id="reason"></p></aside></section>
+<section class="film"><h2>试着印一张。</h2><video controls preload="metadata" src="playthrough.mp4" poster="current.webp"></video><p>真实鼠标与键盘操作：先看夹扣、拾书签、打开盒盖、印错、重排、比较，再印一次。录像单独配项目原创《慢慢翻页》，不是浏览器实时混音；实际游戏另有夹扣、压印和纸张的声音。</p><a href="playthrough.mp4" download>保存这段演示</a></section>
+<footer>旧稿只用于比较；游戏保留当前实现。试玩入口与正式存档分开。其他机关仍在逐个审查。</footer></main>
+<dialog id="zoom"><button aria-label="返回">×</button><img alt="放大的画面"></dialog>
+<script>
+const versions=[
+ ['old.webp','从一张练习纸开始。','旧版把三道工序直接写了出来，结果也跟着排列立即改变。','可以算，却少了观察、试印和验证的过程。'],
+ ['first.webp','盒子有了，但还没对上。','拆成滑盖、版片、夹扣、木柄和抽屉。试纸用相同的记号相认。','这一轮的夹扣还没扣住盖，印记比例也需要校准。'],
+ ['current.webp','这回，真的印了一张。','夹扣扣在盖沿，木书签能挑开它；版片可拖，也可用方向键重排。','印过的那张会留下来。挪版片时，它不会跟着偷偷改变。']
+];
+const views={
+ unfound:['unfound.webp','先看看它。','还没收下书签，也可以靠近观察夹扣和试纸。','不会先列出缺少的工具，更不会凭空把它放进手边。'],
+ closed:['closed.webp','边上有道窄缝。','书签不只用一次；这里先借它挑开夹扣。','打开后它仍会留着，后面的地方也许还用得上。'],
+ wrong:['wrong.webp','刚才那张，先留着。','压下木柄，才会得到新的试纸。','印错后可以调整，也可以退一步；排对了仍需要真正印一次。'],
+ detail:['detail.webp','拿近一点。','印样和刚才那张放在一起，方便慢慢比较。','没有加一段讲解，证据还是那几枚印记。'],
+ done:['done.webp','抽屉开了。','透片留在里面，盒盖和版片仍是刚才的样子。','新的物件会回到随身物品栏，书签仍在。'],
+ room:['room.webp','回到书桌。','远处的小盒子也打开了，试纸和抽屉没有消失。','近景、远景和导航共用同一份进度。'],
+ phone:['phone.webp','小屏也能慢慢看。','试纸排在盒子旁边的下一处，不挤成难认的小图。','木柄可以拖，版片也能交换；印纸还能单独拿近比较。'],
+ phoneProof:['phone-proof.webp','刚才那张。','手机上把两张纸拿近放好，图案保持原比例。','放回去以后，排列和上次印出的结果都还在。']
+};
+let selected=2;const control=document.querySelector('#view'),nav=document.querySelector('nav'),pic=document.querySelector('#picture'),zoom=document.querySelector('#zoom');
+function render(){nav.hidden=control.value!=='compare';document.querySelectorAll('[data-version]').forEach(b=>{const on=Number(b.dataset.version)===selected;b.setAttribute('aria-selected',on);b.tabIndex=on?0:-1;});const [src,title,change,reason]=control.value==='compare'?versions[selected]:views[control.value];pic.src=src;pic.alt=title;for(const [key,value]of Object.entries({title,change,reason}))document.querySelector('#'+key).textContent=value;}
+control.onchange=render;document.querySelectorAll('[data-version]').forEach(b=>b.onclick=()=>{selected=Number(b.dataset.version);render();});nav.onkeydown=e=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();selected=e.key==='Home'?0:e.key==='End'?2:(selected+(e.key==='ArrowRight'?1:2))%3;render();document.querySelector('[data-version="'+selected+'"]').focus();};
+document.querySelector('.picture').onclick=()=>{zoom.querySelector('img').src=pic.src;zoom.showModal();};zoom.querySelector('button').onclick=()=>zoom.close();render();
+</script></html>

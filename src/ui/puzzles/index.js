@@ -1,5 +1,6 @@
 import {renderCalendar} from './calendar.js';
-import { renderPaper, renderPaperBack } from './paper.js';
+import { renderPaperBack } from './paper.js';
+import {renderPaper} from './press.js';
 import { renderCloud, renderCalibration } from './light.js';
 import { renderBooks, renderScreen } from './collection.js';
 import { renderBelt } from './mechanical.js';

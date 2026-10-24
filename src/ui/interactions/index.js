@@ -1,4 +1,5 @@
 import {bindGarden} from './garden.js';
+import {bindPress} from './press.js';
 import { bindPacking } from './packing.js';
 import { bindReorder } from './reorder.js';
 import { bindObjects } from './objects.js';
@@ -34,6 +35,7 @@ export function bindInteractions(root, { id, progress, solved, move, activity, c
     if(id==='cocoa')cleanup.push(bindPouring(root,progress,move));
     if(id==='maze')cleanup.push(bindMaze(root,progress,move));
     if(id==='flowers')cleanup.push(bindGarden(root,progress,move,feedback));
+    if(id==='paper')cleanup.push(bindPress(root,progress,move));
     if(id==='drawers')cleanup.push(bindDrawers(root,progress,move));
     if(id==='sweets')cleanup.push(bindSweets(root,progress,move));
     if(id==='ribbons')cleanup.push(bindRibbons(root,progress,move));

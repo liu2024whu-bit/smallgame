@@ -23,7 +23,7 @@ for (const [id, [row, column, turn]] of [[0, 0, 0], [0, 3, 1], [2, 0, 2], [1, 0,
 
 export const WITNESSES = {
   calendar:[...[0,1,1,2,0,8].map((value,index)=>({type:'set',index,value})),{type:'submit'}],
-  paper: arrange([2, 0, 1], [0, 1, 2]),
+  paper: [{type:'open'},...arrange([2,0,1],[0,1,2]),{type:'print'}],
   cloud: turns([0, 0, 0], [3, 2, 2], 4),
   calibration: turns([0, 0, 0], [2, 1, 3], 4),
   postbox: [...[1, 0, 2, 9].map((value, index) => ({ type: 'set', index, value })), { type:'submit' }],

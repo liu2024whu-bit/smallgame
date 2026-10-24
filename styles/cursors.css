@@ -6,6 +6,7 @@
  #app:has(.inventory-slot.selected[data-id=crank]) [data-tool-target="birthday-door"],
  #app:has(.inventory-slot.selected[data-id=transparency]) [data-tool-target="chocolate-cover"],
  #app:has(.inventory-slot.selected[data-id=bookmark]) [data-tool-target^="flower-pin:"],
+ #app:has(.inventory-slot.selected[data-id=bookmark]) [data-tool-target="paper-latch"],
  #app:has(.inventory-slot.selected[data-id=mirror]) [data-tool-target="postcard-mirror"],
  #app:has(.inventory-slot.selected[data-id=birthdayCard]) [data-tool-target="birthday-fit:0"],
  #app:has(.inventory-slot.selected[data-id=birthdayRibbon]) [data-tool-target="birthday-fit:1"],

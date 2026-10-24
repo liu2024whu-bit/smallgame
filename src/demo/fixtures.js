@@ -3,14 +3,14 @@ import {PUZZLES,MAIN_IDS,PUZZLE_BY_ID} from '../data/puzzles.js';
 import {ACTIVITY_IDS} from '../data/activities.js';
 import {WITNESSES} from './walkthrough.js';
 
-function initial(){
+function initial(pickups=['bookmark','thread']){
   let state=reduce(createState(),{type:'start'});
-  for(const id of ['bookmark','thread'])state=reduce(state,{type:'pickup',id});
+  for(const id of pickups)state=reduce(state,{type:'pickup',id});
   state.settings.sound=false;return state;
 }
 const solve=(state,id)=>WITNESSES[id].reduce((current,move)=>reduce(current,{type:'move',id,move}),state);
-export function previewState({puzzle,completed=false,full=false,hints=false,omitActivities=[],flower}={}){
-  let state=initial();
+export function previewState({puzzle,completed=false,full=false,hints=false,omitActivities=[],flower,setupMoves=[],pickups}={}){
+  let state=initial(pickups);
   if(full||puzzle&&!PUZZLE_BY_ID[puzzle].optional){
     for(const id of MAIN_IDS){
       if(id==='chocolate')state=reduce(state,{type:'use-tool',item:'crank',target:'birthday-door'});
@@ -25,6 +25,7 @@ export function previewState({puzzle,completed=false,full=false,hints=false,omit
     for(const id of ACTIVITY_IDS)state=reduce(state,{type:'activity',id});
   }
   if(puzzle&&PUZZLE_BY_ID[puzzle].optional&&completed)state=solve(state,puzzle);
+  if(puzzle)for(const move of setupMoves)state=reduce(state,{type:'move',id:puzzle,move});
   state.activities=state.activities.filter(id=>!omitActivities.includes(id));
   if(flower)state.settings.flower=flower;
   if(hints)state.hints[puzzle]=3;

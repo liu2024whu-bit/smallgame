@@ -19,10 +19,19 @@ export const PAPER_TARGET = applyOperations(PAPER_SEED, [0, 1, 2]);
 export const BACK_TARGET = applyOperations(BACK_ORIGINAL, BACK_OPERATIONS);
 
 export const paper = {
-  create: () => ({ order: [2, 0, 1] }),
-  valid: state => permutation(state?.order, 3),
-  move: (state, action) => action.type === 'reorder' ? { order: reorder(state.order, action.from, action.to) } : action.type === 'shift' ? { order: moveAdjacent(state.order, action.index, action.direction) } : state,
-  solved: state => same(applyOperations(PAPER_SEED, state.order), PAPER_TARGET),
+  create: () => ({order:[2,0,1],opened:false,proof:null,presses:0}),
+  valid: state => permutation(state?.order,3)&&typeof state.opened==='boolean'&&
+    (state.proof===null||permutation(state.proof,3))&&Number.isInteger(state.presses)&&state.presses>=0&&state.presses<65536&&
+    (state.opened||state.proof===null&&state.presses===0),
+  move(state,action){
+    if(action.type==='open')return {...state,opened:true};
+    if(!state.opened)return state;
+    if(action.type==='print')return {...state,proof:[...state.order],presses:(state.presses+1)%65536};
+    if(action.type==='reorder')return {...state,order:reorder(state.order,action.from,action.to)};
+    if(action.type==='shift')return {...state,order:moveAdjacent(state.order,action.index,action.direction)};
+    return state;
+  },
+  solved: state => permutation(state?.proof,3)&&same(applyOperations(PAPER_SEED,state.proof),PAPER_TARGET),
 };
 
 export const paperBack = {

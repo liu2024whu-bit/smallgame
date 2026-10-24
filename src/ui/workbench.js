@@ -1,6 +1,7 @@
 import {CHAPTER_NOTES} from '../data/story-notes.js';
 import { PUZZLE_BY_ID } from '../data/puzzles.js';
 import { ITEMS } from '../data/items.js';
+import {sceneOpen} from '../core/exploration.js';
 import { access, inventory } from '../core/state.js';
 import { FINISH_REACTIONS } from '../data/feedback.js';
 import { PUZZLE_TOOL_INPUTS } from '../data/tool-uses.js';
@@ -23,16 +24,17 @@ const WAITING = {
   birthdayLock:'纸带还压着匣盖呢。',
 };
 
-const CLOSE_LOOK = new Set(['calibration','postbox','wordlock','belt','flowers','chocolate','stitch','maze','melody','sweets','ribbons','birthdayLock','calendar']);
+const CLOSE_LOOK = new Set(['paper','calibration','postbox','wordlock','belt','flowers','chocolate','stitch','maze','melody','sweets','ribbons','birthdayLock','calendar']);
 
 export function puzzlePanel(id, context) {
   const { state, view = {} } = context;
   const definition = PUZZLE_BY_ID[id];
   const availability = access(state, id);
   const completed = state.solved.includes(id);
-  if (!availability.ready) return { title: definition.title, className: 'inspect-dialog', html: `<div class="locked-object">${motif('leaf')}<p>${escape(WAITING[id] ?? '还少点东西。')}</p>${availability.missing.length ? `<div class="missing-tools">${availability.missing.map(tool => `<span>${escape(ITEMS[tool].name)}</span>`).join('')}</div>` : ''}<button class="primary-button" data-action="close">再找找</button></div>` };
+  if (!availability.ready && !(definition.inspectWithoutTools&&!availability.waiting.length&&sceneOpen(state,definition.scene))) return { title: definition.title, className: 'inspect-dialog', html: `<div class="locked-object">${motif('leaf')}<p>${escape(WAITING[id] ?? '还少点东西。')}</p>${availability.missing.length ? `<div class="missing-tools">${availability.missing.map(tool => `<span>${escape(ITEMS[tool].name)}</span>`).join('')}</div>` : ''}<button class="primary-button" data-action="close">再找找</button></div>` };
   const hintCount = state.hints[id] ?? 0;
-  const availableTools=[...new Set([...definition.tools,...(PUZZLE_TOOL_INPUTS[id]??[]).filter(tool=>inventory(state).includes(tool))])];
+  const owned=inventory(state);
+  const availableTools=[...new Set([...definition.tools,...(PUZZLE_TOOL_INPUTS[id]??[])])].filter(tool=>owned.includes(tool));
   const tools=availableTools.length ? `<details class="tools-fold" data-fold="tools"><summary>手边</summary><div class="workbench-tools" aria-label="手边的物件">${availableTools.map(tool => `<button data-action="arm-tool" data-id="${tool}" data-inventory-drag="${tool}" class="${state.selected===tool?'tool-armed':''}" title="${escape(ITEMS[tool].description)}">${itemSprite(ITEMS[tool].sprite)}${escape(ITEMS[tool].name)}</button>`).join('')}</div></details>` : '';
   const look=CLOSE_LOOK.has(id) ? `<button class="text-button workbench-look" data-action="workbench-look" aria-pressed="${!!view.closeLook}" aria-controls="puzzle-viewport">${icon(view.closeLook?'zoom-out':'zoom-in')}<span>${view.closeLook?'放远些':'凑近看'}</span></button>` : '';
   const field=`<div class="puzzle-viewport ${CLOSE_LOOK.has(id)&&view.closeLook?'close-look':''}" id="puzzle-viewport"><div class="puzzle-field ${completed?'solved-field':''}" role="group" aria-label="${escape(definition.instruction)}">${PUZZLE_VIEWS[id](state.progress[id], context)}</div></div>`;

@@ -1,4 +1,5 @@
 import {gardenMiniature} from './puzzles/flowers.js';
+import {pressMiniature} from './puzzles/press.js';
 import { GAME_DATE } from '../data/calendar.js';
 import { roomCompanions } from './companions.js';
 import { SCENES, SCENE_BY_ID } from '../data/scenes.js';
@@ -12,20 +13,25 @@ import { cabinetMechanisms } from './miniatures.js';
 import { partyRoom } from './party-room.js';
 import { escape, icon, itemSprite } from './dom.js';
 
+const LIVE_SCENE_PROGRESS={desk:['paper','calendar'],window:['flowers'],party:['sweets','ribbons','birthdayLock']};
+export function sceneSignature(state){
+  return JSON.stringify([state.scene,state.collected,sceneChanges(state).map(c=>c.puzzle??c.activity),state.solved,state.ending,(LIVE_SCENE_PROGRESS[state.scene]??[]).map(id=>state.progress[id])]);
+}
+
 export function renderScenePicture(state) {
   const scene=SCENE_BY_ID[state.scene];
   const art=scene.id==='birthday'&&state.ending?ASSETS.birthdayLit:scene.id==='party'&&state.solved.includes('birthdayLock')?ASSETS.partyOpen:SCENE_ART[scene.id];
-  return `<img class="scene-image" src="${art}" alt="${scene.title}" draggable="false">${sceneChanges(state).map(change=>`<img class="scene-change" data-world-change="${change.puzzle??change.activity}" src="${ASSETS[change.asset]}" alt="${change.alt}" style="mask-image:${paintMask(change.region)}" draggable="false">`).join('')}${state.scene==='desk'?`<span class="world-calendar-date ${state.solved.includes('calendar')?'date-unlocked':''}" aria-hidden="true"><small>${GAME_DATE.year} / ${GAME_DATE.month}</small><b>${GAME_DATE.day}</b></span>`:''}${state.scene==='window'?gardenMiniature(state.progress.flowers,state.solved.includes('flowers')):''}${cabinetMechanisms(state)}${partyRoom(state)}`;
+  return `<img class="scene-image" src="${art}" alt="${scene.title}" draggable="false">${sceneChanges(state).map(change=>`<img class="scene-change" data-world-change="${change.puzzle??change.activity}" src="${ASSETS[change.asset]}" alt="${change.alt}" style="mask-image:${paintMask(change.region)}" draggable="false">`).join('')}${state.scene==='desk'?`<span class="world-calendar-date ${state.solved.includes('calendar')?'date-unlocked':''}" aria-hidden="true"><small>${GAME_DATE.year} / ${GAME_DATE.month}</small><b>${GAME_DATE.day}</b></span>`:''}${state.scene==='window'?gardenMiniature(state.progress.flowers,state.solved.includes('flowers')):''}${state.scene==='desk'?pressMiniature(state.progress.paper,state.solved.includes('paper')):''}${cabinetMechanisms(state)}${partyRoom(state)}`;
 }
 
 export function renderRoom(state) {
   const scene = SCENE_BY_ID[state.scene];
   const visible = scene.hotspots.filter(h => h.kind !== 'pickup' || !state.collected.includes(h.target));
-  return `${renderScenePicture(state)}<div class="room-light ${state.solved.includes('flowers') ? 'light-shifted' : ''}"></div><div class="hotspot-layer">${visible.map(h=>hotspotButton(h,scene.id)).join('')}</div>${roomCompanions(scene.id)}<button class="scene-arrow previous" data-action="scene-prev" aria-label="向左看">${icon('left')}</button><button class="scene-arrow next" data-action="scene-next" aria-label="向右看">${icon('right')}</button><button class="scene-caption" data-action="rooms" aria-label="看看小屋有哪些地方"><span>${escape(scene.title)}</span>${icon('feather')}</button>`;
+  return `${renderScenePicture(state)}<div class="room-light ${state.solved.includes('flowers') ? 'light-shifted' : ''}"></div><div class="hotspot-layer">${visible.map(h=>hotspotButton(h,state)).join('')}</div>${roomCompanions(scene.id)}<button class="scene-arrow previous" data-action="scene-prev" aria-label="向左看">${icon('left')}</button><button class="scene-arrow next" data-action="scene-next" aria-label="向右看">${icon('right')}</button><button class="scene-caption" data-action="rooms" aria-label="看看小屋有哪些地方"><span>${escape(scene.title)}</span>${icon('feather')}</button>`;
 }
 
-function hotspotButton(h,scene){
-  const target=roomToolTarget(scene,h.id)??'';
+function hotspotButton(h,state){
+  const target=roomToolTarget(state,h.id)??'';
   return `<button type="button" class="hotspot ${h.sprite?'pickup-hotspot':''} ${h.kind==='pet'?'pet-hotspot':''} ${h.x>80?'caption-inward-right':h.x<20?'caption-inward-left':''}" data-action="hotspot" data-id="${h.id}" ${target?`data-tool-target="${target}"`:''} aria-label="${escape(h.label)}" style="left:${h.x}%;top:${h.y}%;width:${h.width}%;height:${h.height}%">${h.sprite?itemSprite(ITEMS[h.target].sprite):''}<span class="hotspot-caption">${escape(h.label)}</span></button>`;
 }
 

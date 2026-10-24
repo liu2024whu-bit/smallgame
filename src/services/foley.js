@@ -1,5 +1,5 @@
 // Original, short material sounds. No recorded music or external audio dependency.
-export const FOLEY_KINDS=Object.freeze(['detent','turn','wedge-in','wedge-out','stop','return','stamp']);
+export const FOLEY_KINDS=Object.freeze(['detent','turn','wedge-in','wedge-out','stop','return','stamp','press']);
 function noise(ctx,bus,frequency,duration,volume,at){
   const buffer=ctx.createBuffer(1,Math.ceil(ctx.sampleRate*duration),ctx.sampleRate),data=buffer.getChannelData(0);
   let smooth=0;
@@ -25,6 +25,7 @@ export function playFoley(ctx,bus,kind,at=ctx.currentTime){
   if(kind==='stop'){tap(98,.095,.16);rub(240,.04,.12);}
   if(kind==='return')rub(510,.15,.065);
   if(kind==='stamp'){rub(880,.05,.17);tap(125,.065,.11,.008);}
+  if(kind==='press'){rub(620,.10,.09);tap(150,.11,.14,.08);tap(760,.03,.03,.13);rub(1700,.16,.08,.16);}
 }
 export function createFoley({context,output,enabled}){
   const last=new Map();

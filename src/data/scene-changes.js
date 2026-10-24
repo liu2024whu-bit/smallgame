@@ -1,7 +1,6 @@
 // Regions include the whole changed object and a quiet feathered margin.
 // Each completed mechanism reveals only its own paint; unrelated puzzles stay intact.
 export const SCENE_CHANGES=Object.freeze([
-  {scene:'desk',puzzle:'paper',asset:'deskAfter',region:[48,43,13,18],alt:'试印从纸盒里摊开了'},
   {scene:'desk',puzzle:'belt',asset:'deskAfter',region:[80,50,16,18],alt:'放映机的侧板敞着，线已经绕好'},
   {scene:'desk',puzzle:'stitch',asset:'deskAfter',region:[30,48,21,14],alt:'画册已经装订好'},
   {scene:'window',puzzle:'cloud',asset:'windowAfter',region:[18,41,23,27],alt:'云景两旁的木扇展开了'},

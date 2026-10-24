@@ -1,4 +1,4 @@
-# 当前结构 · V2.9 P2
+# 当前结构 · V2.9 P3
 
 ```text
 index.html / src/main.js        正式入口；只挂载真实游戏
@@ -9,6 +9,9 @@ src/data/                      机关定义、证据、热区、个人事实、�
 src/ui/room.js                 远景、物品栏、场景入口
 src/ui/puzzles/                独立机关呈现，规则与图像坐标共用数据
 src/ui/workbench.js            工具、提示、撤销与完成反馈
+src/data/press.js              试印盒的像素帧、支点与近远景标定
+src/ui/puzzles/press.js         试印盒/印纸/可观察夹扣；不代管库存
+src/ui/interactions/tap.js      缺失原生轻点的补发/去重，拖动不触发
 src/ui/interactions/           指针会话、拖放、旋转、重排、连续描线、字轮
 src/ui/dialog*.js              焦点、往返、滚动及放大位置
 src/ui/welcome.js / intro.js    标题、献词、可展开邀请
@@ -35,6 +38,7 @@ src/services/music-decks.js    当前/退场声部寿命、交叠与短时失败
 src/services/deck-fade.js      每个声部音量曲线与中断清理
 src/services/music-library.js  独立本地音源数据库及会话降级
 src/services/audio.js          物件声、试听、混音与音乐配置
+src/services/move-feedback.js  成功规则动作到材料声音的对应
 src/services/foley.js          原创材料音色、静音与短促节流
 src/services/save-file.js      JSON编码、选位置写文件、浏览器下载降级
 src/services/save-transfer.js  导入校验、取消/失败与最近文件名
@@ -43,7 +47,7 @@ src/admin.js                   防误入门槛与会话解锁
 src/services/review-access.js  PIN摘要验证；不冒充服务端认证
 src/demo.js                    后台查询、跳转、尺寸切换、文字导出
 review-frame.html             复用真实游戏的隔离演示框
-src/demo/catalog.js            222个页面状态的唯一目录
+src/demo/catalog.js            226个页面状态的唯一目录
 src/demo/fixtures.js           经真实规则重建可操作演示状态
 src/demo/walkthrough.js        验证走法，测试复用；正式入口不导入
 src/demo/visible-copy.js       读取实际可见文字，不另写一套文案

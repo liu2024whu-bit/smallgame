@@ -4,7 +4,7 @@ import { RULES } from '../puzzles/index.js';
 import { COLLECTIONS, COLLECTION_PUZZLES } from '../data/assets.js';
 import { KEEPSAKES } from '../data/keepsakes.js';
 import { ACTIVITY_IDS } from '../data/activities.js';
-import { CONTENT_REVISION, migrateContent } from './migrations.js';
+import { CONTENT_REVISION, migrateContent,migrateProgress } from './migrations.js';
 import { sceneOpen, birthdayReady } from './exploration.js';
 import { PERSISTENT_TOOL_USES, PUZZLE_TOOL_INPUTS } from '../data/tool-uses.js';
 import { MUSIC_BY_ID } from '../data/music.js';
@@ -54,7 +54,7 @@ export function normalizeState(raw) {
   state.discovered = Object.keys(COLLECTIONS).filter(id => Array.isArray(raw.discovered) && raw.discovered.includes(id));
   state.activities = ACTIVITY_IDS.filter(id => Array.isArray(raw.activities) && raw.activities.includes(id));
   for (const puzzle of PUZZLES) {
-    const candidate = raw.progress?.[puzzle.id];
+    const candidate = migrateProgress(puzzle.id,raw.progress?.[puzzle.id],raw);
     if (RULES[puzzle.id].valid(candidate)) state.progress[puzzle.id] = structuredClone(candidate);
     const count = raw.hints?.[puzzle.id];
     if (Number.isInteger(count) && count > 0) state.hints[puzzle.id] = Math.min(count, 3);

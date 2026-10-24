@@ -1,6 +1,9 @@
 import { SWEET_CROP, BOX_CROP, OPEN_BOX_CROP } from './birthday-workshop.js';
+import {PRESS_MAIN,PRESS_PARTS} from './press.js';
 // Source-pixel frames follow the actual edges of each illustration.
 export const ASSET_LAYOUTS = Object.freeze({
+  pressMain:PRESS_MAIN,
+  pressParts:PRESS_PARTS,
   invitation:{width:1536,height:1024,frames:[[12,82,766,408],[789,76,727,414],[28,593,772,301],[857,503,618,448]]},
   turntable:{width:1536,height:1024,frames:[[32,150,952,775],[1007,50,520,520],[1032,581,470,384]]},
   campusMarks:{width:1536,height:1024,frames:[[55,228,668,620],[760,221,752,615]]},

@@ -28,17 +28,6 @@
   .stamp-row { display: flex; align-items: center; justify-content: center; gap: 10px; }
   .stamp { display: inline-flex; width: 48px; height: 48px; border-bottom: 1px solid #dadac8; align-items: center; justify-content: center; }
   .stamp .motif { width: 44px; }
-  .sample-prints { max-width: 700px; margin: auto; }
-  .print-example { display: flex; align-items: center; justify-content: center; gap: 15px; padding: 5px 0; }
-  .print-example > span:first-child { flex: 0 0 45px; font-size: 14px; }
-  .print-example .stamp { width: 35px; height: 35px; }
-  .print-example .stamp-row { gap: 3px; }
-  .print-example .motif { width: 34px; }
-  .thin-arrow { color: #9aa38b; padding: 0 5px; }
-  .operation-strip { display: flex; justify-content: center; gap: 20px; margin: 22px 0; }
-  .operation-piece { padding: 9px 15px 11px; background: #f9f8ed; border: 1px solid #cdd3bc; border-radius: 4px 2px 6px 2px; text-align: center; min-width: 125px; }
-  .operation-piece small { display: block; color: #adb39e; font: 11px Georgia, serif; }
-  .operation-piece strong { font-weight: 500; }
   .comparison { display: flex; gap: 32px; justify-content: center; padding-top: 10px; }
   .operation-note { text-align: center; padding: 16px; color: #758565; }
   .stamp-arrangement { display: flex; justify-content: center; gap: 15px; margin: 22px 0; }
@@ -140,9 +129,6 @@
     .workbench-tools { gap: 8px; }
     .puzzle-control { min-width: 33px; min-height: 36px; }
     .stamp-row { gap: 3px; }.stamp { width: 33px; height: 33px; }.stamp .motif { width: 31px; }
-    .print-example { display: grid; grid-template-columns: 1fr 16px 1fr; gap: 4px; font-size: 12px; padding: 7px 0; }.print-example > span:first-child { grid-column: 1 / -1; white-space: nowrap; padding-left: 9px; text-align: left; }
-    .print-example .stamp { width: 23px; height: 28px; }.print-example .motif { width: 26px; }.print-example .stamp-row { gap: 0; }
-    .operation-strip { gap: 8px; }.operation-piece { min-width: 0; padding: 6px 10px; font-size: 14px; }
     .comparison { flex-wrap: wrap; gap: 10px; }.stamp-arrangement { gap: 6px; }.loose-stamp > .motif { width: 44px; }
     .dial-row { gap: 8px; }.dial-controls { gap: 2px; }.dial-face, .dial-face .item-art { width: 43px; }.dial-name { font-size: 11px; }
     .dial-controls .puzzle-control { min-width: 26px; padding: 2px; min-height: 32px; }

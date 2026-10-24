@@ -1,4 +1,5 @@
 import { createCompanions } from './services/companions.js';
+import {playMoveFeedback} from './services/move-feedback.js';
 import { birthdayActions } from './services/birthday-flow.js';
 import { createStore } from './core/store.js';
 import { inventory, access } from './core/state.js';
@@ -6,10 +7,9 @@ import { sceneOpen, openScenes, neighborScene, birthdayReady } from './core/expl
 import { roomToolTarget, toolFor, puzzleToolUse } from './data/tool-uses.js';
 import { SCENE_BY_ID } from './data/scenes.js';
 import { SCENE_ART } from './data/assets.js';
-import { sceneChanges } from './data/scene-changes.js';
 import { BLOCKED_LINES } from './data/feedback.js';
 import { ITEMS } from './data/items.js';
-import { renderRoom, renderHud } from './ui/room.js';
+import { renderRoom, renderHud,sceneSignature } from './ui/room.js';
 import { renderPanel } from './ui/panels.js';
 import { createDialog } from './ui/dialog.js';
 import { announce, itemSprite } from './ui/dom.js';
@@ -18,9 +18,10 @@ import { fitHandle } from './services/tool-motion.js';
 import { motionAllowed,watchMotionPreferences } from './services/motion.js';
 import { roomPainting, transitionRoom } from './services/room-transition.js';
 import { bindInteractions } from './ui/interactions/index.js';
-import { viewActions } from './ui/view-actions.js';
+import { viewActions,afterPuzzleAction } from './ui/view-actions.js';
 import { blockedMove } from './ui/interactions/feedback.js';
 import { bindInventoryUse } from './ui/interactions/inventory.js';
+import {bindButtonTaps} from './ui/interactions/tap.js';
 import { createWelcome } from './services/welcome-flow.js';
 import { bindSaveTransfer } from './services/save-transfer.js';
 import { bindMusicControls } from './ui/music-controls.js';
@@ -38,11 +39,14 @@ const stage = document.querySelector('#room-stage');
 const dialog = createDialog(document.querySelector('#explore-dialog'), closePanel);
 let roomSignature = '', hudSignature = '', toastTimer;
 let disposeInteractions = () => {},disposeSession=()=>{};
-let fittingHandle=false,completionTimer;
+let fittingHandle=false;
 const preloadedScenes = new Set();
 const settleMotion=watchMotionPreferences(app);
 const welcome=createWelcome(document.querySelector('#welcome'),{onCue:()=>audio.material('paper'),getState:()=>store.get(),onReveal:()=>{document.querySelector('.game-shell').hidden=false;},onEnter:()=>{ui.home=false;if(!store.get().begun)store.dispatch({type:'start'});else render(store.get());document.querySelector('.wordmark')?.focus({preventScroll:true});}});
 const engageAudio=event=>audio.resume({music:!event.target.closest('.music-dialog,.settings-dialog,[data-action="music"],[data-action="settings"],[data-action="sound"]')}).catch(()=>{});
+const freshPress=event=>{if(event.type==='pointerdown'||['Enter',' '].includes(event.key)){delete app.dataset.suppressUntil;delete dialog.element.dataset.suppressUntil;}};
+app.addEventListener('pointerdown',freshPress,{capture:true});app.addEventListener('keydown',freshPress,{capture:true});
+bindButtonTaps(app);
 app.addEventListener('pointerdown',engageAudio,{capture:true});app.addEventListener('keydown',engageAudio,{capture:true});
 const transfers=bindSaveTransfer(document.querySelector('#save-file'),{store,loaded:()=>showWelcome(),toast,refresh:()=>{if(ui.panel?.type==='settings')renderDialog();},remember:storage?null:{getItem:key=>window.sessionStorage.getItem(key),setItem:(key,value)=>window.sessionStorage.setItem(key,value)}});
 const companions=createCompanions({panel:()=>ui.panel,activity,audio,toast});
@@ -56,12 +60,7 @@ function performMove(move) {
   if(id==='melody')audio.stopMelody();
   const previous=store.get().progress[id];
   const changed = store.dispatch({ type: 'move', id, move });
-  if (changed) {
-    if (id === 'melody' && ['note','set-note'].includes(move.type)) audio.previewNote(store.get().progress.melody.notes[move.index]);
-    else if(id==='cocoa')audio.pour();
-    else if(id==='flowers'){const next=store.get().progress.flowers;audio.foley(move.type==='crank'?'turn':next.pin>=0?'wedge-in':'wedge-out');if(move.type==='crank'&&previous.pin>=0&&next.pin<0)audio.foley('wedge-out',.16);}
-    else audio.material(id === 'wordlock' ? 'key' : id === 'postbox' || move.type === 'set-turn' ? 'metal' : ['paper', 'paperBack', 'album', 'screen', 'film'].includes(id) ? 'paper' : 'wood');
-  }
+  if(changed)playMoveFeedback(audio,id,move,previous,store.get().progress[id]);
   return changed;
 }
 function renderDialog(preserveFocus = true, restore = null) {
@@ -75,7 +74,7 @@ function renderDialog(preserveFocus = true, restore = null) {
   disposeSession=bindSessionView(dialog.element,audio.music,{getContext:context,feedback:()=>audio.foley('detent')});
 }
 function render(state,previous=null) {
-  const signature = `${state.scene}:${state.collected.join()}:${sceneChanges(state).map(change=>change.puzzle??change.activity).join()}:${state.scene==='window'?JSON.stringify(state.progress.flowers):''}:${state.solved.includes('flowers')}:${state.solved.includes('calendar')}:${state.ending}:${state.scene==='party'?JSON.stringify([state.progress.sweets,state.progress.ribbons,state.progress.birthdayLock]):''}`;
+  const signature=sceneSignature(state);
   if (signature !== roomSignature) {
     const sameScene = stage.dataset.scene === state.scene;
     const previousArt=roomPainting(stage);
@@ -104,14 +103,12 @@ function render(state,previous=null) {
   preloadScenes(state);
 }
 function openPanel(panel, push = true) {
-  window.clearTimeout(completionTimer);
   audio.stopMelody();
   if (push && ui.panel) { ui.panel.presentation=dialog.capture(); ui.stack.push(ui.panel); }
   ui.panel = panel;
   renderDialog(false);
 }
 function closePanel() {
-  window.clearTimeout(completionTimer);
   disposeInteractions();disposeSession();
   audio.stopMelody();
   audio.stopRain();
@@ -129,7 +126,7 @@ function look(direction) {
   store.dispatch({ type: 'scene', id: neighborScene(store.get(),direction) });
   audio.material('paper');
 }
-function closeAllPanels(){window.clearTimeout(completionTimer);ui.stack=[];ui.panel=null;disposeInteractions();disposeSession();audio.stopMelody();audio.stopRain();dialog.hide();}
+function closeAllPanels(){ui.stack=[];ui.panel=null;disposeInteractions();disposeSession();audio.stopMelody();audio.stopRain();dialog.hide();}
 function showWelcome(phase='title'){closeAllPanels();ui.home=true;welcome.show(phase);render(store.get());}
 function goScene(id){if(!sceneOpen(store.get(),id)){openPanel({type:'passage',id});return;}closeAllPanels();store.dispatch({type:'scene',id});}
 async function useTool(item,target){
@@ -160,7 +157,7 @@ function hotspot(id) {
   const state = store.get();
   const spot = SCENE_BY_ID[state.scene].hotspots.find(h => h.id === id);
   if (!spot) return;
-  const target=roomToolTarget(state.scene,id,state.selected);
+  const target=roomToolTarget(state,id,state.selected);
   if(state.selected&&target){useTool(state.selected,target);return;}
   const handlers = {
     pickup: () => { if (store.dispatch({ type: 'pickup', id: spot.target })) { audio.material('pickup'); toast(`${ITEMS[spot.target].name}，放在手边了。`); } },
@@ -176,7 +173,7 @@ function hotspot(id) {
   (handlers[spot.kind] ?? (() => openPanel({ type: spot.kind })))();
 }
 function currentPuzzle(action) {
-  if (ui.panel?.type === 'puzzle') store.dispatch({ type: action, id: ui.panel.id });
+  if(ui.panel?.type==='puzzle'){ui.panel.view=afterPuzzleAction(ui.panel.view,action);store.dispatch({type:action,id:ui.panel.id});}
 }
 function setting(key, value) { store.dispatch({ type: 'setting', key, value }); }
 const actions = {
@@ -268,11 +265,6 @@ store.subscribe((state, previous) => {
   if(revealed.length)toast(revealed[0].unlocked);
   if (state.solved.length > previous.solved.length) {
     audio.success();
-    const id=ui.panel?.id;
-    window.clearTimeout(completionTimer);
-    completionTimer=window.setTimeout(()=>{
-      if(ui.panel?.type==='puzzle'&&ui.panel.id===id)dialog.element.querySelector('.completion-note')?.scrollIntoView({ behavior: motionAllowed() ? 'smooth' : 'instant', block: 'nearest' });
-    },motionAllowed()?240:0);
   }
 });
 function preloadScenes(state) {
@@ -284,7 +276,7 @@ function preloadScenes(state) {
 }
 render(store.get());
 
-bindInventoryUse(app,{scene:()=>store.get().scene,owns:id=>inventory(store.get()).includes(id),use:useTool});
+bindInventoryUse(app,{getState:()=>store.get(),owns:id=>inventory(store.get()).includes(id),use:useTool});
 if (store.notice) toast(store.notice);
 
 return {resetPresentation:()=>{ui.skyPair=0;clearTimeout(toastTimer);document.querySelector('#toast').hidden=true;},store,openPanel,closeAllPanels,showWelcome,enter:()=>welcome.enter(),panel:()=>ui.panel,audio};

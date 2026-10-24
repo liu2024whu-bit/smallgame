@@ -12,7 +12,7 @@ export function bindReorder(root, id, move) {
       const button=event.target.closest('button');
       if (button && !button.matches('.film-inspect, .page-face')) return null;
       const source = event.target.closest('[data-reorder]');
-      return source ? { source, from: Number(source.dataset.reorder) } : null;
+      return source && !source.closest('[inert]') && source.getAttribute('aria-disabled')!=='true' ? { source, from: Number(source.dataset.reorder) } : null;
     },
     start(gesture) {
       const box = gesture.source.getBoundingClientRect();
