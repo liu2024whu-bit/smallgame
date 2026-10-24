@@ -1,7 +1,6 @@
 @layer puzzles {
   .dial-face.puzzle-control { padding:0; min-width:0; min-height:0; border:0; box-shadow:none; background:transparent; cursor:var(--cursor-grab,grab); touch-action:none; }
   .dial-face.puzzle-control:active { cursor:var(--cursor-hold,grabbing); }
-  .cloud-workbench .dial-face b { inset:auto -3px -3px auto; width:20px; height:20px; border:1px solid #c5b791; border-radius:50%; background:#fcf6df; color:#786e4e; font-size:12px; }
   .gesture-thread { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:3; }
   .gesture-thread polyline { stroke:#ae7766; stroke-width:.65; stroke-linejoin:round; filter:drop-shadow(0 1px 1px #7d5c3840); }
   .trace-touched { filter:drop-shadow(0 0 3px #c4a160a0); }
@@ -71,7 +70,7 @@
   .drawer-turn { display:block; width:fit-content; margin:18px auto 0; font-size:13px; }
   .backlit-paper { box-shadow:inset 0 0 70px #fff8c6a6; }
   .negative-board { position:relative; max-width:640px; margin:auto; }.negative-board > .character-art { width:100%; display:block; filter:saturate(.7); }
-  .negative-windows { position:absolute; inset:16% 9% 14%; display:flex; justify-content:space-around; align-items:center; gap:15px; background:#ecebd994; box-shadow:inset 0 0 35px #fffbe2bc; }
+  .negative-windows { position:absolute; inset:24% 16% 29%; display:flex; justify-content:space-around; align-items:center; gap:15px; background:#f7f1dfc9; box-shadow:inset 0 0 35px #fffbe2bc; }
   .negative-reading { display:grid; gap:12px; justify-items:center; }.negative-reading > .pencil-label { font:11px Georgia,serif; }
   .negative-cutout { display:block; width:85px; height:85px; background:radial-gradient(#fffef3,#f5edcf); box-shadow:0 2px 4px #77774a33; overflow:visible; }.cut-paper { fill:#cbbd91; filter:drop-shadow(0 1px 1px #6d654b59); }.paper-edge { fill:none; stroke:#ded4b4; stroke-width:.8; }.negative-target .motif { width:32px; }
   .shadow-rails { max-width:480px; display:grid; gap:12px; margin:20px auto 0; }.shadow-row { display:flex; align-items:center; gap:12px; color:#939a82; font:12px Georgia,serif; }
@@ -81,7 +80,7 @@
   .shadow-tab.puzzle-control { position:absolute; left:calc(18px + (100% - 36px) / 3 * var(--slide)); top:0; translate:-50% 0; width:35px; height:34px; padding:0; background:#ede2c2; border-color:#b5ac8e; box-shadow:1px 3px 1px #a39a7c30; border-radius:2px 1px 5px 2px; touch-action:none; cursor:ew-resize; }
   .shadow-tab i { height:13px; width:1px; background:#b9b18f; box-shadow:4px 0 #b9b18f,-4px 0 #b9b18f; }
   @media(max-width:700px) {
-    .negative-windows { gap:6px; }.negative-reading { gap:5px; }.negative-cutout { width:48px; height:48px; }.negative-target .motif { width:21px; }.shadow-row { gap:5px; }.binding-page>span:last-child { font-size:8px; }
+    .negative-windows { gap:6px; }.negative-reading { gap:3px; }.negative-cutout { width:clamp(32px,11vw,48px); height:clamp(32px,11vw,48px); }.negative-target .motif { width:18px; }.shadow-row { gap:5px; }.binding-page>span:last-child { font-size:8px; }
     .page-illustration { height:110px; margin:20px 0 8px; }.drawer-backboard { padding:12px; }
     .optical-evidence { gap:12px; padding:12px 4px; }.optical-evidence > div { min-width:0; flex:1; }.ruler,.mirror-mark { gap:8px; font-size:13px; }.shade-mark { font-size:12px; }
     .light-console .dial-controls > .puzzle-control:not(.dial-face) { top:18%; width:18px; height:22px; padding:0; }.light-console .dial-controls > .puzzle-control:first-child { left:-22%; }.light-console .dial-controls > .puzzle-control:last-child { right:-22%; }.light-console .dial-name { font-size:9px; bottom:-10%; }

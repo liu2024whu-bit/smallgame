@@ -9,7 +9,7 @@
 | 路径 | 内容与处理 |
 | --- | --- |
 | `assets/scenes/desk.webp` | 书桌、画册、台灯、玫瑰和猫；可拾取物件独立绘制，拿走后场景不残留重复物件 |
-| `assets/scenes/window.webp` | 双面云景、联动花架、玫瑰与明信片 |
+| `assets/scenes/window.webp` | 旧云景占位已移除；新云景与花架由同源部件按实际进度放入，保留小王子、玫瑰和窗光 |
 | `assets/scenes/collection.webp` | 软木板中的带土/卡卡西画稿，书架上的魈/流浪者立牌，与柜中机械摆件；角色作为场景内物件整合绘制 |
 | `assets/scenes/entry.webp` | 门边、礼物、狗和年轮灯 |
 | `assets/scenes/rain.webp` | 雨廊、邮匣、两张明信片与分拣格纸件 |
@@ -17,7 +17,7 @@
 | `assets/illustrations/items.webp` | 12件可重复使用的工具与画页；木书签按描述的实物外观重绘，刻尺纸套是游戏虚构 |
 | `assets/illustrations/motifs.webp` | 云、星、叶、玫瑰、猫爪、月、三盆花、书、信封与花瓣 |
 | `assets/illustrations/board.webp` | 可放大机关的纸面工作台，不参与判断答案 |
-| `assets/illustrations/sky-clouds.webp` | 两组造型作为同一木纸景的正面，第三格为真实纸景背面；旧四套孤立角色图集已从运行资产删除 |
+| `assets/illustrations/sky-clouds.webp` | 旧两组收藏纸景，留待P29完整审查；不再用作P4机关、P13背板或画册的近似图 |
 | `assets/illustrations/hei2.webp` | 小黑、无限、鹿野、哪吒、小黑猫形与黑咻、师徒同行 |
 | `assets/illustrations/naruto.webp` | 带土和卡卡西的少年/后来造型 |
 | `assets/illustrations/genshin.webp` | 魈、流浪者 |
@@ -182,3 +182,9 @@ V2.3 的机关重绘、场景校正与四帧角色提示词另见 [v23-art-promp
 `press-main.webp`为机身/滑盖/抽屉，`press-parts.webp`为版片/压柄/侧书签/试纸/五枚单色印痕/夹扣；两图1536×1024，透明背景，按实际像素框取件。机身上方只裁去另一部件侵入的透明图集空间，不裁掉机身本体。试纸结果和版片路径由真实规则生成；不是画死的密码图。
 
 `desk.webp`仅清去旧明信片盒以承接相同状态的实体试印盒，尺寸保持1672×941；旧背景存于本地QA对照。概念图不进入运行背景，未选初稿不增加运行资源。书签侧姿是本作新绘，非实物照片；未读取或提交私人照片/信件。绘图提示与来源链保留在[v29-paper-prompts.json](v29-paper-prompts.json)。
+
+## P4 两面的云 · 2026-10-25
+
+新绘运行部件：`cloud-front.webp`、`cloud-back.webp`、`cloud-doors.webp`、`cloud-parts.webp`、`cloud-figures.webp`、`cloud-ledge.webp`。生成及二次修订记录见[v29-cloud-prompts.json](v29-cloud-prompts.json)。前后壳、纸环、轴、侧扇分层；拼合半图、齿轮与切线绳路是精确原生几何，源像素取框在data/cloud.js和asset-layouts.js。背壳按同一脚下锚点做0.9834的纵向配准，纸人/帽尖/穗边完整留在取框中。旧window-after.webp已随无引用遮罩移除。
+
+小纸人参照上述公开实机截图的新绘纸艺造型：高个黑脸、经典巫师帽及其自带白发；矮个矮人面具与鸣谢收藏家短发；两人均为火先知套装和蝙蝠斗篷。额头菱形与闭眼短线参照[面具图鉴中的躲猫猫面具图标](https://wiki.biligame.com/sky/面具)。先修正发梢与裤摆再入景，仍是风格再创作，不是官方纹理，也不宣称其他发型、童真面具或衣柜系统已经全部完成。未读取或上传私人照片、信件。

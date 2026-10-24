@@ -24,6 +24,11 @@ function copy(){
     const id=panel.view?.pressProof&&p.proof?'paper-proof-look':state.solved.includes('paper')?'paper-done':state.hints.paper?'paper-hints':p.proof?'paper-proof':p.opened?'paper-open':!state.collected.includes('bookmark')?'paper-unfound':'paper';
     spec=REVIEW_CASES.find(entry=>entry.id===id)??spec;
   }
+  if(panel?.type==='puzzle'&&panel.id==='cloud'){
+    const state=game.store.get(),back=panel.view?.back,front=state.progress.cloud.values.every((v,i)=>v===[1,0,0][i]);
+    const id=state.solved.includes('cloud')?'cloud-done'+(back?'-back':''):state.hints.cloud?'cloud-hints':!state.collected.includes('thread')?'cloud-unfound':front?'cloud-front-paired'+(back?'-back':''):back?'cloud-back':'cloud';
+    spec=REVIEW_CASES.find(entry=>entry.id===id)??spec;
+  }
   if(root.matches('#welcome')){const invitation=root.querySelector('.invitation');spec=REVIEW_CASES.find(entry=>invitation?entry.mode==='intro'&&entry.step===Number(invitation.dataset.step):entry.id==='opening')??spec;}
   return {id:spec.id,title:dialog?.querySelector('#dialog-title')?.textContent??spec.name,source:spec.source,text:visibleCopy(root)};
 }

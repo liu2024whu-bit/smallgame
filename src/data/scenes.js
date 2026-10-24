@@ -15,10 +15,11 @@ export const SCENES = Object.freeze([
     { id: 'cat', kind: 'pet', target: 'cat', label: '睡着的小猫', x: 9, y: 82, width: 15, height: 16 },
   ] },
   { id: 'window', title: '窗边', hotspots: [
-    puzzle('cloud', '双面云景', 29.5, 55.3, 19, 24, { revisit: 'cloudGap', revisitAfter: 'flowers' }),
+    puzzle('cloud', '双面云景', 30.9, 55.6, 22.4, 20.5, { revisit: 'cloudGap', revisitAfter: 'flowers' }),
     puzzle('flowers', '花架', 83.5, 47, 21, 38),
     inspect('window-rose', '玫瑰与玻璃罩', 'prince', 50.5, 55, 10, 23),
-    inspect('sky-figures', '我们俩', 'sky', 31, 38, 19, 12),
+    {...inspect('sky-figures', '戴巫师帽的那位', 'sky', 21.8, 56.5, 4, 8),hideAfter:'cloud'},
+    {...inspect('sky-figures-right', '矮一点的那位', 'sky', 40.2, 57.7, 4, 6),hideAfter:'cloud'},
     inspect('postcards', '书里的明信片', 'cities', 63, 64, 16, 11),
   ] },
   { id: 'collection', title: '收藏柜', hotspots: [

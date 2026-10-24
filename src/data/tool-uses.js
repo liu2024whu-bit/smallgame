@@ -16,11 +16,13 @@ export function roomToolTarget(state,spot,item) {
   return typeof target==='string'?target:target&&!state.solved.includes(target.until)?target.target:undefined;
 }
 export function toolFor(target) {
+  if(/^cloud-wind:[0-2]:-?1$/.test(target))return 'thread';
   if(target?.startsWith('flower-pin:'))return 'bookmark';
   if(target?.startsWith('birthday-fit:'))return BIRTHDAY_INPUTS[Number(target.split(':')[1])];
   return {'birthday-door':'crank','postcard-mirror':'mirror','chocolate-cover':'transparency','paper-latch':'bookmark'}[target];
 }
 export function puzzleToolUse(target) {
+  if(/^cloud-wind:[0-2]:-?1$/.test(target)){const [,index,direction]=target.split(':').map(Number);return {id:'cloud',move:{type:'turn',index,direction}};}
   if(target==='paper-latch')return {id:'paper',move:{type:'open'}};
   if(target==='chocolate-cover')return {id:'chocolate',move:{type:'cover'}};
   if(target?.startsWith('flower-pin:'))return {id:'flowers',move:{type:'set-pin',index:Number(target.split(':')[1])}};

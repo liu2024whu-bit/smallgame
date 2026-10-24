@@ -1,7 +1,8 @@
 import {renderCalendar} from './calendar.js';
 import { renderPaperBack } from './paper.js';
 import {renderPaper} from './press.js';
-import { renderCloud, renderCalibration } from './light.js';
+import { renderCalibration } from './light.js';
+import {renderCloud} from './cloud.js';
 import { renderBooks, renderScreen } from './collection.js';
 import { renderBelt } from './mechanical.js';
 import { renderFlowers } from './flowers.js';

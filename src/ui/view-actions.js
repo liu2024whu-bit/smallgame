@@ -4,6 +4,7 @@ export const afterPuzzleAction=(view={},action)=>['undo','reset'].includes(actio
 export function viewActions({ panel, render, activity,foley=()=>{} }) {
   const change = patch => { const current = panel(); current.view = { ...current.view, ...patch }; render(); };
   return {
+    'cloud-face':button=>{const back=button.dataset.back==='true';if(back!==!!panel().view?.back){change({back});foley('turn');}},
     'press-proof':button=>change({pressProof:button.dataset.open==='true'}),
     'settings-page':button=>{if(['sound','picture','save'].includes(button.dataset.id))change({section:button.dataset.id});},
     'calendar-note':button=>change({dateNote:Number(button.dataset.index)}),
@@ -16,7 +17,10 @@ export function viewActions({ panel, render, activity,foley=()=>{} }) {
     'workbench-look':()=>{
       const closeLook=!panel().view?.closeLook;change({closeLook});
       const viewport=document.querySelector('.puzzle-viewport');
-      if(closeLook&&viewport)viewport.scrollLeft=(viewport.scrollWidth-viewport.clientWidth)/2;
+      if(closeLook&&viewport){
+        const focus=panel().id==='cloud'&&!panel().view?.back ? .34:.5;
+        viewport.scrollLeft=viewport.scrollWidth*focus-viewport.clientWidth/2;
+      }
     },
     'memory-detail': button => { const focus = Number(button.dataset.index); change({ focus }); activity(`art:detail:${focus}`); },
     'memory-cinema': () => { change({ playing: !panel().view?.playing }); activity('cinema:play'); },

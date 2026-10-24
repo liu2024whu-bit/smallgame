@@ -1,0 +1,78 @@
+{
+  "version": "2.9.3",
+  "date": "2026-10-25",
+  "sourceModules": 176,
+  "tests": 172,
+  "puzzles": 26,
+  "reviewCases": 231,
+  "assetReferences": 86,
+  "uniqueRasterPaths": 78,
+  "nativeDesktop": {
+    "winderAndPaperDragging": true,
+    "signedReverse": true,
+    "doubleBackGear": true,
+    "escapeAndBlurCancel": true,
+    "threadDropAndReuse": true,
+    "frontOnlyDoesNotSolve": true,
+    "viewOutsideHistory": true,
+    "finishedViewAvailable": true,
+    "fourQuickTurnsKeep360Phase": true,
+    "catchMovingPartDoesNotJump": true
+  },
+  "nativeTouch": {
+    "dragThenThreeImmediateTapsExactlyFourMoves": true,
+    "sevenTapSolution": true,
+    "postCompletionFlip": true,
+    "reducedMotion": true
+  },
+  "route": {
+    "nativeControls": 26,
+    "birthdayDoor": true,
+    "ending": true,
+    "errors": []
+  },
+  "save": {
+    "realNamedDownload": true,
+    "freshContextReadback": true,
+    "cloud": [
+      2,
+      1,
+      3
+    ],
+    "cameraNotSerialized": true,
+    "badFilePreserved": true,
+    "cancelPreserved": true,
+    "testJsonRemoved": true
+  },
+  "backend": {
+    "pin": true,
+    "searchAndNavigation": true,
+    "realTextExport": true,
+    "formalAndBackupUnchanged": true
+  },
+  "layouts": {
+    "clear390": {
+      "cases": 231,
+      "issues": 0
+    },
+    "clear1440": {
+      "cases": 231,
+      "issues": 0
+    },
+    "clear320": {
+      "cases": 231,
+      "issues": 0
+    }
+  },
+  "movie": {
+    "seconds": 13.36,
+    "audio": "Project original window.mp3, mixed separately; not live browser capture",
+    "nativePlaybackVerified": true,
+    "reviewImagesDecoded": 15
+  },
+  "limits": [
+    "No player blind test; route success is not evidence of equivalent Rusty Lake difficulty.",
+    "New paper fan art based on public game references, not official textures. Other avatars/collections/wardrobe/character motion remain separate project work.",
+    "P13/P15 artwork compatibility updated; their full puzzle reviews remain pending."
+  ]
+}

@@ -1,19 +1,5 @@
-import { CLOUD_TARGET, CALIBRATION_TARGET, cloudReadings } from '../../puzzles/rotors.js';
-import { STAMP_MOTIFS, MOTIF_LABELS } from '../../data/assets.js';
-import { character, dial, motif, moveButton } from '../dom.js';
-import { skyFrame } from '../sky.js';
-
-export function renderCloud(progress, context) {
-  const target = CLOUD_TARGET;
-  const readings = cloudReadings(progress.values);
-  const visible = progress.back ? [2] : [0, 1];
-  return `<div class="cloud-workbench ">
-    <div class="sky-diorama ${progress.back ? 'sky-back' : ''}">${skyFrame(context.skyPair, progress.back)}${visible.map(index => `<span class="sky-stamp sky-tag tag-${index}" role="img" aria-label="${progress.back ? '背签' : index ? '右签' : '左签'}：${MOTIF_LABELS[STAMP_MOTIFS[target[index]]]}">${motif(STAMP_MOTIFS[target[index]])}</span><span class="sky-stamp sky-window window-${index}" role="img" aria-label="${progress.back ? '背窗' : `前窗${index + 1}`}：${MOTIF_LABELS[STAMP_MOTIFS[readings[index]]]}">${motif(STAMP_MOTIFS[readings[index]])}</span>`).join('')}</div>
-    <div class="cloud-view-controls"><button class="text-button" data-action="sky-pair">另一组</button>${moveButton(progress.back ? '看正面' : '看背面', { type: 'view' }, { className: 'turn-scene' })}</div>
-    <div class="dial-row">${progress.values.map((value, index) => dial(index, value, `牵引绳 ${['Ⅰ', 'Ⅱ', 'Ⅲ'][index]}`)).join('')}</div>
-    <p class="hand-note">左窗对左签，右窗对右签，背窗也有一张。</p>
-  </div>`;
-}
+import { CALIBRATION_TARGET } from '../../puzzles/rotors.js';
+import { character, dial } from '../dom.js';
 
 export function renderCalibration(progress) {
   const error = progress.values.reduce((sum,value,i) => sum + Math.abs(value - CALIBRATION_TARGET[i]),0);

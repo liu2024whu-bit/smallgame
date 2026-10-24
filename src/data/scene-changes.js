@@ -3,7 +3,6 @@
 export const SCENE_CHANGES=Object.freeze([
   {scene:'desk',puzzle:'belt',asset:'deskAfter',region:[80,50,16,18],alt:'放映机的侧板敞着，线已经绕好'},
   {scene:'desk',puzzle:'stitch',asset:'deskAfter',region:[30,48,21,14],alt:'画册已经装订好'},
-  {scene:'window',puzzle:'cloud',asset:'windowAfter',region:[18,41,23,27],alt:'云景两旁的木扇展开了'},
   {scene:'collection',puzzle:'screen',asset:'collectionAfter',region:[41,45,25,20],alt:'折屏上的画连在一起了'},
   {scene:'collection',puzzle:'maze',asset:'collectionAfter',region:[64,47,10,20],alt:'迷宫盒的盖子打开了'},
   {scene:'collection',puzzle:'melody',asset:'collectionAfter',region:[74,47,11,19],alt:'音乐盒打开了，音钉停在曲谱的高低上'},

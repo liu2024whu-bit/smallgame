@@ -1,12 +1,13 @@
+import {cloudCase} from './cloud.js';
 import { character, escape, motif, moveButton, shiftControls } from '../dom.js';
 import { BINDING_HOLES as HOLES } from '../../data/mechanism-layouts.js';
 import { PAGE_MARKS } from '../../puzzles/album.js';
 
-const PAGE_ART = [['princeHei', 0, 2, 2, '小王子'], ['skyClouds', 0, 1, 3, '光遇'], ['memoryNaruto', 0, 1, 1, '带土与卡卡西的画稿'], ['cinema', 0, 1, 1, '石桥上的小黑与伙伴']];
+const PAGE_ART = [['princeHei', 0, 2, 2, '小王子'], null, ['memoryNaruto', 0, 1, 1, '带土与卡卡西的画稿'], ['cinema', 0, 1, 1, '石桥上的小黑与伙伴']];
 const PAGE_WORDS = ['玫瑰', '云', '画稿', '石桥'];
 
-export function renderAlbum(progress) {
-  return `<div class="album-workbench"><div class="album-layout">${progress.order.map((page, index) => `<div class="loose-page ${progress.faces[page] ? 'page-back' : ''}"><span class="page-letter">${String.fromCharCode(65 + page)}</span><span class="page-mark">${motif(PAGE_MARKS[page])}</span>${moveButton(`<span class="page-illustration">${character(...PAGE_ART[page])}</span><small>${progress.faces[page] ? '背' : '正'}</small>`, {type:'flip',index:page}, {key:`album-face-${page}`,className:'page-face'}).replace('<button ',`<button aria-label="翻动画页${String.fromCharCode(65+page)}，${escape(PAGE_WORDS[page])}" `)}${shiftControls(index, 4)}</div>`).join('')}</div><p class="input-note">画页能换位，也能翻面。</p></div>`;
+export function renderAlbum(progress,{state}) {
+  return `<div class="album-workbench"><div class="album-layout">${progress.order.map((page, index) => `<div class="loose-page ${progress.faces[page] ? 'page-back' : ''}"><span class="page-letter">${String.fromCharCode(65 + page)}</span><span class="page-mark">${motif(PAGE_MARKS[page])}</span>${moveButton(`<span class="page-illustration">${page===1?`<span class="album-cloud">${cloudCase(state.progress.cloud,{done:state.solved.includes('cloud'),miniature:true})}</span>`:character(...PAGE_ART[page])}</span><small>${progress.faces[page] ? '背' : '正'}</small>`, {type:'flip',index:page}, {key:`album-face-${page}`,className:'page-face'}).replace('<button ',`<button aria-label="翻动画页${String.fromCharCode(65+page)}，${escape(PAGE_WORDS[page])}" `)}${shiftControls(index, 4)}</div>`).join('')}</div><p class="input-note">画页能换位，也能翻面。</p></div>`;
 }
 
 export function renderStitch(progress) {

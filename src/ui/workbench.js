@@ -24,7 +24,7 @@ const WAITING = {
   birthdayLock:'纸带还压着匣盖呢。',
 };
 
-const CLOSE_LOOK = new Set(['paper','calibration','postbox','wordlock','belt','flowers','chocolate','stitch','maze','melody','sweets','ribbons','birthdayLock','calendar']);
+const CLOSE_LOOK = new Set(['paper','cloud','calibration','postbox','wordlock','belt','flowers','chocolate','stitch','maze','melody','sweets','ribbons','birthdayLock','calendar']);
 
 export function puzzlePanel(id, context) {
   const { state, view = {} } = context;

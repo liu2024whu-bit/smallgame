@@ -1,7 +1,12 @@
 import { SWEET_CROP, BOX_CROP, OPEN_BOX_CROP } from './birthday-workshop.js';
 import {PRESS_MAIN,PRESS_PARTS} from './press.js';
+import {CLOUD_BODY,CLOUD_DOORS} from './cloud.js';
 // Source-pixel frames follow the actual edges of each illustration.
 export const ASSET_LAYOUTS = Object.freeze({
+  cloudFront:CLOUD_BODY,cloudBack:CLOUD_BODY,cloudDoors:CLOUD_DOORS,
+  cloudParts:{width:1536,height:1024,frames:[[105,0,620,590],[840,0,600,590],[601,621,335,338]]},
+  cloudFigures:{width:1536,height:1024,frames:[[122,0,688,1024],[810,327,570,697]]},
+  cloudLedge:{width:1536,height:1024},
   pressMain:PRESS_MAIN,
   pressParts:PRESS_PARTS,
   invitation:{width:1536,height:1024,frames:[[12,82,766,408],[789,76,727,414],[28,593,772,301],[857,503,618,448]]},
@@ -33,7 +38,6 @@ export const ASSET_LAYOUTS = Object.freeze({
   balanceScale:{width:1254,height:1254},
   bindingBook:{width:1536,height:1024},
   deskAfter:{width:1672,height:941},
-  windowAfter:{width:1672,height:941},
   collectionAfter:{width:1672,height:941},
   entryAfter:{width:1672,height:941},
   rainAfter:{width:1672,height:941},

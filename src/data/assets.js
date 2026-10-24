@@ -9,6 +9,12 @@ export const SCENE_ART = Object.freeze({
   party:'assets/scenes/party.webp',
 });
 export const ASSETS = Object.freeze({
+  cloudFront:'assets/illustrations/cloud-front.webp',
+  cloudBack:'assets/illustrations/cloud-back.webp',
+  cloudDoors:'assets/illustrations/cloud-doors.webp',
+  cloudParts:'assets/illustrations/cloud-parts.webp',
+  cloudFigures:'assets/illustrations/cloud-figures.webp',
+  cloudLedge:'assets/illustrations/cloud-ledge.webp',
   pressMain:'assets/illustrations/press-main.webp',
   pressParts:'assets/illustrations/press-parts.webp',
   invitation:'assets/illustrations/invitation.webp',
@@ -34,7 +40,6 @@ export const ASSETS = Object.freeze({
   balanceScale:'assets/illustrations/balance-scale.webp',
   bindingBook:'assets/illustrations/binding-book.webp',
   deskAfter:'assets/scenes/desk-after.webp',
-  windowAfter:'assets/scenes/window-after.webp',
   collectionAfter:'assets/scenes/collection-after.webp',
   entryAfter:'assets/scenes/entry-after.webp',
   rainAfter:'assets/scenes/rain-after.webp',
