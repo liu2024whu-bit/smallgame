@@ -41,7 +41,7 @@ async function load(id,{instant=false,clearText=false,sound=false,reduced=false}
   await frame();return copy();
 }
 window.reviewAPI={load,copy,playback:()=>game.audio.music.snapshot(),cases:REVIEW_CASES,snapshot:()=>game.store.get()};
-let copyTimer;
-function publishCopy(){window.parent.postMessage({type:'smallgame-review',...copy()},location.origin);}
-new MutationObserver(()=>{publishCopy();clearTimeout(copyTimer);copyTimer=setTimeout(publishCopy,380);}).observe(document.querySelector('#app'),{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['class','hidden']});
+let copyTimer,lastCopy='';
+function publishCopy(){const data=copy(),signature=JSON.stringify(data);if(signature===lastCopy)return;lastCopy=signature;window.parent.postMessage({type:'smallgame-review',...data},location.origin);}
+new MutationObserver(()=>{publishCopy();clearTimeout(copyTimer);copyTimer=setTimeout(publishCopy,380);}).observe(document.querySelector('#app'),{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['class','hidden','open']});
 window.parent.postMessage({type:'smallgame-review-ready'},location.origin);

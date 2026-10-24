@@ -24,7 +24,7 @@ export function createAudio({advance,library}={}) {
   }
   function duck(value){ducked=value;levels();}
 
-  async function resume() {
+  async function resume({music:startMusic=true}={}) {
     if (!context) {
       const Audio = window.AudioContext || window.webkitAudioContext;
       if (!Audio) return;
@@ -34,7 +34,7 @@ export function createAudio({advance,library}={}) {
       configure(settings);
     }
     if (context.state === 'suspended') await context.resume().catch(() => {});
-    levels();music.engage();
+    levels();if(startMusic)music.engage();else music.refresh();
   }
 
   function tone(frequency, duration = 0.25, volume = 0.18, delay = 0, type = 'sine') {

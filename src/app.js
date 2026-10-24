@@ -24,7 +24,8 @@ import { bindInventoryUse } from './ui/interactions/inventory.js';
 import { createWelcome } from './services/welcome-flow.js';
 import { bindSaveTransfer } from './services/save-transfer.js';
 import { bindMusicControls } from './ui/music-controls.js';
-import { bindMusicProgress } from './ui/music.js';
+import {bindMusicView} from './ui/music-view.js';
+import {updateMusicView} from './ui/music.js';
 import { audioOnlyUpdate } from './core/presentation-updates.js';
 
 export function mountGame({storage,library}={}) {
@@ -41,7 +42,7 @@ let fittingHandle=false,completionTimer;
 const preloadedScenes = new Set();
 const settleMotion=watchMotionPreferences(app);
 const welcome=createWelcome(document.querySelector('#welcome'),{getState:()=>store.get(),onReveal:()=>{document.querySelector('.game-shell').hidden=false;},onEnter:()=>{ui.home=false;if(!store.get().begun)store.dispatch({type:'start'});else render(store.get());document.querySelector('.wordmark')?.focus({preventScroll:true});}});
-const engageAudio=()=>audio.resume().catch(()=>{});
+const engageAudio=event=>audio.resume({music:!event.target.closest('.music-dialog,.settings-dialog,[data-action="music"],[data-action="settings"],[data-action="sound"]')}).catch(()=>{});
 app.addEventListener('pointerdown',engageAudio,{capture:true});app.addEventListener('keydown',engageAudio,{capture:true});
 const transfers=bindSaveTransfer(document.querySelector('#save-file'),{store,loaded:()=>showWelcome(),toast,refresh:()=>{if(ui.panel?.type==='settings')renderDialog();},remember:storage?null:{getItem:key=>window.sessionStorage.getItem(key),setItem:(key,value)=>window.sessionStorage.setItem(key,value)}});
 const companions=createCompanions({panel:()=>ui.panel,activity,audio,toast});
@@ -71,7 +72,7 @@ function renderDialog(preserveFocus = true, restore = null) {
   const state = store.get(), id = ui.panel.type === 'puzzle' ? ui.panel.id : null;
   disposeInteractions = bindInteractions(dialog.element, { id, progress: state.progress[id], solved: state.solved.includes(id), move: performMove, activity, feedback:kind=>audio.foley(kind), changeView: patch => { ui.panel.view = {...ui.panel.view,...patch}; renderDialog(); } });
   const unbindPuzzle=disposeInteractions,unbindPet=companions.bind(dialog.element);disposeInteractions=()=>{unbindPuzzle();unbindPet();};
-  disposeMusic=bindMusicProgress(dialog.element,audio.music);
+  disposeMusic=bindMusicView(dialog.element,audio.music,{getContext:context,feedback:()=>audio.foley('detent')});
 }
 function render(state,previous=null) {
   const signature = `${state.scene}:${state.collected.join()}:${sceneChanges(state).map(change=>change.puzzle??change.activity).join()}:${state.scene==='window'?JSON.stringify(state.progress.flowers):''}:${state.solved.includes('flowers')}:${state.solved.includes('calendar')}:${state.ending}:${state.scene==='party'?JSON.stringify([state.progress.sweets,state.progress.ribbons,state.progress.birthdayLock]):''}`;
@@ -98,7 +99,7 @@ function render(state,previous=null) {
   audio.configure(state.settings);
   const audioOnly=audioOnlyUpdate(previous,state);
   const visibleSettingsChanged=ui.panel?.type==='settings'&&['sound','music','volume','musicVolume','effectsVolume'].some(key=>previous?.settings[key]!==state.settings[key]);
-  if(!audioOnly||ui.panel?.type==='music'||visibleSettingsChanged)renderDialog();
+  if(audioOnly&&ui.panel?.type==='music')updateMusicView(dialog.element,context());else if(!audioOnly||visibleSettingsChanged)renderDialog();
   preloadScenes(state);
 }
 function openPanel(panel, push = true) {
@@ -230,7 +231,7 @@ app.addEventListener('click', async event => {
   if (Date.now() < Math.max(Number(dialog.element.dataset.suppressUntil ?? 0),Number(app.dataset.suppressUntil??0))) { event.preventDefault(); return; }
   const button = event.target.closest('button');
   if (!button || button.disabled) return;
-  await audio.resume();
+  await engageAudio(event);
   if(store.get().selected&&button.dataset.toolTarget&&button.dataset.action!=='use-direct'){useTool(store.get().selected,button.dataset.toolTarget);return;}
   if (button.dataset.pmove && ui.panel?.type === 'puzzle') {
     try {
@@ -245,6 +246,7 @@ app.addEventListener('change', event => {
   if (event.target.dataset.setting) {
     const input = event.target;
     setting(input.dataset.setting, input.type === 'checkbox' ? input.checked : Number(input.value));
+    if(input.checked&&['sound','music'].includes(input.dataset.setting))audio.music.engage();
   }
 });
 app.addEventListener('input',event=>{
@@ -280,7 +282,7 @@ function preloadScenes(state) {
   }
 }
 render(store.get());
-audio.music.subscribe(()=>{if(ui.panel?.type==='music')renderDialog();});
+
 bindInventoryUse(app,{scene:()=>store.get().scene,owns:id=>inventory(store.get()).includes(id),use:useTool});
 if (store.notice) toast(store.notice);
 

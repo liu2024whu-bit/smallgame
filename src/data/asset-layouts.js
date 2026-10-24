@@ -1,6 +1,7 @@
 import { SWEET_CROP, BOX_CROP, OPEN_BOX_CROP } from './birthday-workshop.js';
 // Source-pixel frames follow the actual edges of each illustration.
 export const ASSET_LAYOUTS = Object.freeze({
+  turntable:{width:1536,height:1024,frames:[[32,150,952,775],[1007,50,520,520],[1032,581,470,384]]},
   campusMarks:{width:1536,height:1024,frames:[[55,228,668,620],[760,221,752,615]]},
   gardenBody:{width:1536,height:1024,frames:[[0,0,1536,1024]]},
   gardenBookmark:{width:1254,height:1254,frames:[[64,341,1158,774]]},

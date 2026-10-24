@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>唱片架 · 三版对照</title>
+<style>
+*{box-sizing:border-box}body{margin:0;color:#53634d;background:#f6f3e9;font:15px/1.9 "Microsoft YaHei","PingFang SC",sans-serif}main{max-width:1320px;margin:auto;padding:34px 5vw 64px}header{display:flex;align-items:center;justify-content:space-between;gap:20px}h1,h2{font-family:KaiTi,serif;font-weight:400}h1{font-size:32px;margin:0}header p{font:11px Georgia,serif;letter-spacing:.12em;color:#8d957c;margin:0}a{color:inherit;text-underline-offset:5px}header a{font-size:13px}.lead{font-size:14px;color:#758068;max-width:55em;margin:24px 0}nav{display:flex;flex-wrap:wrap;gap:10px}button{font:inherit;color:inherit;border:1px solid #cbd1bb;border-radius:3px 7px 4px 3px;background:#fffdf5;padding:7px 17px;cursor:pointer}button:focus-visible,a:focus-visible{outline:2px solid #8da078;outline-offset:4px}button[aria-selected=true]{background:#e8eddc;border-color:#9baa87}.viewer{display:grid;grid-template-columns:minmax(0,1fr) 230px;gap:28px;align-items:start;margin:22px 0}.picture{display:block;width:100%;padding:0;overflow:hidden;line-height:0;cursor:zoom-in}.picture img{width:100%;display:block;height:auto}.notes h2{font-size:24px;line-height:1.6;margin:5px 0 15px}.notes p{font-size:13px;color:#758169}.checks{display:flex;gap:15px 25px;flex-wrap:wrap;border-block:1px solid #d5d9c7;padding:14px 0;font-size:12px;color:#859176}.film{margin-top:34px}.film h2{font-size:25px}.film video{display:block;width:min(100%,1100px);background:#ecebdc;border:1px solid #d2d8c3;border-radius:4px}.film p,footer{font-size:12px;color:#858d79;max-width:62em}footer{margin-top:36px;border-top:1px solid #d5dac7;padding-top:20px}dialog{width:min(95vw,1600px);max-height:94vh;padding:8px;border:1px solid #b7c3a7;background:#fffdf5}dialog img{display:block;max-width:100%;max-height:87vh;margin:auto}dialog button{position:absolute;right:15px;top:15px}dialog::backdrop{background:#34432caa}@media(max-width:850px){.viewer{grid-template-columns:1fr}.notes h2{margin-top:0}.notes p{margin-bottom:8px}header{display:block}header>a{display:inline-block;margin-top:15px}main{padding:24px 17px 45px}h1{font-size:28px}}
+</style>
+<main><header><div><p>BEFORE THE TWENTIETH ORBIT</p><h1>唱片架 · 三版对照</h1></div><a href="../../admin.html?page=music">实际试玩 ↗</a></header>
+<p class="lead">先把声音接稳，再让动作与画面对应。这里留着实际运行过的三版截图，点图可放大；当前版本可以进入后台操作，密码20261029。</p>
+<nav role="tablist" aria-label="版本"><button role="tab" data-version="0">旧版</button><button role="tab" data-version="1">第一轮画面</button><button role="tab" data-version="2">第二轮 · 当前</button></nav>
+<section class="viewer"><button class="picture" aria-label="放大画面"><img id="picture" alt=""></button><aside class="notes"><h2 id="title"></h2><p id="change"></p><p id="reason"></p></aside></section>
+<div class="checks"><span>11首逐一实播</span><span>失败保留原曲</span><span>拖转与原生寻位</span><span>暂停优先于晚到的导入</span><span>生日歌回到原位置</span></div>
+<section class="film"><h2>唱针轻轻落下。</h2><video controls preload="metadata" src="playthrough.mp4" poster="v2.webp"></video><p>实际鼠标操作：播放、拖转、换曲、暂停和翻看录音版本。录像另配项目原创《窗边》，不包含歌单的商业录音，也不冒充浏览器实时混音。</p><a href="playthrough.mp4" download>保存操作演示</a></section>
+<footer>这轮完成的是唱片架和播放会话。其他场景与机关会按总审查清单继续逐项制作，当前对照不代表整体已完成。<a href="../../docs/v29-music-review.md">查看本轮验证记录</a></footer>
+<dialog id="zoom"><img alt="放大的唱片架"><button>收起</button></dialog></main>
+<script>
+const versions=[
+ {title:'歌选好了，声音还没接稳。',change:'旧版单曲结束没有重新开声；切换失败还会停掉原曲。曲目与进度更新重画列表，操作容易被打断。',reason:'先保留旧曲到新曲真的响起，再把加载、失败、重试与暂停的关系理顺。'},
+ {title:'先让唱片机动起来。',change:'机身、唱片、唱臂分开绘制，可以直接抓住唱片转动；播放状态变了，手里的物件还留在原处。',reason:'实测画面占得太满，选歌需要长滚动。手机窄屏也需要重新安排。'},
+ {title:'唱片在左边，想听的在手边。',change:'桌面分为唱片和曲目两处，手机自然往下接。拖转抬手才听到新位置，取消不会跳走，换歌失败继续听原曲。',reason:'11首实际播放、本地音频替换和刷新、单曲循环、生日歌回切均已核对。减少动态时停住旋转，播放照常。'}
+];let selected=2;const picture=document.querySelector('#picture'),zoom=document.querySelector('#zoom');
+function render(){document.querySelectorAll('[data-version]').forEach(b=>{const on=Number(b.dataset.version)===selected;b.setAttribute('aria-selected',on);b.tabIndex=on?0:-1;});picture.src='v'+selected+'.webp';picture.alt=versions[selected].title;for(const key of ['title','change','reason'])document.querySelector('#'+key).textContent=versions[selected][key];}
+document.querySelectorAll('[data-version]').forEach(b=>b.onclick=()=>{selected=Number(b.dataset.version);render();});
+document.querySelector('nav').onkeydown=e=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();selected=e.key==='Home'?0:e.key==='End'?2:(selected+(e.key==='ArrowRight'?1:2))%3;render();document.querySelector('[data-version="'+selected+'"]').focus();};
+document.querySelector('.picture').onclick=()=>{zoom.querySelector('img').src=picture.src;zoom.showModal();};zoom.querySelector('button').onclick=()=>zoom.close();render();
+</script></html>

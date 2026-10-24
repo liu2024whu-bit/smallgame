@@ -22,6 +22,8 @@ export const REVIEW_CASES=[
   {id:'ending-last',name:'下一页',group:'故事',full:true,panel:{type:'ending',view:{lastPage:true}},source:'src/ui/ending.js'},
   {id:'encore',name:'彩蛋',group:'故事',full:true,panel:{type:'encore',view:{wind:360,letter:true}},source:'src/ui/achievements.js'},
   ...['rooms','settings','music','about','how-to','flowers','reading','interests'].map(type=>({id:type==='flowers'?'flower-book':type,name:({rooms:'小屋导航',settings:'设置',music:'唱片',about:'这间小屋','how-to':'怎么玩',flowers:'花',reading:'书与电影',interests:'平时'})[type],group:'其他页面',full:true,panel:{type},source:'src/ui/'+({rooms:'navigation',about:'welcome','how-to':'panels',flowers:'notebook',reading:'notebook',interests:'notebook'}[type]??type)+'.js'})),
+  {id:'music-songs',name:'想一起听的',group:'唱片的另一面',full:true,panel:{type:'music',view:{musicShelf:'songs'}},source:'src/ui/music.js · src/data/music.js'},
+  {id:'music-original',name:'无人知晓 · 录音选择',group:'唱片的另一面',full:true,panel:{type:'music',view:{musicShelf:'songs'}},click:'[data-track-row="unknown"] summary',source:'src/ui/music.js · src/data/music.js'},
   ...[0,1].map(id=>({id:'campus-'+id,name:id?'南京大学':'武汉大学',group:'其他页面',full:true,panel:{type:'campus',id},source:'src/ui/campus.js'})),
 
   ...KEEPSAKES.map(k=>({id:'keepsake-'+k.id,name:k.name,group:'收集物近景',full:true,panel:{type:'keepsake',id:k.id},source:'src/ui/notebook.js · src/data/keepsakes.js'})),

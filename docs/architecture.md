@@ -1,4 +1,4 @@
-# 当前结构 · V2.8
+# 当前结构 · V2.9 P1
 
 ```text
 index.html / src/main.js        正式入口；只挂载真实游戏
@@ -28,7 +28,8 @@ src/services/room-transition.js 新画解码后的局部绘画交叠
 src/services/motion/           材料、机械、纸面与物件的测量过渡
 src/services/music-player.js   可取消播放会话、顺序、寻位、生日插曲
 src/services/media-deck.js     统一原生Audio、Blob、公开播放源适配
-src/services/deck-fade.js      音量交叠的唯一拥有者与清理
+src/services/music-decks.js    当前/退场声部寿命、交叠与短时失败恢复
+src/services/deck-fade.js      每个声部音量曲线与中断清理
 src/services/music-library.js  独立本地音源数据库及会话降级
 src/services/audio.js          物件声、试听、混音与音乐配置
 src/services/foley.js          原创材料音色、静音与短促节流
@@ -39,7 +40,7 @@ src/admin.js                   防误入门槛与会话解锁
 src/services/review-access.js  PIN摘要验证；不冒充服务端认证
 src/demo.js                    后台查询、跳转、尺寸切换、文字导出
 review-frame.html             复用真实游戏的隔离演示框
-src/demo/catalog.js            218个页面状态的唯一目录
+src/demo/catalog.js            220个页面状态的唯一目录
 src/demo/fixtures.js           经真实规则重建可操作演示状态
 src/demo/walkthrough.js        验证走法，测试复用；正式入口不导入
 src/demo/visible-copy.js       读取实际可见文字，不另写一套文案
@@ -93,11 +94,11 @@ tools/render-audio.py          开发时生成原创琴声和公版生日旋律�
 
 ## 音乐
 
-所有本地录音、Blob与官方公开源共用原生Audio适配，避免跨域WebAudio图导致在线音源无声。`music-player` 持有加载序号、AbortController、当前与淡出声部；过期结果立即释放，寻位／切歌／离页清理媒体、计时器和对象URL。
+所有本地录音、Blob与官方公开源共用原生Audio适配，避免跨域WebAudio图导致在线音源无声。`music-player` 持有加载序号、意图、源版本、AbortController和失败会话；music-decks管理当前与淡出声部。过期结果立即释放，寻位／切歌／离页清理媒体、计时器和对象URL。播放启动、metadata、seek与卡流有可取消期限。新曲真实可播放才交接，失败恢复旧曲；普通解谜操作不重试已经失败的源。
 
-`deck-fade` 单独拥有音量变化，平滑交叠可中断。物件声仍经WebAudio；首次指针或键盘操作解锁，页面载入不提前出声。花架与图章音色由foley独立负责，不写进规则；试听压低背景音乐。切后台暂停，回来按偏好恢复。播放进度定时更新原控件，纯音频偏好不会重建正在拖动的谜题DOM。
+`deck-fade` 单独拥有音量变化，平滑交叠可中断。物件声仍经WebAudio；首次指针或键盘操作解锁，页面载入不提前出声。花架与图章音色由foley独立负责，不写进规则；试听压低背景音乐。切后台暂停，回来按偏好恢复。music-view局部更新唱片、唱臂与进度，纯音频偏好不会重建正在拖动的谜题或唱片DOM。唱片角度是表现状态，实际寻位只在释放时提交，取消不改变音频位置。
 
-许愿的生日歌属于临时插曲，不改用户选择的曲目；播放完恢复前一首的实际位置。静音、音乐关闭、后台和插曲失败均有回退。五份本地音频可直接听，五个官方在线源已准备；《无人知晓》仅保留平台入口与本地覆盖，不绕过权限。
+许愿的生日歌属于临时插曲，不改用户选择的曲目；播放完恢复前一首的实际位置。静音、音乐关闭、后台和插曲失败均有回退。五份本地音频可直接听，六个公开在线版本已准备；《无人知晓》播放明确标注的Fayeii翻唱版，并另留田馥甄原唱入口。不绕过平台权限。同一ID换录音也会更新源版本。
 
 本地文件存于独立 `smallgame-audio / tracks` IndexedDB；持久写失败可在本次会话使用并说明，不上传、不随存档导出。删除本地覆盖后仍保留原在线源；失败不谎报成功。服务器支持206/416及后缀字节范围，原生Audio可真实寻位。
 

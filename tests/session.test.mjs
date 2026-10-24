@@ -96,7 +96,7 @@ function playerHarness(overrides={}){
   };
   let player,settings={...createState().settings};
   const {media:custom,...rest}=overrides;
-  player=createMusicPlayer({context:()=>context,library,document:doc,advance:id=>set({musicTrack:id}),...rest,media});
+  player=createMusicPlayer({context:()=>context,library,document:doc,advance:id=>{if(id!==settings.musicTrack)set({musicTrack:id});},...rest,media});
   const set=patch=>{settings={...settings,...patch};player.configure(settings);};
   set({});return {player,voices,doc,set};
 }
@@ -136,10 +136,10 @@ test('pause while a different recording is loading never borrows the previous so
   const late={time:0,duration:10,stop(){this.stopped=true;}};release(late);await settle();assert.equal(late.stopped,true);assert.equal(h.player.snapshot().playing,false);await h.player.dispose();
 });
 
-test('failed media and rejected imports do not claim playback or retain an invalid recording',async()=>{
+test('a failed switch preserves the previous recording, and rejected imports are not retained',async()=>{
   let put=0;
   const h=playerHarness({media:async()=>{throw new Error('Unreadable media');},probe:async()=>{throw new Error('Invalid audio');},library:{list:async()=>[],get:async()=>new Blob([1]),put:async()=>{put++;},close:async()=>{}}});
-  await h.player.engage();h.set({musicTrack:'encounter'});await settle();assert.equal(h.player.snapshot().status,'error');assert.equal(h.player.snapshot().playing,false);
+  await h.player.engage();h.set({musicTrack:'encounter'});await settle();assert.equal(h.player.snapshot().status,'playing');assert.equal(h.player.snapshot().id,'window');assert.equal(h.voices[0].stopped,false);assert.ok(h.player.snapshot().notice);
   await assert.rejects(h.player.add('encounter',new File([1],'broken.wav',{type:'audio/wav'})));assert.equal(put,0);
   assert.equal(h.player.snapshot().imported.includes('encounter'),false);await h.player.dispose();
 });

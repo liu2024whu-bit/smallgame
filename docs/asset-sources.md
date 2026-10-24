@@ -71,7 +71,7 @@ V1中的三张既有WebP在仓库历史中已经截断，无法正常解码；V2
 
 ## 动效实现依据
 
-核对了 [Motion](https://github.com/motiondivision/motion) 与 [Anime.js](https://github.com/juliangarnier/anime) 的项目说明。当前位移、旋转、描线与减少动态效果可用浏览器原生动画接口完成，因此未引入额外运行库或克隆依赖。只动画实际被操作的对象，省去常驻粒子、全屏发光与持续漂浮。开源库目录没有新增安装。
+核对了 [Motion](https://github.com/motiondivision/motion) 与 [Anime.js](https://github.com/juliangarnier/anime) 的项目说明。V2.8的位移、旋转、描线与减少动态效果使用浏览器原生动画接口，没有引入运行库。V2.9按用户指定目录下载Anime.js作开发工具，采样唱臂轻微落定曲线；发布内容仍只使用原生CSS/RAF，详见下文固定版本及许可。只动画实际被操作的对象，省去常驻粒子、全屏发光与持续漂浮。
 
 ## V2.2校园核对边界
 
@@ -158,3 +158,13 @@ V2.3 的机关重绘、场景校正与四帧角色提示词另见 [v23-art-promp
 《等你的季节》标为另备的作曲者现场版，不冒充《季风2》现场剪辑。[田馥甄《无人知晓》](https://music.163.com/song?id=1481929839)保留官方入口；没有可用完整公开外链，没有下载或绕过账号／付费限制。平台曲目可使用仅存当前设备的本地覆盖，音频不进存档导出。
 
 `review/flowers/playthrough.mp4`约18秒，为真实鼠标操作录像，配本项目原创《窗边》。录像不含指定商业歌曲，也未宣称录下浏览器原生音效，音色小样单独提供。
+
+## V2.9 P1：唱片机与缺曲
+
+`illustrations/turntable.webp`是三个完整透明部件：木质机身、独立唱片和唱臂。只参考项目既有musicbox.webp与desk.webp的细线、暖木和纸色；不引用私人原照或信件。生成后精确去掉机身原先重复的唱臂座，独立唱臂覆盖一个小定位点。完整提示词见[v29-art-prompts.json](v29-art-prompts.json)。Pillow仅编码和检查边界，文字与20标记由HTML排版。
+
+《无人知晓》新增可公开播放的[Fayeii翻唱版](https://music.163.com/song?id=1878024509)，实际录音时长278.711746秒，2026-10-25在原生播放器中实播核对。界面明确标注翻唱，另留[田馥甄原唱入口](https://music.163.com/song?id=1481929839)。不冒充剧本的现场剪辑；录音没有下载或随游戏分发。其他五个在线版本不变，仍直接使用平台公开媒体入口。
+
+动画开发工具采用[Anime.js v4.5.0](https://github.com/juliangarnier/anime/releases/tag/v4.5.0)，固定提交`2c9cf8ea00329f6768c7d7902252ed977d75ce42`，许可MIT。用户指定的本地目录为`E:\github\github\animejs`；发布代码不依赖该绝对路径。`tools/sample-motion.mjs`从该工具的spring ESM采样41点，写成CSS原生linear()缓动，参数bounce0.08、duration430。不支持linear()时使用普通cubic-bezier，减少动态时跳过。没有把完整动画库塞进游戏。
+
+工具许可原文随[animejs-license.txt](animejs-license.txt)保留。对照录像只配项目原创琴声，不录入六首商业歌曲。

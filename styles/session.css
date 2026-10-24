@@ -28,39 +28,8 @@
   .restart-link { display:block; margin:18px 0 0; color:#8e7564; font-size:13px; }
   .settings-footer { display:flex; align-items:center; justify-content:space-between; gap:15px; font-size:13px; padding-bottom:5px; }
   .settings-footer .icon { width:15px; height:15px; margin-right:6px; }
-  .music-dialog { max-width:730px !important; }
-  .music-room { padding:6px 9px 3px; }
-  .music-now { display:grid; grid-template-columns:146px 1fr; align-items:center; gap:31px; margin-bottom:16px; }
-  .music-platter { position:relative; width:146px; aspect-ratio:1; border:1px solid #b7bea3; border-radius:50%; display:grid; place-items:center; background:#e3e4d5; box-shadow:inset 0 0 0 5px #f4f1e4,0 3px 9px #7c80611c; }
-  .music-platter::before { content:''; position:absolute; inset:11px; border-radius:50%; background:repeating-radial-gradient(circle,#c6ceba 0 1px,#d9ddcb 2px 4px); box-shadow:inset 2px 1px 10px #6a785522; animation:record-turn 26s linear infinite paused; }
-  .music-platter.spinning::before { animation-play-state:running; }
-  .music-platter>.icon { z-index:1; width:47px; height:47px; padding:9px; border:1px solid #b2b895; border-radius:50%; color:#8e8559; background:#f8f2dc; }
-  .music-platter>span { position:absolute; right:0; bottom:1px; width:37px; height:37px; display:grid; place-items:center; color:#64765a; background:#fcfaf0; border:1px solid #c1c9b1; border-radius:50%; }
-  .music-platter>span .icon { width:17px; height:17px; }
-  @keyframes record-turn { to { transform:rotate(1turn); } }
-  .reduce-motion .music-platter::before { animation:none; }
-  @media (prefers-reduced-motion:reduce) { .music-platter::before { animation:none; } }
-  .music-caption { min-width:0; }.music-caption .eyebrow { margin:0 0 8px; font-size:9px; }
-  .music-caption h3 { font-size:27px; color:#56715c; }.music-by { font-size:13px; color:#6d7862; margin:5px 0 0; }
-  .music-status { font-size:13px; color:#6b765f; margin:15px 0 0; line-height:1.8; text-wrap:pretty; }
-  .music-timeline { display:grid; grid-template-columns:34px 1fr 34px 34px; align-items:center; gap:9px; }
-  .music-timeline>span { font:11px Georgia,serif; color:#707b64; }.music-timeline input:disabled { opacity:.4; }
-  .music-timeline button { width:34px; height:40px; }.music-timeline .icon { width:17px; height:17px; }
-  .music-order { display:flex; justify-content:space-between; align-items:center; gap:15px; margin:6px 0 22px; font-size:12px; }
-  .music-order .icon { width:15px; height:15px; margin-right:5px; }
-  .music-section-title { color:#6a795d; font-size:13px; font-weight:400; letter-spacing:.05em; margin:22px 0 9px; }
-  .music-tracks { list-style:none; margin:0; padding:0; border-top:1px solid #d9ddcc; }
-  .music-track { display:flex; align-items:center; border-bottom:1px solid #e2e2d5; min-width:0; }
-  .track-pick { flex:1; display:flex; align-items:center; gap:13px; width:100%; min-width:0; padding:12px 7px; text-align:left; }
-  .track-pick>span:nth-child(2) { min-width:0; }.track-pick b { display:block; color:#526b53; font-weight:400; font-size:16px; }
-  .track-pick small { display:block; color:#75806b; font-size:11px; margin-top:1px; line-height:1.7; }.track-pick em { margin-left:auto; font-style:normal; font-size:11px; color:#728264; white-space:nowrap; }
-  .track-mark { width:28px; height:28px; display:grid; place-items:center; flex:0 0 28px; }.track-mark .icon { width:16px; height:16px; color:#7d8c70; }
-  .track-pick:hover,.current-track { background:#e8ecdf82; }.track-remove { flex:0 0 36px; width:36px; height:40px; }.track-remove .icon { width:16px; height:16px; }
-  .music-local-note { color:#717c66; font-size:12px; line-height:1.9; margin:20px 0 3px; }
-  @media (max-width:700px) {
-    .settings-controls { padding:0 4px; }.music-room { padding:3px 2px; }
-    .music-now { grid-template-columns:112px 1fr; gap:21px; }.music-platter { width:112px; }.music-platter>span { width:32px; height:32px; }
-    .music-caption h3 { font-size:24px; }.music-status { margin-top:9px; font-size:12px; }.sound-levels { gap:20px; }
+  @media(max-width:700px) {
+    .settings-controls { padding:0 4px; }.sound-levels { gap:20px; }
     .settings-controls fieldset { margin-bottom:21px; padding-bottom:21px; }.setting-toggle { font-size:15px; }
   }
 }

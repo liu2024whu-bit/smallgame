@@ -25,20 +25,11 @@
   .ending-last-page>span { grid-area:1/1; transition:opacity .35s,translate .35s; align-self:center; }.ending-page-back { opacity:0; translate:0 5px; }.ending-page-back>small { display:block; font-size:12px; margin-top:4px; }
   .page-turned .ending-page-front { opacity:0; translate:0 -5px; }.page-turned .ending-page-back { opacity:1; translate:0 0; }.ending-last-page .icon { width:15px; height:15px; margin-left:7px; }
   @keyframes ending-light { to { opacity:.45; } }
-  .music-track { display:block; }.music-track-line { display:flex; align-items:center; width:100%; }
-  .track-pick { min-height:67px; }.track-pick:disabled { opacity:.8; }
-  .track-source { display:grid; place-items:center; flex:0 0 40px; min-height:44px; color:#728367; }.track-source .icon { width:16px; height:16px; }
-  .track-note { padding:0 8px 0 48px; font-size:12px; line-height:1.8; color:#75806a; margin:-2px 0 11px; }
-  .track-options { padding:0 8px 0 48px; margin:-3px 0 10px; font-size:11px; color:#7c816e; }
-  .track-options summary { width:fit-content; cursor:pointer; }.track-options .text-button { margin:10px 15px 0 0; font-size:12px; }
-  .settings-controls fieldset>.text-button { margin-top:12px; margin-right:15px; font-size:13px; }
   .clear-text { --font:'Microsoft YaHei','PingFang SC',sans-serif; }
   .clear-text :is(.hand-note,.input-note,.settings-save-note,.music-status,.pet-murmur,.track-note,.short-note p,.birthday-letter,.journal-entry p) { font-size:17px; line-height:1.9; }
   .clear-text :is(.setting-toggle,.track-pick b) { font-size:17px; }
   @media(max-width:700px) {
     .ending-page { padding:3px 18px 20px; }.ending-page .birthday-letter { font-size:16px; max-width:22em; }.ending-date { font-size:9px; }
-    .track-pick { gap:8px; padding-inline:3px; }.track-mark { width:22px; flex-basis:22px; }.track-note,.track-options { padding-left:33px; }
-    .track-pick b { font-size:16px; }.track-pick small { font-size:11px; }.track-pick em { font-size:10px; }
   }
 }
 @layer room {
