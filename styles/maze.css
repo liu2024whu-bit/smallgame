@@ -8,15 +8,15 @@
   .maze-seam { fill:none; stroke:#bca377; stroke-width:1; opacity:.65; pointer-events:none; }
   .maze-track { fill:none; stroke:#81784e; stroke-width:7; stroke-linecap:round; pointer-events:none; }
   .maze-grip { stroke:#a48c61; stroke-width:2; opacity:.65; pointer-events:none; }
-  .maze-ring-touch { fill:none; stroke:transparent; stroke-width:45; cursor:grab; touch-action:none; }
+  .maze-ring-touch { fill:none; stroke:transparent; stroke-width:45; cursor:var(--cursor-grab,grab); touch-action:none; }
   .maze-ring-touch:hover,.maze-ring-touch:focus-visible { stroke:#f7f0cc25; outline:none; }
-  .is-dragging .maze-ring-touch { cursor:grabbing; }
+  .is-dragging .maze-ring-touch { cursor:var(--cursor-hold,grabbing); }
   .ring-maze .maze-star { font-size:26px; fill:#ac986c; stroke:#fcf3d5; stroke-width:3px; paint-order:stroke; pointer-events:none; }
   .ring-maze .star-touched { fill:#d4a244; filter:drop-shadow(0 0 3px #f3d68c); }
   .maze-end { fill:#eee6c6; stroke:#89936b; stroke-width:3; pointer-events:none; }
   .maze-end-mark { fill:none; stroke:#a0ac85; stroke-width:1.5; pointer-events:none; }
   .maze-entry-arrow { fill:none; stroke:#a89363; stroke-width:2; pointer-events:none; }
-  .maze-ball { cursor:pointer; transform-box:view-box; }.maze-ball>circle { pointer-events:none; }.maze-ball .ball-hit { fill:transparent; pointer-events:all; }
+  .maze-ball { cursor:var(--cursor-point,pointer); transform-box:view-box; }.maze-ball>circle { pointer-events:none; }.maze-ball .ball-hit { fill:transparent; pointer-events:all; }
   .maze-ball:focus-visible { outline:none; filter:drop-shadow(0 0 4px #c6a469); }
   .maze-tested-route { fill:none; stroke:#e2b85c; stroke-width:2; opacity:.8; stroke-linecap:round; pointer-events:none; }
   .maze-trial-path { pointer-events:none; }

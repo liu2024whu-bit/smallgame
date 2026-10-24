@@ -21,7 +21,7 @@
   .music-apparatus>.character-art { display:block; width:100%; }
   .music-pin-column { display:contents; }
   .music-slot-index { position:absolute; top:40%; transform:translate(-50%,-50%); font:clamp(10px,1.25vw,14px) Georgia,serif; color:#f1e5c4; text-shadow:0 1px 1px #423822; }
-  .music-pin-track { position:absolute; display:block; border:0; padding:0; background:none; cursor:grab; touch-action:none; }
+  .music-pin-track { position:absolute; display:block; border:0; padding:0; background:none; cursor:var(--cursor-grab,grab); touch-action:none; }
   .music-pin { position:absolute; width:17px; height:13px; transform:translate(-50%,-50%); pointer-events:none; }
   .music-brass-pin { display:block; width:100%; height:100%; border-radius:50%; border:1px solid #9d7f4a; background:radial-gradient(at 35% 25%,#fff2ba,#c3a465 70%,#997a48); box-shadow:0 2px 2px #5c49364d; }
   .music-pin-column.playing .music-pin { filter:drop-shadow(0 0 7px #e1c963); }

@@ -1,0 +1,24 @@
+@layer base {
+ body { cursor:var(--cursor-idle,auto); }
+ :is(a[href],summary,select,input[type=checkbox],input[type=range],.invitation-open,.invitation-turn) { cursor:var(--cursor-point,pointer); }
+ :is(input:not([type=range],[type=checkbox],[type=radio],[type=file]),textarea,[contenteditable=true]) { cursor:text; }
+ .hotspot:not(.pickup-hotspot) { cursor:var(--cursor-inspect,pointer); }
+ #app:has(.inventory-slot.selected[data-id=crank]) [data-tool-target="birthday-door"],
+ #app:has(.inventory-slot.selected[data-id=transparency]) [data-tool-target="chocolate-cover"],
+ #app:has(.inventory-slot.selected[data-id=bookmark]) [data-tool-target^="flower-pin:"],
+ #app:has(.inventory-slot.selected[data-id=mirror]) [data-tool-target="postcard-mirror"],
+ #app:has(.inventory-slot.selected[data-id=birthdayCard]) [data-tool-target="birthday-fit:0"],
+ #app:has(.inventory-slot.selected[data-id=birthdayRibbon]) [data-tool-target="birthday-fit:1"],
+ #app:has(.inventory-slot.selected[data-id=mirror]) [data-tool-target="birthday-fit:2"] { cursor:var(--cursor-use,pointer); }
+ .cursor-sample { width:24px; height:24px; margin-left:auto; margin-right:5px; }
+ @media(hover:hover) and (pointer:fine) and (forced-colors:none) {
+  :root:not(.native-cursor) {
+   --cursor-idle:url('../assets/cursors/idle.svg') 4 3,auto;
+   --cursor-point:url('../assets/cursors/point.svg') 14 3,pointer;
+   --cursor-inspect:url('../assets/cursors/inspect.svg') 11 11,zoom-in;
+   --cursor-grab:url('../assets/cursors/grab.svg') 14 14,grab;
+   --cursor-hold:url('../assets/cursors/hold.svg') 14 14,grabbing;
+   --cursor-use:url('../assets/cursors/use.svg') 4 3,pointer;
+  }
+ }
+}

@@ -24,7 +24,7 @@ import { bindInventoryUse } from './ui/interactions/inventory.js';
 import { createWelcome } from './services/welcome-flow.js';
 import { bindSaveTransfer } from './services/save-transfer.js';
 import { bindMusicControls } from './ui/music-controls.js';
-import {bindMusicView} from './ui/music-view.js';
+import {bindSessionView} from './ui/session-view.js';
 import {updateMusicView} from './ui/music.js';
 import { audioOnlyUpdate } from './core/presentation-updates.js';
 
@@ -37,11 +37,11 @@ const ui = { panel: null, stack: [], home: true, skyPair: 0 };
 const stage = document.querySelector('#room-stage');
 const dialog = createDialog(document.querySelector('#explore-dialog'), closePanel);
 let roomSignature = '', hudSignature = '', toastTimer;
-let disposeInteractions = () => {},disposeMusic=()=>{};
+let disposeInteractions = () => {},disposeSession=()=>{};
 let fittingHandle=false,completionTimer;
 const preloadedScenes = new Set();
 const settleMotion=watchMotionPreferences(app);
-const welcome=createWelcome(document.querySelector('#welcome'),{getState:()=>store.get(),onReveal:()=>{document.querySelector('.game-shell').hidden=false;},onEnter:()=>{ui.home=false;if(!store.get().begun)store.dispatch({type:'start'});else render(store.get());document.querySelector('.wordmark')?.focus({preventScroll:true});}});
+const welcome=createWelcome(document.querySelector('#welcome'),{onCue:()=>audio.material('paper'),getState:()=>store.get(),onReveal:()=>{document.querySelector('.game-shell').hidden=false;},onEnter:()=>{ui.home=false;if(!store.get().begun)store.dispatch({type:'start'});else render(store.get());document.querySelector('.wordmark')?.focus({preventScroll:true});}});
 const engageAudio=event=>audio.resume({music:!event.target.closest('.music-dialog,.settings-dialog,[data-action="music"],[data-action="settings"],[data-action="sound"]')}).catch(()=>{});
 app.addEventListener('pointerdown',engageAudio,{capture:true});app.addEventListener('keydown',engageAudio,{capture:true});
 const transfers=bindSaveTransfer(document.querySelector('#save-file'),{store,loaded:()=>showWelcome(),toast,refresh:()=>{if(ui.panel?.type==='settings')renderDialog();},remember:storage?null:{getItem:key=>window.sessionStorage.getItem(key),setItem:(key,value)=>window.sessionStorage.setItem(key,value)}});
@@ -65,14 +65,14 @@ function performMove(move) {
   return changed;
 }
 function renderDialog(preserveFocus = true, restore = null) {
-  disposeInteractions();disposeMusic();
+  disposeInteractions();disposeSession();
   if (!ui.panel) return;
   dialog.show(renderPanel(ui.panel, context()), { preserveFocus, restore });
   if (ui.panel.type === 'ambient') audio.rain(); else audio.stopRain();
   const state = store.get(), id = ui.panel.type === 'puzzle' ? ui.panel.id : null;
   disposeInteractions = bindInteractions(dialog.element, { id, progress: state.progress[id], solved: state.solved.includes(id), move: performMove, activity, feedback:kind=>audio.foley(kind), changeView: patch => { ui.panel.view = {...ui.panel.view,...patch}; renderDialog(); } });
   const unbindPuzzle=disposeInteractions,unbindPet=companions.bind(dialog.element);disposeInteractions=()=>{unbindPuzzle();unbindPet();};
-  disposeMusic=bindMusicView(dialog.element,audio.music,{getContext:context,feedback:()=>audio.foley('detent')});
+  disposeSession=bindSessionView(dialog.element,audio.music,{getContext:context,feedback:()=>audio.foley('detent')});
 }
 function render(state,previous=null) {
   const signature = `${state.scene}:${state.collected.join()}:${sceneChanges(state).map(change=>change.puzzle??change.activity).join()}:${state.scene==='window'?JSON.stringify(state.progress.flowers):''}:${state.solved.includes('flowers')}:${state.solved.includes('calendar')}:${state.ending}:${state.scene==='party'?JSON.stringify([state.progress.sweets,state.progress.ribbons,state.progress.birthdayLock]):''}`;
@@ -95,6 +95,7 @@ function render(state,previous=null) {
   document.documentElement.classList.toggle('show-hotspots', state.settings.hotspots);
   document.documentElement.classList.toggle('reduce-motion', !state.settings.motion);
   document.documentElement.classList.toggle('clear-text',state.settings.clearText);
+  document.documentElement.classList.toggle('native-cursor',!state.settings.customCursor);
   settleMotion();
   audio.configure(state.settings);
   const audioOnly=audioOnlyUpdate(previous,state);
@@ -111,7 +112,7 @@ function openPanel(panel, push = true) {
 }
 function closePanel() {
   window.clearTimeout(completionTimer);
-  disposeInteractions();disposeMusic();
+  disposeInteractions();disposeSession();
   audio.stopMelody();
   audio.stopRain();
   ui.panel = ui.stack.pop() ?? null;
@@ -128,7 +129,7 @@ function look(direction) {
   store.dispatch({ type: 'scene', id: neighborScene(store.get(),direction) });
   audio.material('paper');
 }
-function closeAllPanels(){window.clearTimeout(completionTimer);ui.stack=[];ui.panel=null;disposeInteractions();disposeMusic();audio.stopMelody();audio.stopRain();dialog.hide();}
+function closeAllPanels(){window.clearTimeout(completionTimer);ui.stack=[];ui.panel=null;disposeInteractions();disposeSession();audio.stopMelody();audio.stopRain();dialog.hide();}
 function showWelcome(phase='title'){closeAllPanels();ui.home=true;welcome.show(phase);render(store.get());}
 function goScene(id){if(!sceneOpen(store.get(),id)){openPanel({type:'passage',id});return;}closeAllPanels();store.dispatch({type:'scene',id});}
 async function useTool(item,target){

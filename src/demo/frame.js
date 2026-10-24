@@ -8,7 +8,7 @@ const game=mountGame({storage:{getItem:key=>memory.get(key),setItem:(key,value)=
 let current=REVIEW_CASES[0],loadTicket=0;
 const frame=async()=>{
   await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
-  const fades=[...document.querySelectorAll('.welcome-content,.dialog-body')].flatMap(el=>el.getAnimations()).filter(a=>a.playState==='running'&&a.effect.getComputedTiming().duration<=500);
+  const fades=[...document.querySelectorAll('.welcome-content,.dialog-body,.invitation')].flatMap(el=>el.getAnimations({subtree:el.matches('.invitation')})).filter(a=>a.playState==='running'&&a.effect.getComputedTiming().duration<=1000);
   await Promise.allSettled(fades.map(a=>a.finished));
 };
 function copy(){
@@ -18,6 +18,8 @@ function copy(){
   let spec=current;
   if(dialog&&!matches(current))spec=REVIEW_CASES.find(matches)??current;
   else if(!dialog&&root.matches('.game-shell'))spec=REVIEW_CASES.find(s=>s.id==='room-'+game.store.get().scene)??current;
+  if(panel?.type==='settings')spec=REVIEW_CASES.find(entry=>entry.panel?.type==='settings'&&(entry.panel.view?.section??'sound')===(panel.view?.section??'sound'))??spec;
+  if(root.matches('#welcome')){const invitation=root.querySelector('.invitation');spec=REVIEW_CASES.find(entry=>invitation?entry.mode==='intro'&&entry.step===Number(invitation.dataset.step):entry.id==='opening')??spec;}
   return {id:spec.id,title:dialog?.querySelector('#dialog-title')?.textContent??spec.name,source:spec.source,text:visibleCopy(root)};
 }
 async function load(id,{instant=false,clearText=false,sound=false,reduced=false}={}){

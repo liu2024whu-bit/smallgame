@@ -6,8 +6,8 @@
   .music-player-pane,.music-records-pane { min-width:0; }.music-records-pane { padding-top:6px; }
   .turntable-stage { position:relative; width:min(100%,535px); margin:-10px auto -4px; aspect-ratio:952/775; isolation:isolate; overflow:clip; }
   .turntable-body { display:block; width:100%; }
-  .record-grip { position:absolute; display:block; aspect-ratio:1; padding:0; border:0; background:none; border-radius:50%; touch-action:none; user-select:none; cursor:grab; }
-  .record-grip:active { cursor:grabbing; }.record-grip:focus-visible { outline:2px dashed #8b9f76; outline-offset:6px; }
+  .record-grip { position:absolute; display:block; aspect-ratio:1; padding:0; border:0; background:none; border-radius:50%; touch-action:none; user-select:none; cursor:var(--cursor-grab,grab); }
+  .record-grip:active { cursor:var(--cursor-hold,grabbing); }.record-grip:focus-visible { outline:2px dashed #8b9f76; outline-offset:6px; }
   .record-spin,.vinyl-art { display:block; width:100%; }.record-spin { position:relative; will-change:rotate; }
   .record-date { position:absolute; left:50%; top:56%; translate:-50% 0; font:clamp(10px,1.4vw,17px)/1 Georgia,serif; color:#9e8156; letter-spacing:.1em; }
   .turntable-arm { position:absolute; display:block; transform-origin:var(--pivot-x) var(--pivot-y); rotate:var(--arm-angle); transition:rotate .65s var(--record-settle,cubic-bezier(.22,.75,.3,1)); pointer-events:none; z-index:2; }
@@ -41,7 +41,7 @@
   .track-source { flex:0 0 32px; min-height:40px; display:grid; place-items:center; color:#718361; }.track-source .icon { width:15px; height:15px; }
   .current-track { background:#e9eedc80; }.track-pick:hover { background:#f0f1e4; }.track-pick:disabled { opacity:.7; }
   .track-options { padding:0 8px 7px 45px; margin-top:-1px; font-size:11px; color:#687660; }
-  .track-options summary { width:fit-content; cursor:pointer; padding:2px 0; }
+  .track-options summary { width:fit-content; cursor:var(--cursor-point,pointer); padding:2px 0; }
   .track-options>div { display:flex; align-items:center; gap:12px 18px; flex-wrap:wrap; padding:8px 0 3px; }
   .track-options .text-button,.original-recording { font-size:12px; }.original-recording { display:inline-flex; min-height:30px; flex:none; text-decoration:underline; text-underline-offset:4px; }
   .track-note { font-size:11px; line-height:1.8; color:#7d856f; margin:0 8px 8px 45px; }

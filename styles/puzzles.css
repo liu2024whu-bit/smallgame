@@ -23,7 +23,7 @@
   .reward-items { display: flex; gap: 30px; justify-content: center; margin-bottom: 12px; }
   .reward-items > span { display: grid; justify-items: center; font-size: 13px; }
   .solved-field .puzzle-control:disabled { opacity: .65; }
-  .solved-field [data-sugar-cut]:disabled,.solved-field [data-music-track]:disabled,.solved-field [data-vessel]:disabled { opacity:1;cursor:default; }
+  .solved-field [data-sugar-cut]:disabled,.solved-field [data-music-track]:disabled,.solved-field [data-vessel]:disabled { opacity:1;cursor:var(--cursor-idle,default); }
   .pencil-label { color: #636f58; font-size: 14px; margin-bottom: 7px; text-align: center; }
   .stamp-row { display: flex; align-items: center; justify-content: center; gap: 10px; }
   .stamp { display: inline-flex; width: 48px; height: 48px; border-bottom: 1px solid #dadac8; align-items: center; justify-content: center; }

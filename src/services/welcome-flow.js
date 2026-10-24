@@ -1,8 +1,9 @@
 import { ASSETS } from '../data/assets.js';
 import { welcomeContent } from '../ui/welcome.js';
+import {updateIntro} from '../ui/intro.js';
 import { motionAllowed } from './motion.js';
 
-export function createWelcome(host,{getState,onEnter,onReveal=()=>{}}) {
+export function createWelcome(host,{getState,onEnter,onReveal=()=>{},onCue=()=>{}}) {
   let phase='title',step=0,signature='',busy=false,transition;
   host.innerHTML=`<img class="welcome-painting" src="${ASSETS.welcome}" alt="门半掩着，阳光照进书房。小猫睡在门边。" draggable="false"><div class="welcome-content"></div>`;
   const content=host.querySelector('.welcome-content');
@@ -10,6 +11,7 @@ export function createWelcome(host,{getState,onEnter,onReveal=()=>{}}) {
     if(host.hidden)return;
     const key=JSON.stringify([phase,step,state.begun,state.scene,state.solved.includes('stitch'),state.usedTools,state.ending]);
     if(signature===key)return;signature=key;
+    if(phase==='intro'&&host.dataset.phase==='intro'&&updateIntro(content,step))return;
     const replacing=content.childElementCount>0;
     content.innerHTML=welcomeContent(state,phase,step);host.dataset.phase=phase;
     if(replacing){content.querySelector('h1')?.focus({preventScroll:true});if(motionAllowed())content.animate([{opacity:0,translate:'0 7px'},{opacity:1,translate:'0 0'}],{duration:320,easing:'cubic-bezier(.2,.7,.2,1)'});}
@@ -27,5 +29,5 @@ export function createWelcome(host,{getState,onEnter,onReveal=()=>{}}) {
     host.hidden=true;transition?.cancel();busy=false;onEnter();
   }
   render();
-  return {render,show,enter,unfold:()=>{step=1;render();},next:()=>{step=2;render();},begin:()=>getState().begun?enter():show('intro'),get phase(){return phase;}};
+  return {render,show,enter,unfold:()=>{if(phase!=='intro'||step!==0)return;step=1;render();onCue();},next:()=>{if(phase!=='intro'||step!==1)return;step=2;render();onCue();},begin:()=>getState().begun?enter():show('intro'),get phase(){return phase;}};
 }

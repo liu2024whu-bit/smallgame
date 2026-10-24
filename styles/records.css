@@ -31,7 +31,7 @@
   .encore-handle .item-art { position:absolute; left:0; top:0; display:block; width:100%; height:auto; aspect-ratio:var(--ratio); transform-origin:var(--pivot-x) var(--pivot-y); rotate:var(--wind); filter:drop-shadow(1px 3px 1px #4c492a26); }
   .encore-handle:hover { background:transparent; }.encore-handle:focus-visible { outline-offset:6px; }
   .theatre-envelope { position:absolute; left:16%; top:69%; width:21%; height:12%; rotate:-3deg; }.theatre-envelope:not(:disabled):hover { box-shadow:0 3px 10px #f7edb854; background:#fff4d118; }
-  .theatre-envelope:disabled { cursor:default; opacity:1; }
+  .theatre-envelope:disabled { cursor:var(--cursor-idle,default); opacity:1; }
   .theatre-cat { position:absolute; left:35%; top:51%; width:7%; height:15%; padding:0; transform-origin:50% 100%; }
   .theatre-cat > .character-art { position:absolute; inset:0; width:100%; filter:drop-shadow(0 2px 1px #46602d2b); }
   .theatre-cat .cat-blink { opacity:0; }.theatre-cat:hover .cat-blink,.theatre-cat:focus-visible .cat-blink { opacity:1; }

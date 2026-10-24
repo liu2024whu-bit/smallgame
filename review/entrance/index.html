@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>门口与小屋 · 改版对照</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f6f3e9;color:#53634d;font:15px/1.9 "Microsoft YaHei","PingFang SC",sans-serif}main{max-width:1320px;margin:auto;padding:35px 5vw 60px}header{display:flex;align-items:center;justify-content:space-between;gap:20px}h1,h2{font-family:KaiTi,serif;font-weight:400}h1{font-size:32px;margin:0}header p{font:11px Georgia,serif;letter-spacing:.1em;color:#8c967d;margin:0}a{color:inherit;text-underline-offset:5px}header a{font-size:13px}.lead{max-width:53em;font-size:14px;color:#7b856e;margin:23px 0}.controls{display:flex;flex-wrap:wrap;align-items:center;gap:12px 23px}select,button{font:inherit;color:inherit;background:#fffdf6;border:1px solid #cad2b9;border-radius:3px 7px 3px 4px;padding:7px 15px}button{cursor:pointer}button:focus-visible,a:focus-visible,select:focus-visible{outline:2px solid #8aa177;outline-offset:4px}nav{display:flex;flex-wrap:wrap;gap:9px}button[aria-selected=true]{background:#e7edda;border-color:#9faf8e}.viewer{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:26px;align-items:start;margin:22px 0}.picture{display:block;padding:0;width:100%;overflow:hidden;cursor:zoom-in;line-height:0}.picture img{width:100%;display:block;height:auto}.notes h2{font-size:24px;line-height:1.6;margin:4px 0 15px}.notes p{font-size:13px;color:#78826b}.pointers{display:flex;flex-wrap:wrap;gap:22px;border-block:1px solid #d7dccc;padding:18px 0;margin-top:30px}.pointers>span{display:grid;grid-template-columns:32px auto;align-items:center;gap:9px;font-size:12px;color:#7a886d}.pointers img{width:32px;height:32px}.film{margin-top:35px}.film h2{font-size:25px}.film video{display:block;width:min(100%,1100px);background:#efeddf;border:1px solid #d4dac7;border-radius:4px}.film p,footer{max-width:65em;color:#858d77;font-size:12px}footer{border-top:1px solid #d7dccc;margin-top:35px;padding-top:20px}dialog{padding:8px;width:min(95vw,1600px);max-height:94vh;border:1px solid #b9c4aa;background:#fffdf5}dialog img{display:block;max-width:100%;max-height:87vh;margin:auto}dialog button{position:absolute;right:15px;top:15px}dialog::backdrop{background:#35442ca6}[hidden]{display:none!important}@media(max-width:850px){main{padding:24px 17px 45px}header{display:block}header>a{display:inline-block;margin-top:15px}h1{font-size:28px}.viewer{grid-template-columns:1fr}.notes p{margin-bottom:9px}.controls{gap:12px}.pointers{gap:15px}}
+</style>
+<main><header><div><p>BEFORE THE TWENTIETH ORBIT</p><h1>门口与小屋 · 改版对照</h1></div><a href="../../admin.html?page=intro-0">实际试玩 ↗</a></header>
+<p class="lead">同一封邀请，慢慢展开；常用的东西，也放得顺手些。这里可以看邀请、设置和导航的改版，旧方案只留作比较，正式游戏使用当前版。</p>
+<div class="controls"><select id="area" aria-label="比较的地方"><option value="intro">邀请</option><option value="settings">设置</option><option value="navigation">小屋导航</option></select><nav role="tablist" aria-label="比较版本"><button role="tab" data-version="0">旧版</button><button role="tab" data-version="1">第一轮</button><button role="tab" data-version="2">第二轮 · 当前</button></nav><select id="phase" aria-label="邀请状态"><option value="0">初样</option><option value="1">打开后</option><option value="2">再往后</option></select></div>
+<section class="viewer"><button class="picture" aria-label="放大当前画面"><img id="picture" alt=""></button><aside class="notes"><h2 id="title"></h2><p id="change"></p><p id="reason"></p></aside></section>
+<div class="pointers" aria-label="小小的光标"><span><img src="../../assets/cursors/idle.svg" alt="">闲着</span><span><img src="../../assets/cursors/point.svg" alt="">点点看</span><span><img src="../../assets/cursors/inspect.svg" alt="">看近一点</span><span><img src="../../assets/cursors/grab.svg" alt="">拿得起来</span><span><img src="../../assets/cursors/hold.svg" alt="">正拿着呢</span><span><img src="../../assets/cursors/use.svg" alt="">这里用得上</span></div>
+<section class="film"><h2>从门口，进屋看看。</h2><video controls preload="metadata" src="playthrough.mp4" poster="intro-v2-0.webp"></video><p>真实鼠标操作：拆邀请、翻到背面、进屋、设置三页和导航。录像另配项目原创《慢慢翻页》，不是浏览器实时混音；原生光标通常不会被浏览器录像捕获，上面单独列出实际使用的六个小图。</p><a href="playthrough.mp4" download>保存操作演示</a></section>
+<footer>后台密码20261029，仅为静态防误入门槛。<a href="../../docs/copy-review.md">当前全部可见文字</a> · <a href="../../docs/v29-entrance-review.md">本轮改动与验证</a>。逐关改造继续按总清单推进。</footer>
+<dialog id="zoom"><img alt="放大的改版画面"><button>收起</button></dialog></main>
+<script>
+const notes={
+ intro:[
+ ['一封邀请，还缺点动作。','旧版每步整体替换内容，信封变成三张图标纸。','文字还可以再收短一些，不必从头讲起每件往事。'],
+ ['先把纸张分开。','新绘背板、前袋、翻盖和信纸，展开时保留同一封邀请。','这一轮闭合时纸角露在了底下，最后一步的变化也太小，留作淘汰对照。'],
+ ['翻过去，还有一句。','纸张尺寸重新对正，可以点纸面翻到祝福。打开、抽出、翻面连续发生。','动画不拦住操作；系统减少动态立即生效。文字只留短短几句。']
+ ],
+ settings:[
+ ['常用的东西，藏得有点深。','声音、画面和存档排成长页，手机上需要一直往下找。','存档仍然可靠，但入口值得放得更顺手。'],
+ ['分成三页。','声音、画面、进度分开放，键盘也能切换。','保持同一份设置与保存逻辑，返回位置和焦点一起保留。'],
+ ['想调哪一处，就翻哪一页。','重新整理比例，加入可关闭的卡通光标，手机保留清楚的三页入口。','全屏和系统减少动态会显示真实状态；下载与新页面读取重新核对。']
+ ],
+ navigation:[
+ ['先凭名字认一认。','八处地方按同样的标记排列。','图标容易看成关卡编号，和实际看过的画面联系较弱。'],
+ ['换成小窗，但还不够。','能认出场景了，不过固定背景没有带上解开的物件。','同一个地方，不该在近景、远景和导航里各有一套状态。'],
+ ['小窗里，也留着刚才的样子。','共用实际场景绘制，把抽屉、花架和开匣变化一同缩小。','未打开的地方收着，不提前展示生日内容；没有虚构一张地理路线图。']
+ ]};
+let selected=2;const area=document.querySelector('#area'),phase=document.querySelector('#phase'),picture=document.querySelector('#picture'),zoom=document.querySelector('#zoom');
+function render(){document.querySelectorAll('[data-version]').forEach(b=>{const on=Number(b.dataset.version)===selected;b.setAttribute('aria-selected',on);b.tabIndex=on?0:-1;});phase.hidden=area.value!=='intro';picture.src=area.value+'-v'+selected+(area.value==='intro'?'-'+phase.value:'')+'.webp';const data=notes[area.value][selected];for(const [i,key]of ['title','change','reason'].entries())document.querySelector('#'+key).textContent=data[i];picture.alt=data[0];}
+area.onchange=phase.onchange=render;document.querySelectorAll('[data-version]').forEach(b=>b.onclick=()=>{selected=Number(b.dataset.version);render();});document.querySelector('nav').onkeydown=e=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();selected=e.key==='Home'?0:e.key==='End'?2:(selected+(e.key==='ArrowRight'?1:2))%3;render();document.querySelector('[data-version="'+selected+'"]').focus();};document.querySelector('.picture').onclick=()=>{zoom.querySelector('img').src=picture.src;zoom.showModal();};zoom.querySelector('button').onclick=()=>zoom.close();render();
+</script></html>

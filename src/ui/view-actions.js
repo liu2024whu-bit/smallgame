@@ -3,6 +3,7 @@ import { motionAllowed } from '../services/motion.js';
 export function viewActions({ panel, render, activity,foley=()=>{} }) {
   const change = patch => { const current = panel(); current.view = { ...current.view, ...patch }; render(); };
   return {
+    'settings-page':button=>{if(['sound','picture','save'].includes(button.dataset.id))change({section:button.dataset.id});},
     'calendar-note':button=>change({dateNote:Number(button.dataset.index)}),
     'ending-page':button=>{
       const current=panel(),lastPage=!current.view?.lastPage;current.view={...current.view,lastPage};

@@ -4,7 +4,7 @@
   html, body { margin: 0; min-height: 100%; }
   button, input { font: inherit; }
   button { color: inherit; }
-  button:not(:disabled) { cursor: pointer; }
+  button:not(:disabled) { cursor:var(--cursor-point,pointer); }
   img { max-width: 100%; }
   [hidden] { display: none !important; }
 }
@@ -13,7 +13,7 @@
   body { background: #f3f3ec; color: var(--ink); font: 17px/1.65 var(--font); overflow-x: hidden; }
   button { border: 0; background: none; -webkit-tap-highlight-color: transparent; }
   button, a, input { touch-action: manipulation; }
-  button:disabled { opacity: .36; cursor: default; }
+  button:disabled { opacity: .36; cursor:var(--cursor-idle,default); }
   :focus-visible { outline: 2px solid #697f72; outline-offset: 4px; }
   p { margin: 0 0 1em; }
   h1, h2, h3 { font-weight: 500; margin: 0; }
@@ -48,12 +48,12 @@
   .dialog-header h2 { font-size: 23px; letter-spacing: .06em; }
   .dialog-header > div { display: flex; align-items: center; }
   .dialog-body { padding: 22px 30px 28px; }
-  .inspect-dialog, .pet-dialog, .settings-dialog, .flower-dialog { max-width: 660px !important; }
+  .inspect-dialog, .pet-dialog, .flower-dialog { max-width: 660px !important; }
   .short-note { padding: 20px 18px; text-align: center; }
   .short-note p { margin-bottom: 24px; }
   .short-note .quiet-button { margin: 12px; }
   .keyboard-note { margin:0 auto 24px; max-width:440px; text-align:left; color:#66725e; font-size:14px; }
-  .keyboard-note summary { cursor:pointer; width:fit-content; margin:0 auto; border-bottom:1px dotted #a7b29c; }
+  .keyboard-note summary { cursor:var(--cursor-point,pointer); width:fit-content; margin:0 auto; border-bottom:1px dotted #a7b29c; }
   .keyboard-note p { margin:12px 0 0; }
   .locked-object { text-align: center; padding: 20px; }
   .locked-object > .motif { width: 80px; margin-bottom: 14px; }

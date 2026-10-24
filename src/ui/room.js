@@ -12,11 +12,16 @@ import { cabinetMechanisms } from './miniatures.js';
 import { partyRoom } from './party-room.js';
 import { escape, icon, itemSprite } from './dom.js';
 
+export function renderScenePicture(state) {
+  const scene=SCENE_BY_ID[state.scene];
+  const art=scene.id==='birthday'&&state.ending?ASSETS.birthdayLit:scene.id==='party'&&state.solved.includes('birthdayLock')?ASSETS.partyOpen:SCENE_ART[scene.id];
+  return `<img class="scene-image" src="${art}" alt="${scene.title}" draggable="false">${sceneChanges(state).map(change=>`<img class="scene-change" data-world-change="${change.puzzle??change.activity}" src="${ASSETS[change.asset]}" alt="${change.alt}" style="mask-image:${paintMask(change.region)}" draggable="false">`).join('')}${state.scene==='desk'?`<span class="world-calendar-date ${state.solved.includes('calendar')?'date-unlocked':''}" aria-hidden="true"><small>${GAME_DATE.year} / ${GAME_DATE.month}</small><b>${GAME_DATE.day}</b></span>`:''}${state.scene==='window'?gardenMiniature(state.progress.flowers,state.solved.includes('flowers')):''}${cabinetMechanisms(state)}${partyRoom(state)}`;
+}
+
 export function renderRoom(state) {
   const scene = SCENE_BY_ID[state.scene];
   const visible = scene.hotspots.filter(h => h.kind !== 'pickup' || !state.collected.includes(h.target));
-  const art=scene.id==='birthday'&&state.ending?ASSETS.birthdayLit:scene.id==='party'&&state.solved.includes('birthdayLock')?ASSETS.partyOpen:SCENE_ART[scene.id];
-  return `<img class="scene-image" src="${art}" alt="${scene.title}" draggable="false">${sceneChanges(state).map(change=>`<img class="scene-change" data-world-change="${change.puzzle??change.activity}" src="${ASSETS[change.asset]}" alt="${change.alt}" style="mask-image:${paintMask(change.region)}" draggable="false">`).join('')}${state.scene==='desk'?`<span class="world-calendar-date ${state.solved.includes('calendar')?'date-unlocked':''}" aria-hidden="true"><small>${GAME_DATE.year} / ${GAME_DATE.month}</small><b>${GAME_DATE.day}</b></span>`:''}${state.scene==='window'?gardenMiniature(state.progress.flowers,state.solved.includes('flowers')):''}${cabinetMechanisms(state)}${partyRoom(state)}<div class="room-light ${state.solved.includes('flowers') ? 'light-shifted' : ''}"></div><div class="hotspot-layer">${visible.map(h=>hotspotButton(h,scene.id)).join('')}</div>${roomCompanions(scene.id)}<button class="scene-arrow previous" data-action="scene-prev" aria-label="向左看">${icon('left')}</button><button class="scene-arrow next" data-action="scene-next" aria-label="向右看">${icon('right')}</button><button class="scene-caption" data-action="rooms" aria-label="看看小屋有哪些地方"><span>${escape(scene.title)}</span>${icon('feather')}</button>`;
+  return `${renderScenePicture(state)}<div class="room-light ${state.solved.includes('flowers') ? 'light-shifted' : ''}"></div><div class="hotspot-layer">${visible.map(h=>hotspotButton(h,scene.id)).join('')}</div>${roomCompanions(scene.id)}<button class="scene-arrow previous" data-action="scene-prev" aria-label="向左看">${icon('left')}</button><button class="scene-arrow next" data-action="scene-next" aria-label="向右看">${icon('right')}</button><button class="scene-caption" data-action="rooms" aria-label="看看小屋有哪些地方"><span>${escape(scene.title)}</span>${icon('feather')}</button>`;
 }
 
 function hotspotButton(h,scene){

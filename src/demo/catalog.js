@@ -10,7 +10,7 @@ import {RECORD_DISPLAY} from '../data/record-display.js';
 
 export const REVIEW_CASES=[
   {id:'opening',name:'开始',group:'故事',mode:'title',source:'src/ui/welcome.js'},
-  ...[0,1,2].map(step=>({id:'intro-'+step,name:['邀请','风先到了','蛋糕在等'][step],group:'故事',mode:'intro',step,source:'src/ui/intro.js'})),
+  ...[0,1,2].map(step=>({id:'intro-'+step,name:['邀请','风先到了','邀请背面'][step],group:'故事',mode:'intro',step,source:'src/ui/intro.js'})),
   ...PUZZLES.flatMap(p=>[false,true].map(completed=>({id:p.id+(completed?'-done':''),name:p.title+(completed?' · 已解开':''),group:completed?'机关完成后':'每个机关',puzzle:p.id,keywords:p.instruction+' '+p.hints.join(' '),completed,panel:{type:'puzzle',id:p.id},source:'src/ui/puzzles/ · src/data/puzzles.js'}))),
   ...PUZZLES.map(p=>({id:p.id+'-hints',name:p.title+' · 提醒',group:'主动打开的提醒',puzzle:p.id,hints:true,panel:{type:'puzzle',id:p.id},source:'src/data/puzzles.js'})),
   ...['desk','window','collection','entry','rain','atelier','birthday','party'].map(id=>({id:'room-'+id,name:({desk:'书桌',window:'窗边',collection:'收藏柜',entry:'门边',rain:'雨廊',atelier:'画桌',birthday:'生日桌',party:'准备台'})[id],group:'场景',full:true,scene:id,source:'src/ui/room.js · src/data/scenes.js'})),
@@ -21,6 +21,7 @@ export const REVIEW_CASES=[
   {id:'ending',name:'生日快乐',group:'故事',full:true,panel:{type:'ending'},source:'src/ui/ending.js · src/data/memories.js'},
   {id:'ending-last',name:'下一页',group:'故事',full:true,panel:{type:'ending',view:{lastPage:true}},source:'src/ui/ending.js'},
   {id:'encore',name:'彩蛋',group:'故事',full:true,panel:{type:'encore',view:{wind:360,letter:true}},source:'src/ui/achievements.js'},
+  ...['picture','save'].map(section=>({id:'settings-'+section,name:section==='picture'?'画面设置':'存档设置',group:'其他页面',full:true,panel:{type:'settings',view:{section}},source:'src/ui/settings.js'})),
   ...['rooms','settings','music','about','how-to','flowers','reading','interests'].map(type=>({id:type==='flowers'?'flower-book':type,name:({rooms:'小屋导航',settings:'设置',music:'唱片',about:'这间小屋','how-to':'怎么玩',flowers:'花',reading:'书与电影',interests:'平时'})[type],group:'其他页面',full:true,panel:{type},source:'src/ui/'+({rooms:'navigation',about:'welcome','how-to':'panels',flowers:'notebook',reading:'notebook',interests:'notebook'}[type]??type)+'.js'})),
   {id:'music-songs',name:'想一起听的',group:'唱片的另一面',full:true,panel:{type:'music',view:{musicShelf:'songs'}},source:'src/ui/music.js · src/data/music.js'},
   {id:'music-original',name:'无人知晓 · 录音选择',group:'唱片的另一面',full:true,panel:{type:'music',view:{musicShelf:'songs'}},click:'[data-track-row="unknown"] summary',source:'src/ui/music.js · src/data/music.js'},

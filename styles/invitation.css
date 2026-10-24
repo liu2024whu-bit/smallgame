@@ -1,0 +1,36 @@
+@layer room {
+ .invitation h1 { min-height:1.7em; margin-bottom:7px; }
+ .invitation-art { width:min(350px,92%); aspect-ratio:1.22; position:relative; margin:-8px 0 12px; perspective:900px; isolation:isolate; }
+ .envelope-body { position:absolute; width:92%; aspect-ratio:1.9; left:3%; top:40%; rotate:-3deg; transition:translate .7s ease,rotate .7s ease; }
+ .envelope-back,.envelope-pocket { position:absolute; inset:0; width:100%; height:100%; }
+ .envelope-back { z-index:0; }.envelope-pocket { z-index:3; }
+ .envelope-lid { display:block; position:absolute; left:-.6%; top:0; width:101.2%; aspect-ratio:2.58; z-index:4; transform-origin:50% 2%; backface-visibility:visible; transition:transform .6s cubic-bezier(.3,.6,.2,1),filter .6s; }
+ .envelope-flap-art { display:block; width:100%; height:100%; }
+ .invitation-seal { position:absolute; display:grid; place-items:center; left:calc(50% - 14px); top:70%; width:28px; height:28px; border-radius:48% 52% 46% 54%; color:#fdf7dc; border:1px solid #a2915e; background:#b6a36b; box-shadow:0 2px 3px #74633324; transition:opacity .12s; }.invitation-seal .icon { width:14px; height:14px; }
+ .invitation-card { position:absolute; display:block; width:70%; left:15%; top:2%; aspect-ratio:1.38; z-index:2; transition:translate .7s cubic-bezier(.2,.7,.2,1),rotate .7s,scale .7s; transition-delay:.13s; }
+ .invitation-paper { display:block; width:100%; height:100%; }
+ .invitation-card-turner { display:block; position:absolute; inset:0; transform-style:preserve-3d; transition:transform .75s cubic-bezier(.2,.6,.2,1); }
+ .invitation-card-face { position:absolute; inset:0; backface-visibility:hidden; }.card-reverse { transform:rotateY(180deg); }
+ .invitation[data-step="2"] .invitation-card-turner { transform:rotateY(180deg); }
+ .invitation-greeting { font-size:18px; line-height:1.8; font-weight:400; text-align:center; }.invitation-greeting small { display:block; font:12px Georgia,serif; letter-spacing:.1em; }
+ .invitation-turn { position:absolute; left:0; top:0; width:100%; height:55%; background:none; border:0; border-radius:3px; z-index:7; }.invitation-turn:focus-visible { outline:1.5px dashed #8b9e76; outline-offset:-8px; }
+ .invitation-ink { position:absolute; inset:15% 20% 18%; display:grid; justify-items:center; align-content:center; gap:5px; color:#829272; opacity:0; transition:opacity .35s .4s; }
+ .invitation-ink .icon { width:21px; height:21px; }.invitation-ink b { font:35px/1.2 Georgia,serif; color:#6c7f62; font-weight:400; }
+ .envelope-name { position:absolute; bottom:12%; right:8%; z-index:5; font-size:16px; color:#6a795f; pointer-events:none; transition:opacity .3s; }
+ .invitation-open { position:absolute; left:3%; top:36%; width:92%; height:61%; border:0; background:none; border-radius:7px; }
+ .invitation-open:focus-visible { outline:1.5px dashed #91a27d; outline-offset:6px; }.invitation-open:hover { background:none; }
+ .invitation-art:has(.invitation-open:hover) .envelope-body { rotate:-1deg; translate:0 -3px; }
+ .invitation:not([data-step="0"]) .envelope-lid { transform:rotateX(-174deg); filter:brightness(.97); z-index:1; }.invitation:not([data-step="0"]) .invitation-seal { opacity:0; }
+ .invitation:not([data-step="0"]) .invitation-card { translate:0 -58%; rotate:3deg; }.invitation:not([data-step="0"]) .invitation-ink { opacity:1; }
+ .invitation[data-step="2"] .envelope-body { translate:0 12px; rotate:2deg; }
+ .invitation[data-step="2"] .invitation-card { translate:0 -75%; rotate:-7deg; scale:1.04; }
+ .invitation[data-step="2"] .envelope-name { opacity:.55; }
+ .invitation-copy { margin-bottom:20px; }.invitation-copy p { margin-bottom:0; min-height:4.4em; }.intro-choices { display:flex; align-items:center; gap:23px; min-height:50px; }
+ .intro-skip { font-size:13px; }.invitation[data-step="0"] .intro-choices { min-height:0; margin-top:-10px; }
+ @media(max-width:700px) { .invitation-art { width:min(310px,100%); margin-top:0; }.invitation h1 { min-height:3.3em; margin-bottom:-4px; }.invitation-copy p { min-height:4.2em; }.envelope-name { font-size:15px; } }
+ @media(max-height:700px) and (orientation:landscape) { .invitation-art { width:230px; margin-bottom:2px; }.invitation h1 { font-size:25px; margin-bottom:0; }.invitation-copy { font-size:16px; margin-bottom:14px; }.invitation .welcome-date { margin-bottom:14px; }.invitation-copy p { min-height:3.8em; } }
+}
+@layer motion {
+ .reduce-motion .invitation :is(.envelope-body,.envelope-lid,.invitation-card,.invitation-seal,.invitation-ink,.envelope-name,.invitation-card-turner) { transition:none; }
+ @media(prefers-reduced-motion:reduce) { .invitation :is(.envelope-body,.envelope-lid,.invitation-card,.invitation-seal,.invitation-ink,.envelope-name,.invitation-card-turner) { transition:none; } }
+}

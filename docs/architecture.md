@@ -1,4 +1,4 @@
-# 当前结构 · V2.9 P1
+# 当前结构 · V2.9 P2
 
 ```text
 index.html / src/main.js        正式入口；只挂载真实游戏
@@ -20,10 +20,13 @@ src/ui/campus*.js              校园折页与可操作拓纸
 src/ui/achievements.js         实物手账与纸艺彩蛋
 src/ui/pets.js / companions.js  猫狗近景与融入场景的角色
 src/ui/music*.js / settings.js  唱片、音量、画面、存档操作
+src/ui/session-view.js          只在系统面板存活时绑定音乐/设置/导航
+src/ui/navigation-view.js       共用场景绘制的完整空间缩略与尺寸观察
+styles/cursors.css             小尺寸原生光标与触屏/高对比/关闭回退
 src/services/birthday-flow.js   点烛、许愿、拆袋的动作协调
 src/services/companions.js      抚摸、招呼与临时姿态
 src/services/character-motion.js 多帧角色回应；取消与脚下锚点
-src/services/welcome-flow.js    邀请步骤、进屋、取消和继续
+src/services/welcome-flow.js    邀请步骤、原位更新、进屋、取消和继续
 src/services/room-transition.js 新画解码后的局部绘画交叠
 src/services/motion/           材料、机械、纸面与物件的测量过渡
 src/services/music-player.js   可取消播放会话、顺序、寻位、生日插曲
@@ -40,7 +43,7 @@ src/admin.js                   防误入门槛与会话解锁
 src/services/review-access.js  PIN摘要验证；不冒充服务端认证
 src/demo.js                    后台查询、跳转、尺寸切换、文字导出
 review-frame.html             复用真实游戏的隔离演示框
-src/demo/catalog.js            220个页面状态的唯一目录
+src/demo/catalog.js            222个页面状态的唯一目录
 src/demo/fixtures.js           经真实规则重建可操作演示状态
 src/demo/walkthrough.js        验证走法，测试复用；正式入口不导入
 src/demo/visible-copy.js       读取实际可见文字，不另写一套文案
@@ -107,6 +110,8 @@ tools/render-audio.py          开发时生成原创琴声和公版生日旋律�
 维护入口摘要验证固定PIN，仅用于防误入。它无法保护公开静态文件，不加入账号、密钥或伪服务端登录。
 
 真实游戏通过 `mountGame({storage,library})` 注入存储；正式入口用浏览器保存，review-frame只用内存Map和内存音源库。演示夹具按真实 reducer 与验证走法重建，经 core 规范化后才展示，不给正式入口加作弊参数。
+
+邀请步骤与设置子页按真实DOM/当前view映射后台位置；指针外观偏好独立布尔校验，不改变进度。导航复用renderScenePicture，把固定源空间的字/物件一起缩小，ResizeObserver在关闭时断开。
 
 后台目录覆盖机关三种状态及收藏、物件、证据、校园、祝福、小记、故事与系统回应。侧栏从当前可见DOM读取文字和来源编号；实际在演示里继续导航时，文字所属页面也跟着切换。全量导出按同一目录逐页渲染，隐藏面与主动提醒不会混入初样。
 

@@ -168,3 +168,11 @@ V2.3 的机关重绘、场景校正与四帧角色提示词另见 [v23-art-promp
 动画开发工具采用[Anime.js v4.5.0](https://github.com/juliangarnier/anime/releases/tag/v4.5.0)，固定提交`2c9cf8ea00329f6768c7d7902252ed977d75ce42`，许可MIT。用户指定的本地目录为`E:\github\github\animejs`；发布代码不依赖该绝对路径。`tools/sample-motion.mjs`从该工具的spring ESM采样41点，写成CSS原生linear()缓动，参数bounce0.08、duration430。不支持linear()时使用普通cubic-bezier，减少动态时跳过。没有把完整动画库塞进游戏。
 
 工具许可原文随[animejs-license.txt](animejs-license.txt)保留。对照录像只配项目原创琴声，不录入六首商业歌曲。
+
+## V2.9 P2：邀请与原生光标
+
+`illustrations/invitation.webp`由ImageGen参照既有welcome.webp绘制四个完整纸层：背板、前袋、翻盖、信纸。文字由HTML加入，背面祝福不引用任何私人信件。展开/翻转使用同一部件连续插值；未把多张随机姿态的整幅图交替当作动画。生成提示词追加在[v29-art-prompts.json](v29-art-prompts.json)，Pillow只编码与检查透明边界。
+
+`assets/cursors/`的六个32×32 SVG是项目原生UI图标，沿用奶油、草绿和细轮廓，代码制作，无第三方素材或运行库。热点分别校准到箭尖、指尖、镜心和手心；触屏/高对比/关闭偏好使用原生回退，不叠加跟随鼠标的可见DOM。原有抓取和方向调整逻辑保留。
+
+导航图由renderScenePicture共用实际进度渲染，再整体缩小，包含局部完成变化；未打开的场景不加载内容缩略图。门口环境不重新生成，维持原书房的色彩与比例。

@@ -9,6 +9,7 @@ export const SCENE_ART = Object.freeze({
   party:'assets/scenes/party.webp',
 });
 export const ASSETS = Object.freeze({
+  invitation:'assets/illustrations/invitation.webp',
   turntable:'assets/illustrations/turntable.webp',
   campusMarks:'assets/illustrations/campus-marks.webp',
   gardenBody:'assets/illustrations/garden-body.webp',

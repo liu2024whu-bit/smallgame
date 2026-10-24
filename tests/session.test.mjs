@@ -14,6 +14,7 @@ test('old saves gain independent audio defaults, reject forged music preferences
   const old={...createState(),begun:true,settings:{sound:false,volume:.2,motion:false}};
   const restored=normalizeState(old);
   assert.equal(restored.settings.sound,false);assert.equal(restored.settings.volume,.2);
+  assert.equal(restored.settings.customCursor,true);assert.equal(normalizeState({...old,settings:{customCursor:false}}).settings.customCursor,false);assert.equal(normalizeState({...old,settings:{customCursor:'false'}}).settings.customCursor,true);
   assert.equal(restored.settings.musicTrack,'window');assert.equal(restored.settings.musicVolume,.65);
   const forged=normalizeState({...old,settings:{musicTrack:'javascript:bad',musicOrder:'unknown',musicVolume:9,effectsVolume:-1,music:'yes'}});
   assert.equal(forged.settings.musicTrack,'window');assert.equal(forged.settings.musicOrder,'cycle');assert.equal(forged.settings.music,true);

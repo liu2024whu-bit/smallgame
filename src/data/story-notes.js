@@ -14,4 +14,3 @@ export const CHAPTER_NOTES=Object.freeze({
   film:'那次电影，三个人。',
   stitch:'从刚认识的时候，慢慢到了今天。',
 });
-export const SCENE_MARKS={desk:'book',window:'cloud',collection:'star',entry:'moon',rain:'feather',atelier:'leaf',birthday:'rainbow',party:'star'};
