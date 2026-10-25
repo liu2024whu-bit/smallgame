@@ -4,6 +4,12 @@ import {CLOUD_BODY,CLOUD_DOORS} from './cloud.js';
 // Source-pixel frames follow the actual edges of each illustration.
 export const ASSET_LAYOUTS = Object.freeze({
   lightCorner:{width:1672,height:941},
+  lightLamp:{width:1024,height:1536,frames:[[0,0,1024,1536]]},
+  lightBook:{width:1024,height:1536,frames:[[140,138,305,1304],[480,65,530,1385]]},
+  lightBracket:{width:1254,height:1254,frames:[[175,90,900,1100]]},
+  lightPrint:{width:1254,height:1254,frames:[[0,0,1254,1254],[370,320,520,640]]},
+  lightSupports:{width:1536,height:1024,frames:[[60,250,540,700],[650,20,380,960],[1030,155,440,295],[960,650,550,260]]},
+  lightWashes:{width:1536,height:1024,frames:[[0,0,730,520],[740,0,796,650],[0,500,790,524],[780,650,756,374]]},
   lightDeskTall:{width:1086,height:1448},
   lightDesk:{width:1536,height:1024},
   lightFilm:{width:1254,height:1254,frames:[[88,88,1078,1078]]},

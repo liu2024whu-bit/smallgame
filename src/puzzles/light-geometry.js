@@ -3,7 +3,11 @@ const dot=(a,b)=>a.reduce((sum,value,i)=>sum+value*b[i],0);
 const subtract=(a,b)=>a.map((v,i)=>v-b[i]);
 const addScaled=(a,b,t)=>a.map((v,i)=>v+b[i]*t);
 export const lightCamera=([x,y,z],camera=G.camera)=>[camera.xx*x+camera.xy*y+camera.x0,camera.yx*x+camera.yy*y+camera.yz*z+camera.y0];
-export function lightNormal(turn){const angle=G.normals[0]+turn*(G.normals[1]-G.normals[0]);return [Math.cos(angle*Math.PI/180),Math.sin(angle*Math.PI/180),0];}
+export function lightNormal(turn){const angle=(G.normals[0]+turn*(G.normals[1]-G.normals[0]))*Math.PI/180,c=Math.cos(G.mirrorPitch);return [Math.cos(angle)*c,Math.sin(angle)*c,Math.sin(G.mirrorPitch)];}
+export function mirrorBasis(values){
+ const n=lightNormal(values[2]),l=Math.hypot(n[0],n[1]),u=[-n[1]/l,n[0]/l,0];
+ return {u,v:[-n[2]*u[1],n[2]*u[0],n[0]*u[1]-n[1]*u[0]]};
+}
 export function reflectRay(ray,normal){return addScaled(ray,normal,-2*dot(ray,normal));}
 export function traceLight(point,values){
  const normal=lightNormal(values[2]),ray=subtract(point,G.source),denominator=dot(ray,normal);
@@ -11,17 +15,19 @@ export function traceLight(point,values){
  const t=dot(subtract(G.mirror,G.source),normal)/denominator;if(t<=0)return null;
  const hit=addScaled(G.source,ray,t),reflected=reflectRay(ray,normal),k=(G.screenY-hit[1])/reflected[1];
  if(!Number.isFinite(k)||k<=0)return null;
- const end=addScaled(hit,reflected,k),offset=subtract(hit,G.mirror),tangent=[-normal[1],normal[0],0];
- return {hit,end,screen:[end[0],end[2]],normal,ray,reflected,inside:Math.hypot(dot(offset,tangent),offset[2])<=G.mirrorRadius+1e-7};
+ const end=addScaled(hit,reflected,k),offset=subtract(hit,G.mirror),{u,v}=mirrorBasis(values);
+ return {hit,end,screen:[end[0],end[2]],normal,ray,reflected,inside:Math.hypot(dot(offset,u),dot(offset,v))<=G.mirrorRadius+1e-7};
 }
+export const filmCenter=values=>{const x=G.filmX[0]+values[0]*(G.filmX[1]-G.filmX[0]);return [x,G.filmY,G.source[2]+(x-G.source[0])*G.filmSlope];};
 export function filmPoint([x,y],values,flipped=false){
  const span=G.filmHalf*2,phase=typeof flipped==='boolean'?(flipped?1:0):flipped,angle=phase*Math.PI,offset=(x/SIZE-.5)*span;
- return [G.filmX[0]+values[0]*(G.filmX[1]-G.filmX[0])-Math.sin(angle)*offset,G.filmY+Math.cos(angle)*offset,G.filmZ+(.5-y/SIZE)*span];
+ const center=filmCenter(values);
+ return [center[0]-Math.sin(angle)*offset,center[1]+Math.cos(angle)*offset,center[2]+(.5-y/SIZE)*span];
 }
 export const filmProjection=(point,values,flipped=false)=>traceLight(filmPoint(point,values,flipped),values);
-export const screenToCamera=([x,z])=>lightCamera([x,G.screenY,z]);
+export const bookHeight=values=>G.bookZ[0]+values[1]*(G.bookZ[1]-G.bookZ[0]);
 export function bookPoints(values){
- const h=G.bookZ[0]+values[1]*(G.bookZ[1]-G.bookZ[0]);
+ const h=bookHeight(values);
  return G.bookX.flatMap(x=>G.bookY.flatMap(y=>[-1,1].map(sign=>[x,y,h+sign*G.bookHalfThickness])));
 }
 export function convexHull(points){
@@ -56,10 +62,10 @@ export function clipLightScreen(points){
 }
 export const bookShadow=values=>clipLightScreen(convexHull(bookPoints(values).map(p=>virtualProjection(p,values)).filter(Boolean)));
 export function mirrorCircle(values,count=64){
- const normal=lightNormal(values[2]),u=[-normal[1],normal[0],0];
+ const {u,v}=mirrorBasis(values);
  return Array.from({length:count},(_,i)=>{
   const angle=i/count*Math.PI*2;
-  return addScaled(addScaled(G.mirror,u,Math.cos(angle)*G.mirrorRadius),[0,0,1],Math.sin(angle)*G.mirrorRadius);
+  return addScaled(addScaled(G.mirror,u,Math.cos(angle)*G.mirrorRadius),v,Math.sin(angle)*G.mirrorRadius);
  });
 }
 export const mirrorFootprint=values=>mirrorCircle(values).map(point=>traceLight(point,values)?.screen).filter(Boolean);
@@ -68,7 +74,7 @@ export function visibleLightError(values,flipped,landmarks){
   const actual=filmProjection(point,values,flipped),a=actual?.inside?actual.screen:null,b=filmProjection(point,goal.values,goal.flipped).screen;
   return a?Math.hypot(a[0]-b[0],a[1]-b[1]):Infinity;
  });
- const height=G.bookZ[0]+values[1]*(G.bookZ[1]-G.bookZ[0]);
+ const height=bookHeight(values);
  const targetHeight=G.bookZ[goal.values[1]];
  // Only the upper far edge is illuminated by this finite mirror. The lower
  // near edge lies outside the light patch, so it cannot be a hidden condition.

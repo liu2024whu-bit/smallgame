@@ -34,7 +34,7 @@ function copy(){
     const state=game.store.get(),p=state.progress.calibration,matched=p.values.every((v,i)=>v===[2,1,3][i]);
     const stage={'000':'empty-lit','100':'film','010':'mirror-only','001':'book-only','110':'mirror','101':'film-book','011':'mirror-book','111':'book'}[p.fitted.map(Number).join('')];
     const id=state.solved.includes('calibration')?'calibration-done':state.hints.calibration?'calibration-hints':p.lit&&p.fitted.every(Boolean)&&matched?(p.flipped?'calibration-aligned':'calibration-flipped-wrong'):p.lit?'calibration-'+stage:'calibration';
-    spec=REVIEW_CASES.find(entry=>entry.id===id)??spec;
+    spec=(panel.view?.closeLook?REVIEW_CASES.find(entry=>entry.id===id+'-close'):null)??REVIEW_CASES.find(entry=>entry.id===id)??spec;
   }
   if(panel?.type==='puzzle'&&game.store.get().solved.includes(panel.id)){
     const state=game.store.get(),rewards=PUZZLE_BY_ID[panel.id].rewards;

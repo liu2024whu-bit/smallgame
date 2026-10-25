@@ -1,4 +1,4 @@
-import {LIGHT_INK,LIGHT_FILM_SURFACE} from '../data/light.js';
+import {LIGHT_FILM_SURFACE} from '../data/light.js';
 import { ASSETS, MOTIFS, MOTIF_LABELS } from '../data/assets.js';
 import { ASSET_LAYOUTS } from '../data/asset-layouts.js';
 
@@ -61,7 +61,7 @@ export function itemSprite(index,className=''){
  if(index===0)return atlas('bookmarkFull',0,{columns:1,rows:1,label:'木书签',className:`item-art ${className}`});
  if(index!==4)return atlas('items',index,{className:`item-art ${className}`});
  const surface=LIGHT_FILM_SURFACE,frame=ASSET_LAYOUTS.lightFilm.frames[0];
- const drawing=`<svg class="transparency-engraving" viewBox="${frame.join(' ')}" aria-hidden="true"><g transform="translate(${surface.x} ${surface.y}) scale(${surface.width/400} ${surface.height/400}) translate(100 100)">${LIGHT_INK.map(d=>`<path d="${d}"/>`).join('')}</g></svg>`;
+ const drawing=`<img class="transparency-print" src="${ASSETS.lightPrint}" alt="" draggable="false" style="left:${(surface.x-frame[0])/frame[2]*100}%;top:${(surface.y-frame[1])/frame[3]*100}%;width:${surface.width/frame[2]*100}%;height:${surface.height/frame[3]*100}%">`;
  return atlas('lightFilm',0,{label:'角上有四道记号的雨窗透片',className:`item-art transparency-prop ${className}`}).replace('</span>',drawing+'</span>');
 }
 export function character(asset, index, columns, rows, label, className = '') {

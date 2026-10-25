@@ -1,4 +1,4 @@
-# 当前结构 · V2.9.5
+# 当前结构 · V2.9.6
 
 ```text
 index.html / src/main.js        正式入口；只挂载真实游戏
@@ -12,10 +12,11 @@ src/ui/room.js                 远景、物品栏、场景入口
 src/ui/puzzles/                独立机关呈现，规则与图像坐标共用数据
 src/ui/workbench.js            工具、提示、撤销与完成反馈
 src/data/press.js              试印盒的像素帧、支点与近远景标定
-src/data/light.js              光路世界坐标、两种相机、图形及物件注册
+src/data/light.js              光路世界坐标、三种取景及位图/支点注册
 src/puzzles/light-geometry.js   有限镜面反射、实体遮挡与可见判断
 src/puzzles/calibration.js      工具安装、灯/翻片/物理档位和独立纸稿
-src/ui/puzzles/light*.js        同源光影器件、纸面裁切、近远景
+src/ui/puzzles/light*.js        同源自然位图、纸面裁切、近远景
+src/ui/raster-plane.js         位图四角透视变换和不可见裁切
 src/services/motion/light.js    一个连续姿态/投影驱动；只更新属性
 src/ui/puzzles/press.js         试印盒/印纸/可观察夹扣；不代管库存
 src/ui/interactions/tap.js      缺失原生轻点的补发/去重，拖动不触发
@@ -54,7 +55,7 @@ src/admin.js                   防误入门槛与会话解锁
 src/services/review-access.js  PIN摘要验证；不冒充服务端认证
 src/demo.js                    后台查询、跳转、尺寸切换、文字导出
 review-frame.html             复用真实游戏的隔离演示框
-src/demo/catalog.js            257个页面状态的唯一目录
+src/demo/catalog.js            259个页面状态的唯一目录
 src/demo/fixtures.js           经真实规则重建可操作演示状态
 src/demo/walkthrough.js        验证走法，测试复用；正式入口不导入
 src/demo/visible-copy.js       读取实际可见文字，不另写一套文案
@@ -97,6 +98,10 @@ tools/render-audio.py          开发时生成原创琴声和公版生日旋律�
 小黑用原有眨眼与新增六张过渡姿态，按脚下位置切换和短交叠；点击中断只保留最新动作。猫狗直接抚摸只改变临时近景姿态，首次完成手势才记活动。背景与家具保持稳定，不通过拉伸整张画制造呼吸。
 
 花架几何集中于data/garden.js，近远景透视分别标定，规则高度和制动状态共用。garden动作模块独占平台、摇柄、书签与完成窗光，原通用花盆/书签处理已删除。
+
+光影关卡的灯、器件、透片印花、参考、投影和纸稿全部使用栅格原画。SVG仅提供自适应视口，没有可见路径；CSS裁切只限制纸面、镜口与遮挡。四角变换按真实反射投影计算，测试还对照内部着色点，避免只对齐四个角。木片和下垂的穗子分别取景；世界坐标、素材坐标和相机数据共用，近远景不另存进度。
+
+放大焦点由视图数据提供，首次进入才定位；已有滚动位置继续保留。有限的靠近/退远变换只改变呈现，禁止写入规则或存档。
 
 每类材料有自己的有限动作驱动；系统减少动态效果或游戏关闭动画时结束有限过渡、停止循环装饰。装饰动画不掌管规则和交互结果。机器性能仍会影响实际帧率。
 

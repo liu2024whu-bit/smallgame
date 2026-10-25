@@ -11,6 +11,13 @@ function selectorFor(target, root) {
 }
 
 // Returning from a clue restores only the reading position, never game progress.
+export function centerWorkbenchViewport(viewport){
+ const point=viewport?.querySelector('[data-look-point]')?.dataset.lookPoint.split(',').map(Number);
+ if(point?.length!==2||!point.every(v=>Number.isFinite(v)&&v>=0&&v<=1))return false;
+ viewport.scrollLeft=viewport.scrollWidth*point[0]-viewport.clientWidth/2;
+ viewport.scrollTop=viewport.scrollHeight*point[1]-viewport.clientHeight/2;
+ return true;
+}
 export function captureDialogState(element) {
   const viewport=element.querySelector('.puzzle-viewport');
   return {
@@ -32,4 +39,5 @@ export function restoreDialogState(element, saved) {
   element.scrollTop = saved?.scroll ?? 0;
   const viewport=element.querySelector('.puzzle-viewport');
   if(viewport&&saved?.pan){viewport.scrollLeft=saved.pan.x;viewport.scrollTop=saved.pan.y;}
+  else if(viewport?.classList.contains('close-look'))centerWorkbenchViewport(viewport);
 }

@@ -1,4 +1,5 @@
-import { motionAllowed } from '../services/motion.js';
+import { motionAllowed,settleWorkbenchZoom } from '../services/motion.js';
+import {centerWorkbenchViewport} from './dialog-state.js';
 export const afterPuzzleAction=(view={},action)=>['undo','reset'].includes(action)?{...view,pressProof:false}:view;
 // Transient presentation choices stay out of the save and puzzle rule modules.
 export function viewActions({ panel, render, activity,foley=()=>{} }) {
@@ -15,12 +16,17 @@ export function viewActions({ panel, render, activity,foley=()=>{} }) {
       button.querySelector('.ending-page-back').setAttribute('aria-hidden',!lastPage);
     },
     'workbench-look':()=>{
+      const before=document.querySelector('.puzzle-field')?.getBoundingClientRect();
       const closeLook=!panel().view?.closeLook;change({closeLook});
       const viewport=document.querySelector('.puzzle-viewport');
+      const measured=!!viewport?.querySelector('[data-look-point]');
       if(closeLook&&viewport){
-        const focus=panel().id==='cloud'&&!panel().view?.back ? .34:.5;
-        viewport.scrollLeft=viewport.scrollWidth*focus-viewport.clientWidth/2;
+        if(!centerWorkbenchViewport(viewport)){
+          const focus=panel().id==='cloud'&&!panel().view?.back ? .34:.5;
+          viewport.scrollLeft=viewport.scrollWidth*focus-viewport.clientWidth/2;
+        }
       }
+      if(measured)settleWorkbenchZoom(viewport.querySelector('.puzzle-field'),before);
     },
     'memory-detail': button => { const focus = Number(button.dataset.index); change({ focus }); activity(`art:detail:${focus}`); },
     'memory-cinema': () => { change({ playing: !panel().view?.playing }); activity('cinema:play'); },

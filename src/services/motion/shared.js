@@ -11,6 +11,12 @@ export function watchMotionPreferences(root){
   return settle;
 }
 export const ease = 'cubic-bezier(.22,.75,.3,1)';
+export function settleWorkbenchZoom(field,before){
+ if(!field||!before||!motionAllowed())return;
+ const after=field.getBoundingClientRect(),scale=before.width/after.width;
+ if(!Number.isFinite(scale)||Math.abs(scale-1)<.001)return;
+ field.animate([{transformOrigin:'0 0',transform:`translate(${before.left-after.left}px,${before.top-after.top}px) scale(${scale})`},{transformOrigin:'0 0',transform:'none'}],{duration:360,easing:ease}).finished.catch(()=>{});
+}
 export const turnDelta = (old, next) => ((old - next + 180) % 360 + 360) % 360 - 180;
 export function drawLine(element) {
   const length = element.getTotalLength();

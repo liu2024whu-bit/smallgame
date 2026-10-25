@@ -10,6 +10,12 @@ export const SCENE_ART = Object.freeze({
 });
 export const ASSETS = Object.freeze({
   lightCorner:'assets/illustrations/light-corner.webp',
+  lightLamp:'assets/illustrations/light-lamp.webp',
+  lightBook:'assets/illustrations/light-book.webp',
+  lightBracket:'assets/illustrations/light-bracket.webp',
+  lightPrint:'assets/illustrations/light-print.webp',
+  lightSupports:'assets/illustrations/light-supports.webp',
+  lightWashes:'assets/illustrations/light-washes.webp',
   lightDeskTall:'assets/illustrations/light-desk-tall.webp',
   lightDesk:'assets/illustrations/light-desk.webp',
   lightFilm:'assets/illustrations/light-film.webp',

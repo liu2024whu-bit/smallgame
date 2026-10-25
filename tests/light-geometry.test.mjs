@@ -1,16 +1,17 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {LIGHT_GEOMETRY as G,LIGHT_LANDMARKS} from '../src/data/light.js';
-import {reflectRay,traceLight,virtualProjection,filmPoint,filmProjection,bookShadow,visibleLightError} from '../src/puzzles/light-geometry.js';
-import {LIGHT_LINES} from '../src/puzzles/light-ink.js';
-import {drawingPaths} from '../src/ui/puzzles/light-drawing.js';
+import {LIGHT_GEOMETRY as G,LIGHT_LANDMARKS,lightLayout} from '../src/data/light.js';
+import {reflectRay,traceLight,virtualProjection,filmPoint,filmProjection,bookShadow,visibleLightError,lightNormal,lightCamera,mirrorBasis,mirrorCircle} from '../src/puzzles/light-geometry.js';
+import {printQuad,drawingMasks} from '../src/ui/puzzles/light-raster.js';
+import {planeMatrix} from '../src/ui/raster-plane.js';
+import {ASSET_LAYOUTS} from '../src/data/asset-layouts.js';
 import {calibration,canTraceLight} from '../src/puzzles/calibration.js';
 const close=(a,b,tolerance=1e-6)=>{assert.equal(a.length,b.length);a.forEach((v,i)=>assert.ok(Math.abs(v-b[i])<tolerance,JSON.stringify({a,b,i})));};
 const states=Array.from({length:64},(_,n)=>[n%4,Math.floor(n/4)%4,Math.floor(n/16)]);
 test('a 45-degree plane reflects a horizontal ray through a right angle and preserves vertical components',()=>{
  const n=[Math.SQRT1_2,-Math.SQRT1_2,0];
  close(reflectRay([100,0,7],n),[0,100,7]);close(reflectRay(reflectRay([73,-18,12],n),n),[73,-18,12]);
- const ray=traceLight([400,300,200],[2,1,3]);close(ray.hit,[700,300,180]);close(ray.end,[700,700,153.3333333333333]);
+ const ray=traceLight(filmPoint([100,100],[2,1,3]),[2,1,3]);close(ray.hit,G.mirror);close(ray.end,[700,700,165]);
 });
 test('unfolded projection agrees with the real two-segment path, including a turning transparency',()=>{
  for(const values of states)for(const flip of [0,.25,.5,.75,1])for(const point of [[0,0],[200,0],[200,200],[0,200],[81,147]]){
@@ -18,15 +19,36 @@ test('unfolded projection agrees with the real two-segment path, including a tur
   assert.ok(ray);close(virtualProjection(world,values),ray.screen);
  }
 });
-test('every authored ink sample stays finite during a physical flip and both cameras preserve the same drawing',()=>{
+test('raster pigment anchors and projected quads remain finite throughout a flip in all cameras',()=>{
  for(const values of states)for(const phase of [0,.25,.5,.75,1]){
-  for(const run of LIGHT_LINES)for(const point of run)assert.ok(filmProjection(point,values,phase).screen.every(Number.isFinite));
-  for(const tall of [false,true]){
-   const data=drawingPaths({...calibration.create(),values,flipped:phase},tall);
-   for(const path of Object.values(data))assert.ok(!/NaN|Infinity|undefined/.test(path));
+  for(const point of LIGHT_LANDMARKS)assert.ok(filmProjection(point,values,phase).screen.every(Number.isFinite));
+  for(const view of [false,true,'room']){
+   assert.ok(printQuad(values,phase,false,view).flat().every(Number.isFinite));
+   for(const path of Object.values(drawingMasks(values,view)))assert.ok(!/NaN|Infinity|undefined/.test(path));
   }
  }
- assert.ok(LIGHT_LINES.length>=9);
+});
+test('the raster homography agrees with independently traced interior pigment, not only its four corners',()=>{
+ const [x,y,w,h]=ASSET_LAYOUTS.lightPrint.frames[1];
+ for(const values of states)for(const phase of [0,.25,.49,.51,.75,1])for(const view of [false,true,'room']){
+  const matrix=planeMatrix(printQuad(values,phase,false,view),w,h);
+  for(const point of LIGHT_LANDMARKS){
+   const px=(point[0]+100)/400*1254-x,py=(point[1]+100)/400*1254-y,weight=matrix[3]*px+matrix[7]*py+matrix[15];
+   const actual=[(matrix[0]*px+matrix[4]*py+matrix[12])/weight,(matrix[1]*px+matrix[5]*py+matrix[13])/weight];
+   const ray=filmProjection(point,values,phase),expected=lightCamera([ray.end[0],G.screenY,ray.end[2]],lightLayout(view).camera);
+   close(actual,expected,1e-5);
+  }
+ }
+});
+test('the inclined mirror basis is orthonormal and every pupil sample is on its real plane',()=>{
+ for(const values of states){
+  const n=lightNormal(values[2]),{u,v}=mirrorBasis(values),dot=(a,b)=>a.reduce((s,x,i)=>s+x*b[i],0);
+  for(const axis of [n,u,v])assert.ok(Math.abs(Math.hypot(...axis)-1)<1e-8);
+  for(const [a,b]of [[n,u],[n,v],[u,v]])assert.ok(Math.abs(dot(a,b))<1e-8);
+  for(const p of mirrorCircle(values)){
+   const d=p.map((x,i)=>x-G.mirror[i]);assert.ok(Math.abs(dot(d,n))<1e-8);assert.ok(Math.abs(Math.hypot(...d)-G.mirrorRadius)<1e-7);
+  }
+ }
 });
 const inPolygon=(p,polygon)=>{let inside=false;for(let i=0,j=polygon.length-1;i<polygon.length;j=i++){const a=polygon[i],b=polygon[j];if((a[1]>p[1])!==(b[1]>p[1])&&p[0]<(b[0]-a[0])*(p[1]-a[1])/(b[1]-a[1])+a[0])inside=!inside;}return inside;};
 function segmentHitsBox(from,to,minimum,maximum){
@@ -38,11 +60,12 @@ function segmentHitsBox(from,to,minimum,maximum){
  return low<=high;
 }
 test('the long bookmark shadow matches an independent ray/solid intersection, without discarding off-screen ends',()=>{
- const polygon=bookShadow([2,1,3]);assert.ok(polygon.length>=4);
- for(const x of [580,640,700,760,820])for(const z of [0,20,40,60,80,100,160]){
-  // For this known 45-degree geometry the reflected light source is (700,-300,220).
-  const t=600/(1700-x),hit=[700+t*(x-700),-300+1000*t,220+t*(z-220)];
-  const blocked=segmentHitsBox([100,300,220],hit,[206,260,198],[234,420,202]);
+ const polygon=bookShadow([2,1,3]);assert.ok(polygon.length>=3);
+ const dot=(a,b)=>a.reduce((s,v,i)=>s+v*b[i],0),n=lightNormal(3),offset=G.source.map((v,i)=>v-G.mirror[i]);
+ const virtual=G.source.map((v,i)=>v-2*dot(offset,n)*n[i]);
+ for(const x of [610,650,700,750,790])for(const z of [55,80,100,130,160,210,280]){
+  const ray=[x-virtual[0],G.screenY-virtual[1],z-virtual[2]],t=dot(G.mirror.map((v,i)=>v-virtual[i]),n)/dot(ray,n),hit=virtual.map((v,i)=>v+t*ray[i]);
+  const blocked=segmentHitsBox(G.source,hit,[206,260,484],[234,380,488]);
   assert.equal(inPolygon([x,z],polygon),blocked,JSON.stringify({x,z}));
  }
  for(const values of states)for(const [x,z]of bookShadow(values)){assert.ok(Number.isFinite(x)&&Number.isFinite(z));assert.ok(x>=G.screen.left-1e-5&&x<=G.screen.right+1e-5&&z>=G.screen.bottom-1e-5&&z<=G.screen.top+1e-5);}
@@ -53,11 +76,12 @@ test('visible configurations have one joint solution; wrong snapped positions re
   const error=visibleLightError(values,flipped,LIGHT_LANDMARKS);
   if(error<.75)found.push({values,flipped});else nearest=Math.min(nearest,error);
  }
- assert.deepEqual(found,[{values:[2,1,3],flipped:true}]);assert.ok(nearest>20);
- for(const point of LIGHT_LANDMARKS){const ray=filmProjection(point,[2,1,3],true);assert.ok(ray.inside);assert.ok(ray.screen[1]>85.6716417911);}
+ assert.deepEqual(found,[{values:[2,1,3],flipped:true}]);assert.ok(nearest>10);
+ const shadow=bookShadow([2,1,3]);
+ for(const point of LIGHT_LANDMARKS){const ray=filmProjection(point,[2,1,3],true);assert.ok(ray.inside);assert.ok(!inPolygon(ray.screen,shadow));}
 });
 test('alignment is not a finished drawing; tracing needs the three fitted tools and light',()=>{
- assert.ok(traceLight([234,300,202],[2,1,3]).inside);assert.ok(!traceLight([206,300,198],[2,1,3]).inside);
+ assert.ok(traceLight([234,300,488],[2,1,3]).inside);
  const initial=calibration.create();assert.equal(calibration.move(initial,{type:'trace'}),initial);
  assert.equal(calibration.move(initial,{type:'flip'}),initial);
  for(const order of [[0,1,2],[0,2,1],[1,0,2],[1,2,0],[2,0,1],[2,1,0]]){

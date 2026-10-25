@@ -10,7 +10,7 @@ import { materialMotion } from './motion/materials.js';
 import { workshopMotion } from './motion/workshop.js';
 
 export { motionAllowed };
-export { watchMotionPreferences } from './motion/shared.js';
+export { watchMotionPreferences,settleWorkbenchZoom } from './motion/shared.js';
 // Measured presentation belongs to its material, never to the save or rules.
 const drivers = [gardenMotion,pressMotion,cloudMotion,lightMotion, objectMotion, mechanismMotion, paperMotion, materialMotion, workshopMotion];
 export const captureMotion = root => motionAllowed() ? drivers.map(driver => driver.capture(root)) : null;

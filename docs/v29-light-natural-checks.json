@@ -1,0 +1,230 @@
+{
+  "version": "2.9.6",
+  "scope": "P5 painted light puzzle and coordinated props; P6 and later remain pending",
+  "unitTests": {
+    "passed": 189
+  },
+  "sourceModules": 185,
+  "reviewCases": 259,
+  "native": {
+    "out": [
+      {
+        "width": 1440,
+        "touch": false,
+        "drag": true,
+        "cancel": true,
+        "trace": true,
+        "controls": 9,
+        "errors": []
+      },
+      {
+        "width": 390,
+        "touch": true,
+        "drag": true,
+        "cancel": true,
+        "trace": true,
+        "controls": 9,
+        "errors": []
+      },
+      {
+        "width": 320,
+        "touch": true,
+        "drag": true,
+        "cancel": true,
+        "trace": true,
+        "controls": 9,
+        "errors": []
+      }
+    ],
+    "errors": []
+  },
+  "fullRoute": {
+    "played": [
+      {
+        "id": "paper",
+        "solved": true
+      },
+      {
+        "id": "cloud",
+        "solved": true
+      },
+      {
+        "id": "calibration",
+        "solved": true
+      },
+      {
+        "id": "postbox",
+        "solved": true
+      },
+      {
+        "id": "books",
+        "solved": true
+      },
+      {
+        "id": "screen",
+        "solved": true
+      },
+      {
+        "id": "belt",
+        "solved": true
+      },
+      {
+        "id": "film",
+        "solved": true
+      },
+      {
+        "id": "flowers",
+        "solved": true
+      },
+      {
+        "id": "paperBack",
+        "solved": true
+      },
+      {
+        "id": "cloudGap",
+        "solved": true
+      },
+      {
+        "id": "wordlock",
+        "solved": true
+      },
+      {
+        "id": "album",
+        "solved": true
+      },
+      {
+        "id": "stitch",
+        "solved": true
+      },
+      {
+        "id": "chocolate",
+        "solved": true
+      },
+      {
+        "id": "cocoa",
+        "solved": true
+      },
+      {
+        "id": "sweets",
+        "solved": true
+      },
+      {
+        "id": "ribbons",
+        "solved": true
+      },
+      {
+        "id": "birthdayLock",
+        "solved": true
+      },
+      {
+        "id": "calendar",
+        "solved": true
+      },
+      {
+        "id": "maze",
+        "solved": true
+      },
+      {
+        "id": "balance",
+        "solved": true
+      },
+      {
+        "id": "drawers",
+        "solved": true
+      },
+      {
+        "id": "flips",
+        "solved": true
+      },
+      {
+        "id": "packing",
+        "solved": true
+      },
+      {
+        "id": "melody",
+        "solved": true
+      }
+    ],
+    "solved": 26,
+    "door": true,
+    "cake": "许愿的时候",
+    "ending": true,
+    "errors": []
+  },
+  "save": {
+    "partial": true,
+    "proof": true,
+    "toolsReturned": true,
+    "downstream": true
+  },
+  "revision": 10,
+  "extra": {
+    "closeFixtures": true,
+    "zoomControlsReachable": 9,
+    "mousePan": true,
+    "simulatedBlur": true,
+    "keyboardEndpoints": true,
+    "reduceDuringMotion": true,
+    "rapidTapCount": 8,
+    "resize": true,
+    "frameSample": {
+      "count": 210,
+      "p95": 24,
+      "max": 36.3
+    },
+    "errors": []
+  },
+  "layouts": {
+    "320": {
+      "images": {
+        "references": 97,
+        "unique": 89,
+        "failed": []
+      },
+      "layouts": 259,
+      "issues": [],
+      "errors": []
+    },
+    "390": {
+      "images": {
+        "references": 97,
+        "unique": 89,
+        "failed": []
+      },
+      "layouts": 259,
+      "issues": [],
+      "errors": []
+    },
+    "1440": {
+      "images": {
+        "references": 97,
+        "unique": 89,
+        "failed": []
+      },
+      "layouts": 259,
+      "issues": [],
+      "errors": []
+    }
+  },
+  "browser": "Chromium; reachable panned controls checked separately; frame sample is from this test host, not a device guarantee",
+  "rendering": "Natural raster artwork; hidden geometry only; four-corner projection checked against interior ray samples",
+  "media": {
+    "duration": 11.666666,
+    "crop": [
+      1040,
+      1100
+    ],
+    "originalMusicMixedSeparately": true
+  },
+  "gallery": {
+    "versions": 5,
+    "detailViews": 11,
+    "decodedImages": 16,
+    "keyboard": true,
+    "zoom": true,
+    "nativeVideo": true,
+    "width": 320,
+    "horizontalOverflow": false,
+    "errors": []
+  }
+}

@@ -1,24 +1,27 @@
 @layer puzzles {
  .transparency-prop { position:relative; }
- .transparency-engraving { position:absolute;inset:0;width:100%;height:100%;fill:none;stroke:#697b79;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:.72;pointer-events:none; }
+ .transparency-print { position:absolute;object-fit:fill;opacity:.86;pointer-events:none; }
  .puzzle-calibration .puzzle-field { padding:0;background:transparent; }
  .light-workbench { overflow:clip;border-radius:3px; }
- .light-case { position:relative;isolation:isolate;aspect-ratio:1536/720;container-type:inline-size; }
- .light-portrait { aspect-ratio:768/1024; }
+ .light-case { position:relative;isolation:isolate;aspect-ratio:1536/1150;container-type:inline-size; }
+ .light-portrait { aspect-ratio:768/1100; }
  .light-art { display:block;width:100%;height:100%;overflow:hidden;pointer-events:none; }
- .light-desk { filter:saturate(.74) contrast(.94) brightness(1.03); }
- .light-contact { fill:#806d4a;opacity:.1; }
- .light-bulb { fill:#fff7be; }
- .light-incoming,.light-reflected { fill:#fff3bd;opacity:.075; }
- .light-reflected { opacity:.055; }
- .light-reference { stroke:#847c6b;stroke-width:1.35;opacity:.5;stroke-dasharray:4 5;stroke-linecap:round;stroke-linejoin:round; }
- .light-paper-wash { fill:#fff9d4;opacity:.8; }
- .light-shadow-ink { stroke:#52656a;stroke-width:4.7;stroke-linecap:round;stroke-linejoin:round;opacity:.72; }
- .light-physical-ink { stroke:#52656a;stroke-width:1.55;stroke-linecap:round;stroke-linejoin:round;opacity:.8; }
- .light-drawn-ink,.light-drawn-sill { stroke:#56675d;stroke-width:2.65;stroke-linecap:round;stroke-linejoin:round; }
- .light-drawn-sill { stroke-width:1.7; }
- [data-light-plane=film] { opacity:.6; }
- [data-light-plane=holder] { opacity:.72; }
+ .light-stage { position:relative;isolation:isolate;pointer-events:none; }
+ .light-stage>div,.light-paper-region div { position:absolute;inset:0; }
+ .light-plane { position:absolute;left:0;top:0;display:block;transform-origin:0 0; }
+ .light-plane-crop { position:absolute;inset:0;display:block;overflow:hidden; }
+ .light-plane img { position:absolute;max-width:none;max-height:none;user-select:none; }
+ .light-desk { position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.64) contrast(.92) brightness(1.04); }
+ .light-bulb .light-plane { mask-image:radial-gradient(ellipse,#000 20%,transparent 65%); }
+ .light-reference-image { filter:grayscale(.8) sepia(.2);opacity:.22; }
+ .light-reference-book { filter:brightness(.2) sepia(1);opacity:.06; }
+ .light-paper-wash { opacity:.66;mask-image:radial-gradient(ellipse,#000 30%,transparent 70%); }
+ .light-shadow-ink { filter:grayscale(.45) brightness(.85);opacity:.8; }
+ .light-physical-print { opacity:.85; }
+ .light-book-shadow { filter:brightness(.15) sepia(.6) blur(.6px);opacity:.2; }
+ .light-drawn-ink { filter:grayscale(.65) sepia(.18) brightness(.85);opacity:.9; }
+ [data-light-plane=film] { opacity:.72; }
+ [data-light-plane=holder] { opacity:.85; }
  .light-tool { filter:drop-shadow(0 1px 1px #5d57371b); }
  .light-paper-blocker { position:absolute;inset:0;z-index:4; }
  .light-socket { position:absolute;translate:-50% -50%;width:44px;height:44px;z-index:3;pointer-events:none;border-radius:50%; }
@@ -27,28 +30,27 @@
  .light-grip,.light-power,.light-flip { width:max(44px,4.5cqw);height:max(44px,4.5cqw);padding:0;border:0;border-radius:50%;background:transparent;touch-action:none;cursor:var(--cursor-grab,grab); }
  .light-grip:hover,.light-power:hover,.light-flip:hover { background:#f8f1c92b;box-shadow:inset 0 0 0 1px #8d81533d; }
  .light-grip:active { cursor:var(--cursor-hold,grabbing); }
- .light-flip .icon { width:clamp(13px,2cqw,23px);height:auto;color:#776d4f; }
+ .light-flip span { font-size:clamp(11px,1.6cqw,17px);color:#776d4f;letter-spacing:.12em; }
  .light-power { z-index:5; }
  .light-power[aria-pressed=true] { box-shadow:0 0 15px #ffeaa040; }
- .light-fitting { display:flex;align-items:center;gap:5px;min-width:56px;min-height:38px;padding:4px 9px;border-radius:2px 8px 3px 6px;background:#fbf5e4c9;color:#7d806b;font-size:clamp(10px,1.7cqw,16px);box-shadow:0 1px 2px #7566461c; }
- .light-fitting .icon { width:14px;height:14px; }
+ .light-fitting { display:flex;align-items:center;min-width:56px;min-height:44px;padding:4px 9px;border-radius:2px 8px 3px 6px;background:#fbf5e4c9;color:#777d66;font-size:clamp(11px,1.7cqw,16px);box-shadow:0 1px 2px #7566461c; }
  .light-fitting.is-fitted { background:#f4edda91;color:#9a937d; }
  .light-fitting:disabled { opacity:.35; }
- .light-pencil { left:86.2%;top:88%;width:18%;height:max(44px,10%);z-index:5;cursor:var(--cursor-grab,grab);touch-action:none; }
- .light-pencil-label { display:block;margin-top:32%;font-size:clamp(10px,1.7cqw,15px);color:#8a8b76;letter-spacing:.12em; }
+ .light-pencil { left:86.2%;top:88%;width:18%;min-height:44px;z-index:5;cursor:var(--cursor-grab,grab);touch-action:none; }
+ .light-pencil-label { position:absolute;top:100%;left:50%;translate:-50% 0;white-space:nowrap;font-size:clamp(11px,1.7cqw,15px);color:#7e826e;letter-spacing:.12em;pointer-events:none; }
  .light-pencil-ghost { display:block;width:150px;rotate:-25deg;transform-origin:0 50%; }
  .drawing-pencil { width:150px;height:50px;pointer-events:none; }
  .light-ready-to-trace .light-paper-art { filter:drop-shadow(0 0 4px #d3be7d66); }
  .light-done .light-fitting,.light-done .light-grip,.light-done .light-flip { visibility:hidden; }
- .world-light { position:absolute;left:58.1%;top:45.7%;width:17%;pointer-events:none; }
- .world-light .light-case { aspect-ratio:1536/720; }
- .world-light .light-beams { display:none; }
+ .world-light { position:absolute;left:50.4%;top:27.4%;width:29.67%;pointer-events:none; }
+ .world-light .light-case { aspect-ratio:1536/1100; }
+ .puzzle-calibration .puzzle-viewport { overflow:clip; }
  .puzzle-calibration .close-look>.puzzle-field { min-width:600px; }
+ .puzzle-calibration .close-look .light-case { cursor:var(--cursor-grab,grab); }
+ .puzzle-calibration.is-dragging .close-look .light-case { cursor:var(--cursor-hold,grabbing); }
  @media(max-width:700px) {
-  .light-fitting { padding:2px 5px;min-height:32px;gap:3px; }
-  .light-fitting .icon { width:11px;height:11px; }
-  .light-pencil-label { margin-top:48%; }
-  .puzzle-calibration .puzzle-viewport.close-look { max-height:65dvh; }
+  .light-fitting { padding:2px 5px; }
+  .puzzle-calibration .puzzle-viewport.close-look { max-height:68dvh;overflow:auto; }
  }
- @media(forced-colors:active){.light-grip,.light-fitting,.light-flip,.light-power {outline:1px solid ButtonText;}.light-reference,.light-shadow-ink {stroke:CanvasText;}.light-reference {opacity:.5;}}
+ @media(forced-colors:active){.light-grip,.light-fitting,.light-flip,.light-power {outline:1px solid ButtonText;}.light-reference-image {opacity:.5;}}
 }
