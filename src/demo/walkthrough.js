@@ -27,7 +27,7 @@ export const WITNESSES = {
   cloud: turns([0, 0, 0], [3, 2, 2], 4),
   calibration: [...[0,1,2].map(index=>({type:'fit',index})),{type:'power'},...turns([0,0,0],[2,1,3],4),{type:'flip'},{type:'trace'}],
   postbox: [...[1, 0, 2, 9].map((value, index) => ({ type: 'set', index, value })), { type:'submit' }],
-  books: arrange([0, 1, 2, 3, 4], [3, 0, 4, 1, 2]),
+  books: [{type:'fit',index:0},...arrange([0,1,2,3,4],[3,0,4,1,2]),{type:'submit'}],
   screen: flip([0, 2, 3, 6, 8]),
   belt: [...[0, 2, 1, 4, 3, 5, 6].map(index => ({ type: 'node', index })), { type: 'cross' }, { type: 'ratio' }, { type: 'ratio' }],
   film: [...arrange([2, 0, 1], [1, 0, 2]), ...flip([0, 2])],

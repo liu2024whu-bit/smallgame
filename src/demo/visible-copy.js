@@ -4,6 +4,7 @@ export function visibleCopy(root){
   const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
   function visible(element){
     for(let el=element;el&&el!==root.parentElement;el=el.parentElement){
+      if(el.tagName==='DETAILS'&&!el.open&&!el.querySelector(':scope > summary')?.contains(element))return false;
       const s=getComputedStyle(el);
       if(el.hidden||el.inert||el.hasAttribute('data-copy-hidden')||el.classList.contains('sr-only')||s.display==='none'||s.visibility==='hidden'||Number(s.opacity)===0)return false;
     }

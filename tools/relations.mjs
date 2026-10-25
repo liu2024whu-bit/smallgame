@@ -8,7 +8,7 @@ const names=ids=>ids.length?ids.map(id=>ITEMS[id]?.name??PUZZLE_BY_ID[id]?.title
 const main=PUZZLES.filter(p=>!p.optional),tools=[...new Set(PUZZLES.flatMap(p=>p.tools))];
 const graph=['flowchart LR',...main.map(p=>`  ${p.id}["${p.title}"]`),
  ...main.flatMap(p=>p.requires.map(id=>`  ${id} --> ${p.id}`)),
-  '  postbox -->|实际拾取| borrowSlip["借阅签"]','  borrowSlip -->|准入| books',
+  '  postbox -->|实际拾取| borrowSlip["借阅签"]','  borrowSlip -->|夹座释放书列| books',
   '  stitch --> birthdayDoor["摇柄装入生日门"]','  birthdayDoor --> chocolate','  birthdayDoor --> sweets','  birthdayDoor --> ribbons',
  '  sweets --> birthdayLock','  cocoa --> candles["点烛与许愿"]','  sweets --> candles','  birthdayLock --> candles'];
 const text=`# V2.9 现有关系图与道具审查底稿
@@ -23,7 +23,7 @@ ${graph.join('\n')}
 
 ## 每个机关
 
-“完成得到”列记录解开后可领取的物件；实际点击拾取后才进入库存。晚邮的借阅签留在匣内，拿走才满足书架准入；书架内如何更自然地用签，仍按P7独立审查。
+“完成得到”列记录解开后可领取的物件；实际点击拾取后才进入库存。晚邮的借阅签留在匣内，拿走后可放入书架夹座释放书列。抽看和翻纸不写解题旗标；合适的排列还需实际拉屉，画页与针分别拿起。
 
 | 机关 | 所在场景 | 前置机关 | 所需物品 | 完成得到 | 类型 |
 | --- | --- | --- | --- | --- | --- |
@@ -39,7 +39,7 @@ ${tools.map(id=>`| ${names([id])} | ${PUZZLES.filter(p=>p.tools.includes(id)).ma
 
 ## 逐关要继续追问的地方
 
-上表“所需”包含准入检查，不能据此声称每件物品都已有完整抓取、操作或材料反馈。目前明确的直接复用包括试印夹扣、云景牵线、借光三工具嵌合与回收、花架书签、透片覆巧克力、摇柄装门，以及贺卡／纸带／镜子嵌入生日匣。其余关系按P3—P28逐关检查，必要时把仅检查拥有的条件改为可见且合理的操作，或删去不必要条件。
+上表“所需”包含准入检查，不能据此声称每件物品都已有完整抓取、操作或材料反馈。目前明确的直接使用包括试印夹扣、云景牵线、借光三工具嵌合与回收、书架夹座与退签、花架书签、透片覆巧克力、摇柄装门，以及贺卡／纸带／镜子嵌入生日匣。其余关系按P3—P28逐关检查，必要时把仅检查拥有的条件改为可见且合理的操作，或删去不必要条件。
 
 试印与云景可并行；借点光以后，书架与纸屏两支汇入穿线。花架后，纸盒夹层与云间留白两支汇入字间。生日桌与准备台两支汇入许愿。七个独立机关不进入结尾门槛；可选活动和收集物由真实状态派生成就，不维护第二套通关表。
 

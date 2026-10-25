@@ -5,7 +5,7 @@ export const FINISH_REACTIONS = Object.freeze({
   cloud: ['云停在这里了。', 'cloud'],
   calibration: ['把光留住了。', 'star'],
   postbox: ['咔哒。', 'envelope'],
-  books: ['书后面，果然有东西。', 'book'],
+  books: ['原来还藏着一层。', 'book'],
   screen: ['接成一幅了。', 'petal'],
   belt: ['转起来了。', 'leaf'],
   film: ['原来是这个先后。', 'petal'],

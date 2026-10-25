@@ -222,7 +222,7 @@ const actions = {
     note?.scrollIntoView({block:'nearest',behavior:motionAllowed()?'smooth':'instant'});
     if(note)announce(note.textContent);
   },
-  'sky-pair': () => { ui.skyPair = 1 - ui.skyPair; renderDialog(); },
+  'sky-pair': () => { ui.skyPair = 1 - ui.skyPair; renderDialog(); audio.foley('turn'); },
   'play-melody': () => {
     const field=dialog.element.querySelector('.music-apparatus');
     audio.melody(store.get().progress.melody.notes, index => {

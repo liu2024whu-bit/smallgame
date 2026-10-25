@@ -41,8 +41,7 @@
  .pocket-1 .cloud-found { top:60%; left:13%; width:74%; }
  .cloud-wing { display:block; position:absolute; inset:0; backface-visibility:visible; }
  .cloud-wing-art { display:block; width:100%; }
- .cloud-figure { display:block; position:absolute; left:8%; bottom:22%; width:84%; filter:drop-shadow(.8px 1px .5px #68502b2a); }
- .pocket-1 .cloud-figure { left:11%; width:78%; }
+ .cloud-figure { display:block; position:absolute; left:50%; bottom:22%; translate:-50% 0; filter:drop-shadow(.8px 1px .5px #68502b2a); }
  .cloud-drive { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; fill:none; }
  .cloud-belt { stroke:#c4bda0; stroke-width:3; fill:none; stroke-linecap:round; filter:drop-shadow(0 1px .5px #685a3a33); }
  .cloud-gear { fill:#d8c49b; stroke:#9b875e; stroke-width:2.2; }

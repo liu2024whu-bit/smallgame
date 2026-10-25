@@ -1,14 +1,5 @@
-import { BOOKS, BOOK_CLUES } from '../../puzzles/books.js';
 import { HASHIRA, screenPorts } from '../../puzzles/screen.js';
-import { BOOKMARKS } from '../../data/assets.js';
-import { character, escape, moveButton, shiftControls } from '../dom.js';
-
-export function renderBooks(progress) {
-  return `<div class="books-workbench"><div class="borrow-notes">${BOOK_CLUES.map(clue => `<p>${escape(clue)}</p>`).join('')}</div><div class="book-row">${progress.order.map((book, index) => {
-    const bookmark = BOOKMARKS.find(mark => mark.book === book);
-    return `<div class="book-slot">${bookmark ? `<span class="character-bookmark">${character('genshin', bookmark.figure, 2, 1, bookmark.name)}<small>${escape(bookmark.name)}</small></span>` : ''}<div class="illustrated-spine book-tone-${book}"><span>${escape(BOOKS[book])}</span><small>${index + 1}</small></div>${shiftControls(index, 5)}</div>`;
-  }).join('')}</div></div>`;
-}
+import {character,escape,moveButton} from '../dom.js';
 
 export function renderScreen(progress) {
   const ports = screenPorts(progress.flips);

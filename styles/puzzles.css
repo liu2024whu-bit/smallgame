@@ -45,20 +45,11 @@
   .dial-face { position: relative; display: inline-grid; place-items: center; width: 65px; aspect-ratio: 1; }
   .dial-face .item-art { width: 65px; transform: rotate(var(--turn)); }
   .dial-face b { position: absolute; inset: 0; display: grid; place-items: center; font: 17px Georgia, serif; color: #7f806a; }
-  .appearance-controls { display: flex; gap: 9px 18px; flex-wrap: wrap; justify-content: center; font-size: 12px; }
-  .sky-diorama { position: relative; width: min(740px, 100%); margin: 0 auto; border-radius: 4px; overflow: hidden; }
-  .sky-diorama > .character-art { display: block; width: 100%; }
-  .books-workbench { position: relative; }
-  .borrow-notes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 28px; max-width: 650px; margin: 0 auto 20px; font-size: 15px; }
-  .borrow-notes p { border-bottom: 1px dotted #b5c09e; padding: 4px 0; margin: 0; }
-  .book-row { display: flex; justify-content: center; gap: 13px; padding-top: 82px; }
-  .book-slot { position: relative; }
-  .illustrated-spine { display: flex; position: relative; align-items: center; justify-content: center; writing-mode: vertical-rl; width: 65px; height: 195px; border: 1px solid #a6a68d; border-radius: 4px 6px 2px 3px; background-image: url('../assets/illustrations/board.webp'); background-size: auto 220%; background-position:center; background-blend-mode: multiply; font-size: 17px; box-shadow:inset 4px 0 1px #ffffff52,inset -3px 0 1px #7a795b18,2px 3px 3px #55552210; }
-  .illustrated-spine::before,.illustrated-spine::after { content:''; position:absolute; left:7px; right:7px; height:4px; border-block:1px solid #9f98625c; }.illustrated-spine::before { top:13px; }.illustrated-spine::after { bottom:29px; }
-  .illustrated-spine small { position: absolute; bottom: 9px; font: 10px Georgia, serif; color: #7e886e; writing-mode: horizontal-tb; }
-  .book-tone-0 { background-color: #d9e2be; }.book-tone-1 { background-color: #d8d4bf; }.book-tone-2 { background-color: #d0d8d0; }.book-tone-3 { background-color: #eccbbf; }.book-tone-4 { background-color: #e8dba7; }
-  .character-bookmark { position: absolute; left: 50%; top: -69px; width: 42px; transform: translateX(-50%); padding: 4px 4px 9px; background: #fff9e9 url('../assets/illustrations/board.webp') center / cover; border: 1px solid #cfc4a3; box-shadow: 2px 2px 3px #726a4930; display: grid; justify-items: center; z-index: 1; }
-  .character-bookmark .character-art { width: 100%; }.character-bookmark small { font-size: 9px; line-height: 1.3; }
+  .appearance-controls { display:flex;gap:9px 18px;flex-wrap:wrap;justify-content:center;align-items:center;font-size:12px; }
+  .sky-diorama { display:block; position:relative; width:min(740px,100%); aspect-ratio:1.5; margin:0 auto 14px; border-radius:4px; overflow:hidden; background:url('../assets/illustrations/cloud-ledge.webp') center/100% 100% no-repeat; }
+  .sky-person { display:block;position:absolute;left:30%;bottom:14%;translate:-50% 0;filter:drop-shadow(1px 2px 1px #66543820); }
+  .sky-person-1 { left:69%; }.sky-cover { width:min(100%,202.5px);margin:0; }
+  .appearance-controls .text-button { display:inline-flex;align-items:center;gap:7px;min-height:44px; }.appearance-controls .icon { width:16px;height:16px; }
   .port-key { text-align: center; font-size: 13px; color: #82936c; }
   .accordion-screen { display: flex; justify-content: center; gap: 4px; }
   .screen-leaf { flex: 1; min-width: 0; position: relative; padding: 8px 2px; text-align: center; background: #fffdf3; border: 1px solid #cbd2b8; box-shadow: inset 5px 0 0 #a3ad8410; }
@@ -135,8 +126,6 @@
 
     .appearance-controls { gap: 3px 10px; font-size: 10px; }
     .turn-scene { font-size: 12px; }
-    .book-row { gap: 6px; padding-top: 66px; }.illustrated-spine { width: 46px; height: 170px; font-size: 14px; }.book-slot .shift-controls { gap: 2px; }.book-slot .puzzle-control { min-width: 23px; }.character-bookmark { width: 33px; top: -56px; padding: 3px 3px 7px; }
-    .borrow-notes { gap: 8px 15px; font-size: 13px; }
     .accordion-screen { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }.screen-name { font-size: 12px; height: 20px; }.screen-leaf .character-art { width: 74%; margin: auto; }.screen-line { height: 46px; }.screen-leaf .puzzle-control { min-height: 27px; }
     .mechanical-controls { gap: 6px; }.mechanical-controls .puzzle-control { font-size: 12px; }
     .album-layout { gap: 7px; }.loose-page { padding: 4px; width: 24%; }.loose-page p { font-size: 11px; }.loose-page > .puzzle-control { font-size: 10px; padding: 2px; }.page-letter { font-size: 12px; }.loose-page .shift-controls { gap: 1px; }.loose-page .shift-controls .puzzle-control { min-width: 24px; }

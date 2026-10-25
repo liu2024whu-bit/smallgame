@@ -32,7 +32,7 @@ function product(count, length) {
 test('paper operations and inverse, book ordering, film and album have unique solutions', () => {
   for (const id of ['paper', 'paperBack', 'books']) {
     const initial = RULES[id].create();
-    assert.equal(enumeratePermutations(initial.order).filter(order => RULES[id].solved(id==='paper'?{...initial,opened:true,order,proof:order,presses:1}:{order})).length, 1, id);
+    assert.equal(enumeratePermutations(initial.order).filter(order => RULES[id].solved(id==='paper'?{...initial,opened:true,order,proof:order,presses:1}:id==='books'?{...initial,order,opened:true,attempts:1}:{order})).length, 1, id);
   }
   for (const id of ['film', 'album']) {
     const seed = RULES[id].create();

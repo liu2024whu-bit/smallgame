@@ -35,6 +35,6 @@ function postcards(context){return postalPaperDesk(context,{collection:true});}
 
 export function memoryExhibit(id, context) {
   const views = { genshin: sketch, naruto: artist, hei: cinema, hashira: fan, prince, cities: postcards,
-    sky: () => `${renderSkyPair(context.state, context.skyPair)}${skyControls(context.state, context.skyPair)}<p class="memory-caption">上线啦。</p>` };
+    sky: () => `${renderSkyPair(context.skyPair)}${skyControls(context.skyPair)}<p class="memory-caption">上线啦。</p>` };
   return (views[id] ?? (() => ''))(context);
 }

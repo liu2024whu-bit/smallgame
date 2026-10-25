@@ -9,6 +9,7 @@ import { memoryExhibit } from './exhibits.js';
 import { achievementsPage } from './achievements.js';
 import { EVIDENCE_TITLES } from './evidence.js';
 import { ITEM_EVIDENCE } from '../data/ciphers.js';
+import {renderSkyPair} from './sky.js';
 
 export function journalPanel(state, tab = 'clues', view = {}) {
   const tabs = [['clues', '线索','feather'], ['memories', '以前','moon'], ['collections', '收藏','star'], ['activities', '小记','book']];
@@ -25,7 +26,7 @@ export function journalPanel(state, tab = 'clues', view = {}) {
 function collectionIndex(state) {
   const found = discoveredCollections(state);
   const covers={naruto:'memoryNaruto',genshin:'memoryGenshin',hei:'cinema',cities:'campusWhu'};
-  return `<div class="collection-index">${Object.entries(COLLECTIONS).map(([id, c]) => `<button class="collection-link ${found.has(id) ? '' : 'collection-hidden'}" aria-label="${escape(c.title)}" data-action="collection" data-id="${id}" ${found.has(id) ? '' : 'disabled'}>${found.has(id) ? covers[id]?`<img src="${ASSETS[covers[id]]}" alt="${escape(c.title)}" draggable="false">`:character(c.asset, 0, c.columns, c.rows, c.names[0]) : `<span class="unfound-art">${motif('envelope')}</span>`}<span>${escape(c.title)}</span>${found.has(id) ? '' : '<small>还没找到</small>'}</button>`).join('')}</div><div class="journal-links"><button class="quiet-button" data-action="reading">书与电影</button><button class="quiet-button" data-action="interests">平时</button><button class="quiet-button" data-action="flowers">花</button></div>`;
+  return `<div class="collection-index">${Object.entries(COLLECTIONS).map(([id, c]) => `<button class="collection-link ${found.has(id) ? '' : 'collection-hidden'}" aria-label="${escape(c.title)}" data-action="collection" data-id="${id}" ${found.has(id) ? '' : 'disabled'}>${found.has(id) ? id==='sky'?renderSkyPair(0,{cover:true}):covers[id]?`<img src="${ASSETS[covers[id]]}" alt="${escape(c.title)}" draggable="false">`:character(c.asset, 0, c.columns, c.rows, c.names[0]) : `<span class="unfound-art">${motif('envelope')}</span>`}<span>${escape(c.title)}</span>${found.has(id) ? '' : '<small>还没找到</small>'}</button>`).join('')}</div><div class="journal-links"><button class="quiet-button" data-action="reading">书与电影</button><button class="quiet-button" data-action="interests">平时</button><button class="quiet-button" data-action="flowers">花</button></div>`;
 }
 
 function giftGallery(state) {

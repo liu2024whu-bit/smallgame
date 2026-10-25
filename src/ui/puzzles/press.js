@@ -1,7 +1,8 @@
 import {PAPER_SEED,PAPER_TARGET,STAMPS,operate,applyOperations} from '../../puzzles/paper.js';
-import {PRESS_MARKS,PRESS_NAMES,PRESS_WORLD} from '../../data/press.js';
+import {PRESS_MARKS,PRESS_NAMES,PRESS_WORLD,PRESS_BOOKMARK} from '../../data/press.js';
 import {inventory} from '../../core/state.js';
 import {atlas,moveButton,itemSprite} from '../dom.js';
+import {rasterPlane} from '../raster-plane.js';
 
 export const pressInk=value=>atlas('pressParts',value+4,{className:'press-ink',label:STAMPS[value]});
 export function inkRow(values,className=''){
@@ -21,6 +22,10 @@ function plate(operation,index,disabled,miniature){
 function printSlip(operation){
  return `<div class="press-test" aria-label="${PRESS_NAMES[operation]}版的试印">${atlas('pressParts',3,{className:'press-slip-art'})}<span class="test-mark" aria-hidden="true">${PRESS_MARKS[operation]}</span><span class="test-input">${inkRow(PAPER_SEED)}</span><span class="test-arrow" aria-hidden="true">↓</span><span class="test-output">${inkRow(operate(PAPER_SEED,operation))}</span></div>`;
 }
+function bookmarkCue(){
+ const {view:[width,height],wood,cord}=PRESS_BOOKMARK;
+ return `<svg class="press-book-cue" viewBox="0 0 ${width} ${height}" aria-hidden="true"><foreignObject x="0" y="0" width="${width}" height="${height}"><div xmlns="http://www.w3.org/1999/xhtml" style="position:relative;width:${width}px;height:${height}px">${rasterPlane('lightBook',0,wood)}${rasterPlane('lightBook',1,cord)}</div></foreignObject></svg>`;
+}
 export function pressCase(progress,{done=false,miniature=false,ownsBook=true,rewardTaken=false}={}){
  const opened=progress.opened;
  const lever=atlas('pressParts',1,{className:'press-arm',label:''});
@@ -33,7 +38,7 @@ export function pressCase(progress,{done=false,miniature=false,ownsBook=true,rew
  const proof=progress.proof?applyOperations(PAPER_SEED,progress.proof):null;
  const proofTag=miniature?'span':'button';
  const proofAttrs=miniature?'':`data-action="press-proof" data-open="true" data-focus="press-proof" aria-label="拿近看刚印的纸" ${proof?'':'disabled'}`;
- return `<div class="press-case ${opened?'press-open':''} ${done?'press-done':''}" data-press-open="${opened}" data-press-count="${progress.presses}">${atlas('pressMain',0,{className:'press-body',label:'有滑盖、三格版槽和木柄的试印盒'})}<div class="press-wells" ${opened&&!done?'':'inert'}>${progress.order.map((op,i)=>plate(op,i,!opened||done,miniature)).join('')}</div><div class="press-lid">${atlas('pressMain',1,{className:'press-lid-art'})}<span class="press-target-label">印样</span>${inkRow(PAPER_TARGET,'press-target')}</div>${control}${catchControl}<span class="press-book-cue" aria-hidden="true">${atlas('pressParts',2,{label:''})}</span><div class="press-drawer">${atlas('pressMain',2,{className:'press-drawer-art'})}${reward}</div><${proofTag} ${proofAttrs} class="press-proof ${proof?'has-proof':''}" data-proof="${progress.proof?.join('')??''}">${atlas('pressParts',3,{className:'press-slip-art'})}${proof?inkRow(proof):''}</${proofTag}></div>`;
+ return `<div class="press-case ${opened?'press-open':''} ${done?'press-done':''}" data-press-open="${opened}" data-press-count="${progress.presses}">${atlas('pressMain',0,{className:'press-body',label:'有滑盖、三格版槽和木柄的试印盒'})}<div class="press-wells" ${opened&&!done?'':'inert'}>${progress.order.map((op,i)=>plate(op,i,!opened||done,miniature)).join('')}</div><div class="press-lid">${atlas('pressMain',1,{className:'press-lid-art'})}<span class="press-target-label">印样</span>${inkRow(PAPER_TARGET,'press-target')}</div>${control}${catchControl}${bookmarkCue()}<div class="press-drawer">${atlas('pressMain',2,{className:'press-drawer-art'})}${reward}</div><${proofTag} ${proofAttrs} class="press-proof ${proof?'has-proof':''}" data-proof="${progress.proof?.join('')??''}">${atlas('pressParts',3,{className:'press-slip-art'})}${proof?inkRow(proof):''}</${proofTag}></div>`;
 }
 export function renderPaper(progress,{state,view={}}){
  if(view.pressProof&&progress.proof)return `<div class="press-reading"><div><p>印样</p><div class="press-reading-slip">${atlas('pressParts',3,{className:'press-slip-art'})}${inkRow(PAPER_TARGET)}</div></div><div><p>刚才那张</p><div class="press-reading-slip">${atlas('pressParts',3,{className:'press-slip-art'})}${inkRow(applyOperations(PAPER_SEED,progress.proof))}</div></div><button class="text-button" data-action="press-proof" data-open="false">放回去</button></div>`;

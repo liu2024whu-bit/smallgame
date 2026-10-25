@@ -24,6 +24,7 @@
   .scene-arrow:hover { background: #fffef5eb; }
   .scene-arrow.previous { left: 12px; }
   .scene-arrow.next { right: 12px; }
+  .room-stage[data-scene="desk"] .scene-arrow.next { top:63%; }
   .scene-caption { position: absolute; left: 27px; bottom: 18px; display: inline-flex;align-items:center;gap:7px;padding:3px 7px;border-radius:3px 7px;background:#fffdf3a1;z-index:3;pointer-events:auto; color: #63715c; text-shadow: 0 1px 10px #fff; }
   .scene-caption span { letter-spacing: .2em; font-size: 18px; }
   .scene-caption small { font-size: 13px; opacity: .82; }

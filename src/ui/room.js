@@ -3,6 +3,7 @@ import {lightMiniature} from './puzzles/light.js';
 import {pressMiniature} from './puzzles/press.js';
 import {cloudMiniature} from './puzzles/cloud.js';
 import {postalMiniature} from './puzzles/postal.js';
+import {libraryMiniature} from './puzzles/library.js';
 import { GAME_DATE } from '../data/calendar.js';
 import { roomCompanions } from './companions.js';
 import { SCENES, SCENE_BY_ID } from '../data/scenes.js';
@@ -11,12 +12,17 @@ import { ITEMS } from '../data/items.js';
 import { inventory } from '../core/state.js';
 import { sceneOpen } from '../core/exploration.js';
 import { roomToolTarget } from '../data/tool-uses.js';
-import { sceneChanges, paintMask } from '../data/scene-changes.js';
+import {BASE_SCENE_PAINT,sceneChanges,paintMask} from '../data/scene-changes.js';
 import { cabinetMechanisms } from './miniatures.js';
 import { partyRoom } from './party-room.js';
 import { escape, icon, itemSprite } from './dom.js';
 
-const LIVE_SCENE_PROGRESS={desk:['paper','calendar','calibration'],window:['flowers','cloud'],rain:['postbox'],party:['sweets','ribbons','birthdayLock']};
+const LIVE_SCENE_PROGRESS={desk:['paper','calendar','calibration','books'],window:['flowers','cloud'],rain:['postbox'],party:['sweets','ribbons','birthdayLock']};
+const LIVE_SCENE_ART={
+  desk:state=>lightMiniature(state.progress.calibration,state.solved.includes('calibration'))+pressMiniature(state.progress.paper,state.solved.includes('paper'),inventory(state))+libraryMiniature(state),
+  window:state=>cloudMiniature(state.progress.cloud,state.solved.includes('cloud'),inventory(state))+gardenMiniature(state.progress.flowers,state.solved.includes('flowers')),
+  rain:postalMiniature,
+};
 export function sceneSignature(state){
   return JSON.stringify([state.scene,state.collected,sceneChanges(state).map(c=>c.puzzle??c.activity),state.solved,state.ending,(LIVE_SCENE_PROGRESS[state.scene]??[]).map(id=>state.progress[id])]);
 }
@@ -24,7 +30,11 @@ export function sceneSignature(state){
 export function renderScenePicture(state) {
   const scene=SCENE_BY_ID[state.scene];
   const art=scene.id==='birthday'&&state.ending?ASSETS.birthdayLit:scene.id==='party'&&state.solved.includes('birthdayLock')?ASSETS.partyOpen:SCENE_ART[scene.id];
-  return `<img class="scene-image" src="${art}" alt="${scene.title}" draggable="false">${state.scene==='desk'?`<img class="scene-change" src="${ASSETS.lightCorner}" alt="" aria-hidden="true" style="animation:none;mask-image:${paintMask([55.2,27.8,19.8,29])}" draggable="false">`:''}${sceneChanges(state).map(change=>`<img class="scene-change" data-world-change="${change.puzzle??change.activity}" src="${ASSETS[change.asset]}" alt="${change.alt}" style="mask-image:${paintMask(change.region)}" draggable="false">`).join('')}${state.scene==='desk'?`<span class="world-calendar-date ${state.solved.includes('calendar')?'date-unlocked':''}" aria-hidden="true"><small>${GAME_DATE.year} / ${GAME_DATE.month}</small><b>${GAME_DATE.day}</b></span>`:''}${state.scene==='window'?cloudMiniature(state.progress.cloud,state.solved.includes('cloud'),inventory(state))+gardenMiniature(state.progress.flowers,state.solved.includes('flowers')):''}${state.scene==='desk'?lightMiniature(state.progress.calibration,state.solved.includes('calibration'))+pressMiniature(state.progress.paper,state.solved.includes('paper'),inventory(state)):''}${state.scene==='rain'?postalMiniature(state):''}${cabinetMechanisms(state)}${partyRoom(state)}`;
+  return `<img class="scene-image" src="${art}" alt="${scene.title}" draggable="false">
+    ${BASE_SCENE_PAINT.filter(p=>p.scene===state.scene).map(p=>`<img class="scene-change" src="${ASSETS[p.asset]}" alt="" aria-hidden="true" style="animation:none;mask-image:${paintMask(p.region)}" draggable="false">`).join('')}
+    ${sceneChanges(state).map(change=>`<img class="scene-change" data-world-change="${change.puzzle??change.activity}" src="${ASSETS[change.asset]}" alt="${change.alt}" style="mask-image:${paintMask(change.region)}" draggable="false">`).join('')}
+    ${state.scene==='desk'?`<span class="world-calendar-date ${state.solved.includes('calendar')?'date-unlocked':''}" aria-hidden="true"><small>${GAME_DATE.year} / ${GAME_DATE.month}</small><b>${GAME_DATE.day}</b></span>`:''}
+    ${LIVE_SCENE_ART[state.scene]?.(state)??''}${cabinetMechanisms(state)}${partyRoom(state)}`;
 }
 
 export function renderRoom(state) {
@@ -34,6 +44,7 @@ export function renderRoom(state) {
 }
 
 function hotspotButton(h,state){
+  if(h.afterSolved&&state.solved.includes(h.afterSolved.id))h={...h,...h.afterSolved.bounds};
   const target=roomToolTarget(state,h.id)??'';
   return `<button type="button" class="hotspot ${h.sprite?'pickup-hotspot':''} ${h.kind==='pet'?'pet-hotspot':''} ${h.x>80?'caption-inward-right':h.x<20?'caption-inward-left':''}" data-action="hotspot" data-id="${h.id}" ${target?`data-tool-target="${target}"`:''} aria-label="${escape(h.label)}" style="left:${h.x}%;top:${h.y}%;width:${h.width}%;height:${h.height}%">${h.sprite?itemSprite(ITEMS[h.target].sprite):''}<span class="hotspot-caption">${escape(h.label)}</span></button>`;
 }

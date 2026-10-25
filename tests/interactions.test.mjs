@@ -33,7 +33,7 @@ test('the same printed picture can be completed with five direct drags', () => {
 test('reordering a whole book or page preserves its identity and attached face', () => {
   for (const id of ['paper', 'paperBack', 'books', 'film', 'album']) {
     const seed = RULES[id].create();
-    const initial = id==='paper'?RULES[id].move(seed,{type:'open'}):seed;
+    const initial = id==='paper'?RULES[id].move(seed,{type:'open'}):id==='books'?RULES[id].move(seed,{type:'fit',index:0}):seed;
     const moved = RULES[id].move(initial, { type: 'reorder', from: 0, to: initial.order.length - 1 });
     assert.ok(RULES[id].valid(moved));
     assert.deepEqual(moved.order, [...initial.order.slice(1), initial.order[0]]);

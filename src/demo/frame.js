@@ -20,6 +20,8 @@ function copy(){
   if(dialog&&!matches(current))spec=REVIEW_CASES.find(matches)??current;
   else if(!dialog&&root.matches('.game-shell'))spec=REVIEW_CASES.find(s=>s.id==='room-'+game.store.get().scene)??current;
   if(panel?.type==='settings')spec=REVIEW_CASES.find(entry=>entry.panel?.type==='settings'&&(entry.panel.view?.section??'sound')===(panel.view?.section??'sound'))??spec;
+  if(panel?.type==='about')spec=REVIEW_CASES.find(entry=>entry.id===(root.querySelector('.about-credits')?.open?'about-credits':'about'))??spec;
+  if(panel?.type==='how-to')spec=REVIEW_CASES.find(entry=>entry.id===(root.querySelector('.keyboard-note')?.open?'how-to-keyboard':'how-to'))??spec;
   if(panel?.type==='puzzle'&&panel.id==='paper'){
     const state=game.store.get(),p=state.progress.paper;
     const id=panel.view?.pressProof&&p.proof?(state.solved.includes('paper')?'paper-done-proof-look':'paper-proof-look'):state.solved.includes('paper')?'paper-done':state.hints.paper?'paper-hints':p.proof?'paper-proof':p.opened?'paper-open':!state.collected.includes('bookmark')?'paper-unfound':'paper';
@@ -41,10 +43,16 @@ function copy(){
     const id=view.postal==='papers'?state.solved.includes('postbox')?'postbox-done-papers':view.reflected?'postbox-mirror-'+(view.postalAim===0?0:view.postalAim===1?2:1):`postbox-paper-${view.card===1?1:0}-${!!view.back}`:state.solved.includes('postbox')?'postbox-done':view.postal==='detail'?'postbox-'+(p.attempts?'attempt':p.values.join()==='1,0,2,9'?'ready':'detail'):state.hints.postbox?'postbox-hints':'postbox';
     spec=REVIEW_CASES.find(entry=>entry.id===id)??spec;
   }
+  if(panel?.type==='puzzle'&&panel.id==='books'){
+    const state=game.store.get(),v=panel.view??{},p=state.progress.books,done=state.solved.includes('books');
+    const id=v.library==='book'?'books-page-'+(done?'done-':'')+(Number.isInteger(v.book)?v.book:4):v.library==='slip'?'books-slip-'+(done?'done-':'')+!!v.slipBack:done?'books-done':state.hints.books?'books-hints':!state.collected.includes('borrowSlip')?'books-unfound'+(v.askedSlip?'-asked':''):p.attempts?'books-attempt':p.fitted[0]?p.order.join()==='3,0,4,1,2'?'books-ready':'books-with-slip':'books';
+    spec=REVIEW_CASES.find(entry=>entry.id===id)??spec;
+  }
+  if(panel?.type==='item'&&panel.id==='borrowSlip')spec=REVIEW_CASES.find(entry=>entry.id==='item-borrowSlip'+(panel.view?.slipBack?'-back':''))??spec;
   if(panel?.type==='puzzle'&&game.store.get().solved.includes(panel.id)){
     const state=game.store.get(),rewards=PUZZLE_BY_ID[panel.id].rewards;
     const mask=rewards.reduce((bits,item,index)=>bits|(state.collected.includes(item)?1<<index:0),0);
-    if(mask&&!panel.view?.back&&!panel.view?.pressProof&&!(panel.id==='postbox'&&panel.view?.postal==='papers'))spec=REVIEW_CASES.find(entry=>entry.id===panel.id+'-collected-'+mask)??spec;
+    if(mask&&!panel.view?.back&&!panel.view?.pressProof&&!(panel.id==='postbox'&&panel.view?.postal==='papers')&&!(panel.id==='books'&&['book','slip'].includes(panel.view?.library)))spec=REVIEW_CASES.find(entry=>entry.id===panel.id+'-collected-'+mask)??spec;
   }
   if(root.matches('#welcome')){const invitation=root.querySelector('.invitation');spec=REVIEW_CASES.find(entry=>invitation?entry.mode==='intro'&&entry.step===Number(invitation.dataset.step):entry.id==='opening')??spec;}
   return {id:spec.id,title:dialog?.querySelector('#dialog-title')?.textContent??spec.name,source:spec.source,text:visibleCopy(root)};

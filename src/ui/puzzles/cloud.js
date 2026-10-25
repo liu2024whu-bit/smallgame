@@ -2,6 +2,7 @@ import {cloudAngles,CLOUD_LINKS} from '../../puzzles/rotors.js';
 import {CLOUD_GEOMETRY as G,CLOUD_GLYPHS,CLOUD_MARKS} from '../../data/cloud.js';
 import {inventory} from '../../core/state.js';
 import {atlas,itemSprite,icon} from '../dom.js';
+import {skyPaperFigure} from '../sky-figures.js';
 const degrees=(values,index,half,side)=>cloudAngles(values)[index][half]*90*side;
 const rotations=(values,index,side)=>[degrees(values,index,0,side),degrees(values,index,1,side)];
 const coordinates=point=>`left:${point.x/1536*100}%;top:${point.y/1024*100}%;width:${point.r*2/1536*100}%;`;
@@ -67,7 +68,7 @@ function pocketItem(index,done,miniature,owned){
  return `<${tag} class="cloud-found" ${attrs}>${itemSprite(index?3:2)}</${tag}>`;
 }
 function doors(done,miniature,owned){
- return G.doors.map((door,index)=>`<div class="cloud-pocket pocket-${index}" style="left:${door.x/1536*100}%;top:${door.y/1024*100}%;width:${door.w/1536*100}%;height:${door.h/1024*100}%">${pocketItem(index,done,miniature,owned)}<span class="cloud-wing" data-cloud-wing="${index}" style="rotate:y ${done?door.angle:0}deg;transform-origin:${door.pivot}% 50%;">${atlas('cloudDoors',index,{className:'cloud-wing-art'})}${atlas('cloudFigures',index,{className:'cloud-figure',label:index?'矮人面具、正太短发、武士裤与蝙蝠斗篷的小纸人':'黑脸、经典巫师帽、武士裤与蝙蝠斗篷的高纸人'})}</span></div>`).join('');
+  return G.doors.map((door,index)=>`<div class="cloud-pocket pocket-${index}" style="left:${door.x/1536*100}%;top:${door.y/1024*100}%;width:${door.w/1536*100}%;height:${door.h/1024*100}%">${pocketItem(index,done,miniature,owned)}<span class="cloud-wing" data-cloud-wing="${index}" style="rotate:y ${done?door.angle:0}deg;transform-origin:${door.pivot}% 50%;">${atlas('cloudDoors',index,{className:'cloud-wing-art'})}${skyPaperFigure(0,index,{height:49,aspect:door.w/door.h,className:'cloud-figure'})}</span></div>`).join('');
 }
 function face(progress,{back,active,ownsThread,done,miniature,owned}){
  const side=back?-1:1;

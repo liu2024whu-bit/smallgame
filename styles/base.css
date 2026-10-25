@@ -9,7 +9,7 @@
   [hidden] { display: none !important; }
 }
 @layer base {
-  :root { color-scheme: light; --paper: #fcfaf4; --ink: #4c4b43; --soft: #85877c; --line: #d8d8c9; --green: #637765; --pink: #dbb5ab; --cream: #f3efe2; --font: 'KaiTi', 'STKaiti', 'FangSong', 'Noto Serif SC', serif; }
+  :root { color-scheme: light; --paper: #fcfaf4; --ink: #4c4b43; --soft: #85877c; --line: #d8d8c9; --green: #637765; --pink: #dbb5ab; --cream: #f3efe2; --font-note: 'KaiTi', 'STKaiti', 'FangSong', 'Noto Serif SC', serif; --font-print:'SimSun','Songti SC','Noto Serif SC',serif; --font:var(--font-note); }
   body { background: #f3f3ec; color: var(--ink); font: 17px/1.65 var(--font); overflow-x: hidden; }
   button { border: 0; background: none; -webkit-tap-highlight-color: transparent; }
   button, a, input { touch-action: manipulation; }

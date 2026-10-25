@@ -3,6 +3,7 @@ import {bindPress} from './press.js';
 import {bindLight} from './light.js';
 import {bindCloud} from './cloud.js';
 import {bindPostal} from './postal.js';
+import {bindLibrary} from './library.js';
 import { bindPacking } from './packing.js';
 import { bindReorder } from './reorder.js';
 import { bindObjects } from './objects.js';
@@ -29,6 +30,7 @@ export function bindInteractions(root, { id, progress, solved, move, activity, c
   if(id==='cloud')cleanup.push(bindCloud(root,progress,{move,changeView,solved,feedback}));
   if(id==='calibration')cleanup.push(bindLight(root,progress,move,feedback,changeView));
   cleanup.push(bindPostal(root,changeView,feedback));
+  if(id==='books')cleanup.push(bindLibrary(root,progress,{move,changeView,feedback}));
   if (id && !solved) {
     cleanup.push(id === 'packing' ? bindPacking(root, progress, move) : bindReorder(root, id, move));
     cleanup.push(bindObjects(root, id, move, progress));

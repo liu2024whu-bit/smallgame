@@ -1,7 +1,7 @@
 import { BIRTHDAY_INPUTS } from './birthday-workshop.js';
 
 export const PERSISTENT_TOOL_USES = Object.freeze({ 'birthday-door':{item:'crank',requires:['stitch']} });
-export const PUZZLE_TOOL_INPUTS = Object.freeze({birthdayLock:BIRTHDAY_INPUTS,calibration:['transparency','mirror','bookmark']});
+export const PUZZLE_TOOL_INPUTS = Object.freeze({birthdayLock:BIRTHDAY_INPUTS,calibration:['transparency','mirror','bookmark'],books:['borrowSlip']});
 export const ROOM_TOOL_TARGETS = Object.freeze({
   'entry:ring-lamp':'birthday-door',
   'rain:rain-postcards':'postcard-mirror',
@@ -20,9 +20,11 @@ export function toolFor(target) {
   if(/^cloud-wind:[0-2]:-?1$/.test(target))return 'thread';
   if(target?.startsWith('flower-pin:'))return 'bookmark';
   if(target?.startsWith('birthday-fit:'))return BIRTHDAY_INPUTS[Number(target.split(':')[1])];
+  if(target==='library-slip')return 'borrowSlip';
   return {'birthday-door':'crank','postcard-mirror':'mirror','chocolate-cover':'transparency','paper-latch':'bookmark'}[target];
 }
 export function puzzleToolUse(target) {
+  if(target==='library-slip')return {id:'books',move:{type:'fit',index:0}};
   if(/^light-fit:[0-2]$/.test(target))return {id:'calibration',move:{type:'fit',index:Number(target.split(':')[1])}};
   if(/^cloud-wind:[0-2]:-?1$/.test(target)){const [,index,direction]=target.split(':').map(Number);return {id:'cloud',move:{type:'turn',index,direction}};}
   if(target==='paper-latch')return {id:'paper',move:{type:'open'}};

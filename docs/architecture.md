@@ -1,4 +1,4 @@
-# 当前结构 · V2.9.7
+# 当前结构 · V2.9.8
 
 ```text
 index.html / src/main.js        正式入口；只挂载真实游戏
@@ -23,6 +23,14 @@ src/ui/postal-papers.js         来源、镜中、证据与库存共用的纸面
 src/ui/puzzles/postal.js        匣体、纸件工作台、字轮近看与雨廊缩影
 src/ui/interactions/postal.js   镜子原生输入、可取消观察与尺寸测量
 src/services/motion/postal.js   靠近/退远、铰链、翻纸与字轮的有限过渡
+src/data/library.js            原书柜/抽屉锚点、同源角色书签
+src/ui/library-papers.js        借阅签的正反、夹页与物品面板共用纸面
+src/ui/puzzles/library.js       书架、挡条、托盘及来源物件
+src/ui/interactions/library.js  抽看/拖排/拉屉的预览、提交与取消
+src/services/motion/library.js  同一书身份的让位与抽屉连续姿态
+src/data/sky.js                两组角色身份与跨场景一致的相对身高
+src/ui/sky-figures.js           完整纸人帧区和原比例绘制
+src/services/motion/sky.js      只在换组时运行的有限纸片过渡
 src/ui/puzzles/press.js         试印盒/印纸/可观察夹扣；不代管库存
 src/ui/interactions/tap.js      缺失原生轻点的补发/去重，拖动不触发
 src/ui/interactions/           指针会话、拖放、旋转、重排、连续描线、字轮
@@ -60,7 +68,7 @@ src/admin.js                   防误入门槛与会话解锁
 src/services/review-access.js  PIN摘要验证；不冒充服务端认证
 src/demo.js                    后台查询、跳转、尺寸切换、文字导出
 review-frame.html             复用真实游戏的隔离演示框
-src/demo/catalog.js            272个页面状态的唯一目录
+src/demo/catalog.js            296个页面状态的唯一目录
 src/demo/fixtures.js           经真实规则重建可操作演示状态
 src/demo/walkthrough.js        验证走法，测试复用；正式入口不导入
 src/demo/visible-copy.js       读取实际可见文字，不另写一套文案
@@ -143,3 +151,7 @@ P5的透片在物品栏、检查、P3奖励、P5和P17共用同一材料与图�
 P6的镜读使用同一张邮片印刷层的负X映射和有限圆形视口，观察姿态只在panel.view中，不存进规则，不以看过线索为开锁门槛。这是一处平面镜读呈现，不声称建立了完整三维反射模型。近远景读同一进度与collected；字轮拖动只预览，释放时提交一次。共用数字输入仍保留日历/生日匣原来的档距和绘制路径，不能因本关变更而丢掉其他机关的数字。
 
 可见文字导出同时检查隐藏面与硬裁切视口；滚动区域中的自然长文仍会保留。镜外印刷与轮外重复数字不会混入当前可见文字。实际演示录像来自鼠标操作，静态多版对照不加载旧运行代码。
+
+P7的order/fitted/opened/attempts是唯一规则状态；查看哪本书、纸签哪面属于临时panel.view，不要求读过线索。抽屉预览不发库存，打开后才生成可拾取按钮。内容修订12保留合法旧完成与部分排列，不认可独立伪造的solved字段。
+
+四份光遇人物由sky数据与sky-figures按实际帧区、相对高度和原比例复用；不同取景只给物理高度与所在平面比例。没有保存第二套服装进度或复制每页角色图；换组动效是独立有限所有者，减少动态由共用收束器处理。

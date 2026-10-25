@@ -13,6 +13,7 @@ import { settingsPanel } from './settings.js';
 import { aboutPanel } from './welcome.js';
 import { musicPanel } from './music.js';
 import { MUSIC_BY_ID } from '../data/music.js';
+import {librarySlipPanel} from './library-papers.js';
 import { escape,icon } from './dom.js';
 
 export function renderPanel(panel, context) {
@@ -33,7 +34,7 @@ export function renderPanel(panel, context) {
     encore: () => encorePanel(context),
     interests: interestsPanel,
     flowers: () => flowersPanel(context.flower),
-    item: () => birthdayToolPanel(panel.id,context)??itemPanel(panel.id),
+    item: () => panel.id==='borrowSlip'?librarySlipPanel(context):birthdayToolPanel(panel.id,context)??itemPanel(panel.id),
     ending: () => endingPanel(context.flower,context.view),
     rooms:()=>navigationPanel(context),
     settings: () => settingsPanel(context),

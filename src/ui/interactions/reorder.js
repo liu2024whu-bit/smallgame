@@ -1,6 +1,6 @@
 import { pointerSession, dragGhost } from './pointer.js';
 
-const SELECTORS = { paper: '.operation-piece', paperBack: '.loose-stamp', books: '.book-slot', film: '.film-frame', album: '.loose-page' };
+const SELECTORS = { paper: '.operation-piece', paperBack: '.loose-stamp', film: '.film-frame', album: '.loose-page' };
 
 export function bindReorder(root, id, move) {
   const selector = SELECTORS[id];

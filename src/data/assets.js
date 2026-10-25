@@ -9,6 +9,11 @@ export const SCENE_ART = Object.freeze({
   party:'assets/scenes/party.webp',
 });
 export const ASSETS = Object.freeze({
+  libraryMain:'assets/illustrations/library-main.webp',
+  librarySpines:'assets/illustrations/library-spines.webp',
+  libraryPages:'assets/illustrations/library-pages.webp',
+  libraryNook:'assets/illustrations/library-nook.webp',
+  libraryCorner:'assets/illustrations/library-corner.webp',
   lightCorner:'assets/illustrations/light-corner.webp',
   lightLamp:'assets/illustrations/light-lamp.webp',
   lightBook:'assets/illustrations/light-book.webp',
@@ -25,7 +30,10 @@ export const ASSETS = Object.freeze({
   cloudBack:'assets/illustrations/cloud-back.webp',
   cloudDoors:'assets/illustrations/cloud-doors.webp',
   cloudParts:'assets/illustrations/cloud-parts.webp',
-  cloudFigures:'assets/illustrations/cloud-figures.webp',
+  skyWizard:'assets/illustrations/sky-wizard.webp',
+  skyChibi:'assets/illustrations/sky-chibi.webp',
+  skyTall:'assets/illustrations/sky-tall.webp',
+  skyBloom:'assets/illustrations/sky-bloom.webp',
   cloudLedge:'assets/illustrations/cloud-ledge.webp',
   pressMain:'assets/illustrations/press-main.webp',
   pressParts:'assets/illustrations/press-parts.webp',
@@ -60,7 +68,6 @@ export const ASSETS = Object.freeze({
   items: 'assets/illustrations/items.webp',
   motifs: 'assets/illustrations/motifs.webp',
   board: 'assets/illustrations/board.webp',
-  skyClouds: 'assets/illustrations/sky-clouds.webp',
   petCorners: 'assets/illustrations/pet-corners.webp',
   genshin: 'assets/illustrations/genshin.webp',
   hashira: 'assets/illustrations/hashira.webp',
@@ -106,13 +113,8 @@ export const ASSETS = Object.freeze({
 export const MOTIFS = Object.freeze({ cloud: 0, star: 1, leaf: 2, rose: 3, paw: 4, moon: 5, daisy: 6, tulip: 7, lavender: 8, book: 9, envelope: 10, petal: 11 });
 export const MOTIF_LABELS = Object.freeze({ cloud: '云', star: '星', leaf: '叶', rose: '玫瑰', paw: '猫爪', moon: '月', daisy: '雏菊', tulip: '郁金香', lavender: '薰衣草', book: '书', envelope: '信封', petal: '花瓣' });
 export const STAMP_MOTIFS = ['leaf', 'moon', 'star', 'rose', 'cloud'];
-export const BOOKMARKS = Object.freeze([
-  { book: 0, figure: 0, name: '魈' },
-  { book: 2, figure: 1, name: '流浪者' },
-]);
-
 export const COLLECTIONS = Object.freeze({
-  sky: { title: '光遇', asset: 'skyClouds', columns: 1, rows: 3, names: ['巫师帽与正太', '正太与樱花', '纸景背面'] },
+  sky: { title: '光遇', asset: 'skyWizard', columns: 1, rows: 1, names: ['巫师帽与正太', '正太与樱花'] },
   naruto: { title: '带土与卡卡西', asset: 'naruto', columns: 2, rows: 2, names: ['少年带土', '少年卡卡西', '带土', '卡卡西'] },
   hashira: { title: '九位柱', asset: 'hashira', columns: 3, rows: 3, names: ['富冈义勇', '胡蝶忍', '炼狱杏寿郎', '宇髄天元', '时透无一郎', '甘露寺蜜璃', '伊黑小芭内', '不死川实弥', '悲鸣屿行冥'] },
   genshin: { title: '魈与流浪者', asset: 'genshin', columns: 2, rows: 1, names: ['魈', '流浪者'] },

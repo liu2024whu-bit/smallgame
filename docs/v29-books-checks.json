@@ -1,0 +1,678 @@
+{
+  "version": "2.9.8",
+  "scope": "Local development verification; public deployment verified separately; not player blind testing.",
+  "source": {
+    "modules": 198,
+    "puzzles": 26,
+    "importsAndRasterHeaders": true
+  },
+  "unitTests": {
+    "passed": 195,
+    "exitCode": 0
+  },
+  "libraryNative": {
+    "out": [
+      {
+        "width": 1440,
+        "touch": false,
+        "verticalPeek": true,
+        "fit": true,
+        "unfit": true,
+        "cancel": true,
+        "undo": true,
+        "manualDrawer": true,
+        "manualPickups": true,
+        "hits": [
+          {
+            "label": "拿起画页 A",
+            "w": 205.3125,
+            "h": 168.64584350585938,
+            "art": {
+              "top": 12.48358154296875,
+              "bottom": 81.62542724609375
+            },
+            "floor": 87.69583862304688
+          },
+          {
+            "label": "拿起装订针",
+            "w": 213.875,
+            "h": 168.64584350585938,
+            "art": {
+              "top": 8.6441650390625,
+              "bottom": 86.9024658203125
+            },
+            "floor": 87.69583862304688
+          }
+        ],
+        "errors": []
+      },
+      {
+        "width": 390,
+        "touch": true,
+        "verticalPeek": true,
+        "fit": true,
+        "unfit": true,
+        "cancel": true,
+        "undo": true,
+        "manualDrawer": true,
+        "manualPickups": true,
+        "hits": [
+          {
+            "label": "拿起画页 A",
+            "w": 75.07292175292969,
+            "h": 61.66666793823242,
+            "art": {
+              "top": 4.0257568359375,
+              "bottom": 29.180095672607422
+            },
+            "floor": 32.06666732788086
+          },
+          {
+            "label": "拿起装订针",
+            "w": 78.19792175292969,
+            "h": 61.66666793823242,
+            "art": {
+              "top": 2.4827880859375,
+              "bottom": 30.912883758544922
+            },
+            "floor": 32.06666732788086
+          }
+        ],
+        "errors": []
+      },
+      {
+        "width": 320,
+        "touch": true,
+        "verticalPeek": true,
+        "fit": true,
+        "unfit": true,
+        "cancel": true,
+        "undo": true,
+        "manualDrawer": true,
+        "manualPickups": true,
+        "hits": [
+          {
+            "label": "拿起画页 A",
+            "w": 59.91666793823242,
+            "h": 49.208335876464844,
+            "art": {
+              "top": 3.162353515625,
+              "bottom": 23.232177734375
+            },
+            "floor": 25.58833465576172
+          },
+          {
+            "label": "拿起装订针",
+            "w": 62.40625,
+            "h": 49.208335876464844,
+            "art": {
+              "top": 1.91510009765625,
+              "bottom": 24.60040283203125
+            },
+            "floor": 25.58833465576172
+          }
+        ],
+        "errors": []
+      }
+    ]
+  },
+  "libraryExtra": {
+    "inventoryDrag": true,
+    "keyboardHomeEnd": true,
+    "keyboardPeek": true,
+    "returnFocus": true,
+    "outsideDrop": true,
+    "blurCancel": true,
+    "viewportCancel": true,
+    "reducedDuringOpen": true,
+    "completedObservation": true,
+    "errors": []
+  },
+  "drawerPreview": {
+    "out": [
+      {
+        "width": 1440,
+        "touch": false,
+        "ready": false,
+        "visibleBeforeRelease": false,
+        "shift": -105.639,
+        "returned": true
+      },
+      {
+        "width": 1440,
+        "touch": false,
+        "ready": true,
+        "visibleBeforeRelease": true,
+        "shift": -0.0000198364,
+        "returned": true
+      },
+      {
+        "width": 390,
+        "touch": true,
+        "ready": false,
+        "visibleBeforeRelease": false,
+        "shift": -38.2333,
+        "returned": true
+      },
+      {
+        "width": 390,
+        "touch": true,
+        "ready": true,
+        "visibleBeforeRelease": true,
+        "shift": 0,
+        "returned": true
+      }
+    ]
+  },
+  "fullRoute": {
+    "played": [
+      {
+        "id": "paper",
+        "solved": true
+      },
+      {
+        "id": "cloud",
+        "solved": true
+      },
+      {
+        "id": "calibration",
+        "solved": true
+      },
+      {
+        "id": "postbox",
+        "solved": true
+      },
+      {
+        "id": "books",
+        "solved": true
+      },
+      {
+        "id": "screen",
+        "solved": true
+      },
+      {
+        "id": "belt",
+        "solved": true
+      },
+      {
+        "id": "film",
+        "solved": true
+      },
+      {
+        "id": "flowers",
+        "solved": true
+      },
+      {
+        "id": "paperBack",
+        "solved": true
+      },
+      {
+        "id": "cloudGap",
+        "solved": true
+      },
+      {
+        "id": "wordlock",
+        "solved": true
+      },
+      {
+        "id": "album",
+        "solved": true
+      },
+      {
+        "id": "stitch",
+        "solved": true
+      },
+      {
+        "id": "chocolate",
+        "solved": true
+      },
+      {
+        "id": "cocoa",
+        "solved": true
+      },
+      {
+        "id": "sweets",
+        "solved": true
+      },
+      {
+        "id": "ribbons",
+        "solved": true
+      },
+      {
+        "id": "birthdayLock",
+        "solved": true
+      },
+      {
+        "id": "calendar",
+        "solved": true
+      },
+      {
+        "id": "maze",
+        "solved": true
+      },
+      {
+        "id": "balance",
+        "solved": true
+      },
+      {
+        "id": "drawers",
+        "solved": true
+      },
+      {
+        "id": "flips",
+        "solved": true
+      },
+      {
+        "id": "packing",
+        "solved": true
+      },
+      {
+        "id": "melody",
+        "solved": true
+      }
+    ],
+    "solved": 26,
+    "door": true,
+    "cake": "许愿的时候",
+    "ending": true,
+    "errors": []
+  },
+  "layout": [
+    {
+      "width": 320,
+      "images": {
+        "references": 107,
+        "unique": 99,
+        "failed": []
+      },
+      "layouts": 296,
+      "issues": [],
+      "errors": []
+    },
+    {
+      "width": 390,
+      "images": {
+        "references": 107,
+        "unique": 99,
+        "failed": []
+      },
+      "layouts": 296,
+      "issues": [],
+      "errors": []
+    },
+    {
+      "width": 1440,
+      "images": {
+        "references": 107,
+        "unique": 99,
+        "failed": []
+      },
+      "layouts": 296,
+      "issues": [],
+      "errors": []
+    }
+  ],
+  "save": {
+    "revision": 12,
+    "roundtrip": {
+      "partial": true,
+      "unclaimed": true,
+      "pageOnly": true,
+      "taken": true,
+      "observation": true
+    },
+    "qaDownloadsRemoved": true
+  },
+  "printBox": {
+    "checks": {
+      "lastDrag": {
+        "rotate": "",
+        "drag": true
+      },
+      "continuousLid": {
+        "before": "0px -60.9049%",
+        "from": "0px -60.9049%"
+      },
+      "proofCopy": "paper-proof-look",
+      "world": "press-case press-open press-done",
+      "running": 0,
+      "mobile": {
+        "order": [
+          0,
+          1,
+          2
+        ],
+        "presses": 1,
+        "overflow": 0
+      }
+    },
+    "errors": []
+  },
+  "sky": {
+    "output": [
+      {
+        "width": 1440,
+        "touch": false,
+        "figures": [
+          {
+            "label": "经典巫师帽自带白发、黑脸、火先知套装与蝙蝠斗篷的高个纸人",
+            "ratio": 0.6504709480378701,
+            "frame": "0.650472334682861",
+            "inside": true
+          },
+          {
+            "label": "鸣谢收藏家斜刘海短发、矮人面具、火先知套装与蝙蝠斗篷的小纸人",
+            "ratio": 0.6654613058712359,
+            "frame": "0.6655124653739612",
+            "inside": true
+          }
+        ],
+        "pairs": [
+          [
+            {
+              "label": "经典巫师帽自带白发、黑脸、火先知套装与蝙蝠斗篷的高个纸人",
+              "height": 355.19793701171875,
+              "baseline": 424.2708740234375,
+              "target": 424.26667541503906,
+              "inside": true
+            },
+            {
+              "label": "鸣谢收藏家斜刘海短发、矮人面具、火先知套装与蝙蝠斗篷的小纸人",
+              "height": 216.6666717529297,
+              "baseline": 424.27085876464844,
+              "target": 424.26667541503906,
+              "inside": true
+            }
+          ],
+          [
+            {
+              "label": "鸣谢收藏家斜刘海短发、黑脸、火先知套装与蝙蝠斗篷的高个纸人",
+              "height": 298.3645935058594,
+              "baseline": 424.2708435058594,
+              "target": 424.26667541503906,
+              "inside": true
+            },
+            {
+              "label": "花织低双尾、侧面樱花结、矮人面具、火先知套装与蝙蝠斗篷的小纸人",
+              "height": 223.77084350585938,
+              "baseline": 424.2708435058594,
+              "target": 424.26667541503906,
+              "inside": true
+            }
+          ]
+        ],
+        "rapidSwitch": true,
+        "reducedMotion": true,
+        "unchangedPuzzle": true,
+        "sharedIndex": true,
+        "errors": []
+      },
+      {
+        "width": 390,
+        "touch": true,
+        "figures": [
+          {
+            "label": "经典巫师帽自带白发、黑脸、火先知套装与蝙蝠斗篷的高个纸人",
+            "ratio": 0.6503955429399113,
+            "frame": "0.650472334682861",
+            "inside": true
+          },
+          {
+            "label": "鸣谢收藏家斜刘海短发、矮人面具、火先知套装与蝙蝠斗篷的小纸人",
+            "ratio": 0.6652869925593698,
+            "frame": "0.6655124653739612",
+            "inside": true
+          }
+        ],
+        "pairs": [
+          [
+            {
+              "label": "经典巫师帽自带白发、黑脸、火先知套装与蝙蝠斗篷的高个纸人",
+              "height": 166.3854217529297,
+              "baseline": 198.74998474121094,
+              "target": 198.74958770751954,
+              "inside": true
+            },
+            {
+              "label": "鸣谢收藏家斜刘海短发、矮人面具、火先知套装与蝙蝠斗篷的小纸人",
+              "height": 101.5,
+              "baseline": 198.75,
+              "target": 198.74958770751954,
+              "inside": true
+            }
+          ],
+          [
+            {
+              "label": "鸣谢收藏家斜刘海短发、黑脸、火先知套装与蝙蝠斗篷的高个纸人",
+              "height": 139.77084350585938,
+              "baseline": 198.75,
+              "target": 198.74958770751954,
+              "inside": true
+            },
+            {
+              "label": "花织低双尾、侧面樱花结、矮人面具、火先知套装与蝙蝠斗篷的小纸人",
+              "height": 104.82292175292969,
+              "baseline": 198.74998474121094,
+              "target": 198.74958770751954,
+              "inside": true
+            }
+          ]
+        ],
+        "rapidSwitch": true,
+        "reducedMotion": true,
+        "unchangedPuzzle": true,
+        "sharedIndex": true,
+        "errors": []
+      },
+      {
+        "width": 320,
+        "touch": true,
+        "figures": [
+          {
+            "label": "经典巫师帽自带白发、黑脸、火先知套装与蝙蝠斗篷的高个纸人",
+            "ratio": 0.6502847848049268,
+            "frame": "0.650472334682861",
+            "inside": true
+          },
+          {
+            "label": "鸣谢收藏家斜刘海短发、矮人面具、火先知套装与蝙蝠斗篷的小纸人",
+            "ratio": 0.6652835830118646,
+            "frame": "0.6655124653739612",
+            "inside": true
+          }
+        ],
+        "pairs": [
+          [
+            {
+              "label": "经典巫师帽自带白发、黑脸、火先知套装与蝙蝠斗篷的高个纸人",
+              "height": 132.7916717529297,
+              "baseline": 158.62501525878906,
+              "target": 158.61625,
+              "inside": true
+            },
+            {
+              "label": "鸣谢收藏家斜刘海短发、矮人面具、火先知套装与蝙蝠斗篷的小纸人",
+              "height": 81,
+              "baseline": 158.625,
+              "target": 158.61625,
+              "inside": true
+            }
+          ],
+          [
+            {
+              "label": "鸣谢收藏家斜刘海短发、黑脸、火先知套装与蝙蝠斗篷的高个纸人",
+              "height": 111.54167175292969,
+              "baseline": 158.62501525878906,
+              "target": 158.61625,
+              "inside": true
+            },
+            {
+              "label": "花织低双尾、侧面樱花结、矮人面具、火先知套装与蝙蝠斗篷的小纸人",
+              "height": 83.65625,
+              "baseline": 158.625,
+              "target": 158.61625,
+              "inside": true
+            }
+          ]
+        ],
+        "rapidSwitch": true,
+        "reducedMotion": true,
+        "unchangedPuzzle": true,
+        "sharedIndex": true,
+        "errors": []
+      }
+    ]
+  },
+  "skyMechanism": {
+    "results": {
+      "missing": true,
+      "signedDrag": true,
+      "cancel": true,
+      "frontNeedsBack": true,
+      "paperDrag": true,
+      "swipe": true,
+      "toolDrop": true,
+      "done": true
+    },
+    "errors": []
+  },
+  "admin": {
+    "wrong": "密码没对上，再看看。",
+    "small": 320,
+    "linked": "九月的夹页",
+    "word": {
+      "values": [
+        11,
+        23,
+        24,
+        23,
+        23
+      ],
+      "active": ""
+    },
+    "unchanged": true,
+    "remembered": true,
+    "locked": true,
+    "relocked": true,
+    "errors": []
+  },
+  "gallery": {
+    "out": [
+      {
+        "gallery": "books",
+        "width": 1440,
+        "versions": 4,
+        "images": 24,
+        "options": 21,
+        "zoom": true,
+        "keyboard": true,
+        "video": {
+          "duration": 16,
+          "time": 0.296656,
+          "paused": false,
+          "error": null
+        },
+        "errors": []
+      },
+      {
+        "gallery": "books",
+        "width": 390,
+        "versions": 4,
+        "images": 24,
+        "options": 21,
+        "zoom": true,
+        "keyboard": true,
+        "video": {
+          "duration": 16,
+          "time": 0.363107,
+          "paused": false,
+          "error": null
+        },
+        "errors": []
+      },
+      {
+        "gallery": "paper",
+        "width": 1440,
+        "versions": 4,
+        "images": 12,
+        "options": 9,
+        "zoom": true,
+        "keyboard": true,
+        "video": {
+          "duration": 11,
+          "time": 0.513219,
+          "paused": false,
+          "error": null
+        },
+        "errors": []
+      },
+      {
+        "gallery": "paper",
+        "width": 390,
+        "versions": 4,
+        "images": 12,
+        "options": 9,
+        "zoom": true,
+        "keyboard": true,
+        "video": {
+          "duration": 11,
+          "time": 0.509531,
+          "paused": false,
+          "error": null
+        },
+        "errors": []
+      },
+      {
+        "gallery": "cloud",
+        "width": 1440,
+        "versions": 5,
+        "images": 19,
+        "options": 15,
+        "zoom": true,
+        "keyboard": true,
+        "video": {
+          "duration": 14,
+          "time": 0.482845,
+          "paused": false,
+          "error": null
+        },
+        "errors": []
+      },
+      {
+        "gallery": "cloud",
+        "width": 390,
+        "versions": 5,
+        "images": 19,
+        "options": 15,
+        "zoom": true,
+        "keyboard": true,
+        "video": {
+          "duration": 14,
+          "time": 0.50246,
+          "paused": false,
+          "error": null
+        },
+        "errors": []
+      }
+    ]
+  },
+  "notes": [
+    "All three refreshed galleries decoded every image, keyboard-switched versions, zoomed and played their current native video controls on desktop and 390px.",
+    "Full 26-puzzle local route precedes the purely visual Sky replacement; the published fresh touch route rechecks P3-P7.",
+    "Technical image frames preserve full physical silhouettes; generated PNGs and exported WebPs have no personal metadata."
+  ],
+  "skyCloseLook": {
+    "before": {
+      "scroll": 58.66666793823242,
+      "width": 345,
+      "canvas": 680
+    },
+    "after": 334.6666564941406,
+    "values": [
+      0,
+      0,
+      0
+    ],
+    "touch": true
+  }
+}

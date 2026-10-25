@@ -17,7 +17,7 @@
 | `assets/illustrations/items.webp` | 12件可重复使用的工具与画页；木书签按描述的实物外观重绘，刻尺纸套是游戏虚构 |
 | `assets/illustrations/motifs.webp` | 云、星、叶、玫瑰、猫爪、月、三盆花、书、信封与花瓣 |
 | `assets/illustrations/board.webp` | 可放大机关的纸面工作台，不参与判断答案 |
-| `assets/illustrations/sky-clouds.webp` | 旧两组收藏纸景，留待P29完整审查；不再用作P4机关、P13背板或画册的近似图 |
+| `assets/illustrations/sky-wizard.webp`、`sky-chibi.webp`、`sky-tall.webp`、`sky-bloom.webp` | 按佩戴模型重绘的两组纸人，机关、房间、画册、收藏与目录共用；旧双人收藏纸景及旧纸人图集已移除 |
 | `assets/illustrations/hei2.webp` | 小黑、无限、鹿野、哪吒、小黑猫形与黑咻、师徒同行 |
 | `assets/illustrations/naruto.webp` | 带土和卡卡西的少年/后来造型 |
 | `assets/illustrations/genshin.webp` | 魈、流浪者 |
@@ -189,7 +189,7 @@ V2.3 的机关重绘、场景校正与四帧角色提示词另见 [v23-art-promp
 
 新绘运行部件：`cloud-front.webp`、`cloud-back.webp`、`cloud-doors.webp`、`cloud-parts.webp`、`cloud-figures.webp`、`cloud-ledge.webp`。生成及二次修订记录见[v29-cloud-prompts.json](v29-cloud-prompts.json)。前后壳、纸环、轴、侧扇分层；拼合半图、齿轮与切线绳路是精确原生几何，源像素取框在data/cloud.js和asset-layouts.js。背壳按同一脚下锚点做0.9834的纵向配准，纸人/帽尖/穗边完整留在取框中。旧window-after.webp已随无引用遮罩移除。
 
-小纸人参照上述公开实机截图的新绘纸艺造型：高个黑脸、经典巫师帽及其自带白发；矮个矮人面具与鸣谢收藏家短发；两人均为火先知套装和蝙蝠斗篷。额头菱形与闭眼短线参照[面具图鉴中的躲猫猫面具图标](https://wiki.biligame.com/sky/面具)。先修正发梢与裤摆再入景，仍是风格再创作，不是官方纹理，也不宣称其他发型、童真面具或衣柜系统已经全部完成。未读取或上传私人照片、信件。
+P4初稿曾按面具图标处理额纹与闭眼，后来确认与佩戴模型不符。V2.9.8已替换为四份新绘纸人，重新核对正太斜刘海、经典帽菱形、樱花低双尾、黑脸与矮人面型；详见[v29-sky-review.md](v29-sky-review.md)及提示词。它们仍是水彩纸艺再创作，不冒称官方纹理或完整衣柜。
 
 ## P5 借点光 · 2026-10-25
 
@@ -202,3 +202,9 @@ V2.3 的机关重绘、场景校正与四帧角色提示词另见 [v23-art-promp
 雨廊底画只清除被实时物件替代的原柜体、柜顶物件与两张桌上邮片，保留相同相机和其他家具。新场景与部件只参考本项目原创画/试稿；没有读取或提交私人照片、信件、脸部或身份资料。提示词见[v29-postal-prompts.json](v29-postal-prompts.json)。镜框直接复用P5同款；校园邮片直接使用原有双栏校园绘画，完整分栏、不称官方原图。
 
 `review/postal/`为本地浏览器实际截图和约22秒的鼠标操作录像，前置已完成。静态画面仅裁去无关菜单并编码，未生成替代的“实机效果”；试作保留其实际裁边/比例问题。录像另配项目原创《窗边》，未复制商业歌曲、未声称录下浏览器音效。图片和录像移除来源元数据，未发布原始附件或本机路径。
+
+## P7书架与材质回访 · V2.9.8
+
+五份library位图与同款试印盒两图由内置图像工具制作，仅使用自有原场景、既有角色图和中性几何参照。书脊最终采用原场景的薄简装、粉彩与细铅笔线；远景只在指定区域清去旧书与相框，保留原柜、邻近花瓶与其余环境。像素帧区重新注册，PNG/WebP无个人元数据。木书签开扣沿用P5的木片与垂穗，未再造近似木片。提示与来源链见[v29-books-prompts.json](v29-books-prompts.json)。
+
+四份光遇位图取自公开实机头发/面具/衣服参考与自有房间画风，见[v29-sky-prompts.json](v29-sky-prompts.json)。未将私人信件、照片或身份资料交给绘图工具。国产作品后续优先查国内官方来源，逐角色资料与尚待核对项见[v29-characters.md](v29-characters.md)。

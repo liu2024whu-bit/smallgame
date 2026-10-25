@@ -3,6 +3,11 @@ import {PRESS_MAIN,PRESS_PARTS} from './press.js';
 import {CLOUD_BODY,CLOUD_DOORS} from './cloud.js';
 // Source-pixel frames follow the actual edges of each illustration.
 export const ASSET_LAYOUTS = Object.freeze({
+  libraryMain:{width:1536,height:1024,frames:[[28,93,1186,564],[29,698,1187,234],[1233,180,282,424],[72,528,1100,24]]},
+  librarySpines:{width:1536,height:1024,frames:[[72,112,161,820],[312,115,157,818],[567,118,158,813],[818,119,151,813],[1058,114,157,819],[1315,123,154,810]]},
+  libraryPages:{width:1536,height:1024,frames:[[20,85,1495,820],[1407,911,110,101]]},
+  libraryNook:{width:1536,height:1024},
+  libraryCorner:{width:1672,height:941},
   lightCorner:{width:1672,height:941},
   lightLamp:{width:1024,height:1536,frames:[[0,0,1024,1536]]},
   lightBook:{width:1024,height:1536,frames:[[140,138,305,1304],[480,65,530,1385]]},
@@ -17,7 +22,10 @@ export const ASSET_LAYOUTS = Object.freeze({
   lightFixtures:{width:1536,height:1024,frames:[[60,30,500,490],[665,78,225,429],[902,220,620,264],[130,535,220,475],[480,728,580,100],[1160,680,250,200]]},
   cloudFront:CLOUD_BODY,cloudBack:CLOUD_BODY,cloudDoors:CLOUD_DOORS,
   cloudParts:{width:1536,height:1024,frames:[[105,0,620,590],[840,0,600,590],[601,621,335,338]]},
-  cloudFigures:{width:1536,height:1024,frames:[[122,0,688,1024],[810,327,570,697]]},
+  skyWizard:{width:1024,height:1536,frames:[[32,29,964,1482]]},
+  skyChibi:{width:1024,height:1536,frames:[[33,54,961,1444]]},
+  skyTall:{width:1024,height:1536,frames:[[32,18,974,1502]]},
+  skyBloom:{width:1024,height:1536,frames:[[33,96,961,1403]]},
   cloudLedge:{width:1536,height:1024},
   pressMain:PRESS_MAIN,
   pressParts:PRESS_PARTS,
@@ -84,7 +92,6 @@ export const ASSET_LAYOUTS = Object.freeze({
   puppyParcel: {width:1254,height:1254},
   packingPicture: {width:1402,height:1122},
   apparatus: {width:1536,height:1024,frames:[[0,0,512,480],[512,0,512,480],[1024,0,512,480],[0,480,512,544],[512,480,512,544],[1024,480,512,544]]},
-  "skyClouds": {"width":1024,"height":1536,"frames":[[0,0,1024,512],[0,514,1024,514],[0,1029,1024,507]]},
   "desk": {"width":1672,"height":941},
   "window": {"width":1672,"height":941},
   "collection": {"width":1672,"height":941},

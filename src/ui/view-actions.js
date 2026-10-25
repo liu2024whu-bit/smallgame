@@ -29,6 +29,9 @@ export function viewActions({ panel, render, activity,foley=()=>{} }) {
       if(measured)settleWorkbenchZoom(viewport.querySelector('.puzzle-field'),before);
     },
     'postal-view':button=>{if(['cabinet','detail','papers'].includes(button.dataset.id)){change({postal:button.dataset.id});foley('turn');}},
+    'library-view':button=>{if(['shelf','book','slip'].includes(button.dataset.id)){change({library:button.dataset.id,...(button.dataset.book!==undefined?{book:Number(button.dataset.book)}:{}),slipBack:false});foley('turn');}},
+    'library-slip-flip':()=>{change({slipBack:!panel().view?.slipBack});foley('turn');},
+    'library-ask':()=>change({askedSlip:true}),
     'memory-detail': button => { const focus = Number(button.dataset.index); change({ focus }); activity(`art:detail:${focus}`); },
     'memory-cinema': () => { change({ playing: !panel().view?.playing }); activity('cinema:play'); },
     'memory-figure': button => change({ figure: Number(button.dataset.index) }),

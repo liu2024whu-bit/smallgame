@@ -7,10 +7,17 @@ import {EVIDENCE_TITLES} from '../ui/evidence.js';
 import {FLOWERS} from '../data/clues.js';
 import {SCENE_BY_ID} from '../data/scenes.js';
 import {RECORD_DISPLAY} from '../data/record-display.js';
+import {WITNESSES} from './walkthrough.js';
+import {BOOKS} from '../puzzles/books.js';
 
 export const REVIEW_CASES=[
   {id:'opening',name:'开始',group:'故事',mode:'title',source:'src/ui/welcome.js'},
   ...[0,1,2].map(step=>({id:'intro-'+step,name:['邀请','风先到了','邀请背面'][step],group:'故事',mode:'intro',step,source:'src/ui/intro.js'})),
+  ...['with-slip','ready','attempt','returned'].map(stage=>({id:'books-'+stage,name:'书脊之间 · '+({'with-slip':'借阅签放好了',ready:'还没拉抽屉',attempt:'抽屉还合着',returned:'纸签取回了'})[stage],group:'机关里的变化',puzzle:'books',setupMoves:stage==='ready'?WITNESSES.books.slice(0,-1):stage==='returned'?[{type:'fit',index:0},{type:'reorder',from:0,to:2},{type:'unfit',index:0}]:[{type:'fit',index:0},...(stage==='attempt'?[{type:'submit'}]:[])],panel:{type:'puzzle',id:'books'},source:'src/ui/puzzles/library.js · src/puzzles/books.js'})),
+  ...[false,true].map(askedSlip=>({id:'books-unfound'+(askedSlip?'-asked':''),name:'书脊之间 · '+(askedSlip?'空夹座':'借阅签还没带来'),group:'机关里的变化',puzzle:'books',unclaimed:['postbox'],panel:{type:'puzzle',id:'books',view:{askedSlip}},source:'src/ui/puzzles/library.js'})),
+  ...[false,true].flatMap(completed=>BOOKS.map((title,book)=>({id:'books-page-'+(completed?'done-':'')+book,name:'书脊之间 · '+title+(completed?'（后来又翻开）':''),group:'机关里的变化',puzzle:'books',completed,unclaimed:completed?['books']:[],panel:{type:'puzzle',id:'books',view:{library:'book',book}},source:'src/ui/library-papers.js'}))),
+  ...[false,true].flatMap(completed=>[false,true].map(slipBack=>({id:'books-slip-'+(completed?'done-':'')+slipBack,name:'书脊之间 · 借阅签'+(slipBack?'背面':'正面')+(completed?'（抽屉开了）':''),group:'机关里的变化',puzzle:'books',completed,unclaimed:completed?['books']:[],setupMoves:completed?[]:[{type:'fit',index:0}],panel:{type:'puzzle',id:'books',view:{library:'slip',slipBack}},source:'src/ui/library-papers.js'}))),
+  {id:'item-borrowSlip-back',name:'借阅签 · 背面',group:'纸面线索',full:true,panel:{type:'item',id:'borrowSlip',view:{slipBack:true}},source:'src/ui/library-papers.js'},
   ...PUZZLES.flatMap(p=>[false,true].map(completed=>({id:p.id+(completed?'-done':''),name:p.title+(completed?' · 已解开':''),group:completed?'机关完成后':'每个机关',puzzle:p.id,keywords:p.instruction+' '+p.hints.join(' '),completed,unclaimed:completed?[p.id]:[],panel:{type:'puzzle',id:p.id},source:'src/ui/puzzles/ · src/data/puzzles.js'}))),
   ...PUZZLES.filter(p=>p.rewards.length).flatMap(p=>Array.from({length:2**p.rewards.length-1},(_,i)=>({id:p.id+'-collected-'+(i+1),name:p.title+' · 已拿起'+p.rewards.filter((_,j)=>(i+1)&(1<<j)).length+'件',group:'物件拿走以后',puzzle:p.id,completed:true,unclaimed:[p.id],takeRewards:p.rewards.filter((_,j)=>(i+1)&(1<<j)),panel:{type:'puzzle',id:p.id},source:'src/data/rewards.js · src/ui/puzzles/'}))),
   ...PUZZLES.map(p=>({id:p.id+'-hints',name:p.title+' · 提醒',group:'主动打开的提醒',puzzle:p.id,hints:true,panel:{type:'puzzle',id:p.id},source:'src/data/puzzles.js'})),
@@ -31,7 +38,7 @@ export const REVIEW_CASES=[
   {id:'postbox-done-papers',name:'晚邮 · 又翻了翻',group:'机关里的变化',puzzle:'postbox',completed:true,panel:{type:'puzzle',id:'postbox',view:{postal:'papers',card:1,back:true,reflected:true,postalAim:1}},source:'src/ui/puzzles/postal.js'},
   ...['desk','window','collection','entry','rain','atelier','birthday','party'].map(id=>({id:'room-'+id,name:({desk:'书桌',window:'窗边',collection:'收藏柜',entry:'门边',rain:'雨廊',atelier:'画桌',birthday:'生日桌',party:'准备台'})[id],group:'场景',full:true,scene:id,source:'src/ui/room.js · src/data/scenes.js'})),
   ...['sky','naruto','hashira','genshin','hei','prince','cities','gifts'].map(id=>({id:'collection-'+id,name:({sky:'光遇',naruto:'带土与卡卡西',hashira:'九位柱',genshin:'魈与流浪者',hei:'罗小黑战记Ⅱ',prince:'小王子',cities:'校园折页',gifts:'小物'})[id],group:'收藏与小记',full:true,panel:{type:'collection',id},source:'src/ui/exhibits.js · src/data/memories.js'})),
-  ...['clues','memories','activities'].map(tab=>({id:'journal-'+tab,name:({clues:'线索',memories:'以前',activities:'小记'})[tab],group:'收藏与小记',full:true,panel:{type:'journal',tab},source:'src/ui/notebook.js · src/data/activities.js'})),
+  ...['clues','memories','collections','activities'].map(tab=>({id:'journal-'+tab,name:({clues:'线索',memories:'以前',collections:'收藏目录',activities:'小记'})[tab],group:'收藏与小记',full:true,panel:{type:'journal',tab},source:'src/ui/notebook.js · src/data/activities.js'})),
   ...['cat','dog'].flatMap(id=>[false,true].map(petAwake=>({id:id+(petAwake?'-awake':''),name:(id==='cat'?'小猫':'小狗')+(petAwake?' · 醒着':''),group:'小住客',panel:{type:'pet',id,view:{petAwake}},source:'src/ui/pets.js'}))),
   {id:'candles',name:'点蜡烛',group:'故事',full:true,beforeEnding:true,panel:{type:'candles',view:{candles:0}},source:'src/ui/birthday.js'},
   {id:'ending',name:'生日快乐',group:'故事',full:true,panel:{type:'ending'},source:'src/ui/ending.js · src/data/memories.js'},
@@ -41,6 +48,8 @@ export const REVIEW_CASES=[
   ...['rooms','settings','music','about','how-to','flowers','reading','interests'].map(type=>({id:type==='flowers'?'flower-book':type,name:({rooms:'小屋导航',settings:'设置',music:'唱片',about:'这间小屋','how-to':'怎么玩',flowers:'花',reading:'书与电影',interests:'平时'})[type],group:'其他页面',full:true,panel:{type},source:'src/ui/'+({rooms:'navigation',about:'welcome','how-to':'panels',flowers:'notebook',reading:'notebook',interests:'notebook'}[type]??type)+'.js'})),
   {id:'music-songs',name:'想一起听的',group:'唱片的另一面',full:true,panel:{type:'music',view:{musicShelf:'songs'}},source:'src/ui/music.js · src/data/music.js'},
   {id:'music-original',name:'无人知晓 · 录音选择',group:'唱片的另一面',full:true,panel:{type:'music',view:{musicShelf:'songs'}},click:'[data-track-row="unknown"] summary',source:'src/ui/music.js · src/data/music.js'},
+  {id:'about-credits',name:'页脚的小字',group:'其他页面',full:true,panel:{type:'about'},click:'.about-credits summary',source:'src/ui/welcome.js'},
+  {id:'how-to-keyboard',name:'键盘也有一份',group:'其他页面',full:true,panel:{type:'how-to'},click:'.keyboard-note summary',source:'src/ui/panels.js'},
   ...[0,1].map(id=>({id:'campus-'+id,name:id?'南京大学':'武汉大学',group:'其他页面',full:true,panel:{type:'campus',id},source:'src/ui/campus.js'})),
 
   ...KEEPSAKES.map(k=>({id:'keepsake-'+k.id,name:k.name,group:'收集物近景',full:true,panel:{type:'keepsake',id:k.id},source:'src/ui/notebook.js · src/data/keepsakes.js'})),

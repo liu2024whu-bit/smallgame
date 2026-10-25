@@ -1,13 +1,11 @@
-import { character } from './dom.js';
+import {SKY_PAIRS} from '../data/sky.js';
+import {skyPaperFigure} from './sky-figures.js';
+import {icon} from './dom.js';
 
-export function skyFrame(pair = 0, back = false) {
-  return character('skyClouds', back ? 2 : pair, 1, 3, back ? '纸景背面，绳子连着云片' : pair ? '云中纸景，正太与樱花' : '云中纸景，巫师帽与正太');
+export function renderSkyPair(pair=0,{cover=false}={}){
+ return `<span class="sky-diorama ${cover?'sky-cover':''}" data-sky-pair="${pair}" aria-label="窗边的两只光遇纸人">${[0,1].map(index=>skyPaperFigure(pair,index,{height:72,aspect:1.5,className:`sky-person sky-person-${index}`})).join('')}</span>`;
 }
 
-export function renderSkyPair(_state, pair = 0) {
-  return `<div class="sky-diorama">${skyFrame(pair)}</div>`;
-}
-
-export function skyControls(_state, pair) {
-  return `<div class="appearance-controls"><span>${pair ? '正太与樱花' : '巫师帽与正太'}</span><button class="text-button" data-action="sky-pair">另一组</button></div>`;
+export function skyControls(pair=0){
+ return `<div class="appearance-controls"><span aria-live="polite">${SKY_PAIRS[pair]?.name??SKY_PAIRS[0].name}</span><button class="text-button" data-action="sky-pair">${icon('repeat')}另一组</button></div>`;
 }
