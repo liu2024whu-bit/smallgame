@@ -1,8 +1,31 @@
 {
   "version": "2.9.10",
   "contentRevision": 14,
-  "touchFallback": {"forcedFallback":true,"coordinatesPreserved":true,"correctLayer":true,"nativeDeduplicated":true,"keyboard":true,"clicks":[{"trusted":true,"x":198,"y":619,"type":"touch","detail":1},{"trusted":false,"x":198,"y":619,"type":"touch","detail":1}],"errors":[]},
-  "scope": "Local Chromium development checks and native mouse/touch inputs; not player blind testing, real iOS/Safari or a frame-rate claim.",
+  "touchFallback": {
+    "forcedFallback": true,
+    "coordinatesPreserved": true,
+    "correctLayer": true,
+    "nativeDeduplicated": true,
+    "keyboard": true,
+    "clicks": [
+      {
+        "trusted": true,
+        "x": 198,
+        "y": 619,
+        "type": "touch",
+        "detail": 1
+      },
+      {
+        "trusted": false,
+        "x": 198,
+        "y": 619,
+        "type": "touch",
+        "detail": 1
+      }
+    ],
+    "errors": []
+  },
+  "scope": "Local development and public deployment verification in Chromium; not player blind testing, real iOS/Safari or a frame-rate claim.",
   "rules": {
     "tests": 200,
     "sourceModules": 205,
@@ -304,7 +327,10 @@
     "Postal animation ownership overlap"
   ],
   "public": {
-    "status": "pending 2.9.10 native verification",
+    "status": "success",
+    "version": "2.9.10",
+    "codeCommit": "ec3b02aa672afe0740a2f3a4a2a99ac4e7b6f491",
+    "record": "v29-screen-public.json",
     "previousRelease": {
       "commit": "aaaec595e7d3dcc451a180c9cd495f408826fadb",
       "version": "2.9.9",

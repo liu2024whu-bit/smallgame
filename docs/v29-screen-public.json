@@ -1,0 +1,89 @@
+{
+  "date": "2026-10-26",
+  "version": "2.9.10",
+  "codeCommit": "ec3b02aa672afe0740a2f3a4a2a99ac4e7b6f491",
+  "actions": {
+    "checks": 40211613940,
+    "pages": 40211613525,
+    "conclusion": "success"
+  },
+  "scope": "Public GitHub Pages, fresh isolated storage, Chromium native touch at 390×844; no fixture progress API. Gallery checked at 1440 and 390. Not a complete public 26-puzzle playthrough, real iOS/Safari test, frame-rate benchmark, or player blind test.",
+  "formal": {
+    "version": "2.9.10",
+    "formal": true,
+    "fixture": false,
+    "nativeTouch": [
+      "paper",
+      "cloud",
+      "calibration",
+      "postbox",
+      "books",
+      "screen",
+      "sky"
+    ],
+    "cancel": true,
+    "proof": {
+      "values": [
+        2,
+        1,
+        3
+      ],
+      "flipped": true
+    },
+    "toolsReturned": true,
+    "rain": true,
+    "mirror": true,
+    "gridReturn": true,
+    "postalDials": true,
+    "dragLatch": true,
+    "manualPickup": true,
+    "books": {
+      "verticalPeek": true,
+      "dragReorder": true,
+      "manualDrawer": true,
+      "partialReload": true,
+      "manualPickups": true
+    },
+    "projectorHotspot": true,
+    "skySwitch": true,
+    "reload": true,
+    "revision": 14,
+    "errors": []
+  },
+  "gallery": {
+    "out": [
+      {
+        "gallery": "screen",
+        "width": 1440,
+        "versions": 4,
+        "images": 29,
+        "options": 26,
+        "zoom": true,
+        "keyboard": true,
+        "video": {
+          "duration": 18.8,
+          "time": 0.280194,
+          "paused": false,
+          "error": null
+        },
+        "errors": []
+      },
+      {
+        "gallery": "screen",
+        "width": 390,
+        "versions": 4,
+        "images": 29,
+        "options": 26,
+        "zoom": true,
+        "keyboard": true,
+        "video": {
+          "duration": 18.8,
+          "time": 0.515944,
+          "paused": false,
+          "error": null
+        },
+        "errors": []
+      }
+    ]
+  }
+}
