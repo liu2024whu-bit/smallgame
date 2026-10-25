@@ -158,7 +158,7 @@ function hotspot(id) {
   const spot = SCENE_BY_ID[state.scene].hotspots.find(h => h.id === id);
   if (!spot) return;
   const target=roomToolTarget(state,id,state.selected);
-  if(state.selected&&target){useTool(state.selected,target);return;}
+  if(state.selected&&target&&toolFor(target)===state.selected){useTool(state.selected,target);return;}
   const handlers = {
     pickup: () => { if (store.dispatch({ type: 'pickup', id: spot.target })) { audio.material('pickup'); toast(`${ITEMS[spot.target].name}，放在手边了。`); } },
     puzzle: () => openPuzzle(spot.revisit && state.solved.includes(spot.revisitAfter) ? spot.revisit : spot.target),
@@ -230,7 +230,7 @@ app.addEventListener('click', async event => {
   const button = event.target.closest('button');
   if (!button || button.disabled) return;
   await engageAudio(event);
-  if(store.get().selected&&button.dataset.toolTarget&&button.dataset.action!=='use-direct'){useTool(store.get().selected,button.dataset.toolTarget);return;}
+  if(store.get().selected&&button.dataset.toolTarget&&toolFor(button.dataset.toolTarget)===store.get().selected&&button.dataset.action!=='use-direct'){useTool(store.get().selected,button.dataset.toolTarget);return;}
   if (button.dataset.pmove && ui.panel?.type === 'puzzle') {
     try {
       const changed = performMove(JSON.parse(button.dataset.pmove));
