@@ -1,6 +1,7 @@
 {
-  "version": "2.9.9",
+  "version": "2.9.10",
   "contentRevision": 14,
+  "touchFallback": {"forcedFallback":true,"coordinatesPreserved":true,"correctLayer":true,"nativeDeduplicated":true,"keyboard":true,"clicks":[{"trusted":true,"x":198,"y":619,"type":"touch","detail":1},{"trusted":false,"x":198,"y":619,"type":"touch","detail":1}],"errors":[]},
   "scope": "Local Chromium development checks and native mouse/touch inputs; not player blind testing, real iOS/Safari or a frame-rate claim.",
   "rules": {
     "tests": 200,
@@ -303,6 +304,14 @@
     "Postal animation ownership overlap"
   ],
   "public": {
-    "status": "pending"
+    "status": "pending 2.9.10 native verification",
+    "previousRelease": {
+      "commit": "aaaec595e7d3dcc451a180c9cd495f408826fadb",
+      "version": "2.9.9",
+      "checks": 40209370829,
+      "pages": 40209370432,
+      "builds": "success",
+      "nativeFailure": "Touch fallback lost physical coordinates and flipped front paper instead of the exposed rear sheet."
+    }
   }
 }

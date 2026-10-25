@@ -4,7 +4,7 @@
 
 [开始游戏](https://liu2024whu-bit.github.io/smallgame/) · [小屋工作间](https://liu2024whu-bit.github.io/smallgame/admin.html) · [文字检阅](docs/copy-review.md) · [代码结构](docs/architecture.md) · [机关设计](docs/puzzle-design.md) · [素材来源](docs/asset-sources.md)
 
-V2.9.9：八处探索场景、19个相互关联的主线机关、7个独立机关、两校折页、12张小记，以及生日后的纸艺彩蛋。纯静态网页，原生 ESM，没有运行依赖。电脑优先，支持手机与键盘。
+V2.9.10：八处探索场景、19个相互关联的主线机关、7个独立机关、两校折页、12张小记，以及生日后的纸艺彩蛋。纯静态网页，原生 ESM，没有运行依赖。电脑优先，支持手机与键盘。
 
 [入口、设置与导航的改版对照](review/entrance/index.html)：邀请可以连续打开、翻面；设置分声音／画面／进度，原生卡通光标可关闭，导航里的小窗使用实际完成状态。
 

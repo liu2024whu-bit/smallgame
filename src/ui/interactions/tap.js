@@ -16,16 +16,19 @@ export function bindButtonTaps(root){
  window.addEventListener('pointerup',event=>{
   if(down?.pointer!==event.pointerId)return;
   const tap=down;down=null;
-  pending={...tap,fired:false};
+  pending={...tap,x:event.clientX,y:event.clientY,fired:false};
   const current=pending;
   current.timer=setTimeout(()=>{
    if(pending!==current||!current.button.isConnected||current.button.disabled)return;
-   current.fired=true;current.button.click();
+   current.fired=true;
+   // A coordinate-aware surface must receive the same physical touch in the
+   // fallback as in the native click. HTMLElement.click() loses that position.
+   current.button.dispatchEvent(new PointerEvent('click',{bubbles:true,cancelable:true,composed:true,view:window,detail:1,button:0,buttons:0,pointerId:current.pointer,pointerType:'touch',isPrimary:true,clientX:current.x,clientY:current.y}));
   },0);
  },{capture:true,signal});
  root.addEventListener('click',event=>{
   if(!event.isTrusted||!pending)return;
-  const samePress=(event.pointerType==='touch'||event.sourceCapabilities?.firesTouchEvents)&&Math.hypot(event.clientX-pending.x,event.clientY-pending.y)<3;
+  const samePress=(event.pointerType==='touch'||event.sourceCapabilities?.firesTouchEvents)&&Math.hypot(event.clientX-pending.x,event.clientY-pending.y)<5;
   // A fallback can replace the button before a delayed native click arrives.
   // Match the physical tap, rather than the now-detached DOM node.
   if(event.target.closest('button')!==pending.button&&!samePress)return;
