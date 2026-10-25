@@ -5,7 +5,6 @@ const FACES = [
   ['.page-face',el=>el.querySelector('small')?.textContent],
   ['.face-selectors button',el=>el.querySelector('span')?.textContent],
   ['.flip-tile',el=>el.classList.contains('tile-back')],
-  ['.postcard',el=>el.classList.contains('postcard-back')],
 ];
 const faces = root => new Map(FACES.flatMap(([selector,value])=>[...root.querySelectorAll(selector)].map((el,i)=>[`${selector}:${el.dataset.focus??i}`,value(el)])));
 const digits = root => [...root.querySelectorAll('.wheel-drum b, .letter-windows button')].map(el => el.textContent);
@@ -20,9 +19,9 @@ export const paperMotion = {
       if (before.digits[i] !== undefined && before.digits[i] !== el.textContent) el.animate([{ translate: '0 -25%', opacity: .3 }, { translate: '0 0', opacity: 1 }], { duration: 150, easing: 'ease-out' });
     });
     const lock=root.querySelector('[data-password-lock]');
-    if(lock&&Number(lock.dataset.attempts)>before.attempts&&!lock.classList.contains('lock-open')){
+    if(lock&&!lock.matches('[data-postal-cabinet]')&&Number(lock.dataset.attempts)>before.attempts&&!lock.classList.contains('lock-open')){
       lock.animate([{translate:'0px'},{translate:'-3px'},{translate:'3px'},{translate:'0px'}],{duration:240});
-      root.querySelector('.postal-latch, .type-special')?.animate([{ translate: '0 0' }, { translate: '0 4px', offset: .4 }, { translate: '0 0' }], { duration: 240 });
+      root.querySelector('.type-special')?.animate([{ translate: '0 0' }, { translate: '0 4px', offset: .4 }, { translate: '0 0' }], { duration: 240 });
     }
     if (!before.opened && root.querySelector('.lock-open')) root.querySelector('.lock-painting')?.animate([{ filter: 'brightness(1)' }, { filter: 'brightness(1.13)', offset: .5 }, { filter: 'brightness(1)' }], { duration: 600 });
     const thread = root.querySelector('.active-thread');

@@ -1,0 +1,57 @@
+{
+  "version": "2.9.7",
+  "provenance": "Only original game paintings and original prototype art were referenced. No private photos, letters, faces, account data or identifying metadata were read or uploaded.",
+  "stages": [
+    {
+      "name": "paper-supports",
+      "assets": [
+        "postal-supports.webp"
+      ],
+      "references": [
+        "rain.webp",
+        "existing postal cabinet prototype"
+      ],
+      "prompt": "Use case: illustration-story. Create one carefully spaced transparent-background raster sprite atlas, 1536x1024 landscape, for a gentle hand-painted watercolor puzzle game. The two reference images show the accepted mail cabinet style and warm quiet rain-window environment; match their fine pencil contours, cream paper, sage wood, softly worn brass, subdued colors, no glossy 3D or vector look. Do not copy the entire cabinet. Arrange these SEPARATE fully complete props with generous transparent gutters, no overlaps: upper left a large blank warm-ivory LANDSCAPE postcard back, width about 620 height 400, slightly aged complete edges, one faint divider and 3 short address guide lines on the right, otherwise blank, NO stamps, letters, numbers or writing. Upper right a large square blank cream sorting sheet about 570x430, subtly worn paper edges and one very faint border, NO grid, NO text (the game prints these). Lower left a small wooden tabletop card stand: long shallow sage wooden ledge and two tiny rear support feet, FRONT view, suitable for resting a wide upright postcard on it, no card attached. Lower center a small low brass cradle to rest the BOTTOM of a hand mirror, complete stable weighted foot and short fork, no mirror attached. Lower right a small cream borrowing ticket, portrait ratio 2:3 with a small circular hole at top left, 3 faint ruled lines near top, otherwise blank, complete edges. All five objects separated, orthographic front or very shallow front view consistent with a tabletop camera, natural watercolor soft contact shading only immediately under feet. No floating fragments, no hands, people, logos, private information, fake typography, gradients pretending to be paper. Real transparent alpha outside every prop, NOT checkerboard painted in."
+    },
+    {
+      "name": "four-stamps",
+      "assets": [
+        "postal-stamps.webp"
+      ],
+      "references": [
+        "original game watercolor style"
+      ],
+      "prompt": "Use case: illustration-story. A transparent watercolor-game prop atlas, square 1024x1024, exactly FOUR separate postmark impressions in a 2 by 2 arrangement with ample transparent space between. Match this reference mail cabinet's subtle pencil/watercolor and worn quiet materials. Each is an understated dark desaturated sage-green ink stamp with imperfect worn circular ink edge, a small simple recognizable engraved illustration in its UPPER HALF, and EMPTY lower half to receive game-printed coordinates. Top left: a modest arched bridge over water. Top right: a small leafy tree. Bottom left: three distinct raindrops and two short rain streaks, NO clouds. Bottom right: an arched window with crossbars, NO umbrella. Keep the exact same stamp size and quiet worn ink treatment across all four. Raster print texture and slight ink gaps; no glossy badges, no modern UI, no gradients, no colored backgrounds, no shadows, no letters, no numbers, no writing. Full circular impressions with intact edges, each about 330x330 pixels, centered in its quadrant with at least 75px gutters. Genuine transparent alpha outside the ink; not a drawn checkerboard. Only these four impressions."
+    },
+    {
+      "name": "wider-lock-plate",
+      "assets": [
+        "postal-parts.webp"
+      ],
+      "references": [
+        "original postal parts prototype"
+      ],
+      "prompt": "Use case: precise-object-edit. Edit this transparent sprite atlas while preserving the same 1254x1254 atlas size, positions and watercolor game style. The upper-left open sage wooden mail cabinet, lower-left inner door/back with bolt, lower-center separate brass lever, and lower-right paper ticket must stay the SAME objects in the SAME places. Change ONLY the UPPER-RIGHT detached front door panel (roughly x685..1237,y335..705). Keep the complete sage wooden door frame, outline and worn paint. Redesign its brass four-wheel plate to be WIDER, spanning about x740..1160 (door width550, brass width420), y440..585. Give it exactly four broad dark empty vertical windows, centered at atlas x810,905,1000,1095, with each window width about48 and height75, with full natural brass margins. Make the front door fit the cabinet opening. No digits, text, fake letters, labels, symbols or new objects. Do not crop, move or alter the other sprites. Real transparent alpha around every object. Retain fine warm pencil contours, mellow sage paint, worn golden brass and cream paper; no new lighting, photorealism, vectors, glossy 3D, extra shadows or checkerboard."
+    },
+    {
+      "name": "clear-fixed-cabinet",
+      "assets": [
+        "rain.webp"
+      ],
+      "references": [
+        "original rain room painting"
+      ],
+      "prompt": "Use case: precise-object-edit. Edit ONLY the following small parts of this original hand-painted watercolor game room. Preserve the exact 1672x941 composition, window, rain, hydrangea and other plants on the LEFT, coat, umbrella, bench, shoes, writing desk, white ledger at the right of that desk, mugs/pencils, wall paper, far-right shelf, blue chest, floor/rug and all their positions/colors/light. Remove the tall sage mail cabinet on the RIGHT at approximately x990..1288,y237..744, together with the pothos pot and books sitting directly on its top. Leave matching empty cream paneled wall and continuous wood floor in the cleared area. Remove ONLY the two small loose colorful postcards lying on the writing desk at x728..886,y463..508, preserving the desk grain behind them, the ledger, vase and pencil cup. Do not add replacement furniture, plants or decorations. These interactive props will be placed by the game. No other changes, no text, no people, no cinematic relighting or crop. Maintain the fine pencil contours and comfortable warm quiet watercolor art, identical camera and room geometry."
+    },
+    {
+      "name": "plant-and-fasteners",
+      "assets": [
+        "postal-props.webp"
+      ],
+      "references": [
+        "original rain room painting"
+      ],
+      "prompt": "Use case: illustration-story. Transparent-background watercolor-game prop atlas 1536x1024, matching the fine warm pencil/watercolor, calm cream paper, sage leaf and gently worn brass in this reference game room. On the LEFT two thirds draw one COMPLETE small trailing pothos plant in a simple pale cream ceramic pot, same rounded heart-shaped leaves and unglazed pot style as the plant that sits on the green cabinet in the reference. A front slightly elevated view suitable for resting on top of a low wooden cabinet. Plant including all leaves about 780x780, pot base centered and horizontal, short trailing vines, everything inside atlas with 70px safety margins. Keep the plant modest, no oversized jungle foliage. On the RIGHT, four small separated craft fasteners in a vertical arrangement with generous transparent gutters: one little worn brass round-headed thumbtack shown from front, one short torn strip of translucent cream washi tape, a small slightly bent brass paper clip, and a second thumbtack shown from a slight angle. The fasteners will secure paper to a wall or card stand; no text, no writing. All objects intact with natural material shading, no fake checkerboard, no UI labels, no drawings around the objects. Genuine transparent alpha. No furniture, background, people, private information or cast shadows stretching away from the base."
+    }
+  ]
+}

@@ -43,7 +43,7 @@ export const SCENES = Object.freeze([
     { id: 'birthday-gift', kind: 'birthday', label: '10月29日的小礼物', x: 74, y: 50, width: 10, height: 11 },
   ] },
   { id: 'rain', title: '雨廊', requires:['calibration'], door:0, closed:'门缝里，还漏着一线光。', unlocked:'外面有雨声。', hotspots: [
-    puzzle('postbox', '邮匣', 68, 52, 16, 48),
+    puzzle('postbox', '邮匣', 69, 62.5, 19, 34),
     inspect('rain-postcards', '两张明信片', 'cities', 48, 52, 10, 7),
     { id: 'postal-grid', kind: 'evidence', target: 'postal', label: '墙上的分拣格', x: 81.4, y: 21.5, width: 8, height: 18 },
     { id: 'rain-bell', kind: 'ambient', target: 'rain', label: '听雨', x: 23.5, y: 20.5, width: 4, height: 7 },

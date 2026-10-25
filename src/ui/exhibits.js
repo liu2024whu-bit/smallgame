@@ -1,8 +1,7 @@
 import { ASSETS, COLLECTIONS } from '../data/assets.js';
 import { character, escape, motif } from './dom.js';
 import { renderSkyPair, skyControls } from './sky.js';
-import { postalMarks } from './evidence.js';
-import { inventory } from '../core/state.js';
+import {postalPaperDesk} from './puzzles/postal.js';
 
 const art = (key, label, className = '') => `<img class="exhibit-art ${className}" src="${ASSETS[key]}" alt="${escape(label)}" draggable="false">`;
 
@@ -32,11 +31,7 @@ function prince(context) {
   return `<div class="prince-keepsake ${open ? 'prince-open' : ''}"><div class="prince-cover">${character('gifts', 2, 3, 2, '小王子笔记本')}</div><div class="prince-page">${character('princeHei', 0, 2, 2, '小王子和玫瑰')}<p>“On ne voit bien qu’avec le cœur.”</p></div></div><div class="memory-tabs"><button class="text-button" data-action="memory-open">${open ? '合上' : '翻开'}</button></div><p class="memory-caption">看见小王子，就想起你。</p>`;
 }
 
-function postcards(context) {
-  const back = context.view.back ?? false;
-  const index = context.view.card ?? 0;
-  return `<div class="postcard-desk"><button class="postcard ${back ? 'postcard-back' : ''}" data-action="memory-postcard" aria-label="翻看明信片">${back ? `<div class="postcard-writing"><span>${index ? '南京' : '武汉'}</span>${postalMarks(index, context.view.reflected)}<p>${index ? '南京，真不错。' : '武汉，留在这一页。'}</p><small>L.</small></div>` : character('campuses', index, 2, 1, index ? '南京大学' : '武汉大学')}</button><span class="postcard-thread">${motif('leaf')}</span></div><div class="memory-tabs">${['武汉', '南京'].map((name, card) => `<button class="text-button" data-action="memory-card" data-index="${card}" aria-pressed="${index === card}">${name}</button>`).join('')}<button class="text-button" data-action="campus" data-index="${index}">展开折页</button>${back && index === 1 && inventory(context.state).includes('mirror') ? `<button class="text-button" data-action="memory-mirror" aria-pressed="${!!context.view.reflected}">${context.view.reflected ? '移开镜子' : '照一照'}</button>` : ''}</div>`;
-}
+function postcards(context){return postalPaperDesk(context,{collection:true});}
 
 export function memoryExhibit(id, context) {
   const views = { genshin: sketch, naruto: artist, hei: cinema, hashira: fan, prince, cities: postcards,

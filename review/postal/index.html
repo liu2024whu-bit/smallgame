@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>晚邮 · 改版对照</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f6f3e9;color:#53634d;font:15px/1.9 "Microsoft YaHei","PingFang SC",sans-serif}main{max-width:1320px;margin:auto;padding:35px 5vw 60px}header{display:flex;align-items:center;justify-content:space-between;gap:20px}h1,h2{font-family:KaiTi,serif;font-weight:400}h1{font-size:32px;margin:0}header p{font:11px Georgia,serif;letter-spacing:.1em;color:#8c967d;margin:0}a{color:inherit;text-underline-offset:5px}header a{font-size:13px}.lead{max-width:52em;font-size:14px;color:#7b856e;margin:23px 0}.controls{display:flex;flex-wrap:wrap;align-items:center;gap:12px 23px}select,button{font:inherit;color:inherit;background:#fffdf6;border:1px solid #cad2b9;border-radius:3px 7px 3px 4px;padding:7px 15px;min-height:44px}button{cursor:pointer}button:focus-visible,a:focus-visible,select:focus-visible{outline:2px solid #8aa177;outline-offset:4px}nav{display:flex;flex-wrap:wrap;gap:9px}button[aria-selected=true]{background:#e7edda;border-color:#9faf8e}.viewer{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:26px;align-items:start;margin:22px 0}.picture{display:block;padding:0;width:100%;cursor:zoom-in;line-height:0}.picture img{width:100%;max-height:800px;object-fit:contain;display:block;height:auto}.notes h2{font-size:24px;line-height:1.6;margin:4px 0 15px}.notes p{font-size:13px;color:#78826b}.film{margin-top:35px}.film h2{font-size:25px}.film video{display:block;width:min(100%,1040px);background:#efeddf;border:1px solid #d4dac7;border-radius:4px}.film p,footer{max-width:65em;color:#858d77;font-size:12px}footer{border-top:1px solid #d7dccc;margin-top:35px;padding-top:20px}dialog{padding:8px;width:min(95vw,1600px);max-height:94vh;border:1px solid #b9c4aa;background:#fffdf5}dialog img{display:block;max-width:100%;max-height:87vh;margin:auto}dialog button{position:absolute;right:15px;top:15px}dialog::backdrop{background:#35442ca6}[hidden]{display:none!important}@media(max-width:850px){main{padding:24px 17px 45px}header{display:block}header>a{display:inline-block;margin-top:15px}h1{font-size:28px}.viewer{grid-template-columns:1fr}.controls{gap:12px}}
+</style>
+<main><header><div><p>BEFORE THE TWENTIETH ORBIT</p><h1>晚邮 · 改版对照</h1></div><a href="../../admin.html?page=postbox">实际试玩 ↗</a></header>
+<p class="lead">两张邮片，翻过来还有几枚邮戳。镜子转一点，没读清的字就落进来了。这里保留旧版、试作和当前版本，也可以看看手机里与开匣后的样子。</p>
+<div class="controls"><select id="view" aria-label="想看哪一处"><option value="compare">改版对照</option><optgroup label="台面"><option value="lock">凑近字轮</option><option value="wuhan">武汉那张的背面</option><option value="nanjing">南京那张的正面</option><option value="mirror-left">雨落在镜里</option><option value="mirror-right">转过去是树</option><option value="open">匣门开了</option><option value="taken">借阅签拿走后</option><option value="room">放回雨廊</option></optgroup><optgroup label="手机"><option value="phone-current">邮匣全貌</option><option value="phone-lock">拨轮与拉扣</option><option value="phone-wuhan">翻看武汉那张</option><option value="phone-nanjing">换一张邮片</option><option value="phone-mirror-left">镜子朝左</option><option value="phone-mirror-right">镜子朝右</option><option value="phone-open">匣内的借阅签</option><option value="phone-taken">取签后</option></optgroup><optgroup label="没有采用的试作"><option value="first-lock">取景还切了边</option><option value="first-mirror">镜子与纸还不协调</option><option value="phone-old">旧版手机</option></optgroup></select><nav role="tablist" aria-label="比较版本"><button role="tab" data-version="0">旧版</button><button role="tab" data-version="1">试作</button><button role="tab" data-version="2">当前</button></nav></div>
+<section class="viewer"><button class="picture" aria-label="放大当前画面"><img id="picture" alt=""></button><aside class="notes"><h2 id="title"></h2><p id="change"></p><p id="reason"></p></aside></section>
+<section class="film"><h2>咔哒，门开了。</h2><video controls preload="metadata" src="playthrough.mp4" poster="current.webp"></video><p>本关的真实鼠标操作，进入时前置关卡已经解开。翻纸、转镜、查格子、拨轮、拉扣，最后从匣里拿走借阅签。录像另配项目原创《窗边》，不是浏览器实时混音；游戏内另有纸张、字轮与锁扣声。完整新开局到结尾的路线另外核对。</p><a href="playthrough.mp4" download>保存这段演示</a></section>
+<footer>运行代码只保留当前实现。近看与雨廊共用匣体、门板、数字和取物状态；书架要在实际拿到借阅签之后才可继续。其他关卡仍按总清单逐项精修，试玩不改正式进度。</footer></main>
+<dialog id="zoom"><button aria-label="返回">×</button><img alt="放大的画面"></dialog>
+<script>
+const versions=[
+ ['old.webp','门还没有真的打开。','旧版用一张闭门画承接拨轮，镜子只把反字切成正字。','手机字轮很小，解开后的借阅签也没有可以拿起的位置。'],
+ ['first.webp','先让门动起来。','匣体、门、锁扣与纸件分开，靠近后可以直接拨轮。','第一轮门板、轮距和取景还要校准；纸座与镜托也没有摆稳。'],
+ ['current.webp','雨廊里的一只小邮匣。','字轮可以拿近，邮片可以翻面。镜子有自己的托架，借阅签留在真正打开的匣子里。','从整体靠近字轮，再退远看门打开；手机重新取景，同一份进度继续留在雨廊。']
+];
+const views={
+ lock:['lock.webp','四只字轮，另有一枚锁扣。','数字会随手势连续滚动，松手才落在一格；也可以轻点或用键盘。','拨对后仍要拉扣。取消不写进度，一次拖动只留一步撤销。'],
+ wuhan:['wuhan.webp','翻过武汉那张。','桥与窗，留在纸背。分拣格就在手边，可以拿近看。','建筑画保持完整比例；它只是邮片上的一个记号，不替人复述往事。'],
+ nanjing:['nanjing.webp','再换一张。','南京那张印着北大楼，旁边标明鼓楼。','两张纸都能翻面；看到的邮片与镜里的印刷内容来自同一处。'],
+ 'mirror-left':['mirror-left.webp','雨落在镜里。','镜子换个朝向，反印的雨字和坐标落进这小片镜面。','镜口之外的部分仍看不到，并没有一键变正整张纸。'],
+ 'mirror-right':['mirror-right.webp','转过去，是树。','另一枚邮戳，在另一边。镜子的观察位置可以连续移动。','镜读不作为隐藏通关条件；知道答案也能直接试锁。'],
+ open:['open.webp','匣门开了。','门沿左铰链打开，里面还夹着一张借阅签。','开锁与领取分开保存，可以先离开，再回来取。'],
+ taken:['taken.webp','书架见。','签拿走了，原处只留着小钉。','物品栏、放大与匣内共用同一张纸；后面的书架读同一份库存。'],
+ room:['room.webp','放回雨廊。','绿植搁在柜顶，邮片摊在桌上。门的开合与匣内状态继续留在远景。','这里裁去了菜单，只保留实际场景局部；没有另画一张完成图。'],
+ 'phone-current':['phone-current.webp','小屏里，也有前后。','先看邮匣全貌，再拿近字轮或翻邮片。','实际触屏核对了轻点、连续拨轮、转镜与取签。'],
+ 'phone-lock':['phone-lock.webp','拿近些就好拨了。','四个独立字轮和锁扣，保持完整。','320像素屏幕里，本关所有操作位置也至少有44像素。'],
+ 'phone-wuhan':['phone-wuhan.webp','纸背留了两枚邮戳。','纸架托住当前这张，另一张放在旁边。','翻纸之后，仍可以交换两张的位置。'],
+ 'phone-nanjing':['phone-nanjing.webp','南京那张。','小屏单独安排纸架、镜托与格子。','建筑画、纸张与镜框的原始比例都保留。'],
+ 'phone-mirror-left':['phone-mirror-left.webp','一小片镜中。','雨字和坐标都能完整落在镜面里。','卡片与镜子没有压扁，收镜与返回也留在画内。'],
+ 'phone-mirror-right':['phone-mirror-right.webp','镜子转到另一边。','树字和坐标也能读到了。','凑近格子再回来，镜子的朝向仍保留。'],
+ 'phone-open':['phone-open.webp','借阅签还在。','打开匣门以后，可以直接点起那张纸。','取签位置在小屏上同样留足大小。'],
+ 'phone-taken':['phone-taken.webp','签已放在手边。','匣内变空，后面的书架也有了所需的东西。','下载、换一个空环境读回，取过和没取过仍分得清。'],
+ 'first-lock':['first-lock.webp','这一轮，取景还切了边。','早期相机贴得太近，铭牌边缘被截断。','后来重新标定门板与相机，没有靠压缩整张图塞进去。'],
+ 'first-mirror':['first-mirror.webp','镜框和纸还没有摆好。','这是第一轮手机试作，纸与镜托的比例还不协调。','后来保留原始长宽比，重新安排落脚处与观察视野。'],
+ 'phone-old':['phone-old.webp','旧版还太挤。','四只字轮跟着整幅横图一起缩小。','当前把全貌与操作近景分开，也另做了手机纸件布局。']
+};
+let selected=versions.length-1;const control=document.querySelector('#view'),nav=document.querySelector('nav'),pic=document.querySelector('#picture'),zoom=document.querySelector('#zoom');
+function render(){nav.hidden=control.value!=='compare';document.querySelectorAll('[data-version]').forEach(b=>{const on=Number(b.dataset.version)===selected;b.setAttribute('aria-selected',on);b.tabIndex=on?0:-1;});const [src,title,change,reason]=control.value==='compare'?versions[selected]:views[control.value];pic.src=src;pic.alt=title;for(const [key,value]of Object.entries({title,change,reason}))document.querySelector('#'+key).textContent=value;}
+control.onchange=render;document.querySelectorAll('[data-version]').forEach(b=>b.onclick=()=>{selected=Number(b.dataset.version);render();});nav.onkeydown=e=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();selected=e.key==='Home'?0:e.key==='End'?versions.length-1:(selected+(e.key==='ArrowRight'?1:-1)+versions.length)%versions.length;render();document.querySelector('[data-version="'+selected+'"]').focus();};
+document.querySelector('.picture').onclick=()=>{zoom.querySelector('img').src=pic.src;zoom.showModal();};zoom.querySelector('button').onclick=()=>zoom.close();render();
+</script></html>

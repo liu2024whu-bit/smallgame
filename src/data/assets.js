@@ -54,7 +54,6 @@ export const ASSETS = Object.freeze({
   deskAfter:'assets/scenes/desk-after.webp',
   collectionAfter:'assets/scenes/collection-after.webp',
   entryAfter:'assets/scenes/entry-after.webp',
-  rainAfter:'assets/scenes/rain-after.webp',
   atelierAfter:'assets/scenes/atelier-after.webp',
   birthdayAfter:'assets/scenes/birthday-after.webp',
   birthdayUnwrapped:'assets/scenes/birthday-unwrapped.webp',
@@ -78,7 +77,11 @@ export const ASSETS = Object.freeze({
   puppyParcel: 'assets/illustrations/puppy-parcel.webp',
   packingPicture: 'assets/illustrations/packing-picture.webp',
   apparatus: 'assets/illustrations/puzzle-props.webp',
-  postbox: 'assets/illustrations/postbox.webp',
+  postalNook:'assets/illustrations/postal-nook.webp',
+  postalParts:'assets/illustrations/postal-parts.webp',
+  postalSupports:'assets/illustrations/postal-supports.webp',
+  postalStamps:'assets/illustrations/postal-stamps.webp',
+  postalProps:'assets/illustrations/postal-props.webp',
   keyboard: 'assets/illustrations/keyboard.webp',
   cinema: 'assets/illustrations/cinema.webp',
   projector: 'assets/illustrations/projector.webp',
@@ -118,4 +121,4 @@ export const COLLECTIONS = Object.freeze({
   cities: { title: '明信片', asset: 'campuses', columns: 2, rows: 1, names: ['武汉大学', '南京大学'] },
   gifts: { title: '小物', asset: 'bookmarkFull', columns: 1, rows: 1, names: ['武大木书签'] },
 });
-export const COLLECTION_PUZZLES = Object.freeze({ sky: 'cloud', naruto: 'album', hashira: 'screen', genshin: 'books', hei: 'film', prince: 'paper', cities: 'flowers' });
+export const COLLECTION_PUZZLES = Object.freeze({ sky: 'cloud', naruto: 'album', hashira: 'screen', genshin: 'books', hei: 'film', prince: 'paper', cities: 'postbox' });

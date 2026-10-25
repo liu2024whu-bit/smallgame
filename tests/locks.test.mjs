@@ -30,6 +30,28 @@ test('the latch must be tried, wrong attempts keep the entered code and allow re
   for(const move of [{type:'set',index:4,value:1},{type:'set',index:0,value:-1},{type:'set',index:0,value:1.5},{type:'turn',index:0,direction:10}])assert.equal(rule.move(state,move),state);
 });
 
+test('a new postal opening leaves the ticket in its source until a real pickup',()=>{
+ let state=start();for(const id of ['paper','cloud','calibration'])state=finish(state,id);
+ POSTAL_CODE.forEach((value,index)=>{state=reduce(state,{type:'move',id:'postbox',move:{type:'set',index,value}});});
+ state=reduce(state,{type:'move',id:'postbox',move:{type:'submit'}});
+ assert.ok(state.solved.includes('postbox'));assert.ok(!state.collected.includes('borrowSlip'));
+ assert.deepEqual(access(state,'books').missing,['borrowSlip']);
+ const restored=normalizeState(serializable(state));
+ assert.ok(!restored.collected.includes('borrowSlip'));assert.equal(access(restored,'books').ready,false);
+ const picked=reduce(restored,{type:'pickup',id:'borrowSlip'});
+ assert.equal(access(picked,'books').ready,true);assert.equal(picked.collected.filter(x=>x==='borrowSlip').length,1);
+ assert.equal(reduce(picked,{type:'pickup',id:'borrowSlip'}),picked);
+});
+
+test('verified old postal passage retains the ticket, unfinished or forged passage earns none',()=>{
+ let state=start();for(const id of ['paper','cloud','calibration','postbox','books'])state=finish(state,id);
+ const raw=serializable(state);raw.revision=10;raw.collected=raw.collected.filter(id=>id!=='borrowSlip');
+ const restored=normalizeState(raw);
+ assert.ok(restored.collected.includes('borrowSlip'));assert.ok(restored.solved.includes('books'));
+ raw.progress.postbox=RULES.postbox.create();
+ const forged=normalizeState(raw);assert.ok(!forged.collected.includes('borrowSlip'));assert.ok(!forged.solved.includes('books'));
+});
+
 test('keyboard editing, cursor positioning and backspace survive correction',()=>{
   const rule=RULES.wordlock;let state=rule.create();
   for(const letter of 'LXA')state=rule.move(state,{type:'key',value:letter.charCodeAt(0)-65});

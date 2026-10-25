@@ -9,7 +9,6 @@ export const SCENE_CHANGES=Object.freeze([
   {scene:'entry',puzzle:'packing',asset:'entryAfter',region:[55,66,10,13],alt:'木框里拼好了整幅画'},
   {scene:'entry',puzzle:'flips',asset:'entryAfter',region:[66,63,9,17],alt:'翻花盒开着，九格都开了花'},
   {scene:'entry',puzzle:'drawers',asset:'entryAfter',region:[76,64,11,16],alt:'下面两格小抽屉拉开了'},
-  {scene:'rain',puzzle:'postbox',asset:'rainAfter',region:[59,33,19,48],alt:'邮匣的门开着'},
   {scene:'atelier',puzzle:'wordlock',asset:'atelierAfter',region:[41,35,20,18],alt:'字匣里的小抽屉滑了出来'},
   {scene:'birthday',puzzle:'chocolate',asset:'birthdayAfter',region:[27,47,22,25],alt:'巧克力盒开着，空位留成了一颗星'},
   {scene:'birthday',puzzle:'cocoa',asset:'birthdayAfter',region:[51.5,49,19.5,22],alt:'两份可可已经分好，小壶空着'},

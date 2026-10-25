@@ -4,7 +4,7 @@ import { POSTAL_CODE, LETTER_CODE } from '../data/ciphers.js';
 import {permutation,same,bounded} from '../puzzles/common.js';
 import {applyOperations,PAPER_SEED,PAPER_TARGET} from '../puzzles/paper.js';
 
-export const CONTENT_REVISION = 10;
+export const CONTENT_REVISION = 11;
 const NEW_GATES = new Set(['postbox', 'wordlock']);
 const OLD_REQUIREMENTS = { books: ['calibration'], album: ['paperBack', 'cloudGap', 'film'] };
 
@@ -34,7 +34,8 @@ export function migrateContent(raw, state) {
       if (NEW_GATES.has(puzzle.id) || verified.has(puzzle.id) || !Array.isArray(raw.solved) || !raw.solved.includes(puzzle.id)) continue;
       const required = OLD_REQUIREMENTS[puzzle.id] ?? puzzle.requires;
       const owned = new Set([...state.collected, ...[...verified].flatMap(id => PUZZLES.find(p => p.id === id).rewards)]);
-      if (required.every(id => verified.has(id)) && puzzle.tools.every(id => owned.has(id)) && RULES[puzzle.id].solved(state.progress[puzzle.id])) {
+      const tools=puzzle.id==='books'?puzzle.tools.filter(id=>id!=='borrowSlip'):puzzle.tools;
+      if (required.every(id => verified.has(id)) && tools.every(id => owned.has(id)) && RULES[puzzle.id].solved(state.progress[puzzle.id])) {
         verified.add(puzzle.id); changed = true;
       }
     }
@@ -47,5 +48,8 @@ export function migrateContent(raw, state) {
     values.forEach((value, index) => { progress = rule.move(progress, { type: 'set', index, value }); });
     state.progress[gate] = rule.move(progress, { type: 'submit' });
     state.solved.push(gate);
+    // These very old saves had already reached the library before its postal
+    // gate existed. Preserve the ticket only after that old route is verified.
+    if(gate==='postbox'&&!state.collected.includes('borrowSlip'))state.collected.push('borrowSlip');
   }
 }

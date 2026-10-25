@@ -74,7 +74,7 @@ export function normalizeState(raw) {
       if (access(state, puzzle.id).ready && inputsOwned(state,puzzle.id,state.progress[puzzle.id]) && RULES[puzzle.id].solved(state.progress[puzzle.id])) {
         state.solved.push(puzzle.id);
         // Old runs already received these objects. New runs preserve only real pickups.
-        const earned=puzzle.rewards.filter(item=>(raw.revision??0)<10||requested.has(item));
+        const earned=puzzle.rewards.filter(item=>(raw.revision??0)<(item==='borrowSlip'?11:10)||requested.has(item));
         state.collected.push(...earned.filter(item=>!state.collected.includes(item)));
         restoreUses();
         changed = true;

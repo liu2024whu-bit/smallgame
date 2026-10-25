@@ -41,10 +41,6 @@
   .prince-page { flex-direction: column; background: #fffdf5; border-bottom: 1px solid #ded7c1; opacity: 0; }
   .prince-page > .character-art { height: 80%; width: auto; }.prince-page p { font: italic 15px Georgia, serif; color: #959c80; margin: 10px; }
   .prince-open .prince-cover { transform: rotateY(-100deg); opacity: 0; pointer-events: none; }.prince-open .prince-page { opacity: 1; }
-  .postcard-desk { position: relative; padding: 20px 16px; max-width: 560px; margin: auto; background: #f0e9d7 url('../assets/illustrations/board.webp') center / cover; border-radius: 5px; }
-  .postcard { display: block; padding: 12px; width: min(285px, 80%); aspect-ratio: .75; background: #fffdf2; transform: rotate(-4deg); box-shadow: 3px 4px 9px #615a4229; margin: auto; }
-  .postcard > .character-art { width: 100%; }.postcard-writing { height: 100%; padding: 16px 8px; border-top: 1px dotted #b8bc9e; display: flex; flex-direction: column; justify-content: space-between; text-align: left; font-size: 15px; line-height: 1.9; }.postcard-writing small { text-align: right; color: #99a18b; }.postcard-writing p { margin: 0; }
-  .postcard-thread { position: absolute; right: 4%; bottom: 4%; transform: rotate(28deg); }.postcard-thread .motif { width: 80px; }
   .ending-page .birthday-letter { text-align: left; max-width: 34em; }.ending-page .birthday-letter:first-of-type { text-align: center; }
   .reading-shelf > .reading-book { display: flex; gap: 14px; align-items: center; border-bottom: 1px dotted #cdd5bd; padding-bottom: 10px; text-align: left; }.reading-book.book-opened { color: #6f8c69; background: #edf0e6; }
   @media(max-width:700px) {

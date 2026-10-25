@@ -36,7 +36,7 @@
 | `assets/illustrations/puzzle-garden.webp` | 同原书房笔触与浅色调的花架近景；可动花盆独立叠在支架上 |
 | `assets/illustrations/puzzle-props.webp` | 保留抽屉柜与翻片盒；图集中的旧迷宫、天平、音乐盒和装订近景已由独立完整位图替换 |
 | `assets/illustrations/packing-picture.webp` | 专门为五块木片制作完整画面，替代孤立角色白底切片 |
-| `assets/illustrations/postbox.webp` | 四轮邮匣近景，动态字轮与锁扣对齐原画位置 |
+| `assets/illustrations/postal-*.webp` | 晚邮的可拆分匣体、纸张、邮戳、支架与盆栽；由既有原创游戏场景作参考，近远景使用同一组部件。旧邮匣单图保留在历史提交中 |
 | `assets/illustrations/keyboard.webp` | 五格字匣与键盘近景，文字由界面排印，保留可输入操作 |
 | `assets/illustrations/light-desk.webp`、`light-desk-tall.webp` | 同房间的横/竖取景空桌面；功能器件分层，不用静止旋钮图代替动作 |
 | `assets/illustrations/light-parts.webp`、`light-fixtures.webp`、`light-film.webp` | 全黄铜花纹圆镜、棕穗木签、纸屏、薄透片、固定支架和灯；共享原生图形与同一光路 |
@@ -194,3 +194,11 @@ V2.3 的机关重绘、场景校正与四帧角色提示词另见 [v23-art-promp
 ## P5 借点光 · 2026-10-25
 
 六份运行图片由内置imagegen绘制，来源仅本项目既有绘画与几何构图。新的圆镜按items图集的全黄铜花纹柄修正，未保留误画的木柄。透片使用共享材料和LIGHT_INK图形，四角/雨窗在工具图、奖励、拖影、光路和覆片中一致；黄铜框为空架的部件。木签保留棕穗、建筑和原刻字。图集框避开下一件的穗子/镜柄，完整保留本体。Pillow只做WebP编码，未手工重画、未读取/提交私人照片和信件。提示记录见[v29-light-prompts.json](v29-light-prompts.json)，跨场景核对见[v29-prop-continuity.md](v29-prop-continuity.md)。
+
+## P6 晚邮 · 2026-10-25
+
+`postal-nook.webp`沿用本作原画风格的空柜台试稿；`postal-parts.webp`为匣体、前/背门板与黄铜扣；`postal-supports.webp`为纸张、分拣纸、纸架、镜托和借阅签；`postal-stamps.webp`为桥/树/雨/窗四枚磨损印痕；`postal-props.webp`为柜顶绿植与小钉等部件。均为内置ImageGen新绘或修订的自然位图，不冒称官方游戏素材。文字和数字由HTML加入。宽锁板、镜托与纸架按实际输入范围重新校准；图集取框、相机和镜读注册分别在asset-layouts.js与data/postal.js维护。
+
+雨廊底画只清除被实时物件替代的原柜体、柜顶物件与两张桌上邮片，保留相同相机和其他家具。新场景与部件只参考本项目原创画/试稿；没有读取或提交私人照片、信件、脸部或身份资料。提示词见[v29-postal-prompts.json](v29-postal-prompts.json)。镜框直接复用P5同款；校园邮片直接使用原有双栏校园绘画，完整分栏、不称官方原图。
+
+`review/postal/`为本地浏览器实际截图和约22秒的鼠标操作录像，前置已完成。静态画面仅裁去无关菜单并编码，未生成替代的“实机效果”；试作保留其实际裁边/比例问题。录像另配项目原创《窗边》，未复制商业歌曲、未声称录下浏览器音效。图片和录像移除来源元数据，未发布原始附件或本机路径。

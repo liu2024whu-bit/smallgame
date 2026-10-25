@@ -8,7 +8,8 @@ const names=ids=>ids.length?ids.map(id=>ITEMS[id]?.name??PUZZLE_BY_ID[id]?.title
 const main=PUZZLES.filter(p=>!p.optional),tools=[...new Set(PUZZLES.flatMap(p=>p.tools))];
 const graph=['flowchart LR',...main.map(p=>`  ${p.id}["${p.title}"]`),
  ...main.flatMap(p=>p.requires.map(id=>`  ${id} --> ${p.id}`)),
- '  stitch --> birthdayDoor["摇柄装入生日门"]','  birthdayDoor --> chocolate','  birthdayDoor --> sweets','  birthdayDoor --> ribbons',
+  '  postbox -->|实际拾取| borrowSlip["借阅签"]','  borrowSlip -->|准入| books',
+  '  stitch --> birthdayDoor["摇柄装入生日门"]','  birthdayDoor --> chocolate','  birthdayDoor --> sweets','  birthdayDoor --> ribbons',
  '  sweets --> birthdayLock','  cocoa --> candles["点烛与许愿"]','  sweets --> candles','  birthdayLock --> candles'];
 const text=`# V2.9 现有关系图与道具审查底稿
 
@@ -21,6 +22,8 @@ ${graph.join('\n')}
 \`\`\`
 
 ## 每个机关
+
+“完成得到”列记录解开后可领取的物件；实际点击拾取后才进入库存。晚邮的借阅签留在匣内，拿走才满足书架准入；书架内如何更自然地用签，仍按P7独立审查。
 
 | 机关 | 所在场景 | 前置机关 | 所需物品 | 完成得到 | 类型 |
 | --- | --- | --- | --- | --- | --- |

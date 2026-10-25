@@ -11,9 +11,9 @@ import { escape, icon, itemSprite, motif } from './dom.js';
 
 const WAITING = {
   calibration: '桌上还少点东西。',
-  postbox: '字轮藏在暗处。',
+  postbox: '邮匣还静静合着。',
   wordlock: '压纸的夹层还没有松开。',
-  books: '书脊间，还缺一张借阅签。',
+  books: '这边还少一张借阅签。',
   screen: '纸屏的边角，还暗着。',
   belt: '轮子和摇柄还没装上。',
   film: '胶片轮还没动。',
@@ -25,7 +25,7 @@ const WAITING = {
   birthdayLock:'纸带还压着匣盖呢。',
 };
 
-const CLOSE_LOOK = new Set(['paper','cloud','calibration','postbox','wordlock','belt','flowers','chocolate','stitch','maze','melody','sweets','ribbons','birthdayLock','calendar']);
+const CLOSE_LOOK = new Set(['paper','cloud','calibration','wordlock','belt','flowers','chocolate','stitch','maze','melody','sweets','ribbons','birthdayLock','calendar']);
 
 export function puzzlePanel(id, context) {
   const { state, view = {} } = context;

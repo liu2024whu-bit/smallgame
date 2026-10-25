@@ -143,7 +143,11 @@ async function useTool(item,target){
     toast('画册还没有装好。');return false;
   }
   if(target==='postcard-mirror'){
-    store.dispatch({type:'select',id:null});openCollection('cities');ui.panel.view={card:1,back:true,reflected:true};renderDialog(false);audio.material('glass');return true;
+    store.dispatch({type:'select',id:null});
+    if(ui.panel?.type==='puzzle'&&ui.panel.id==='postbox')ui.panel.view={...ui.panel.view,postal:'papers',reflected:true};
+    else if(ui.panel?.type==='collection'&&ui.panel.id==='cities')ui.panel.view={...ui.panel.view,reflected:true};
+    else {openCollection('cities');ui.panel.view={card:1,back:true,reflected:true};}
+    renderDialog(false);audio.material('glass');return true;
   }
   const effect=puzzleToolUse(target);if(!effect)return false;
   const {id,move}=effect;

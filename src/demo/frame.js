@@ -36,10 +36,15 @@ function copy(){
     const id=state.solved.includes('calibration')?'calibration-done':state.hints.calibration?'calibration-hints':p.lit&&p.fitted.every(Boolean)&&matched?(p.flipped?'calibration-aligned':'calibration-flipped-wrong'):p.lit?'calibration-'+stage:'calibration';
     spec=(panel.view?.closeLook?REVIEW_CASES.find(entry=>entry.id===id+'-close'):null)??REVIEW_CASES.find(entry=>entry.id===id)??spec;
   }
+  if(panel?.type==='puzzle'&&panel.id==='postbox'){
+    const state=game.store.get(),view=panel.view??{},p=state.progress.postbox;
+    const id=view.postal==='papers'?state.solved.includes('postbox')?'postbox-done-papers':view.reflected?'postbox-mirror-'+(view.postalAim===0?0:view.postalAim===1?2:1):`postbox-paper-${view.card===1?1:0}-${!!view.back}`:state.solved.includes('postbox')?'postbox-done':view.postal==='detail'?'postbox-'+(p.attempts?'attempt':p.values.join()==='1,0,2,9'?'ready':'detail'):state.hints.postbox?'postbox-hints':'postbox';
+    spec=REVIEW_CASES.find(entry=>entry.id===id)??spec;
+  }
   if(panel?.type==='puzzle'&&game.store.get().solved.includes(panel.id)){
     const state=game.store.get(),rewards=PUZZLE_BY_ID[panel.id].rewards;
     const mask=rewards.reduce((bits,item,index)=>bits|(state.collected.includes(item)?1<<index:0),0);
-    if(mask&&!panel.view?.back&&!panel.view?.pressProof)spec=REVIEW_CASES.find(entry=>entry.id===panel.id+'-collected-'+mask)??spec;
+    if(mask&&!panel.view?.back&&!panel.view?.pressProof&&!(panel.id==='postbox'&&panel.view?.postal==='papers'))spec=REVIEW_CASES.find(entry=>entry.id===panel.id+'-collected-'+mask)??spec;
   }
   if(root.matches('#welcome')){const invitation=root.querySelector('.invitation');spec=REVIEW_CASES.find(entry=>invitation?entry.mode==='intro'&&entry.step===Number(invitation.dataset.step):entry.id==='opening')??spec;}
   return {id:spec.id,title:dialog?.querySelector('#dialog-title')?.textContent??spec.name,source:spec.source,text:visibleCopy(root)};

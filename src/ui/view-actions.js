@@ -28,13 +28,14 @@ export function viewActions({ panel, render, activity,foley=()=>{} }) {
       }
       if(measured)settleWorkbenchZoom(viewport.querySelector('.puzzle-field'),before);
     },
+    'postal-view':button=>{if(['cabinet','detail','papers'].includes(button.dataset.id)){change({postal:button.dataset.id});foley('turn');}},
     'memory-detail': button => { const focus = Number(button.dataset.index); change({ focus }); activity(`art:detail:${focus}`); },
     'memory-cinema': () => { change({ playing: !panel().view?.playing }); activity('cinema:play'); },
     'memory-figure': button => change({ figure: Number(button.dataset.index) }),
     'memory-open': () => change({ open: !panel().view?.open }),
-    'memory-postcard': () => change({ back: !panel().view?.back }),
-    'memory-card': button => change({ card: Number(button.dataset.index), back: false }),
-    'memory-mirror': () => change({ reflected: !panel().view?.reflected }),
+    'memory-postcard':()=>{activity('memory:cities');change({back:!panel().view?.back});foley('turn');},
+    'memory-card':button=>{activity('memory:cities');change({card:Number(button.dataset.index),back:false});foley('turn');},
+    'memory-mirror':()=>{change({reflected:!panel().view?.reflected});foley('return');},
     'evidence-flip': () => change({ flipped: !panel().view?.flipped }),
     'campus-look': button => { change({ looked: !panel().view?.looked }); if(button.dataset.activity)activity(button.dataset.activity); },
     'campus-stop': button => change({ corner:Number(button.dataset.index),looked:false }),

@@ -1,0 +1,103 @@
+@layer puzzles {
+ .puzzle-postbox .puzzle-field{padding:0;min-height:0;background:transparent;}
+ .postal-cabinet,.postal-paper-desk{position:relative;isolation:isolate;container-type:inline-size;aspect-ratio:1200/1000;overflow:hidden;border-radius:3px;}
+ .postal-environment{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;}
+ .postal-camera{position:absolute;left:0;top:0;width:100%;aspect-ratio:1200/1000;transform-origin:0 0;}
+ .postal-body,.postal-door,.postal-door-paint,.postal-door-front,.postal-door-back{position:absolute;display:block;}
+ .postal-door{transform-origin:0 50%;transform-style:preserve-3d;perspective:1300px;}
+ .postal-door-front,.postal-door-back,.postal-door-paint{inset:0;width:100%;height:100%;backface-visibility:hidden;}
+ .postal-plant,.postal-ticket-pin{position:absolute;display:block;pointer-events:none;}
+ .postal-plant{filter:saturate(.78) brightness(1.02);}
+ .postal-door-back{transform:rotateY(180deg);}
+ .postal-open .postal-door{transform:perspective(1300px) rotateY(-106deg);}
+ .postal-wheel-bank{position:absolute;inset:0;}
+ .postal-wheel-slot{position:absolute;top:38%;height:26%;width:15.1%;translate:-50% 0;}
+ .postal-wheel-sign{position:absolute;bottom:103%;width:100%;text-align:center;color:#65694e;font-size:clamp(7px,1.3cqw,18px);}
+ .postal-drum{position:relative;display:block;width:100%;height:100%;padding:0;border:0;border-radius:1px;background:transparent;color:#f4e2b4;overflow:hidden;touch-action:none;cursor:var(--cursor-grab,grab);}
+ .postal-drum-strip{display:block;position:absolute;left:0;top:0;width:100%;height:100%;transform:translateY(calc((-10 - var(--digit))*100%));pointer-events:none;}
+ .postal-drum-strip>b{display:grid;place-items:center;height:100%;font:500 clamp(8px,2cqw,28px)/1 Georgia,serif;}
+ .postal-static-digit{display:grid;place-items:center;height:100%;font:500 clamp(8px,2cqw,28px)/1 Georgia,serif;color:#f4e2b4;}
+ .postal-drum:focus-visible{outline:1px solid #f0dfaa;outline-offset:2px;}
+ .postal-handle{position:absolute;left:87%;top:43%;width:17%;height:50%;padding:0;border:0;background:transparent;transform-origin:39% 28%;touch-action:none;cursor:var(--cursor-grab,grab);}
+ .postal-handle-paint{display:block;width:100%;height:100%;}
+ .postal-lock-closer{position:absolute;left:18%;top:33%;width:94%;height:58%;border:0;padding:0;background:transparent;}
+ .postal-lock-closer:hover{background:#fff8db0d;}
+ .postal-back,.postal-paper-return,.postal-mirror-return{min-height:44px;}
+ .postal-back{position:absolute;right:4%;bottom:3%;background:#fff9e8cf;padding:7px 12px;font-size:clamp(12px,1.4cqw,16px);}
+ .postal-note-stack{position:absolute;left:.833333%;top:73%;width:31.666667%;height:23%;padding:0;border:0;background:transparent;}
+ .postal-note-stack>.postal-front{position:absolute;left:13.7%;top:17.4%;width:72.6%;height:69.6%;transform:perspective(600px) rotateX(48deg) rotate(-8deg);transform-origin:50% 100%;}
+ .postal-body,.postal-door-paint{pointer-events:none;}
+ .postal-grid-button{position:absolute;left:3%;top:8%;width:21%;height:28%;padding:0;border:0;background:transparent;transform:rotate(-3deg);}
+ .postal-ticket-pickup{position:absolute;border:0;padding:0;background:transparent;transform:rotate(5deg);}
+ .postal-ticket-pickup>.borrowing-ticket{position:absolute;left:23%;top:9.6%;width:54%;height:81%;}
+ .borrowing-ticket{position:relative;display:block;width:100%;height:100%;}
+ .printed-prop{position:relative;display:inline-block;aspect-ratio:230/330;container-type:inline-size;}
+ .printed-paper{position:absolute;inset:0;width:100%;height:100%;display:block;}
+ .prop-inscription{position:absolute;left:10%;right:10%;top:24%;font-size:12cqw;text-align:center;color:#6e745c;}
+ .prop-inscription small{display:block;margin-top:70%;font-size:.65em;white-space:nowrap;}
+ .postal-card-print,.postal-front{position:relative;display:block;width:100%;height:100%;container-type:inline-size;}
+ .postal-card-paper{position:absolute;inset:0;display:block;width:100%;height:100%;}
+ .postal-card-city{position:absolute;left:10%;top:11%;font-size:4cqw;color:#777a62;}
+ .postal-front>.postal-campus-print{position:absolute;left:9%;top:5%;width:40.5%;height:90%;background-size:200% 100%;background-repeat:no-repeat;}
+ .postal-front>span:last-child{position:absolute;right:12%;top:29%;font-size:7cqw;writing-mode:vertical-rl;letter-spacing:.2em;color:#626b52;}
+ .postal-front small{font-size:.33em;display:block;margin-right:22%;letter-spacing:.15em;}
+ .postal-impressions{position:absolute;inset:0;}
+ .postal-reversed{transform:scaleX(-1);}
+ .postal-impression{position:absolute;display:block;width:31%;height:52%;translate:-50% -50%;color:#6c765a;}
+ .postal-stamp-ink{position:absolute;inset:0;width:100%;height:100%;}
+ .postal-impression>b{position:absolute;top:-17%;left:0;width:100%;font-size:4.4cqw;font-weight:400;text-align:center;}
+ .postal-impression>span:last-child{position:absolute;left:0;top:68%;width:100%;text-align:center;font:400 5cqw/1 Georgia,serif;}
+ .postal-sort-paper{position:relative;display:block;width:100%;height:100%;container-type:inline-size;}
+ .postal-sort-texture{position:absolute;inset:0;width:100%;height:100%;}
+ .postal-sort-tack{position:absolute;left:47%;top:2%;width:7%;aspect-ratio:1;display:block;}
+ .postal-sort-print{position:absolute;inset:10%;text-align:center;font-size:6cqw;color:#657052;}
+ .postal-sort-print>span{display:block;font-size:5cqw;margin-bottom:2%;}
+ .postal-sort-print table{border-collapse:collapse;width:100%;table-layout:fixed;font-family:Georgia,serif;line-height:1.8;}
+ .postal-sort-print th{font-size:.72em;font-weight:400;color:#8f957f;}
+ .postal-sort-print td{border-bottom:1px solid #a4a78b3b;}
+ .postal-sort-print thead td{border:0;}
+ .postal-paper-desk{aspect-ratio:1200/900;}
+ .postal-desk-grid{position:absolute;left:4%;top:4%;width:32%;aspect-ratio:660/590;rotate:-3deg;border:0;padding:0;background:transparent;}
+ .postal-other-card{position:absolute;left:51%;top:9%;width:31%;aspect-ratio:600/360;padding:0;border:0;background:transparent;rotate:9deg;}
+ .postal-current-card{position:absolute;left:45%;top:27%;width:50%;aspect-ratio:600/360;padding:0;border:0;background:transparent;perspective:1000px;}
+ .postal-card-leaf{display:block;position:absolute;inset:0;transform-style:preserve-3d;}
+ .postal-card-face,.postal-card-rear{position:absolute;display:block;inset:0;backface-visibility:hidden;}
+ .postal-card-rear{transform:rotateY(180deg);}
+ .postal-card-turned .postal-card-leaf{transform:rotateY(180deg);}
+ .postal-paper-stand{position:absolute;left:43%;top:53.3%;width:54%;aspect-ratio:720/260;}
+ .postal-stand-art{display:block;width:100%;height:100%;}
+ .postal-mirror-rest{position:absolute;left:16.5%;top:83%;width:12%;aspect-ratio:320/270;}
+ .postal-mirror-cradle{width:100%;height:100%;display:block;}
+ .postal-hand-mirror{position:absolute;left:9%;top:44%;width:27%;aspect-ratio:430/580;}
+ .postal-mirror-image{position:absolute;inset:0 0 0 0;transform-origin:50% 95%;}
+ .postal-mirror-frame{position:absolute;inset:0;display:block;width:100%;height:100%;}
+ .postal-mirror-aperture{position:absolute;left:5%;top:2.5%;width:90%;height:66.5%;border-radius:50%;overflow:hidden;pointer-events:none;background:#d6dfd8;}
+ .postal-reflection{position:absolute;left:0;top:0;width:600px;height:360px;transform-origin:0 0;filter:saturate(.72) contrast(.9);}
+ .postal-reflection::after{content:'';position:absolute;inset:0;background:#e8f0e91a;}
+ .postal-mirror-grip{position:absolute;left:26%;bottom:0;width:48%;height:29%;min-height:44px;min-width:44px;border:0;padding:0;background:transparent;color:#757b66;font-size:clamp(10px,1.5cqw,17px);text-shadow:0 1px #fff9e8;cursor:var(--cursor-grab,grab);}
+ .postal-mirror-return{position:absolute;left:50%;bottom:-12%;translate:-50% 0;white-space:nowrap;font-size:clamp(11px,1.5cqw,16px);}
+ .postal-mirror-fit{position:absolute;left:10%;top:79%;width:23%;height:13%;min-width:44px;min-height:44px;border:0;background:#fff6df50;color:#7f8269;font-size:clamp(11px,1.7cqw,17px);}
+ .postal-paper-return{position:absolute;right:4%;bottom:4%;font-size:clamp(12px,1.5cqw,17px);background:#fff9e8b5;padding:7px 12px;}
+ .world-postal{position:absolute;left:51.15%;top:33.7%;width:35.39%;pointer-events:none;}
+ .world-postal-grid{position:absolute;left:78.3%;top:13.9%;width:6.3%;height:14.5%;pointer-events:none;}
+ .world-postal-card{position:absolute;top:49.4%;width:4.2%;aspect-ratio:600/360;transform-origin:center;transform:perspective(450px) rotateX(45deg) rotate(-6deg);pointer-events:none;}
+ .world-postal-card-0{left:43.5%;}.world-postal-card-1{left:48.3%;top:49.1%;rotate:8deg;}
+ .postal-cabinet:not(.postal-detail) .postal-drum:disabled{opacity:1;}
+ .postal-grid-evidence{width:min(100%,450px);aspect-ratio:660/590;margin:auto;}
+ .postal-miniature .postal-environment{display:none;}
+ .postal-miniature .postal-camera{pointer-events:none;}
+ .postal-miniature .postal-note-stack,.postal-miniature .postal-grid-button,.postal-miniature button{pointer-events:none;}
+ @media(max-width:700px){
+   .postal-paper-desk{aspect-ratio:768/1120;}
+  .postal-desk-grid{left:4%;top:2%;width:48%;}
+  .postal-other-card{left:60%;top:20%;width:35%;}
+  .postal-current-card{left:9%;top:33%;width:86%;}
+  .postal-paper-stand{left:7%;top:56.7%;width:90%;}
+  .postal-mirror-rest{left:14.5%;top:83%;width:25%;}
+  .postal-hand-mirror{left:4%;top:52%;width:46%;}
+  .postal-mirror-fit{left:8%;top:84%;width:34%;height:10%;}
+  .postal-mirror-return{left:112%;bottom:25%;translate:0 0;}
+  .postal-back{bottom:2%;}
+ }
+ @media(forced-colors:active){.postal-drum,.postal-handle,.postal-lock-closer,.postal-mirror-grip{outline:1px solid ButtonText;}}
+}
