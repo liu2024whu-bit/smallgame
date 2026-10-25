@@ -10,6 +10,16 @@ export function visibleCopy(root){
     }
     return true;
   }
+  function insideApertures(rect,parent){
+    let {left,right,top,bottom}=rect;
+    for(let el=parent;el&&el!==root.parentElement;el=el.parentElement){
+      const s=getComputedStyle(el),r=el.getBoundingClientRect();
+      if(['hidden','clip'].includes(s.overflowX)){left=Math.max(left,r.left);right=Math.min(right,r.right);}
+      if(['hidden','clip'].includes(s.overflowY)){top=Math.max(top,r.top);bottom=Math.min(bottom,r.bottom);}
+      if(right-left<.5||bottom-top<.5)return false;
+    }
+    return true;
+  }
   while(walker.nextNode()){
     const text=walker.currentNode.textContent.replace(/\s+/g,' ').trim(),parent=walker.currentNode.parentElement;
     if(!text||!parent||!visible(parent))continue;
@@ -18,17 +28,13 @@ export function visibleCopy(root){
     // can scroll. Exclude text wholly outside those apertures, not offscreen
     // paragraphs that still belong to the current page.
     const range=document.createRange();range.selectNodeContents(walker.currentNode);
-    let {left,right,top,bottom}=range.getBoundingClientRect(),clipped=false;
-    for(let el=parent;el&&el!==root.parentElement;el=el.parentElement){
-      const s=getComputedStyle(el),r=el.getBoundingClientRect();
-      if(['hidden','clip'].includes(s.overflowX)){left=Math.max(left,r.left);right=Math.min(right,r.right);}
-      if(['hidden','clip'].includes(s.overflowY)){top=Math.max(top,r.top);bottom=Math.min(bottom,r.bottom);}
-      if(right-left<.5||bottom-top<.5){clipped=true;break;}
-    }
-    if(clipped)continue;
+    if(!insideApertures(range.getBoundingClientRect(),parent))continue;
     const block=parent.closest('[data-copy-group]')??parent.closest('h1,h2,h3,h4,p,button,summary,label,legend,small,a,output')??parent;
     if(!blocks.has(block))blocks.set(block,[]);
     blocks.get(block).push(text);
   }
+  // Printed raster letters have no DOM text node. Their view supplies a label
+  // only when that specific painted part is exposed; clipped/hidden layers stay out.
+  for(const element of root.querySelectorAll('[data-painted-copy]'))if(visible(element)&&insideApertures(element.getBoundingClientRect(),element))blocks.set(element,['画中数字：'+element.dataset.paintedCopy]);
   return [...blocks.values()].map(words=>words.join(' ')).join('\n\n');
 }

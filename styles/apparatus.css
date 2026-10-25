@@ -9,7 +9,6 @@
   .puzzle-paper .puzzle-field,.puzzle-paperBack .puzzle-field { background:#f6efe0 url('../assets/illustrations/board.webp') center/cover; }
   .puzzle-paper .puzzle-field,.puzzle-paperBack .puzzle-field { padding-top:52px; }
   .puzzle-cloud .puzzle-field,.puzzle-cloudGap .puzzle-field { background:#edf1e8; }
-  .puzzle-screen .puzzle-field { background:#eeecf1; }
   .puzzle-film .puzzle-field { background:#e9e6da; }
   .puzzle-flowers .puzzle-field { padding:0 0 20px; background:#f3f0e5; }
   .puzzle-packing .puzzle-field { background:#eae0cb url('../assets/illustrations/board.webp') center/cover; }

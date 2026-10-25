@@ -8,7 +8,7 @@ export function bindLocks(root, progress, move, feedback=()=>{}) {
   const drums = [...root.querySelectorAll('[data-lock-digit]')];
   if(kind==='number'&&!drums.length)return ()=>{};
   const paint=(button,value)=>{
-    const strip=button.querySelector('.postal-drum-strip');
+    const strip=button.querySelector('[data-number-strip]');
     const current=mod(Math.round(value),10);
     if(strip){
       strip.getAnimations().forEach(a=>a.cancel());strip.style.setProperty('--digit',mod(value,10));
@@ -23,6 +23,7 @@ export function bindLocks(root, progress, move, feedback=()=>{}) {
   const abort = new AbortController();
   root.addEventListener('keydown', event => {
     if (event.ctrlKey || event.metaKey || event.altKey || /INPUT|TEXTAREA|SELECT/.test(event.target.tagName)) return;
+    if(kind==='number'&&!event.target.closest('[data-lock-digit]')&&event.target!==apparatus)return;
     const slot = Number(event.target.closest('[data-lock-digit]')?.dataset.lockDigit ?? progress.cursor);
     let action;
     if (kind === 'number' && /^\d$/.test(event.key)) action = { type:'set', index:slot, value:Number(event.key) };
@@ -42,7 +43,7 @@ export function bindLocks(root, progress, move, feedback=()=>{}) {
   }, { signal:abort.signal });
   const stop = kind === 'number' ? pointerSession(root, {
     pick(event) { const source = event.target.closest('[data-lock-digit]'); return source&&!source.disabled ? { source, index:Number(source.dataset.lockDigit) } : null; },
-    start(g){g.step=g.source.querySelector('.postal-drum-strip')?Math.max(18,Math.min(32,g.source.getBoundingClientRect().height/2)):22;g.last=progress.values[g.index];},
+    start(g){g.step=g.source.querySelector('[data-number-strip]')?Math.max(18,Math.min(32,g.source.getBoundingClientRect().height/2)):22;g.last=progress.values[g.index];},
     move(g,event){const value=progress.values[g.index]+(g.y-event.clientY)/g.step;g.value=(Math.round(value)%10+10)%10;paint(g.source,value);if(g.value!==g.last){g.last=g.value;feedback('detent');}},
     end(gesture,_,cancelled) { if (!cancelled && gesture.value !== undefined) move({type:'set',index:gesture.index,value:gesture.value}); },
     clear() { drums.forEach(button => paint(button,progress.values[Number(button.dataset.lockDigit)])); },

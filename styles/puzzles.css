@@ -50,17 +50,6 @@
   .sky-person { display:block;position:absolute;left:30%;bottom:14%;translate:-50% 0;filter:drop-shadow(1px 2px 1px #66543820); }
   .sky-person-1 { left:69%; }.sky-cover { width:min(100%,202.5px);margin:0; }
   .appearance-controls .text-button { display:inline-flex;align-items:center;gap:7px;min-height:44px; }.appearance-controls .icon { width:16px;height:16px; }
-  .port-key { text-align: center; font-size: 13px; color: #82936c; }
-  .accordion-screen { display: flex; justify-content: center; gap: 4px; }
-  .screen-leaf { flex: 1; min-width: 0; position: relative; padding: 8px 2px; text-align: center; background: #fffdf3; border: 1px solid #cbd2b8; box-shadow: inset 5px 0 0 #a3ad8410; }
-  .screen-leaf.back-face { background: #e9efdf; box-shadow: inset -5px 0 0 #a3ad8410; }
-  .screen-name { display: block; font-size: clamp(9px, 1vw, 13px); height: 25px; white-space: nowrap; }
-  .screen-leaf .character-art { display: block; width: 100%; }
-  .screen-line { width: 100%; height: 95px; display: block; overflow: visible; }
-  .screen-line path { stroke: #789168; stroke-width: 2; }
-  .screen-line text { fill: #879973; font: 11px Georgia, serif; }
-  .screen-leaf .puzzle-control { font-size: 12px; min-width: 0; padding: 3px 7px; }
-  .screen-workbench > .text-button { display: block; margin: 18px auto 0; font-size: 13px; }
   .mechanical-notes { display: flex; justify-content: center; gap: 18px; font-size: 13px; border-top: 1px dotted #c4cbb0; padding-top: 12px; }
   .mechanical-notes p { max-width: 210px; margin: 0; }
   .mechanical-controls { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
@@ -126,7 +115,6 @@
 
     .appearance-controls { gap: 3px 10px; font-size: 10px; }
     .turn-scene { font-size: 12px; }
-    .accordion-screen { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }.screen-name { font-size: 12px; height: 20px; }.screen-leaf .character-art { width: 74%; margin: auto; }.screen-line { height: 46px; }.screen-leaf .puzzle-control { min-height: 27px; }
     .mechanical-controls { gap: 6px; }.mechanical-controls .puzzle-control { font-size: 12px; }
     .album-layout { gap: 7px; }.loose-page { padding: 4px; width: 24%; }.loose-page p { font-size: 11px; }.loose-page > .puzzle-control { font-size: 10px; padding: 2px; }.page-letter { font-size: 12px; }.loose-page .shift-controls { gap: 1px; }.loose-page .shift-controls .puzzle-control { min-width: 24px; }
     .weight-examples { flex-wrap: wrap; gap: 7px; }.weight-examples .motif { width: 28px; }.weight-tray { gap: 7px; }.weight-tray button { padding: 6px; font-size: 11px; }

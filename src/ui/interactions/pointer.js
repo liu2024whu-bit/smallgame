@@ -25,6 +25,9 @@ export function pointerSession(root, handlers) {
   function finish(event, cancelled = false) {
     if (!gesture) return;
     const current = gesture;
+    // A resize event can arrive after pointerup. A changed coordinate space
+    // still cancels the gesture before saved state can be committed.
+    cancelled ||= current.viewportWidth!==window.innerWidth||current.viewportHeight!==window.innerHeight;
     gesture = null;
     if(current.dragging)root.dataset.suppressUntil=Date.now()+350;
     const release=()=>{pending=null;try{if(current.dragging)handlers.end?.(current,event,cancelled);}finally{clear(current,cancelled);}};
@@ -39,7 +42,7 @@ export function pointerSession(root, handlers) {
     delete root.dataset.suppressUntil;
     const picked = handlers.pick(event);
     if (!picked) return;
-    gesture = { ...picked, x: event.clientX, y: event.clientY, pointer: event.pointerId, dragging: false };
+    gesture = { ...picked, x: event.clientX, y: event.clientY, pointer: event.pointerId, dragging: false, viewportWidth:window.innerWidth, viewportHeight:window.innerHeight };
   }, options);
   window.addEventListener('pointermove', event => {
     if (!gesture || event.pointerId !== gesture.pointer) return;
@@ -55,6 +58,7 @@ export function pointerSession(root, handlers) {
   window.addEventListener('pointerup', event => { if (gesture?.pointer === event.pointerId) finish(event); }, options);
   window.addEventListener('pointercancel', event => { if (gesture?.pointer === event.pointerId) finish(event, true); }, options);
   window.addEventListener('blur', event => finish(event, true), options);
+  window.addEventListener('resize', event => finish(event, true), options);
   window.addEventListener('keydown', event => {
     if (!gesture && ['Enter', ' '].includes(event.key)) delete root.dataset.suppressUntil;
     if (!gesture?.dragging) return;

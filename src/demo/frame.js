@@ -3,6 +3,7 @@ import {createMusicLibrary} from '../services/music-library.js';
 import {previewState,REVIEW_CASES} from './fixtures.js';
 import {visibleCopy} from './visible-copy.js';
 import {PUZZLE_BY_ID} from '../data/puzzles.js';
+import {screenAligned,SCREEN_CODE} from '../puzzles/screen.js';
 
 const memory=new Map();
 const game=mountGame({storage:{getItem:key=>memory.get(key),setItem:(key,value)=>memory.set(key,value),removeItem:key=>memory.delete(key)},library:createMusicLibrary(null)});
@@ -32,6 +33,11 @@ function copy(){
     const id=state.solved.includes('cloud')?'cloud-done'+(back?'-back':''):state.hints.cloud?'cloud-hints':!state.collected.includes('thread')?'cloud-unfound':front?'cloud-front-paired'+(back?'-back':''):back?'cloud-back':'cloud';
     spec=REVIEW_CASES.find(entry=>entry.id===id)??spec;
   }
+  if(panel?.type==='puzzle'&&panel.id==='screen'){
+    const state=game.store.get(),p=state.progress.screen,view=panel.view??{},mode=view.screenView??(p.opened?'pocket':'whole');
+    const id=mode==='paper'?'screen-paper-'+(p.opened?'done-':'')+(view.screenGroup??0):p.opened?(mode==='whole'?'screen-done-paper':'screen-done'):mode==='lock'?(p.values.every((v,i)=>v===SCREEN_CODE[i])?'screen-ready':p.attempts?'screen-attempt':'screen-lock'):state.hints.screen?'screen-hints':screenAligned(p.flips)?!p.backing.turned?(Math.abs(p.backing.x)<12&&Math.abs(p.backing.y)<12?'screen-backing-aligned':'screen-backing-turned'):'screen-painting':'screen';
+    spec=REVIEW_CASES.find(entry=>entry.id===id)??spec;
+  }
   if(panel?.type==='puzzle'&&panel.id==='calibration'){
     const state=game.store.get(),p=state.progress.calibration,matched=p.values.every((v,i)=>v===[2,1,3][i]);
     const stage={'000':'empty-lit','100':'film','010':'mirror-only','001':'book-only','110':'mirror','101':'film-book','011':'mirror-book','111':'book'}[p.fitted.map(Number).join('')];
@@ -52,7 +58,7 @@ function copy(){
   if(panel?.type==='puzzle'&&game.store.get().solved.includes(panel.id)){
     const state=game.store.get(),rewards=PUZZLE_BY_ID[panel.id].rewards;
     const mask=rewards.reduce((bits,item,index)=>bits|(state.collected.includes(item)?1<<index:0),0);
-    if(mask&&!panel.view?.back&&!panel.view?.pressProof&&!(panel.id==='postbox'&&panel.view?.postal==='papers')&&!(panel.id==='books'&&['book','slip'].includes(panel.view?.library)))spec=REVIEW_CASES.find(entry=>entry.id===panel.id+'-collected-'+mask)??spec;
+    if(mask&&!panel.view?.back&&!panel.view?.pressProof&&!(panel.id==='postbox'&&panel.view?.postal==='papers')&&!(panel.id==='books'&&['book','slip'].includes(panel.view?.library))&&!(panel.id==='screen'&&['whole','paper'].includes(panel.view?.screenView)))spec=REVIEW_CASES.find(entry=>entry.id===panel.id+'-collected-'+mask)??spec;
   }
   if(root.matches('#welcome')){const invitation=root.querySelector('.invitation');spec=REVIEW_CASES.find(entry=>invitation?entry.mode==='intro'&&entry.step===Number(invitation.dataset.step):entry.id==='opening')??spec;}
   return {id:spec.id,title:dialog?.querySelector('#dialog-title')?.textContent??spec.name,source:spec.source,text:visibleCopy(root)};

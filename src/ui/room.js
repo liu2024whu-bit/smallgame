@@ -4,6 +4,7 @@ import {pressMiniature} from './puzzles/press.js';
 import {cloudMiniature} from './puzzles/cloud.js';
 import {postalMiniature} from './puzzles/postal.js';
 import {libraryMiniature} from './puzzles/library.js';
+import {screenMiniature} from './puzzles/screen.js';
 import { GAME_DATE } from '../data/calendar.js';
 import { roomCompanions } from './companions.js';
 import { SCENES, SCENE_BY_ID } from '../data/scenes.js';
@@ -17,11 +18,12 @@ import { cabinetMechanisms } from './miniatures.js';
 import { partyRoom } from './party-room.js';
 import { escape, icon, itemSprite } from './dom.js';
 
-const LIVE_SCENE_PROGRESS={desk:['paper','calendar','calibration','books'],window:['flowers','cloud'],rain:['postbox'],party:['sweets','ribbons','birthdayLock']};
+const LIVE_SCENE_PROGRESS={desk:['paper','calendar','calibration','books'],window:['flowers','cloud'],collection:['screen'],rain:['postbox'],party:['sweets','ribbons','birthdayLock']};
 const LIVE_SCENE_ART={
   desk:state=>lightMiniature(state.progress.calibration,state.solved.includes('calibration'))+pressMiniature(state.progress.paper,state.solved.includes('paper'),inventory(state))+libraryMiniature(state),
   window:state=>cloudMiniature(state.progress.cloud,state.solved.includes('cloud'),inventory(state))+gardenMiniature(state.progress.flowers,state.solved.includes('flowers')),
   rain:postalMiniature,
+  collection:screenMiniature,
 };
 export function sceneSignature(state){
   return JSON.stringify([state.scene,state.collected,sceneChanges(state).map(c=>c.puzzle??c.activity),state.solved,state.ending,(LIVE_SCENE_PROGRESS[state.scene]??[]).map(id=>state.progress[id])]);

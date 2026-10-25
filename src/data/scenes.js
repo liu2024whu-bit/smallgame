@@ -24,7 +24,7 @@ export const SCENES = Object.freeze([
     inspect('postcards', '书里的明信片', 'cities', 63, 64, 16, 11),
   ] },
   { id: 'collection', title: '收藏柜', hotspots: [
-    puzzle('screen', '纸屏', 53.5, 57, 22, 19),
+    puzzle('screen', '纸屏', 42.7, 40.6, 20.5, 24.3),
     puzzle('maze', '旋转迷宫盒', 69, 58, 8.5, 15),
     puzzle('balance', '平衡摆件', 34, 55, 10, 20),
     puzzle('melody', '钉轮音乐盒', 79, 58, 10, 16),

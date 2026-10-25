@@ -32,6 +32,7 @@ export function viewActions({ panel, render, activity,foley=()=>{} }) {
     'library-view':button=>{if(['shelf','book','slip'].includes(button.dataset.id)){change({library:button.dataset.id,...(button.dataset.book!==undefined?{book:Number(button.dataset.book)}:{}),slipBack:false});foley('turn');}},
     'library-slip-flip':()=>{change({slipBack:!panel().view?.slipBack});foley('turn');},
     'library-ask':()=>change({askedSlip:true}),
+    'screen-view':button=>{if(['whole','paper','lock','pocket'].includes(button.dataset.id)){const group=Number(button.dataset.index??panel().view?.screenGroup??0);change({screenView:button.dataset.id,screenGroup:[0,1,2].includes(group)?group:0});foley('turn');}},
     'memory-detail': button => { const focus = Number(button.dataset.index); change({ focus }); activity(`art:detail:${focus}`); },
     'memory-cinema': () => { change({ playing: !panel().view?.playing }); activity('cinema:play'); },
     'memory-figure': button => change({ figure: Number(button.dataset.index) }),

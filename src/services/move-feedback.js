@@ -1,5 +1,6 @@
 // A successful rule move chooses a material sound; the UI never owns progress.
 export function playMoveFeedback(audio,id,move,previous,next){
+ if(id==='screen'){const paper=['flip','turn-backing','slide'].includes(move.type);audio.foley(paper?'turn':move.type==='submit'?(next.opened?'return':'stop'):'detent');audio.material(paper?'paper':'wood');return;}
  if(id==='melody'&&['note','set-note'].includes(move.type))return audio.previewNote(next.notes[move.index]);
  if(id==='cocoa')return audio.pour();
  if(id==='cloud'){audio.foley('detent');audio.material('paper');return;}

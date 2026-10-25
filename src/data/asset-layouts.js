@@ -1,8 +1,14 @@
 import { SWEET_CROP, BOX_CROP, OPEN_BOX_CROP } from './birthday-workshop.js';
 import {PRESS_MAIN,PRESS_PARTS} from './press.js';
 import {CLOUD_BODY,CLOUD_DOORS} from './cloud.js';
+import {SCREEN_PARTS} from './screen.js';
 // Source-pixel frames follow the actual edges of each illustration.
 export const ASSET_LAYOUTS = Object.freeze({
+  screenMain:{width:1536,height:1024},screenParts:SCREEN_PARTS,
+  screenBacking:{width:2172,height:724,frames:[[0,0,2172,724],[0,0,220,180]]},
+  screenMask:{width:2172,height:724},
+  screenWater:{width:1254,height:1254,frames:[[0,0,1254,1254]]},screenWind:{width:1254,height:1254,frames:[[0,0,1254,1254]]},screenSerpent:{width:1254,height:1254,frames:[[0,0,1254,1254]]},
+  screenNook:{width:1536,height:1024},screenCorner:{width:1672,height:941},
   libraryMain:{width:1536,height:1024,frames:[[28,93,1186,564],[29,698,1187,234],[1233,180,282,424],[72,528,1100,24]]},
   librarySpines:{width:1536,height:1024,frames:[[72,112,161,820],[312,115,157,818],[567,118,158,813],[818,119,151,813],[1058,114,157,819],[1315,123,154,810]]},
   libraryPages:{width:1536,height:1024,frames:[[20,85,1495,820],[1407,911,110,101]]},

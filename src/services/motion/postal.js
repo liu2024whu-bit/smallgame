@@ -1,8 +1,8 @@
 import {ease} from './shared.js';
-import {mod} from '../../puzzles/common.js';
+import {captureNumberStrips,playNumberStrips} from './number-strips.js';
 const pose=root=>{
  const camera=root.querySelector('.postal-camera'),door=root.querySelector('.postal-door'),card=root.querySelector('.postal-card-leaf'),view=root.querySelector('.postal-cabinet,.postal-paper-desk');
- return {top:root.getBoundingClientRect().top,height:view?.getBoundingClientRect().height,camera:camera?getComputedStyle(camera).transform:null,door:door?getComputedStyle(door).transform:null,card:card?getComputedStyle(card).transform:null,attempts:Number(root.querySelector('[data-postal-cabinet]')?.dataset.attempts??0),digits:[...root.querySelectorAll('.postal-drum-strip')].map(el=>-new DOMMatrix(getComputedStyle(el).transform).m42/el.clientHeight-10),paper:!!root.querySelector('[data-postal-desk]')};
+ return {top:root.getBoundingClientRect().top,height:view?.getBoundingClientRect().height,camera:camera?getComputedStyle(camera).transform:null,door:door?getComputedStyle(door).transform:null,card:card?getComputedStyle(card).transform:null,attempts:Number(root.querySelector('[data-postal-cabinet]')?.dataset.attempts??0),digits:captureNumberStrips(root,'.postal-cabinet .postal-drum-strip'),paper:!!root.querySelector('[data-postal-desk]')};
 };
 export const postalMotion={
  capture:pose,
@@ -17,12 +17,7 @@ export const postalMotion={
   for(const [selector,key,duration]of [['.postal-camera','camera',440],['.postal-door','door',680],['.postal-card-leaf','card',440]]){
    const el=root.querySelector(selector);if(el&&before[key]!==null&&before[key]!==next[key])el.animate([{transform:before[key]},{transform:next[key]}],{duration,easing:ease});
   }
-  root.querySelectorAll('.postal-drum-strip').forEach((el,i)=>{
-   if(!Number.isFinite(before.digits[i]))return;
-   const to=next.digits[i],from=to+mod(before.digits[i]-to+5,10)-5;
-   if(Math.abs(from-to)<.001)return;
-   el.animate([{transform:`translateY(${-(10+from)*100}%)`},{transform:`translateY(${-(10+to)*100}%)`}],{duration:210,easing:ease});
-  });
+  playNumberStrips(root,'.postal-cabinet .postal-drum-strip',before.digits);
   if(next.attempts>0&&next.attempts!==before.attempts)root.querySelector('[data-postal-latch]')?.animate([{rotate:'0deg'},{rotate:'-13deg',offset:.45},{rotate:'0deg'}],{duration:300,easing:ease});
   if(next.paper!==before.paper)root.querySelector('.postal-paper-desk,.postal-cabinet')?.animate([{opacity:.5,translate:'0 5px'},{opacity:1,translate:'0 0'}],{duration:220,easing:ease});
  }

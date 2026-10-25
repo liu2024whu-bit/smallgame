@@ -3,13 +3,21 @@ import { PUZZLES } from '../data/puzzles.js';
 import { POSTAL_CODE, LETTER_CODE } from '../data/ciphers.js';
 import {permutation,same,bounded} from '../puzzles/common.js';
 import {applyOperations,PAPER_SEED,PAPER_TARGET} from '../puzzles/paper.js';
+import {screenAligned,SCREEN_CODE} from '../puzzles/screen.js';
 
-export const CONTENT_REVISION = 12;
+export const CONTENT_REVISION = 14;
 const NEW_GATES = new Set(['postbox', 'wordlock']);
 const OLD_REQUIREMENTS = { books: ['calibration'], album: ['paperBack', 'cloudGap', 'film'] };
 
 // The old box printed immediately on a reorder. Preserve only its verified result.
 export function migrateProgress(id,candidate,raw){
+  if(id==='screen'&&(raw.revision??0)<14&&bounded(candidate?.flips,9,2)&&!Object.hasOwn(candidate,'backing')){
+    const paperOnly=!['values','opened','attempts'].some(key=>Object.hasOwn(candidate,key));
+    const oldLock=bounded(candidate.values,3,10)&&typeof candidate.opened==='boolean'&&Number.isInteger(candidate.attempts)&&candidate.attempts>=0&&candidate.attempts<=999&&(!candidate.opened||candidate.attempts>0&&same(candidate.values,[9,0,8]));
+    if(!paperOnly&&!oldLock)return candidate;
+    const opened=Array.isArray(raw.solved)&&raw.solved.includes('screen')&&(paperOnly?screenAligned(candidate.flips):candidate.opened);
+    return {...RULES.screen.create(),flips:[...candidate.flips],...(opened?{backing:{x:0,y:0,turned:false}}:{}),values:opened?[...SCREEN_CODE]:oldLock?[...candidate.values]:[0,0,0],opened,attempts:opened?Math.max(1,candidate.attempts??1):candidate.attempts??0};
+  }
   if(id==='books'&&(raw.revision??0)<12&&permutation(candidate?.order,5)&&!['fitted','opened','attempts'].some(key=>Object.hasOwn(candidate,key))){
     const opened=Array.isArray(raw.solved)&&raw.solved.includes('books')&&RULES.books.solved({...RULES.books.create(),order:candidate.order,opened:true,attempts:1});
     return {...RULES.books.create(),order:[...candidate.order],opened,attempts:opened?1:0};

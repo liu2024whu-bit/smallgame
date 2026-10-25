@@ -43,10 +43,6 @@ test('paper operations and inverse, book ordering, film and album have unique so
 test('both cloud systems each have one joint solution, not independent window guesses', () => {
   for (const id of ['cloud', 'cloudGap']) assert.equal(product(4, 3).filter(values => RULES[id].solved({ values, back: false })).length, 1, id);
 });
-test('all nine paper-screen seams yield one solution', () => {
-  const winners = product(2, 9).filter(flips => RULES.screen.solved({ flips }));
-  assert.deepEqual(winners, [solvedProgress('screen').flips]);
-});
 test('mechanical belt has one route, direction and gear solution', () => {
   const winners = enumeratePermutations([0, 1, 2, 3, 4, 5, 6]).flatMap(route => [false, true].flatMap(crossed => [0, 1, 2].filter(ratio => RULES.belt.solved({ route, crossed, ratio })).map(ratio => ({ route, crossed, ratio }))));
   assert.deepEqual(winners, [solvedProgress('belt')]);

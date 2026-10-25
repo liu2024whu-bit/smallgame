@@ -1,6 +1,7 @@
 // Concrete walkthroughs for isolated previews and rule verification; the live game does not import this module.
 import { RULES } from '../puzzles/index.js';
 import { CHOCOLATE_PATTERN } from '../data/birthday.js';
+import {SCREEN_CODE} from '../puzzles/screen.js';
 
 function arrange(seed, goal) {
   const order = [...seed], moves = [];
@@ -28,7 +29,7 @@ export const WITNESSES = {
   calibration: [...[0,1,2].map(index=>({type:'fit',index})),{type:'power'},...turns([0,0,0],[2,1,3],4),{type:'flip'},{type:'trace'}],
   postbox: [...[1, 0, 2, 9].map((value, index) => ({ type: 'set', index, value })), { type:'submit' }],
   books: [{type:'fit',index:0},...arrange([0,1,2,3,4],[3,0,4,1,2]),{type:'submit'}],
-  screen: flip([0, 2, 3, 6, 8]),
+  screen: [...flip([0,2,3,6,8]),{type:'turn-backing'},{type:'slide',x:0,y:0},...SCREEN_CODE.map((value,index)=>({type:'set',index,value})),{type:'submit'}],
   belt: [...[0, 2, 1, 4, 3, 5, 6].map(index => ({ type: 'node', index })), { type: 'cross' }, { type: 'ratio' }, { type: 'ratio' }],
   film: [...arrange([2, 0, 1], [1, 0, 2]), ...flip([0, 2])],
   flowers: [{type:'crank',index:0},{type:'pin',index:1},{type:'crank',index:0,steps:2},{type:'crank',index:1,steps:-1}],

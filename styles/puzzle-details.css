@@ -15,10 +15,6 @@
   .pulley-node.threaded .thread-grip { border:1px solid #b58562a8; }.thread-grip { width:95%; height:85%; border-radius:50%; display:block; }
   .belt-gear { position:absolute; left:45%; top:71%; width:10%; height:10%; z-index:2; }.belt-gear .puzzle-control { background:#ddd1ac90; border:0; box-shadow:none; font:22px Georgia,serif; width:100%; height:100%; min-width:0; padding:0; }.belt-gear small { font:11px var(--font); }
   .belt-cross { position:absolute; left:39%; top:38%; display:grid; justify-items:center; color:#858b75; }.belt-cross .puzzle-control { border:0; background:#f9f4e1cc; color:#8d947c; box-shadow:1px 1px 1px #6d765326; font-size:22px; padding:0 10px; }.belt-cross > small { font-size:10px; }
-  .screen-leaf.puzzle-control { display:block; min-width:0; min-height:0; border-radius:2px; padding:8px 2px; background:#fffdf3; }
-  .screen-leaf.puzzle-control.back-face { background:#e9efdf; }.screen-leaf .screen-face-label { font-size:11px; color:#929b83; }
-  .screen-leaf.connected-left { border-left-color:#899f76; }.screen-leaf.connected-right { border-right-color:#899f76; }
-  .screen-leaf.connected-left.connected-right .screen-line path { stroke:#4a765c; stroke-width:3; }
   .film-viewer { position:relative; max-width:640px; margin:auto; overflow:hidden; background:#dedbc9; border:10px solid #4e5950; border-radius:4px; }
   .film-viewer > .character-art { width:100%; display:block; }
   .film-view-petal { position:absolute; left:12%; width:5%; transition:top .8s linear; filter:drop-shadow(1px 2px 1px #575c3840); }.film-view-petal .motif { width:100%; }

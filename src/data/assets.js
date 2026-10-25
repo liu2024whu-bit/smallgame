@@ -9,6 +9,15 @@ export const SCENE_ART = Object.freeze({
   party:'assets/scenes/party.webp',
 });
 export const ASSETS = Object.freeze({
+  screenMain:'assets/illustrations/screen-main.webp',
+  screenBacking:'assets/illustrations/screen-backing.webp',
+  screenMask:'assets/illustrations/screen-mask.webp',
+  screenParts:'assets/illustrations/screen-parts.webp',
+  screenWater:'assets/illustrations/screen-water.webp',
+  screenWind:'assets/illustrations/screen-wind.webp',
+  screenSerpent:'assets/illustrations/screen-serpent.webp',
+  screenNook:'assets/illustrations/screen-nook.webp',
+  screenCorner:'assets/illustrations/screen-corner.webp',
   libraryMain:'assets/illustrations/library-main.webp',
   librarySpines:'assets/illustrations/library-spines.webp',
   libraryPages:'assets/illustrations/library-pages.webp',

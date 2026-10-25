@@ -1,7 +1,6 @@
 import { drawLine } from './shared.js';
 
 const FACES = [
-  ['.screen-leaf',el=>el.classList.contains('back-face')],
   ['.page-face',el=>el.querySelector('small')?.textContent],
   ['.face-selectors button',el=>el.querySelector('span')?.textContent],
   ['.flip-tile',el=>el.classList.contains('tile-back')],
@@ -19,7 +18,7 @@ export const paperMotion = {
       if (before.digits[i] !== undefined && before.digits[i] !== el.textContent) el.animate([{ translate: '0 -25%', opacity: .3 }, { translate: '0 0', opacity: 1 }], { duration: 150, easing: 'ease-out' });
     });
     const lock=root.querySelector('[data-password-lock]');
-    if(lock&&!lock.matches('[data-postal-cabinet]')&&Number(lock.dataset.attempts)>before.attempts&&!lock.classList.contains('lock-open')){
+    if(lock&&!lock.matches('[data-postal-cabinet],[data-screen-case]')&&Number(lock.dataset.attempts)>before.attempts&&!lock.classList.contains('lock-open')){
       lock.animate([{translate:'0px'},{translate:'-3px'},{translate:'3px'},{translate:'0px'}],{duration:240});
       root.querySelector('.type-special')?.animate([{ translate: '0 0' }, { translate: '0 4px', offset: .4 }, { translate: '0 0' }], { duration: 240 });
     }
