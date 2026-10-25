@@ -3,7 +3,7 @@ export const ITEMS = Object.freeze({
   thread: { name: '棉线', sprite: 1, description: '松松绕着的一卷棉线。' },
   mirror: { name: '小圆镜', sprite: 2, description: '镜框背后，有个小支架。' },
   crank: { name: '摇柄', sprite: 3, description: '黄铜的，底下是个方口。' },
-  transparency: { name: '透片', sprite: 4, description: '薄薄一片，边角刻着记号。' },
+  transparency: { name: '透片', sprite: 4, description: '角上四道记号，中间一扇小窗。' },
   needle: { name: '装订针', sprite: 5, description: '针头圆圆的，针眼很大。' },
   pulley: { name: '槽轮', sprite: 6, description: '边缘凹下去一圈。' },
   pageA: { name: '画页 A', sprite: 7, description: '页角有一朵玫瑰。' },

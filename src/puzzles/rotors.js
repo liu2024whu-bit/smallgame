@@ -26,5 +26,3 @@ export const GAP_TARGET = cloudReadings([1, 3, 2], true);
 export const cloud = makeRotors([0, 0, 0], CLOUD_TARGET, values => cloudReadings(values),{hasFace:false});
 export const cloudAngles=values=>CLOUD_LINKS.map((link,index)=>[values[link.outer],mod(CLOUD_TARGET[index]-link.ratio*values[link.inner],4)]);
 export const cloudGap = makeRotors([3, 2, 2], GAP_TARGET, values => cloudReadings(values, true));
-export const CALIBRATION_TARGET = Object.freeze([2, 1, 3]);
-export const calibration = makeRotors([0, 0, 0], CALIBRATION_TARGET, values => values);

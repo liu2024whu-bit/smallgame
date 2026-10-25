@@ -9,11 +9,11 @@ import { PUZZLE_VIEWS } from './puzzles/index.js';
 import { escape, icon, itemSprite, motif } from './dom.js';
 
 const WAITING = {
-  calibration: '灯座上，还空着两个槽。',
+  calibration: '桌上还缺两样小东西。',
   postbox: '字轮藏在暗处。',
   wordlock: '压纸的夹层还没有松开。',
   books: '书脊间，还缺一张借阅签。',
-  screen: '侧光没有照过来。',
+  screen: '纸屏的边角，还暗着。',
   belt: '轮子和摇柄还没装上。',
   film: '胶片轮还没动。',
   flowers: '花架上，留着一个方口。',

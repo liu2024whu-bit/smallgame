@@ -1,4 +1,5 @@
 import {gardenMiniature} from './puzzles/flowers.js';
+import {lightMiniature} from './puzzles/light.js';
 import {pressMiniature} from './puzzles/press.js';
 import {cloudMiniature} from './puzzles/cloud.js';
 import { GAME_DATE } from '../data/calendar.js';
@@ -14,7 +15,7 @@ import { cabinetMechanisms } from './miniatures.js';
 import { partyRoom } from './party-room.js';
 import { escape, icon, itemSprite } from './dom.js';
 
-const LIVE_SCENE_PROGRESS={desk:['paper','calendar'],window:['flowers','cloud'],party:['sweets','ribbons','birthdayLock']};
+const LIVE_SCENE_PROGRESS={desk:['paper','calendar','calibration'],window:['flowers','cloud'],party:['sweets','ribbons','birthdayLock']};
 export function sceneSignature(state){
   return JSON.stringify([state.scene,state.collected,sceneChanges(state).map(c=>c.puzzle??c.activity),state.solved,state.ending,(LIVE_SCENE_PROGRESS[state.scene]??[]).map(id=>state.progress[id])]);
 }
@@ -22,7 +23,7 @@ export function sceneSignature(state){
 export function renderScenePicture(state) {
   const scene=SCENE_BY_ID[state.scene];
   const art=scene.id==='birthday'&&state.ending?ASSETS.birthdayLit:scene.id==='party'&&state.solved.includes('birthdayLock')?ASSETS.partyOpen:SCENE_ART[scene.id];
-  return `<img class="scene-image" src="${art}" alt="${scene.title}" draggable="false">${sceneChanges(state).map(change=>`<img class="scene-change" data-world-change="${change.puzzle??change.activity}" src="${ASSETS[change.asset]}" alt="${change.alt}" style="mask-image:${paintMask(change.region)}" draggable="false">`).join('')}${state.scene==='desk'?`<span class="world-calendar-date ${state.solved.includes('calendar')?'date-unlocked':''}" aria-hidden="true"><small>${GAME_DATE.year} / ${GAME_DATE.month}</small><b>${GAME_DATE.day}</b></span>`:''}${state.scene==='window'?cloudMiniature(state.progress.cloud,state.solved.includes('cloud'))+gardenMiniature(state.progress.flowers,state.solved.includes('flowers')):''}${state.scene==='desk'?pressMiniature(state.progress.paper,state.solved.includes('paper')):''}${cabinetMechanisms(state)}${partyRoom(state)}`;
+  return `<img class="scene-image" src="${art}" alt="${scene.title}" draggable="false">${state.scene==='desk'?`<img class="scene-change" src="${ASSETS.lightCorner}" alt="" aria-hidden="true" style="animation:none;mask-image:${paintMask([55.2,27.8,19.8,29])}" draggable="false">`:''}${sceneChanges(state).map(change=>`<img class="scene-change" data-world-change="${change.puzzle??change.activity}" src="${ASSETS[change.asset]}" alt="${change.alt}" style="mask-image:${paintMask(change.region)}" draggable="false">`).join('')}${state.scene==='desk'?`<span class="world-calendar-date ${state.solved.includes('calendar')?'date-unlocked':''}" aria-hidden="true"><small>${GAME_DATE.year} / ${GAME_DATE.month}</small><b>${GAME_DATE.day}</b></span>`:''}${state.scene==='window'?cloudMiniature(state.progress.cloud,state.solved.includes('cloud'))+gardenMiniature(state.progress.flowers,state.solved.includes('flowers')):''}${state.scene==='desk'?pressMiniature(state.progress.paper,state.solved.includes('paper'))+lightMiniature(state.progress.calibration,state.solved.includes('calibration')):''}${cabinetMechanisms(state)}${partyRoom(state)}`;
 }
 
 export function renderRoom(state) {

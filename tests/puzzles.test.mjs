@@ -40,8 +40,8 @@ test('paper operations and inverse, book ordering, film and album have unique so
     assert.equal(winners.length, 1, id);
   }
 });
-test('both cloud systems and side light each have one joint solution, not independent window guesses', () => {
-  for (const id of ['cloud', 'cloudGap', 'calibration']) assert.equal(product(4, 3).filter(values => RULES[id].solved({ values, back: false })).length, 1, id);
+test('both cloud systems each have one joint solution, not independent window guesses', () => {
+  for (const id of ['cloud', 'cloudGap']) assert.equal(product(4, 3).filter(values => RULES[id].solved({ values, back: false })).length, 1, id);
 });
 test('all nine paper-screen seams yield one solution', () => {
   const winners = product(2, 9).filter(flips => RULES.screen.solved({ flips }));

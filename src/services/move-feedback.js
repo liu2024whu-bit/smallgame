@@ -3,6 +3,7 @@ export function playMoveFeedback(audio,id,move,previous,next){
  if(id==='melody'&&['note','set-note'].includes(move.type))return audio.previewNote(next.notes[move.index]);
  if(id==='cocoa')return audio.pour();
  if(id==='cloud'){audio.foley('detent');audio.material('paper');return;}
+ if(id==='calibration'){audio.foley(move.type==='trace'?'stamp':move.type==='power'?'detent':move.type==='flip'?'turn':move.type==='fit'?'wedge-in':move.type==='unfit'?'wedge-out':'detent');return;}
  if(id==='flowers'){
   audio.foley(move.type==='crank'?'turn':next.pin>=0?'wedge-in':'wedge-out');
   if(move.type==='crank'&&previous.pin>=0&&next.pin<0)audio.foley('wedge-out',.16);

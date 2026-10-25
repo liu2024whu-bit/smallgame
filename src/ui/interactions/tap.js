@@ -1,5 +1,6 @@
 // Some touch UAs omit the compatibility click immediately after a custom drag.
-// Prefer the native click; only a missing one gets a fallback after touchend.
+// Keep the zero-delay fallback for rapid taps after a custom drag. A delayed
+// native compatibility click is deduplicated by its original physical press.
 export function bindButtonTaps(root){
  const controller=new AbortController(),signal=controller.signal;
  let down,pending;
@@ -23,7 +24,11 @@ export function bindButtonTaps(root){
   },0);
  },{capture:true,signal});
  root.addEventListener('click',event=>{
-  if(!event.isTrusted||!pending||event.target.closest('button')!==pending.button)return;
+  if(!event.isTrusted||!pending)return;
+  const samePress=(event.pointerType==='touch'||event.sourceCapabilities?.firesTouchEvents)&&Math.hypot(event.clientX-pending.x,event.clientY-pending.y)<3;
+  // A fallback can replace the button before a delayed native click arrives.
+  // Match the physical tap, rather than the now-detached DOM node.
+  if(event.target.closest('button')!==pending.button&&!samePress)return;
   if(pending.fired){event.preventDefault();event.stopImmediatePropagation();}
   else cancel();
  },{capture:true,signal});

@@ -25,7 +25,7 @@ export const WITNESSES = {
   calendar:[...[0,1,1,2,0,8].map((value,index)=>({type:'set',index,value})),{type:'submit'}],
   paper: [{type:'open'},...arrange([2,0,1],[0,1,2]),{type:'print'}],
   cloud: turns([0, 0, 0], [3, 2, 2], 4),
-  calibration: turns([0, 0, 0], [2, 1, 3], 4),
+  calibration: [...[0,1,2].map(index=>({type:'fit',index})),{type:'power'},...turns([0,0,0],[2,1,3],4),{type:'flip'},{type:'trace'}],
   postbox: [...[1, 0, 2, 9].map((value, index) => ({ type: 'set', index, value })), { type:'submit' }],
   books: arrange([0, 1, 2, 3, 4], [3, 0, 4, 1, 2]),
   screen: flip([0, 2, 3, 6, 8]),

@@ -1,5 +1,6 @@
 import {bindGarden} from './garden.js';
 import {bindPress} from './press.js';
+import {bindLight} from './light.js';
 import {bindCloud} from './cloud.js';
 import { bindPacking } from './packing.js';
 import { bindReorder } from './reorder.js';
@@ -25,6 +26,7 @@ export function bindInteractions(root, { id, progress, solved, move, activity, c
   cleanup.push(bindRubbing(root,activity));
   if (id === 'film') cleanup.push(bindFilm(root,progress));
   if(id==='cloud')cleanup.push(bindCloud(root,progress,{move,changeView,solved,feedback}));
+  if(id==='calibration')cleanup.push(bindLight(root,progress,move,feedback,changeView));
   if (id && !solved) {
     cleanup.push(id === 'packing' ? bindPacking(root, progress, move) : bindReorder(root, id, move));
     cleanup.push(bindObjects(root, id, move, progress));

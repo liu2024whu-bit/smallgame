@@ -1,15 +1,19 @@
 import { RULES } from '../puzzles/index.js';
 import { PUZZLES } from '../data/puzzles.js';
 import { POSTAL_CODE, LETTER_CODE } from '../data/ciphers.js';
-import {permutation,same} from '../puzzles/common.js';
+import {permutation,same,bounded} from '../puzzles/common.js';
 import {applyOperations,PAPER_SEED,PAPER_TARGET} from '../puzzles/paper.js';
 
-export const CONTENT_REVISION = 8;
+export const CONTENT_REVISION = 9;
 const NEW_GATES = new Set(['postbox', 'wordlock']);
 const OLD_REQUIREMENTS = { books: ['calibration'], album: ['paperBack', 'cloudGap', 'film'] };
 
 // The old box printed immediately on a reorder. Preserve only its verified result.
 export function migrateProgress(id,candidate,raw){
+  if(id==='calibration'&&(raw.revision??0)<9&&bounded(candidate?.values,3,4)&&(candidate.back===undefined||typeof candidate.back==='boolean')&&!['fitted','lit','flipped','proof'].some(key=>Object.hasOwn(candidate,key))){
+    const completed=Array.isArray(raw.solved)&&raw.solved.includes(id)&&same(candidate.values,[2,1,3]);
+    return {values:[...candidate.values],fitted:[false,false,false],flipped:completed,lit:false,proof:completed?{values:[...candidate.values],flipped:true}:null};
+  }
   if(id==='cloud'&&Array.isArray(candidate?.values))return {values:[...candidate.values]};
   if(id!=='paper'||(raw.revision??0)>=7||!permutation(candidate?.order,3))return candidate;
   if(['opened','proof','presses'].some(key=>Object.hasOwn(candidate,key)))return candidate;

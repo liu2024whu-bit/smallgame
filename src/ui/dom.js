@@ -1,3 +1,4 @@
+import {LIGHT_INK,LIGHT_FILM_SURFACE} from '../data/light.js';
 import { ASSETS, MOTIFS, MOTIF_LABELS } from '../data/assets.js';
 import { ASSET_LAYOUTS } from '../data/asset-layouts.js';
 
@@ -55,7 +56,14 @@ export function atlas(asset, index, { columns = 4, rows = 3, label = '', classNa
 }
 
 export const motif = (id, className = '') => atlas('motifs', MOTIFS[id] ?? 0, { label: MOTIF_LABELS[id] ?? '', className: `motif ${className}` });
-export const itemSprite = (index, className = '') => typeof index==='object' ? atlas(index.asset,index.index,{...index,className:`item-art ${className}`}) : index === 0 ? atlas('bookmarkFull', 0, { columns: 1, rows: 1, label: '木书签', className: `item-art ${className}` }) : atlas('items', index, { className: `item-art ${className}` });
+export function itemSprite(index,className=''){
+ if(typeof index==='object')return atlas(index.asset,index.index,{...index,className:`item-art ${className}`});
+ if(index===0)return atlas('bookmarkFull',0,{columns:1,rows:1,label:'木书签',className:`item-art ${className}`});
+ if(index!==4)return atlas('items',index,{className:`item-art ${className}`});
+ const surface=LIGHT_FILM_SURFACE,frame=ASSET_LAYOUTS.lightFilm.frames[0];
+ const drawing=`<svg class="transparency-engraving" viewBox="${frame.join(' ')}" aria-hidden="true"><g transform="translate(${surface.x} ${surface.y}) scale(${surface.width/400} ${surface.height/400}) translate(100 100)">${LIGHT_INK.map(d=>`<path d="${d}"/>`).join('')}</g></svg>`;
+ return atlas('lightFilm',0,{label:'角上有四道记号的雨窗透片',className:`item-art transparency-prop ${className}`}).replace('</span>',drawing+'</span>');
+}
 export function character(asset, index, columns, rows, label, className = '') {
   return atlas(asset, index, { columns, rows, label, className: `character-art ${className}` });
 }

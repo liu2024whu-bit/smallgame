@@ -7,7 +7,7 @@ export const SCENES = Object.freeze([
     { id: 'take-bookmark', kind: 'pickup', target: 'bookmark', label: '木书签', x: 60.7, y: 56.4, width: 5.8, height: 6.5, sprite: true },
     { id: 'take-thread', kind: 'pickup', target: 'thread', label: '一卷棉线', x: 55.3, y: 54.3, width: 4.2, height: 6.5, sprite: true },
     puzzle('paper', '纸盒', 52.7, 51.8, 12.8, 15, { revisit: 'paperBack', revisitAfter: 'flowers' }),
-    puzzle('calibration', '台灯', 62.8, 44.6, 14, 26),
+    puzzle('calibration', '光影小桌', 66.7, 52, 17, 18),
     puzzle('books', '借阅书架', 87.5, 38, 17, 33),
     puzzle('belt', '小放映机', 87.5, 59.7, 14, 18, { revisit: 'film', revisitAfter: 'belt' }),
     { id: 'album-desk', kind: 'album', label: '画册', x: 40.4, y: 56, width: 19, height: 12 },
@@ -41,7 +41,7 @@ export const SCENES = Object.freeze([
     { id: 'dog', kind: 'pet', target: 'dog', label: '打盹的小狗', x: 39.5, y: 76, width: 21, height: 18 },
     { id: 'birthday-gift', kind: 'birthday', label: '10月29日的小礼物', x: 74, y: 50, width: 10, height: 11 },
   ] },
-  { id: 'rain', title: '雨廊', requires:['calibration'], door:0, closed:'门缝里，还漏着一线光。', unlocked:'玻璃门的搭扣松开了。', hotspots: [
+  { id: 'rain', title: '雨廊', requires:['calibration'], door:0, closed:'门缝里，还漏着一线光。', unlocked:'外面有雨声。', hotspots: [
     puzzle('postbox', '邮匣', 68, 52, 16, 48),
     inspect('rain-postcards', '两张明信片', 'cities', 48, 52, 10, 7),
     { id: 'postal-grid', kind: 'evidence', target: 'postal', label: '墙上的分拣格', x: 81.4, y: 21.5, width: 8, height: 18 },

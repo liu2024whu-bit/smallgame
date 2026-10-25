@@ -38,7 +38,9 @@
 | `assets/illustrations/packing-picture.webp` | 专门为五块木片制作完整画面，替代孤立角色白底切片 |
 | `assets/illustrations/postbox.webp` | 四轮邮匣近景，动态字轮与锁扣对齐原画位置 |
 | `assets/illustrations/keyboard.webp` | 五格字匣与键盘近景，文字由界面排印，保留可输入操作 |
-| `assets/illustrations/lightbench.webp` | 透片灯台、镜子、刻尺与三个旋钮，投影随真实机关状态改变 |
+| `assets/illustrations/light-desk.webp`、`light-desk-tall.webp` | 同房间的横/竖取景空桌面；功能器件分层，不用静止旋钮图代替动作 |
+| `assets/illustrations/light-parts.webp`、`light-fixtures.webp`、`light-film.webp` | 全黄铜花纹圆镜、棕穗木签、纸屏、薄透片、固定支架和灯；共享原生图形与同一光路 |
+| `assets/illustrations/light-corner.webp` | 只清理原书桌灯角，按局部遮罩使用，其余背景保留 |
 | `assets/illustrations/projector.webp` | 打开放映机侧板；轮心按实际图像重新定位，动态棉线独立连入 |
 | `assets/illustrations/campus-whu.webp` | 武大老斋舍折页，以公开实景照片的石砌入口、红色平开窗和屋檐为依据，日字斋牌文字由HTML排印 |
 | `assets/illustrations/campus-nju.webp` | 南大鼓楼校区北大楼折页，核对灰瓦屋脊、中央方塔、红星、藤蔓、台阶与正门 |
@@ -188,3 +190,7 @@ V2.3 的机关重绘、场景校正与四帧角色提示词另见 [v23-art-promp
 新绘运行部件：`cloud-front.webp`、`cloud-back.webp`、`cloud-doors.webp`、`cloud-parts.webp`、`cloud-figures.webp`、`cloud-ledge.webp`。生成及二次修订记录见[v29-cloud-prompts.json](v29-cloud-prompts.json)。前后壳、纸环、轴、侧扇分层；拼合半图、齿轮与切线绳路是精确原生几何，源像素取框在data/cloud.js和asset-layouts.js。背壳按同一脚下锚点做0.9834的纵向配准，纸人/帽尖/穗边完整留在取框中。旧window-after.webp已随无引用遮罩移除。
 
 小纸人参照上述公开实机截图的新绘纸艺造型：高个黑脸、经典巫师帽及其自带白发；矮个矮人面具与鸣谢收藏家短发；两人均为火先知套装和蝙蝠斗篷。额头菱形与闭眼短线参照[面具图鉴中的躲猫猫面具图标](https://wiki.biligame.com/sky/面具)。先修正发梢与裤摆再入景，仍是风格再创作，不是官方纹理，也不宣称其他发型、童真面具或衣柜系统已经全部完成。未读取或上传私人照片、信件。
+
+## P5 借点光 · 2026-10-25
+
+六份运行图片由内置imagegen绘制，来源仅本项目既有绘画与几何构图。新的圆镜按items图集的全黄铜花纹柄修正，未保留误画的木柄。透片使用共享材料和LIGHT_INK图形，四角/雨窗在工具图、奖励、拖影、光路和覆片中一致；黄铜框为空架的部件。木签保留棕穗、建筑和原刻字。图集框避开下一件的穗子/镜柄，完整保留本体。Pillow只做WebP编码，未手工重画、未读取/提交私人照片和信件。提示记录见[v29-light-prompts.json](v29-light-prompts.json)，跨场景核对见[v29-prop-continuity.md](v29-prop-continuity.md)。

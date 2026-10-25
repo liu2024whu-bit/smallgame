@@ -4,22 +4,6 @@
   .gesture-thread { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:3; }
   .gesture-thread polyline { stroke:#ae7766; stroke-width:.65; stroke-linejoin:round; filter:drop-shadow(0 1px 1px #7d5c3840); }
   .trace-touched { filter:drop-shadow(0 0 3px #c4a160a0); }
-  .light-console { position:relative; }
-  .light-console > .character-art { width:100%; display:block; }
-  .puzzle-calibration .puzzle-field { padding:0; background:transparent; }
-  .optical-projection { position:absolute; left:31%; top:22%; width:38%; height:26%; display:flex; align-items:center; justify-content:center; flex-direction:column; color:#7b8866; opacity:var(--light); filter:blur(var(--blur)); pointer-events:none; mix-blend-mode:multiply; }
-  .optical-projection span { font-size:clamp(24px,5vw,55px); letter-spacing:.4em; margin-left:.4em; }.optical-projection small { font-size:13px; letter-spacing:1em; margin-left:1em; }
-  .light-console .dial-row { position:absolute; left:27.5%; right:27.5%; top:66.5%; height:22%; margin:0; display:grid; grid-template-columns:repeat(3,1fr); gap:0; }
-  .light-console .dial { position:relative; width:100%; height:100%; }.light-console .dial-name { position:absolute; bottom:-3%; left:0; right:0; text-align:center; font-size:12px; color:#776746; }
-  .light-console .dial-controls { height:80%; width:100%; position:relative; }
-  .light-console .dial-controls > .puzzle-control:not(.dial-face) { position:absolute; top:38%; width:24px; height:24px; min-height:0; min-width:0; border:0; box-shadow:none; padding:2px; background:transparent; color:#817246; }
-  .light-console .dial-controls > .puzzle-control:first-child { left:-9%; }.light-console .dial-controls > .puzzle-control:last-child { right:-9%; }.light-console .dial-controls .icon { width:16px; height:16px; }
-  .light-console .dial-face { position:absolute; inset:0 18%; height:100%; width:64%; aspect-ratio:auto; }
-  .light-console .dial-face > .item-art { display:none; }.light-console .dial-face::before { content:''; height:29%; width:2px; background:#8a6f3f; position:absolute; top:15%; left:50%; transform:rotate(var(--turn)); transform-origin:0 130%; opacity:.7; }
-  .light-console .dial-face b { font-size:clamp(11px,1.5vw,16px); color:#827043; }
-  .optical-evidence { display:flex; justify-content:center; gap:35px; padding:17px 12px 5px; color:#899178; font-size:13px; }
-  .optical-evidence > div { min-width:120px; text-align:center; }.ruler,.mirror-mark { display:flex; justify-content:center; gap:15px; font:16px Georgia,serif; padding:6px 3px; border-bottom:1px solid #b5b89c; }
-  .ruler-mark { border-bottom:2px solid #8a9677; }.mirror-mark { transform:scaleX(-1); }.mirror-mark .etched { outline:1px solid #9da58b; }.shade-mark { height:34px; line-height:34px; color:#92987e; }
   .belt-diagram { position:relative; width:100%; height:auto; aspect-ratio:1.5; overflow:hidden; }
   .projector-painting { width:100%; display:block; }
   .belt-diagram > svg { position:absolute; inset:0; width:100%; height:100%; z-index:1; pointer-events:none; }
@@ -82,8 +66,6 @@
   @media(max-width:700px) {
     .negative-windows { gap:6px; }.negative-reading { gap:3px; }.negative-cutout { width:clamp(32px,11vw,48px); height:clamp(32px,11vw,48px); }.negative-target .motif { width:18px; }.shadow-row { gap:5px; }.binding-page>span:last-child { font-size:8px; }
     .page-illustration { height:110px; margin:20px 0 8px; }.drawer-backboard { padding:12px; }
-    .optical-evidence { gap:12px; padding:12px 4px; }.optical-evidence > div { min-width:0; flex:1; }.ruler,.mirror-mark { gap:8px; font-size:13px; }.shade-mark { font-size:12px; }
-    .light-console .dial-controls > .puzzle-control:not(.dial-face) { top:18%; width:18px; height:22px; padding:0; }.light-console .dial-controls > .puzzle-control:first-child { left:-22%; }.light-console .dial-controls > .puzzle-control:last-child { right:-22%; }.light-console .dial-name { font-size:9px; bottom:-10%; }
     .pulley-node small { font-size:7px; padding:0 1px; }.pulley-node b { font-size:10px; width:16px; height:16px; }.belt-gear .puzzle-control { font-size:14px; min-height:0; }.belt-cross { left:38%; top:37%; }.belt-cross .puzzle-control { font-size:14px; min-height:24px; padding:0 5px; }.belt-cross > small { font-size:8px; }
     .film-viewer { border-width:5px; }.film-event { font-size:13px; padding:3px 6px; }.film-transport { margin-bottom:12px; font-size:10px; }.film-strip { gap:8px; }.film-frame { padding:12px 3px 3px; }.film-mark { font-size:10px; }.film-perforations { gap:5px; margin:5px 0; }.face-selectors { gap:9px; }.face-selectors .puzzle-control { padding:5px 16px; }.film-edge-note { gap:15px; font-size:11px; }
   }

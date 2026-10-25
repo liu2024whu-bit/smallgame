@@ -24,6 +24,7 @@
   .chocolate-tools button { border-bottom:1px dotted #b9b09b; padding:4px 15px; color:#948b77; }
   .chocolate-tools .tool-active { color:#635b49; border-bottom:2px solid #8c9b76; }
   .tracing-paper { position:absolute; inset:-2%; pointer-events:none; opacity:0; background:#f7edc72a; border:1px solid #b6b7a14d; box-shadow:2px 4px 6px #49352312; transition:opacity .3s; }
+  .tracing-paper>.item-art { display:block;width:100%;height:100%;aspect-ratio:auto;opacity:.17; }
   .sheet-covered .tracing-paper { opacity:1; }
   .sheet-covered .cup-empty { background:#e4c97875; box-shadow:inset 0 0 12px #ecd880; }
   .sheet-covered .chocolate-sheet { color:#687b5f; }

@@ -81,7 +81,7 @@ export function normalizeState(raw) {
   state.solved = PUZZLES.filter(puzzle => completed.has(puzzle.id)).map(puzzle => puzzle.id);
   for(const [id,inputs] of Object.entries(PUZZLE_TOOL_INPUTS)) {
     if(inputsOwned(state,id,state.progress[id]))continue;
-    state.progress[id]={...state.progress[id],opened:false,fitted:state.progress[id].fitted.map((value,index)=>value&&inventory(state).includes(inputs[index]))};
+    state.progress[id]={...state.progress[id],...(Object.hasOwn(state.progress[id],'opened')?{opened:false}:{}),fitted:state.progress[id].fitted.map((value,index)=>value&&inventory(state).includes(inputs[index]))};
   }
   if(!sceneOpen(state,state.scene))state.scene='desk';
   for (const key of ['sound', 'music','motion','clearText','customCursor', 'hotspots']) if (typeof settings[key] === 'boolean') state.settings[key] = settings[key];

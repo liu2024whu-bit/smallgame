@@ -3,6 +3,12 @@ import {PRESS_MAIN,PRESS_PARTS} from './press.js';
 import {CLOUD_BODY,CLOUD_DOORS} from './cloud.js';
 // Source-pixel frames follow the actual edges of each illustration.
 export const ASSET_LAYOUTS = Object.freeze({
+  lightCorner:{width:1672,height:941},
+  lightDeskTall:{width:1086,height:1448},
+  lightDesk:{width:1536,height:1024},
+  lightFilm:{width:1254,height:1254,frames:[[88,88,1078,1078]]},
+  lightParts:{width:1254,height:1254,frames:[[130,20,430,580],[710,44,475,490],[45,600,430,630],[710,565,510,680]]},
+  lightFixtures:{width:1536,height:1024,frames:[[60,30,500,490],[665,78,225,429],[902,220,620,264],[130,535,220,475],[480,728,580,100],[1160,680,250,200]]},
   cloudFront:CLOUD_BODY,cloudBack:CLOUD_BODY,cloudDoors:CLOUD_DOORS,
   cloudParts:{width:1536,height:1024,frames:[[105,0,620,590],[840,0,600,590],[601,621,335,338]]},
   cloudFigures:{width:1536,height:1024,frames:[[122,0,688,1024],[810,327,570,697]]},
@@ -59,7 +65,6 @@ export const ASSET_LAYOUTS = Object.freeze({
   cinema: {width:1672,height:941},
   postbox: {width:1536,height:1024},
   keyboard: {width:1536,height:1024},
-  lightbench: {width:1536,height:1024},
   projector: {width:1536,height:1024},
   campusWhu: {width:1672,height:941},
   campusNju: {width:1672,height:941},

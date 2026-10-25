@@ -1,4 +1,4 @@
-# 当前结构 · V2.9 P3
+# 当前结构 · V2.9 P5
 
 ```text
 index.html / src/main.js        正式入口；只挂载真实游戏
@@ -10,6 +10,11 @@ src/ui/room.js                 远景、物品栏、场景入口
 src/ui/puzzles/                独立机关呈现，规则与图像坐标共用数据
 src/ui/workbench.js            工具、提示、撤销与完成反馈
 src/data/press.js              试印盒的像素帧、支点与近远景标定
+src/data/light.js              光路世界坐标、两种相机、图形及物件注册
+src/puzzles/light-geometry.js   有限镜面反射、实体遮挡与可见判断
+src/puzzles/calibration.js      工具安装、灯/翻片/物理档位和独立纸稿
+src/ui/puzzles/light*.js        同源光影器件、纸面裁切、近远景
+src/services/motion/light.js    一个连续姿态/投影驱动；只更新属性
 src/ui/puzzles/press.js         试印盒/印纸/可观察夹扣；不代管库存
 src/ui/interactions/tap.js      缺失原生轻点的补发/去重，拖动不触发
 src/ui/interactions/           指针会话、拖放、旋转、重排、连续描线、字轮
@@ -47,7 +52,7 @@ src/admin.js                   防误入门槛与会话解锁
 src/services/review-access.js  PIN摘要验证；不冒充服务端认证
 src/demo.js                    后台查询、跳转、尺寸切换、文字导出
 review-frame.html             复用真实游戏的隔离演示框
-src/demo/catalog.js            226个页面状态的唯一目录
+src/demo/catalog.js            241个页面状态的唯一目录
 src/demo/fixtures.js           经真实规则重建可操作演示状态
 src/demo/walkthrough.js        验证走法，测试复用；正式入口不导入
 src/demo/visible-copy.js       读取实际可见文字，不另写一套文案
@@ -73,7 +78,7 @@ tools/render-audio.py          开发时生成原创琴声和公版生日旋律�
 
 字轮与字母输入按真实焦点定位，键入后前进；只有字格／机关本体的Enter直接试锁。方向按钮上的Enter保留原生按钮行为。弹窗先聚焦标题，返回恢复原控件、滚动和放大位置。
 
-存档格式2，内容修订6。迁移重建真实依赖，只为已经跨过的旧门槛补合法状态，不凭 `solved` 声明直接发奖励。新增日历默认未完成，旧结尾仍可读；规范化可重复执行且结果稳定。偏好枚举、音量、动作、场景、工具、活动均校验白名单。
+存档格式2，内容修订9。迁移重建真实依赖，只为已经跨过的旧门槛补合法状态，不凭 `solved` 声明直接发奖励。新增日历默认未完成，旧结尾仍可读；规范化可重复执行且结果稳定。偏好枚举、音量、动作、场景、工具、活动均校验白名单。
 
 正式进度只写 `smallgame:v2:room` 与 `smallgame:v2:backup`；不清空整个localStorage，不覆盖V1。读取损坏时尝试有效备份；保存被禁用仍能游玩与导出。确认重开后先成功写入新进度，再删除旧备份，保留设置与音源。
 
@@ -120,3 +125,5 @@ tools/render-audio.py          开发时生成原创琴声和公版生日旋律�
 后台目录覆盖机关三种状态及收藏、物件、证据、校园、祝福、小记、故事与系统回应。侧栏从当前可见DOM读取文字和来源编号；实际在演示里继续导航时，文字所属页面也跟着切换。全量导出按同一目录逐页渲染，隐藏面与主动提醒不会混入初样。
 
 维护会话解锁只存sessionStorage标记。重锁销毁演示iframe、监听器和页面接口；不改正式进度与备份。QA使用独立浏览器上下文，测试存档与截图不放进发布入口。
+
+P5的透片在物品栏、检查、P3奖励、P5和P17共用同一材料与图形；固定黄铜框属于支架。圆镜以原黄铜花纹柄为准，不因近景重绘换材质。逐件状态见[v29-prop-continuity.md](v29-prop-continuity.md)。

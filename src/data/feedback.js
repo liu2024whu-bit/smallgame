@@ -3,7 +3,7 @@ export const FINISH_REACTIONS = Object.freeze({
   calendar:['九月，藏在这里。','moon'],
   paper: ['这回印上了。', 'leaf'],
   cloud: ['云停在这里了。', 'cloud'],
-  calibration: ['有光了。', 'star'],
+  calibration: ['把光留住了。', 'star'],
   postbox: ['咔哒。', 'envelope'],
   books: ['书后面，果然有东西。', 'book'],
   screen: ['接成一幅了。', 'petal'],
@@ -27,4 +27,4 @@ export const FINISH_REACTIONS = Object.freeze({
   packing: ['拼在一起了。', 'star'],
   melody: ['是这支小调。', 'moon'],
 });
-export const BLOCKED_LINES=Object.freeze({paper:'夹扣还扣着，边上有道细缝。',drawers:'木销挡着。',stitch:'这一针没有穿过去。',belt:'线到不了这一轮。',ribbons:'还被别的纸带压着呢。'});
+export const BLOCKED_LINES=Object.freeze({calibration:'影子还没有和那几笔淡线合上。',paper:'夹扣还扣着，边上有道细缝。',drawers:'木销挡着。',stitch:'这一针没有穿过去。',belt:'线到不了这一轮。',ribbons:'还被别的纸带压着呢。'});
