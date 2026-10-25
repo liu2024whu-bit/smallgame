@@ -34,7 +34,7 @@ export const pressMotion={
   const proof=field.querySelector('.press-proof');
   if((Number(before.count)+1)%65536===Number(field.dataset.pressCount)){
    arm?.animate([{rotate:before.angle+'deg'},{rotate:'28deg',offset:.2},{rotate:'28deg',offset:.48},{rotate:'0deg'}],{duration:500,easing:'ease-in-out'});
-   proof?.animate([{opacity:0,translate:'0 -14px'},{opacity:1,translate:'0 0'}],{duration:420,delay:160,fill:'backwards',easing:ease});
+   proof?.animate([{opacity:0,translate:'38px -15px'},{opacity:1,translate:'0 0'}],{duration:480,delay:160,fill:'backwards',easing:ease});
   }else{
    if(before.angle)arm?.animate([{rotate:before.angle+'deg'},{rotate:'0deg'}],{duration:220,easing:'ease-out'});
    if(proof?.dataset.proof===before.proof&&Number(before.proofOpacity)<1&&before.proof)proof.animate([{opacity:before.proofOpacity,translate:before.proofTranslate},{opacity:1,translate:'0 0'}],{duration:220,easing:ease});

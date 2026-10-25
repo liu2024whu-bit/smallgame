@@ -5,9 +5,8 @@ import { SUGARS, RIBBON_PATHS, RIBBON_LAYERS, RIBBON_TAIL_SIDES, crossing, ribbo
 import { createState, reduce, inventory, normalizeState, serializable, access } from '../src/core/state.js';
 import { birthdayReady, sceneOpen } from '../src/core/exploration.js';
 import { MAIN_IDS } from '../src/data/puzzles.js';
-import { WITNESSES, solvedProgress } from './witnesses.mjs';
+import { finish, solvedProgress } from './witnesses.mjs';
 
-const finish=(state,id)=>WITNESSES[id].reduce((s,move)=>reduce(s,{type:'move',id,move}),state);
 function workshop() {
   let s=reduce(createState(),{type:'start'});
   for(const id of ['bookmark','thread'])s=reduce(s,{type:'pickup',id});

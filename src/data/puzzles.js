@@ -4,10 +4,10 @@ const extra = (id, title, scene, instruction, hints) => ({ id, title, scene, req
 export const PUZZLES = Object.freeze([
   {...main('paper', '试印', 'desk', [], ['bookmark'], ['transparency'],
     '夹扣下，留着一条窄缝。',
-    ['木书签很薄，夹扣下的缝也很窄。', '版片上的记号，和试纸上的是一套。每张纸，都只试过其中一块。', '三角、圆圈、方框，从左到右。压下木柄，才会留下一张新的。']),inspectWithoutTools:true},
+    ['木书签很薄，夹扣下的缝也很窄。', '版片上的记号，和试纸上的是一套。每张纸，都只试过其中一块。', '三角、圆圈、方框，从左到右。压下木柄，才会留下一张新的。']),inspectWithoutTools:true,rewardsInScene:true},
   {...main('cloud', '两面的云', 'window', [], ['thread'], ['mirror', 'crank'],
     '两片小纸，也许能凑成一对。',
-    ['每个小图案，都分在两片纸上。背板似乎也能翻过来。', '棉线绕上线轴，一处转，两处动。背面的小齿轮，跑得快些。', '从最初的样子算，正面左边三格，另外两只各两格。顺时针绕过去，背面的星也会合上。']),inspectWithoutTools:true},
+    ['每个小图案，都分在两片纸上。背板似乎也能翻过来。', '棉线绕上线轴，一处转，两处动。背面的小齿轮，跑得快些。', '从最初的样子算，正面左边三格，另外两只各两格。顺时针绕过去，背面的星也会合上。']),inspectWithoutTools:true,rewardsInScene:true},
   main('calibration', '借点光', 'desk', ['paper', 'cloud'], ['bookmark', 'transparency', 'mirror'], [],
     '纸上还留着几笔淡线。',
     ['透片离灯远近不同，影子也会变大变小。镜子转一点，光就落到别处了。', '木书签的边，能借来做一道窗台。小伞的弯钩在另一边，透片大概还能翻个面。', '从初样算，透片向右两格，木夹升一格，圆镜向右三格，再把透片翻过来。灯亮着时，铅笔就能留住这扇窗了。']),

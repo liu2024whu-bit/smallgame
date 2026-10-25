@@ -4,7 +4,7 @@ import { RULES } from '../src/puzzles/index.js';
 import { createState, reduce, serializable, normalizeState } from '../src/core/state.js';
 import { achievements, canOpenEncore } from '../src/core/achievements.js';
 import { ACTIVITY_IDS } from '../src/data/activities.js';
-import { WITNESSES } from './witnesses.mjs';
+import { finish, WITNESSES } from './witnesses.mjs';
 
 test('a wood-piece drag is one undoable placement, including moves and returns', () => {
   let state = reduce(createState(), { type: 'start' });
@@ -70,10 +70,7 @@ test('optional activity records persist without changing puzzles or granting gif
 test('the extra page requires the birthday, all activities and the real collected gifts', () => {
   let state = reduce(createState(), { type: 'start' });
   for (const id of ['bookmark', 'thread']) state = reduce(state, { type: 'pickup', id });
-  for (const [id, moves] of Object.entries(WITNESSES)) {
-    if(id==='chocolate')state=reduce(state,{type:'use-tool',item:'crank',target:'birthday-door'});
-    for (const move of moves) state = reduce(state, { type: 'move', id, move });
-  }
+  for (const id of Object.keys(WITNESSES)) state=finish(state,id);
   for (const id of ACTIVITY_IDS) state = reduce(state, { type: 'activity', id });
   assert.ok(achievements(state).filter(entry=>entry.id!=='birthday').every(entry => entry.complete));
   assert.equal(canOpenEncore(state), false);

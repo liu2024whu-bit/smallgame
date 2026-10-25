@@ -36,7 +36,8 @@
  .cloud-flip { position:absolute; left:50%; top:18%; translate:-50% -50%; display:flex; align-items:center; justify-content:center; gap:5px; min-height:44px; min-width:78px; padding:0 7px; border:0; background:transparent; color:#807154; font-size:13px; touch-action:none; cursor:var(--cursor-grab,grab); user-select:none; }
  .cloud-flip>.icon { width:17px; height:17px; }.cloud-flip>span { white-space:nowrap; }
  .cloud-pocket { position:absolute; perspective:800px; }
- .cloud-found { position:absolute; left:20%; top:53%; width:60%; translate:0 -50%; }.cloud-found>.item-art { display:block; width:100%; filter:drop-shadow(1px 3px 2px #66502b38); }
+ .cloud-found { position:absolute; left:20%; top:53%; width:60%; translate:0 -50%;border:0;padding:0;background:transparent; }.cloud-found>.item-art { display:block; width:100%; filter:drop-shadow(1px 3px 2px #66502b38); }
+ .cloud-found::before { content:'';position:absolute;left:50%;top:50%;translate:-50% -50%;min-width:44px;min-height:44px;width:100%;height:100%; }
  .pocket-1 .cloud-found { top:60%; left:13%; width:74%; }
  .cloud-wing { display:block; position:absolute; inset:0; backface-visibility:visible; }
  .cloud-wing-art { display:block; width:100%; }
@@ -52,9 +53,6 @@
  .world-cloud .cloud-detents i { min-width:0; }.world-cloud .cloud-mark { stroke-width:1.7; }
  .album-cloud { display:block; position:relative; width:100%; aspect-ratio:1.5; }
  .album-cloud>.cloud-case { inset:0; width:100%; }
- .puzzle-cloud .reward-items { gap:26px; margin:0 auto 8px; }
- .puzzle-cloud .reward-items>span { display:flex; align-items:center; gap:7px; }
- .puzzle-cloud .reward-items .item-art { width:35px; }
  @media(max-width:700px){
   .cloud-flip { font-size:11px; min-width:72px; }.cloud-flip>.icon { width:14px; height:14px; }
   .puzzle-cloud .close-look>.puzzle-field { min-width:680px; }

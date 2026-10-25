@@ -2,6 +2,7 @@ import {mountGame} from '../app.js';
 import {createMusicLibrary} from '../services/music-library.js';
 import {previewState,REVIEW_CASES} from './fixtures.js';
 import {visibleCopy} from './visible-copy.js';
+import {PUZZLE_BY_ID} from '../data/puzzles.js';
 
 const memory=new Map();
 const game=mountGame({storage:{getItem:key=>memory.get(key),setItem:(key,value)=>memory.set(key,value),removeItem:key=>memory.delete(key)},library:createMusicLibrary(null)});
@@ -21,7 +22,7 @@ function copy(){
   if(panel?.type==='settings')spec=REVIEW_CASES.find(entry=>entry.panel?.type==='settings'&&(entry.panel.view?.section??'sound')===(panel.view?.section??'sound'))??spec;
   if(panel?.type==='puzzle'&&panel.id==='paper'){
     const state=game.store.get(),p=state.progress.paper;
-    const id=panel.view?.pressProof&&p.proof?'paper-proof-look':state.solved.includes('paper')?'paper-done':state.hints.paper?'paper-hints':p.proof?'paper-proof':p.opened?'paper-open':!state.collected.includes('bookmark')?'paper-unfound':'paper';
+    const id=panel.view?.pressProof&&p.proof?(state.solved.includes('paper')?'paper-done-proof-look':'paper-proof-look'):state.solved.includes('paper')?'paper-done':state.hints.paper?'paper-hints':p.proof?'paper-proof':p.opened?'paper-open':!state.collected.includes('bookmark')?'paper-unfound':'paper';
     spec=REVIEW_CASES.find(entry=>entry.id===id)??spec;
   }
   if(panel?.type==='puzzle'&&panel.id==='cloud'){
@@ -34,6 +35,11 @@ function copy(){
     const stage={'000':'empty-lit','100':'film','010':'mirror-only','001':'book-only','110':'mirror','101':'film-book','011':'mirror-book','111':'book'}[p.fitted.map(Number).join('')];
     const id=state.solved.includes('calibration')?'calibration-done':state.hints.calibration?'calibration-hints':p.lit&&p.fitted.every(Boolean)&&matched?(p.flipped?'calibration-aligned':'calibration-flipped-wrong'):p.lit?'calibration-'+stage:'calibration';
     spec=REVIEW_CASES.find(entry=>entry.id===id)??spec;
+  }
+  if(panel?.type==='puzzle'&&game.store.get().solved.includes(panel.id)){
+    const state=game.store.get(),rewards=PUZZLE_BY_ID[panel.id].rewards;
+    const mask=rewards.reduce((bits,item,index)=>bits|(state.collected.includes(item)?1<<index:0),0);
+    if(mask&&!panel.view?.back&&!panel.view?.pressProof)spec=REVIEW_CASES.find(entry=>entry.id===panel.id+'-collected-'+mask)??spec;
   }
   if(root.matches('#welcome')){const invitation=root.querySelector('.invitation');spec=REVIEW_CASES.find(entry=>invitation?entry.mode==='intro'&&entry.step===Number(invitation.dataset.step):entry.id==='opening')??spec;}
   return {id:spec.id,title:dialog?.querySelector('#dialog-title')?.textContent??spec.name,source:spec.source,text:visibleCopy(root)};

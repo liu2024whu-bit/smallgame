@@ -27,6 +27,7 @@ import { bindSaveTransfer } from './services/save-transfer.js';
 import { bindMusicControls } from './ui/music-controls.js';
 import {bindSessionView} from './ui/session-view.js';
 import {updateMusicView} from './ui/music.js';
+import {capturePickup,playPickup} from './services/collect-motion.js';
 import { audioOnlyUpdate } from './core/presentation-updates.js';
 
 export function mountGame({storage,library}={}) {
@@ -152,6 +153,11 @@ async function useTool(item,target){
   return performMove(move);
 }
 function openPuzzle(id) { openPanel({ type: 'puzzle', id }); }
+function collectItem(id,source){
+  const from=capturePickup(source);
+  if(!store.dispatch({type:'pickup',id}))return;
+  audio.material('pickup');toast(`${ITEMS[id].name}，放在手边了。`);playPickup(dialog.element,from);
+}
 function openCollection(id) { store.dispatch({ type: 'discover', id }); activity(`memory:${id}`); openPanel({ type: 'collection', id }); }
 function hotspot(id) {
   const state = store.get();
@@ -160,7 +166,7 @@ function hotspot(id) {
   const target=roomToolTarget(state,id,state.selected);
   if(state.selected&&target&&toolFor(target)===state.selected){useTool(state.selected,target);return;}
   const handlers = {
-    pickup: () => { if (store.dispatch({ type: 'pickup', id: spot.target })) { audio.material('pickup'); toast(`${ITEMS[spot.target].name}，放在手边了。`); } },
+    pickup: () => collectItem(spot.target),
     puzzle: () => openPuzzle(spot.revisit && state.solved.includes(spot.revisitAfter) ? spot.revisit : spot.target),
     album: () => openPuzzle(state.solved.includes('album') ? 'stitch' : 'album'),
     collection: () => openCollection(spot.target),
@@ -184,6 +190,7 @@ const actions = {
   'scene-prev': () => look(-1), 'scene-next': () => look(1),
   scene: button => goScene(button.dataset.id),
   hotspot: button => hotspot(button.dataset.id),
+  'collect-item':button=>collectItem(button.dataset.id,button),
   item: button => { store.dispatch({ type: 'select', id: button.dataset.id }); openPanel({ type: 'item', id: button.dataset.id }); },
   'take-tool':button=>{store.dispatch({type:'select',id:button.dataset.id});closeAllPanels();},
   'arm-tool':button=>store.dispatch({type:'select',id:button.dataset.id}),

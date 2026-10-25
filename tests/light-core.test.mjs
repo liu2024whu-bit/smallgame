@@ -1,9 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createState,reduce,normalizeState,serializable,inventory,access} from '../src/core/state.js';
-import {WITNESSES} from './witnesses.mjs';
+import {finish} from './witnesses.mjs';
 import {puzzleToolUse,toolFor} from '../src/data/tool-uses.js';
-const finish=(s,id)=>WITNESSES[id].reduce((p,move)=>reduce(p,{type:'move',id,move}),s);
 function ready(){
  let s=reduce(createState(),{type:'start'});
  for(const id of ['bookmark','thread'])s=reduce(s,{type:'pickup',id});

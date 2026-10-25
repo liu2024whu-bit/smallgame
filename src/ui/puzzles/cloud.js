@@ -60,22 +60,28 @@ function backDrive(values){
   <circle cx="${small.x}" cy="${small.y}" r="9"/>
  </svg>`;
 }
-function doors(done){
- return G.doors.map((door,index)=>`<div class="cloud-pocket pocket-${index}" style="left:${door.x/1536*100}%;top:${door.y/1024*100}%;width:${door.w/1536*100}%;height:${door.h/1024*100}%"><span class="cloud-found">${itemSprite(index?3:2)}</span><span class="cloud-wing" data-cloud-wing="${index}" style="rotate:y ${done?door.angle:0}deg;transform-origin:${door.pivot}% 50%;">${atlas('cloudDoors',index,{className:'cloud-wing-art'})}${atlas('cloudFigures',index,{className:'cloud-figure',label:index?'矮人面具、正太短发、武士裤与蝙蝠斗篷的小纸人':'黑脸、经典巫师帽、武士裤与蝙蝠斗篷的高纸人'})}</span></div>`).join('');
+function pocketItem(index,done,miniature,owned){
+ const id=index?'crank':'mirror';if(owned.includes(id))return '';
+ const tag=miniature?'span':'button';
+ const attrs=miniature?'':`data-action="collect-item" data-id="${id}" data-focus="take-${id}" aria-label="拿起${index?'摇柄':'小圆镜'}" ${done?'':'disabled'}`;
+ return `<${tag} class="cloud-found" ${attrs}>${itemSprite(index?3:2)}</${tag}>`;
 }
-function face(progress,{back,active,ownsThread,done,miniature}){
+function doors(done,miniature,owned){
+ return G.doors.map((door,index)=>`<div class="cloud-pocket pocket-${index}" style="left:${door.x/1536*100}%;top:${door.y/1024*100}%;width:${door.w/1536*100}%;height:${door.h/1024*100}%">${pocketItem(index,done,miniature,owned)}<span class="cloud-wing" data-cloud-wing="${index}" style="rotate:y ${done?door.angle:0}deg;transform-origin:${door.pivot}% 50%;">${atlas('cloudDoors',index,{className:'cloud-wing-art'})}${atlas('cloudFigures',index,{className:'cloud-figure',label:index?'矮人面具、正太短发、武士裤与蝙蝠斗篷的小纸人':'黑脸、经典巫师帽、武士裤与蝙蝠斗篷的高纸人'})}</span></div>`).join('');
+}
+function face(progress,{back,active,ownsThread,done,miniature,owned}){
  const side=back?-1:1;
  const flip=miniature?'':`<button class="cloud-flip" data-action="cloud-face" data-back="${!back}" data-cloud-flip data-focus="${active?'cloud-turn':'cloud-turn-off'}" aria-label="${back?'看看纸景正面':'看看纸景背面'}">${icon('repeat')}<span>另一面</span></button>`;
- return `<div class="cloud-face ${back?'cloud-face-back':'cloud-face-front'}" ${active?'':'inert aria-hidden="true"'}>${atlas(back?'cloudBack':'cloudFront',0,{className:'cloud-chassis',label:back?'同一纸景的木背板':'窗边的云中纸景'})}${back?backDrive(progress.values):doors(done)}${(back?G.back:G.front).map(point=>cloudPair(progress.values,point,side,{active,ownsThread,done,miniature})).join('')}${[0,1,2].map(i=>winder(progress.values,i,back,active,ownsThread,done,miniature)).join('')}${flip}</div>`;
+ return `<div class="cloud-face ${back?'cloud-face-back':'cloud-face-front'}" ${active?'':'inert aria-hidden="true"'}>${atlas(back?'cloudBack':'cloudFront',0,{className:'cloud-chassis',label:back?'同一纸景的木背板':'窗边的云中纸景'})}${back?backDrive(progress.values):doors(done,miniature,owned)}${(back?G.back:G.front).map(point=>cloudPair(progress.values,point,side,{active,ownsThread,done,miniature})).join('')}${[0,1,2].map(i=>winder(progress.values,i,back,active,ownsThread,done,miniature)).join('')}${flip}</div>`;
 }
-export function cloudCase(progress,{back=false,ownsThread=true,done=false,miniature=false}={}){
- return `<div class="cloud-case ${done?'cloud-open':''}" data-cloud-values="${progress.values.join(',')}" data-cloud-side="${back?-1:1}" data-cloud-thread="${ownsThread}"><div class="cloud-turntable" style="--cloud-face:${back?180:0}deg">${[false,true].map(faceBack=>face(progress,{back:faceBack,active:faceBack===back,ownsThread,done,miniature})).join('')}</div></div>`;
+export function cloudCase(progress,{back=false,ownsThread=true,done=false,miniature=false,owned=[]}={}){
+ return `<div class="cloud-case ${done?'cloud-open':''}" data-cloud-values="${progress.values.join(',')}" data-cloud-side="${back?-1:1}" data-cloud-thread="${ownsThread}"><div class="cloud-turntable" style="--cloud-face:${back?180:0}deg">${[false,true].map(faceBack=>face(progress,{back:faceBack,active:faceBack===back,ownsThread,done,miniature,owned})).join('')}</div></div>`;
 }
 export function renderCloud(progress,{state,view={}}){
- return `<div class="cloud-stage">${cloudCase(progress,{back:!!view.back,ownsThread:inventory(state).includes('thread'),done:state.solved.includes('cloud')})}</div>`;
+ return `<div class="cloud-stage">${cloudCase(progress,{back:!!view.back,ownsThread:inventory(state).includes('thread'),done:state.solved.includes('cloud'),owned:inventory(state)})}</div>`;
 }
-export function cloudMiniature(progress,done){
- const g=G.world;return `<div class="world-cloud" style="left:${g.left}%;top:${g.top}%;width:${g.width}%;" aria-hidden="true" inert ${done?'data-world-change="cloud"':''}>${cloudCase(progress,{done,miniature:true})}</div>`;
+export function cloudMiniature(progress,done,owned=[]){
+ const g=G.world;return `<div class="world-cloud" style="left:${g.left}%;top:${g.top}%;width:${g.width}%;" aria-hidden="true" inert ${done?'data-world-change="cloud"':''}>${cloudCase(progress,{done,miniature:true,owned})}</div>`;
 }
 export function updateCloudPreview(field,values,input=null){
  const pairs=cloudAngles(values);

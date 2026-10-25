@@ -4,10 +4,9 @@ import { RULES } from '../src/puzzles/index.js';
 import { POSTMARKS, POSTAL_ORDER, POSTAL_GRID, POSTAL_CODE, LETTER_GRID, COLUMN_STRIP, ROW_STRIP, LETTER_CODE } from '../src/data/ciphers.js';
 import { createState, reduce, normalizeState, serializable, access } from '../src/core/state.js';
 import { MAIN_IDS } from '../src/data/puzzles.js';
-import { WITNESSES, solvedProgress } from './witnesses.mjs';
+import { finish, solvedProgress } from './witnesses.mjs';
 
 const start = () => ['bookmark','thread'].reduce((state,id)=>reduce(state,{type:'pickup',id}),reduce(createState(),{type:'start'}));
-const finish = (state,id) => WITNESSES[id].reduce((s,move)=>reduce(s,{type:'move',id,move}),state);
 
 test('both password answers follow the printed coordinates without personal trivia',()=>{
   const numbers=POSTAL_ORDER.map(mark=>{const stamp=POSTMARKS.find(item=>item.mark===mark);return POSTAL_GRID[stamp.row][stamp.column];});

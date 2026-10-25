@@ -4,14 +4,13 @@ import { createState, reduce, inventory, keepsakes, discoveredCollections, acces
 import { MAIN_IDS, PUZZLES } from '../src/data/puzzles.js';
 import { createStore } from '../src/core/store.js';
 import { SAVE_KEY, BACKUP_KEY, parseSave, loadSave, writeSave } from '../src/core/storage.js';
-import { WITNESSES, solvedProgress } from './witnesses.mjs';
+import { finish, WITNESSES, solvedProgress } from './witnesses.mjs';
 
 export const memoryStorage = () => {
   const data = new Map();
   return { data, getItem: key => data.get(key) ?? null, setItem: (key, value) => data.set(key, value) };
 };
 function start() { let state = reduce(createState(), { type: 'start' }); for (const id of ['bookmark', 'thread']) state = reduce(state, { type: 'pickup', id }); return state; }
-function finish(state, id) { if(id==='chocolate')state=reduce(state,{type:'use-tool',item:'crank',target:'birthday-door'}); return WITNESSES[id].reduce((s, move) => reduce(s, { type: 'move', id, move }), state); }
 
 test('full main journey reaches the birthday with all reusable tools and no side puzzles', () => {
   let state = start();

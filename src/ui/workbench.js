@@ -5,11 +5,12 @@ import {sceneOpen} from '../core/exploration.js';
 import { access, inventory } from '../core/state.js';
 import { FINISH_REACTIONS } from '../data/feedback.js';
 import { PUZZLE_TOOL_INPUTS } from '../data/tool-uses.js';
+import {pendingRewards} from '../data/rewards.js';
 import { PUZZLE_VIEWS } from './puzzles/index.js';
 import { escape, icon, itemSprite, motif } from './dom.js';
 
 const WAITING = {
-  calibration: '桌上还缺两样小东西。',
+  calibration: '桌上还少点东西。',
   postbox: '字轮藏在暗处。',
   wordlock: '压纸的夹层还没有松开。',
   books: '书脊间，还缺一张借阅签。',
@@ -39,15 +40,16 @@ export function puzzlePanel(id, context) {
   const look=CLOSE_LOOK.has(id) ? `<button class="text-button workbench-look" data-action="workbench-look" aria-pressed="${!!view.closeLook}" aria-controls="puzzle-viewport">${icon(view.closeLook?'zoom-out':'zoom-in')}<span>${view.closeLook?'放远些':'凑近看'}</span></button>` : '';
   const field=`<div class="puzzle-viewport ${CLOSE_LOOK.has(id)&&view.closeLook?'close-look':''}" id="puzzle-viewport"><div class="puzzle-field ${completed?'solved-field':''}" role="group" aria-label="${escape(definition.instruction)}">${PUZZLE_VIEWS[id](state.progress[id], context)}</div></div>`;
   const hints=hintCount&&!completed ? `<aside class="hint-notes" id="hint-notes" aria-label="一点提醒">${definition.hints.slice(0,hintCount).map(hint=>`<p>${escape(hint)}</p>`).join('')}</aside>` : '';
-  return { title:definition.title, className:`workbench-dialog puzzle-${id} ${completed?'puzzle-complete':''}`, html:`<div class="workbench-top">${tools}${look}</div>${field}${completed?completion(id):footer(state,id,hintCount)}${hints}` };
+  return { title:definition.title, className:`workbench-dialog puzzle-${id} ${completed?'puzzle-complete':''}`, html:`<div class="workbench-top">${tools}${look}</div>${field}${completed?completion(id,state):footer(state,id,hintCount)}${hints}` };
 }
 
 function footer(state,id,hintCount) {
   return `<div class="workbench-footer"><div><button class="quiet-button" data-action="undo" ${state.history[id]?.length?'':'disabled'}>${icon('undo')}退一步</button><button class="quiet-button" data-action="reset-puzzle">${icon('reset')}重来</button></div><button class="quiet-button hint-button" data-action="hint" aria-controls="hint-notes" aria-expanded="${hintCount>0}" ${hintCount>=3?'disabled':''}>${icon('hint')}${hintCount>=3?'就这几句啦':hintCount?'再聊一句':'一点提醒'}</button></div>`;
 }
 
-function completion(id) {
+function completion(id,state) {
   const definition = PUZZLE_BY_ID[id];
+  const pending=definition.rewardsInScene?[]:pendingRewards(state,id);
   const [line, mark] = FINISH_REACTIONS[id];
-  return `<section class="completion-note finish-${definition.scene}" aria-live="polite"><div class="finish-caption">${motif(mark)}<h3>${escape(line)}</h3></div>${CHAPTER_NOTES[id]?`<p class="completion-afterword">${escape(CHAPTER_NOTES[id])}</p>`:''}${definition.rewards.length ? `<div class="reward-items">${definition.rewards.map(item => `<span>${itemSprite(ITEMS[item].sprite)}${escape(ITEMS[item].name)}</span>`).join('')}</div>` : ''}<button class="text-button finish-return" data-action="close">再逛逛${icon('right')}</button></section>`;
+  return `<section class="completion-note finish-${definition.scene}" aria-live="polite"><div class="finish-caption">${motif(mark)}<h3>${escape(line)}</h3></div>${CHAPTER_NOTES[id]?`<p class="completion-afterword">${escape(CHAPTER_NOTES[id])}</p>`:''}${pending.length ? `<div class="reward-items">${pending.map(item => `<button data-action="collect-item" data-id="${item}" aria-label="拿起${escape(ITEMS[item].name)}">${itemSprite(ITEMS[item].sprite)}<span>${escape(ITEMS[item].name)}</span></button>`).join('')}</div>` : ''}<button class="text-button finish-return" data-action="close">再逛逛${icon('right')}</button></section>`;
 }

@@ -8,9 +8,10 @@ import { CONTENT_REVISION, migrateContent,migrateProgress } from './migrations.j
 import { sceneOpen, birthdayReady } from './exploration.js';
 import { PERSISTENT_TOOL_USES, PUZZLE_TOOL_INPUTS } from '../data/tool-uses.js';
 import { MUSIC_BY_ID } from '../data/music.js';
+import {PICKUPS,REWARD_SOURCES,COLLECTIBLE_IDS} from '../data/rewards.js';
 
 export const SAVE_VERSION = 2;
-export const PICKUPS = ['bookmark', 'thread'];
+export {PICKUPS};
 const DEFAULT_SETTINGS = { sound: true, volume: 0.35, music:true, musicVolume:.65, effectsVolume:1, musicTrack:'window',musicOrder:'cycle',motion: true, clearText:false, customCursor:true, hotspots: false, skyCapeLeft: 'bat', skyCapeRight: 'bat', skyMask: 'chibi', flower: 'rose' };
 const LEVELS=['volume','musicVolume','effectsVolume'];
 const OPTIONS = { musicTrack:Object.keys(MUSIC_BY_ID),musicOrder:['cycle','repeat'],skyCapeLeft: ['bat', 'kizuna'], skyCapeRight: ['bat', 'kizuna'], skyMask: ['chibi', 'innocence'], flower: ['daisy', 'tulip', 'lavender', 'rose'] };
@@ -20,7 +21,7 @@ export function createState() {
 }
 
 export function inventory(state) {
-  return [...new Set([...state.collected, ...state.solved.flatMap(id => PUZZLE_BY_ID[id]?.rewards ?? [])])];
+  return [...state.collected];
 }
 
 function inputsOwned(state,id,progress) {
@@ -48,9 +49,10 @@ export function access(state, id) {
 export function normalizeState(raw) {
   if (!raw || raw.version !== SAVE_VERSION) throw new Error('不兼容的存档版本');
   const state = createState();
+  const requested=new Set(Array.isArray(raw.collected)?raw.collected:[]);
   state.begun = raw.begun === true;
   state.scene = SCENE_BY_ID[raw.scene] ? raw.scene : 'desk';
-  state.collected = PICKUPS.filter(item => Array.isArray(raw.collected) && raw.collected.includes(item));
+  state.collected = PICKUPS.filter(item => requested.has(item));
   state.discovered = Object.keys(COLLECTIONS).filter(id => Array.isArray(raw.discovered) && raw.discovered.includes(id));
   state.activities = ACTIVITY_IDS.filter(id => Array.isArray(raw.activities) && raw.activities.includes(id));
   for (const puzzle of PUZZLES) {
@@ -71,6 +73,9 @@ export function normalizeState(raw) {
       if (state.solved.includes(puzzle.id) || !Array.isArray(raw.solved) || !raw.solved.includes(puzzle.id)) continue;
       if (access(state, puzzle.id).ready && inputsOwned(state,puzzle.id,state.progress[puzzle.id]) && RULES[puzzle.id].solved(state.progress[puzzle.id])) {
         state.solved.push(puzzle.id);
+        // Old runs already received these objects. New runs preserve only real pickups.
+        const earned=puzzle.rewards.filter(item=>(raw.revision??0)<10||requested.has(item));
+        state.collected.push(...earned.filter(item=>!state.collected.includes(item)));
         restoreUses();
         changed = true;
       }
@@ -97,7 +102,7 @@ export function reduce(state, action) {
   if (action.type === 'start') return { ...state, begun: true };
   if (action.type === 'activity') return state.begun && (action.id!=='birthday:unwrap'||state.ending) && ACTIVITY_IDS.includes(action.id) && !state.activities.includes(action.id) ? { ...state, activities: [...state.activities, action.id] } : state;
   if (action.type === 'scene' && sceneOpen(state,action.id)) return { ...state, scene: action.id, selected: null };
-  if (action.type === 'pickup' && state.begun && PICKUPS.includes(action.id) && !state.collected.includes(action.id)) return { ...state, collected: [...state.collected, action.id], selected: action.id };
+  if (action.type === 'pickup' && state.begun && COLLECTIBLE_IDS.includes(action.id) && !state.collected.includes(action.id) && (PICKUPS.includes(action.id)||state.solved.includes(REWARD_SOURCES[action.id]))) return { ...state, collected: [...state.collected, action.id], selected: action.id };
   if (action.type === 'discover' && state.begun && Object.hasOwn(COLLECTIONS, action.id) && !state.discovered.includes(action.id)) return { ...state, discovered: [...state.discovered, action.id] };
   if(action.type==='use-tool'&&state.begun){
     const use=PERSISTENT_TOOL_USES[action.target];

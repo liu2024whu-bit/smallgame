@@ -21,23 +21,25 @@ function plate(operation,index,disabled,miniature){
 function printSlip(operation){
  return `<div class="press-test" aria-label="${PRESS_NAMES[operation]}版的试印">${atlas('pressParts',3,{className:'press-slip-art'})}<span class="test-mark" aria-hidden="true">${PRESS_MARKS[operation]}</span><span class="test-input">${inkRow(PAPER_SEED)}</span><span class="test-arrow" aria-hidden="true">↓</span><span class="test-output">${inkRow(operate(PAPER_SEED,operation))}</span></div>`;
 }
-export function pressCase(progress,{done=false,miniature=false,ownsBook=true}={}){
+export function pressCase(progress,{done=false,miniature=false,ownsBook=true,rewardTaken=false}={}){
  const opened=progress.opened;
  const lever=atlas('pressParts',1,{className:'press-arm',label:''});
  const latch=atlas('pressParts',9,{className:'press-latch-art',label:''});
  const control=miniature?`<span class="press-lever">${lever}</span>`:moveButton(lever,{type:'print'},{className:'press-lever',disabled:!opened||done,key:'press-handle'}).replace('<button ',`<button data-press-handle aria-label="压下木柄，印一张" `);
  const catchAttrs=ownsBook?'data-action="use-direct" data-id="bookmark" data-tool-target="paper-latch"':`data-pmove='{"type":"open"}'`;
  const catchControl=miniature?`<span class="press-latch">${latch}</span>`:`<button class="press-latch" ${catchAttrs} data-focus="press-latch" aria-label="${ownsBook?'用木书签挑开夹扣':'夹扣，边上有道窄缝'}" ${opened?'disabled':''}>${latch}</button>`;
+ const rewardTag=miniature?'span':'button';
+ const reward=done&&!rewardTaken?`<${rewardTag} class="press-reward" ${miniature?'':'data-action="collect-item" data-id="transparency" data-focus="take-transparency" aria-label="拿起透片"'}>${itemSprite(4)}</${rewardTag}>`:'';
  const proof=progress.proof?applyOperations(PAPER_SEED,progress.proof):null;
  const proofTag=miniature?'span':'button';
  const proofAttrs=miniature?'':`data-action="press-proof" data-open="true" data-focus="press-proof" aria-label="拿近看刚印的纸" ${proof?'':'disabled'}`;
- return `<div class="press-case ${opened?'press-open':''} ${done?'press-done':''}" data-press-open="${opened}" data-press-count="${progress.presses}">${atlas('pressMain',0,{className:'press-body',label:'有滑盖、三格版槽和木柄的试印盒'})}<div class="press-wells" ${opened&&!done?'':'inert'}>${progress.order.map((op,i)=>plate(op,i,!opened||done,miniature)).join('')}</div><div class="press-lid">${atlas('pressMain',1,{className:'press-lid-art'})}<span class="press-target-label">印样</span>${inkRow(PAPER_TARGET,'press-target')}</div>${control}${catchControl}<span class="press-book-cue" aria-hidden="true">${atlas('pressParts',2,{label:''})}</span><div class="press-drawer">${atlas('pressMain',2,{className:'press-drawer-art'})}${done?`<span class="press-reward">${itemSprite(4)}</span>`:''}</div><${proofTag} ${proofAttrs} class="press-proof ${proof?'has-proof':''}" data-proof="${progress.proof?.join('')??''}">${atlas('pressParts',3,{className:'press-slip-art'})}${proof?inkRow(proof):''}</${proofTag}></div>`;
+ return `<div class="press-case ${opened?'press-open':''} ${done?'press-done':''}" data-press-open="${opened}" data-press-count="${progress.presses}">${atlas('pressMain',0,{className:'press-body',label:'有滑盖、三格版槽和木柄的试印盒'})}<div class="press-wells" ${opened&&!done?'':'inert'}>${progress.order.map((op,i)=>plate(op,i,!opened||done,miniature)).join('')}</div><div class="press-lid">${atlas('pressMain',1,{className:'press-lid-art'})}<span class="press-target-label">印样</span>${inkRow(PAPER_TARGET,'press-target')}</div>${control}${catchControl}<span class="press-book-cue" aria-hidden="true">${atlas('pressParts',2,{label:''})}</span><div class="press-drawer">${atlas('pressMain',2,{className:'press-drawer-art'})}${reward}</div><${proofTag} ${proofAttrs} class="press-proof ${proof?'has-proof':''}" data-proof="${progress.proof?.join('')??''}">${atlas('pressParts',3,{className:'press-slip-art'})}${proof?inkRow(proof):''}</${proofTag}></div>`;
 }
 export function renderPaper(progress,{state,view={}}){
  if(view.pressProof&&progress.proof)return `<div class="press-reading"><div><p>印样</p><div class="press-reading-slip">${atlas('pressParts',3,{className:'press-slip-art'})}${inkRow(PAPER_TARGET)}</div></div><div><p>刚才那张</p><div class="press-reading-slip">${atlas('pressParts',3,{className:'press-slip-art'})}${inkRow(applyOperations(PAPER_SEED,progress.proof))}</div></div><button class="text-button" data-action="press-proof" data-open="false">放回去</button></div>`;
  const done=state.solved.includes('paper');
- return `<div class="press-workbench"><div class="press-machine">${pressCase(progress,{done,ownsBook:inventory(state).includes('bookmark')})}</div><aside class="press-samples" aria-label="留在旁边的试纸"><span class="press-samples-title">试纸</span>${[0,1,2].map(printSlip).join('')}</aside><output class="sr-only" data-press-status>${progress.opened?'滑盖已打开。':'夹扣下留着一条窄缝。'}${progress.proof?`最近的一张：${applyOperations(PAPER_SEED,progress.proof).map(v=>STAMPS[v]).join('、')}。`:'还没有印过。'}</output></div>`;
+ return `<div class="press-workbench"><div class="press-machine">${pressCase(progress,{done,ownsBook:inventory(state).includes('bookmark'),rewardTaken:inventory(state).includes('transparency')})}</div><aside class="press-samples" aria-label="留在旁边的试纸"><span class="press-samples-title">试纸</span>${[0,1,2].map(printSlip).join('')}</aside><output class="sr-only" data-press-status>${progress.opened?'滑盖已打开。':'夹扣下留着一条窄缝。'}${progress.proof?`最近的一张：${applyOperations(PAPER_SEED,progress.proof).map(v=>STAMPS[v]).join('、')}。`:'还没有印过。'}</output></div>`;
 }
-export function pressMiniature(progress,done){
- return `<div class="world-press" style="left:${PRESS_WORLD.left}%;top:${PRESS_WORLD.top}%;width:${PRESS_WORLD.width}%" aria-hidden="true" inert ${done?'data-world-change="paper"':''}>${pressCase(progress,{done,miniature:true})}</div>`;
+export function pressMiniature(progress,done,owned=[]){
+ return `<div class="world-press" style="left:${PRESS_WORLD.left}%;top:${PRESS_WORLD.top}%;width:${PRESS_WORLD.width}%" aria-hidden="true" inert ${done?'data-world-change="paper"':''}>${pressCase(progress,{done,miniature:true,rewardTaken:owned.includes('transparency')})}</div>`;
 }

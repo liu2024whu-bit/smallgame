@@ -39,7 +39,8 @@ test('every configuration and wrong proof can be corrected, without inventing or
  }
  const locked=reduce(createState(),{type:'start'});assert.equal(move(locked,{type:'open'}),locked);
  let ready=move(begun(),{type:'open'});ready=move(ready,{type:'reorder',from:0,to:2});ready=move(ready,{type:'print'});
- assert.ok(inventory(ready).includes('bookmark'));assert.ok(inventory(ready).includes('transparency'));
+ assert.ok(inventory(ready).includes('bookmark'));assert.ok(!inventory(ready).includes('transparency'));
+ ready=reduce(ready,{type:'pickup',id:'transparency'});assert.ok(inventory(ready).includes('transparency'));
 });
 test('legacy real prints survive, partial setups stay partial, and new saves cannot skip an impression with old fields',()=>{
  const raw={...begun(),revision:6,progress:{...createState().progress,paper:{order:[0,1,2]}},solved:['paper']};

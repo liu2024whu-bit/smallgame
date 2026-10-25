@@ -1,0 +1,297 @@
+{
+  "version": "2.9.5",
+  "date": "2026-10-25",
+  "sourceModules": 185,
+  "tests": 187,
+  "reviewCases": 257,
+  "revision": 10,
+  "scope": "Actual pickup foundation, physical P3/P4 sources and preview inventory combinations. P5 art coordination, P6 and later projects remain open.",
+  "native": {
+    "out": [
+      {
+        "id": "paper-done",
+        "width": 1440,
+        "picked": [
+          "transparency"
+        ]
+      },
+      {
+        "id": "cloud-done",
+        "width": 1440,
+        "picked": [
+          "mirror",
+          "crank"
+        ]
+      },
+      {
+        "id": "books-done",
+        "width": 1440,
+        "picked": [
+          "pageA",
+          "needle"
+        ]
+      },
+      {
+        "id": "paper-done",
+        "width": 390,
+        "picked": [
+          "transparency"
+        ]
+      },
+      {
+        "id": "cloud-done",
+        "width": 390,
+        "picked": [
+          "mirror",
+          "crank"
+        ]
+      },
+      {
+        "id": "books-done",
+        "width": 390,
+        "picked": [
+          "pageA",
+          "needle"
+        ]
+      },
+      {
+        "id": "paper-done",
+        "width": 320,
+        "picked": [
+          "transparency"
+        ]
+      },
+      {
+        "id": "cloud-done",
+        "width": 320,
+        "picked": [
+          "mirror",
+          "crank"
+        ]
+      },
+      {
+        "id": "books-done",
+        "width": 320,
+        "picked": [
+          "pageA",
+          "needle"
+        ]
+      }
+    ],
+    "partial": true,
+    "reduced": true,
+    "errors": []
+  },
+  "fullRoute": {
+    "played": [
+      {
+        "id": "paper",
+        "solved": true
+      },
+      {
+        "id": "cloud",
+        "solved": true
+      },
+      {
+        "id": "calibration",
+        "solved": true
+      },
+      {
+        "id": "postbox",
+        "solved": true
+      },
+      {
+        "id": "books",
+        "solved": true
+      },
+      {
+        "id": "screen",
+        "solved": true
+      },
+      {
+        "id": "belt",
+        "solved": true
+      },
+      {
+        "id": "film",
+        "solved": true
+      },
+      {
+        "id": "flowers",
+        "solved": true
+      },
+      {
+        "id": "paperBack",
+        "solved": true
+      },
+      {
+        "id": "cloudGap",
+        "solved": true
+      },
+      {
+        "id": "wordlock",
+        "solved": true
+      },
+      {
+        "id": "album",
+        "solved": true
+      },
+      {
+        "id": "stitch",
+        "solved": true
+      },
+      {
+        "id": "chocolate",
+        "solved": true
+      },
+      {
+        "id": "cocoa",
+        "solved": true
+      },
+      {
+        "id": "sweets",
+        "solved": true
+      },
+      {
+        "id": "ribbons",
+        "solved": true
+      },
+      {
+        "id": "birthdayLock",
+        "solved": true
+      },
+      {
+        "id": "calendar",
+        "solved": true
+      },
+      {
+        "id": "maze",
+        "solved": true
+      },
+      {
+        "id": "balance",
+        "solved": true
+      },
+      {
+        "id": "drawers",
+        "solved": true
+      },
+      {
+        "id": "flips",
+        "solved": true
+      },
+      {
+        "id": "packing",
+        "solved": true
+      },
+      {
+        "id": "melody",
+        "solved": true
+      }
+    ],
+    "solved": 26,
+    "door": true,
+    "cake": "许愿的时候",
+    "ending": true,
+    "errors": []
+  },
+  "save": {
+    "formal": true,
+    "pending": true,
+    "partial": true,
+    "claimed": true,
+    "keyboardPickup": true,
+    "downstream": true,
+    "revision": 10,
+    "downloads": [
+      {
+        "name": "第20圈以前-存档-20261025-094607-627.json",
+        "receipt": "刚才导出的\n第20圈以前-存档-20261025-094607-627.json\n\n位置可在浏览器的下载记录里查看。下次回这里，读取这份文件就能接上。"
+      },
+      {
+        "name": "第20圈以前-存档-20261025-094612-159.json",
+        "receipt": "刚才导出的\n第20圈以前-存档-20261025-094612-159.json\n\n位置可在浏览器的下载记录里查看。下次回这里，读取这份文件就能接上。"
+      },
+      {
+        "name": "第20圈以前-存档-20261025-094615-610.json",
+        "receipt": "刚才导出的\n第20圈以前-存档-20261025-094615-610.json\n\n位置可在浏览器的下载记录里查看。下次回这里，读取这份文件就能接上。"
+      }
+    ],
+    "errors": []
+  },
+  "layouts": {
+    "320": {
+      "url": "http://127.0.0.1:4180/demo.html?qa=v28-audit",
+      "images": {
+        "references": 91,
+        "unique": 83,
+        "failed": []
+      },
+      "layouts": 257,
+      "issues": [],
+      "errors": []
+    },
+    "390": {
+      "url": "http://127.0.0.1:4180/demo.html?qa=v28-audit",
+      "images": {
+        "references": 91,
+        "unique": 83,
+        "failed": []
+      },
+      "layouts": 257,
+      "issues": [],
+      "errors": []
+    },
+    "1440": {
+      "url": "http://127.0.0.1:4180/demo.html?qa=v28-audit",
+      "images": {
+        "references": 91,
+        "unique": 83,
+        "failed": []
+      },
+      "layouts": 257,
+      "issues": [],
+      "errors": []
+    }
+  },
+  "backend": {
+    "wrong": "密码没对上，再看看。",
+    "small": 320,
+    "linked": "九月的夹页",
+    "word": {
+      "values": [
+        11,
+        23,
+        24,
+        23,
+        23
+      ],
+      "active": ""
+    },
+    "unchanged": true,
+    "remembered": true,
+    "locked": true,
+    "relocked": true,
+    "errors": []
+  },
+  "gallery": {
+    "images": [
+      "old.webp",
+      "first.webp",
+      "current.webp",
+      "taken.webp",
+      "cloud.webp",
+      "cloud-taken.webp",
+      "phone.webp",
+      "phone-cloud.webp"
+    ],
+    "movie": {
+      "ready": 4,
+      "paused": false,
+      "time": 0.708961,
+      "duration": 4.4
+    },
+    "overflow": -15,
+    "errors": []
+  }
+}

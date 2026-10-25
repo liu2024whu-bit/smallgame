@@ -5,10 +5,9 @@ import { CHOCOLATE_PATTERN, CHOCOLATE_ROWS, CHOCOLATE_COLUMNS, runs } from '../s
 import { createState, reduce, normalizeState, serializable, access, inventory } from '../src/core/state.js';
 import { sceneOpen, openScenes, neighborScene } from '../src/core/exploration.js';
 import { MAIN_IDS } from '../src/data/puzzles.js';
-import { WITNESSES } from './witnesses.mjs';
+import { finish } from './witnesses.mjs';
 
 const start=()=>['bookmark','thread'].reduce((s,id)=>reduce(s,{type:'pickup',id}),reduce(createState(),{type:'start'}));
-const finish=(s,id)=>WITNESSES[id].reduce((s,move)=>reduce(s,{type:'move',id,move}),s);
 const beforeBirthday=()=>MAIN_IDS.slice(0,MAIN_IDS.indexOf('chocolate')).reduce(finish,start());
 const handle=s=>reduce(s,{type:'use-tool',item:'crank',target:'birthday-door'});
 

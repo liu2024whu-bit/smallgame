@@ -4,7 +4,7 @@ import { POSTAL_CODE, LETTER_CODE } from '../data/ciphers.js';
 import {permutation,same,bounded} from '../puzzles/common.js';
 import {applyOperations,PAPER_SEED,PAPER_TARGET} from '../puzzles/paper.js';
 
-export const CONTENT_REVISION = 9;
+export const CONTENT_REVISION = 10;
 const NEW_GATES = new Set(['postbox', 'wordlock']);
 const OLD_REQUIREMENTS = { books: ['calibration'], album: ['paperBack', 'cloudGap', 'film'] };
 
