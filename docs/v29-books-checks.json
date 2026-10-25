@@ -1,6 +1,27 @@
 {
   "version": "2.9.8",
-  "scope": "Local development verification; public deployment verified separately; not player blind testing.",
+  "scope": "Local development and public deployment verification; not player blind testing.",
+  "public": {
+    "commit": "df814c9ed6d78dd5f26e954eddc008e01842e34d",
+    "version": "2.9.8",
+    "actions": {"checks": 40193852497, "pages": 40193851828, "conclusion": "success"},
+    "formalFreshStart": true,
+    "fixtureAPI": false,
+    "viewport": [390, 844],
+    "nativeTouch": ["paper", "cloud", "calibration", "postbox", "books", "screen", "sky"],
+    "manualPickups": true,
+    "libraryPartialPickupReload": true,
+    "projectorHotspotAfterWheelPickup": true,
+    "skySwitch": true,
+    "postalReload": true,
+    "publicGalleries": [
+      {"name": "books", "widths": [1440, 390], "versions": 4, "images": 24, "videoSeconds": 16},
+      {"name": "paper", "widths": [1440, 390], "versions": 4, "images": 12, "videoSeconds": 11},
+      {"name": "cloud", "widths": [1440, 390], "versions": 5, "images": 19, "videoSeconds": 14}
+    ],
+    "galleryZoomKeyboardVideo": true,
+    "pageErrors": []
+  },
   "source": {
     "modules": 198,
     "puzzles": 26,
