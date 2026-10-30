@@ -3,6 +3,7 @@ import {MAZE_SIZE,MAZE_CENTER,MAZE_RADII,MAZE_BRAKE_PIVOT} from '../../data/maze
 import {advanceMazeBall,mazeKeyBall,mazeJourney} from '../../data/maze-travel.js';
 import {mazeMaterial,mazeBallPoint} from '../../services/maze-material.js';
 import {routeMeasure} from '../../services/motion/maze.js';
+import {bindMazeAutoRoll} from '../../services/maze-auto-roll.js';
 import {pointerSession} from './pointer.js';
 import {mod} from '../../puzzles/common.js';
 
@@ -13,6 +14,7 @@ export function bindMaze(root,p,{move,changeView,feedback=()=>{}}){
  const inside=e=>{const b=world.parentElement.getBoundingClientRect();return e&&e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom;};
  const blocked=()=>{feedback('stop');changeView({mazeBlocked:true});};
  const roll=q=>move({type:'roll',path:q.path,next:q.next,amount:q.amount});
+ const stopAuto=bindMazeAutoRoll(root,model,p,{roll,feedback});
  const stop=pointerSession(root,{
   pick(e){
    if(busy())return null;const ball=e.target.closest('button[data-maze-ball]'),handle=e.target.closest('[data-maze-return]');if(ball)return {source:ball,kind:'ball'};if(handle)return {source:handle,kind:'handle'};
@@ -68,5 +70,5 @@ export function bindMaze(root,p,{move,changeView,feedback=()=>{}}){
   const direction={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]}[e.key];
   if(ball&&direction){e.preventDefault();e.stopPropagation();const next=mazeKeyBall(p,direction);if(next===p)feedback('stop');else{roll(next);feedback('roll');}}
  },{signal});
- return ()=>{stop();controller.abort();};
+ return ()=>{stopAuto();stop();controller.abort();};
 }

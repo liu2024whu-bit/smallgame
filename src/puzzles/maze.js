@@ -1,4 +1,4 @@
-import {MAZE_START,MAZE_END,mazeSeenStars,mazeExitLimit,mazeConnections} from '../data/maze-apparatus.js';
+import {MAZE_START,MAZE_END,MAZE_MARKS,mazeSeenStars,mazeExitLimit,mazeConnections} from '../data/maze-apparatus.js';
 import {bounded,indexIn,mod} from './common.js';
 
 export const mazeStars=mazeSeenStars;
@@ -13,6 +13,28 @@ export function validMazeWalk(turns,path){
  return true;
 }
 const adjacent=(turns,from,to)=>mazeConnections(turns).some(([a,b])=>a===from&&b===to||b===from&&a===to);
+// Follow the current grooves, including a return along a spur for a star.
+// Search node + visited stars, rather than matching one prescribed route.
+export function mazeAutoWalk(p){
+ if(!maze.valid(p)||maze.solved(p))return null;
+ const edges=mazeConnections(p.turns),markBit=n=>MAZE_MARKS.includes(n)?1<<MAZE_MARKS.indexOf(n):0;
+ const bits=mazeStars(p.path).reduce((mask,n)=>mask|markBit(n),0);
+ const queue=[{node:p.path.at(-1),bits,tail:[]}],seen=new Set();
+ for(let i=0;i<queue.length;i++){
+  const current=queue[i],key=current.node+':'+current.bits;if(seen.has(key))continue;seen.add(key);
+  if(current.node===MAZE_END){
+   const next={...p,path:[...p.path,...current.tail],next:null,amount:0};
+   return maze.valid(next)?next:null;
+  }
+  for(const[a,b]of edges){
+   const to=a===current.node?b:b===current.node?a:null;
+   if(to===null||to===MAZE_END&&current.bits!==3)continue;
+   const visited=to===MAZE_START?0:current.bits|markBit(to);
+   queue.push({node:to,bits:visited,tail:[...current.tail,to]});
+  }
+ }
+ return null;
+}
 export const maze={
  create:()=>({turns:[3,4,0],path:[MAZE_START],next:null,amount:0}),
  valid(p){

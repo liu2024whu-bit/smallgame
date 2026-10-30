@@ -27,7 +27,7 @@ export function hydrateMazeMaterial(root){
   const controller={
    snapshot:()=>structuredClone(pose),
    preview(p,{turns=p.turns,ball=mazeBallPoint(p),lid=mazeLidAngle(p),brake=mazeHome(p)?0:42}={}){cancelAnimationFrame(frame);pose={p:structuredClone(p),turns:[...turns],ball:[...ball],lid,brake};draw();},
-   animate(from,to,route=[],{duration=360,blocking=false}={}){
+   animate(from,to,route=[],{duration=360,blocking=false,onFinish}={}){
     cancelAnimationFrame(frame);const end={p:structuredClone(to),turns:[...to.turns],ball:mazeBallPoint(to),lid:mazeLidAngle(to),brake:mazeHome(to)?0:42},started=performance.now();
     const points=route.length>1?route:[from.ball,end.ball],lengths=[0];for(let i=1;i<points.length;i++)lengths.push(lengths.at(-1)+Math.hypot(points[i][0]-points[i-1][0],points[i][1]-points[i-1][1]));
     const moving=lengths.at(-1)>1,lidTime=moving&&Math.abs(end.lid-from.lid)>1?280:0,totalTime=duration+lidTime;
@@ -38,7 +38,7 @@ export function hydrateMazeMaterial(root){
     const walk=t=>{const at=lengths.at(-1)*t;let i=1;while(i<lengths.length-1&&lengths[i]<at)i++;const span=lengths[i]-lengths[i-1],a=span?(at-lengths[i-1])/span:1;return points[i-1].map((v,k)=>v+(points[i][k]-v)*a);};
     const controls=blocking?[...(model.closest('dialog')??model).querySelectorAll('.maze-workbench button,[data-action="undo"],[data-action="reset-puzzle"]')].map(el=>[el,el.disabled]):[];
     const wanted=document.activeElement,keepFocus=controls.some(([el])=>el===wanted);
-    const finish=()=>{pose=end;draw();delete model.dataset.mazeBusy;controls.forEach(([el,d])=>el.disabled=d);if(keepFocus&&wanted.isConnected&&[document.body,model.closest('dialog')].includes(document.activeElement))wanted.focus({preventScroll:true});};
+    const finish=()=>{pose=end;draw();delete model.dataset.mazeBusy;controls.forEach(([el,d])=>el.disabled=d);if(keepFocus&&wanted.isConnected&&[document.body,model.closest('dialog')].includes(document.activeElement))wanted.focus({preventScroll:true});onFinish?.();};
     if(!motionAllowed()||!duration){finish();return;}
     if(blocking){model.dataset.mazeBusy='true';controls.forEach(([el])=>el.disabled=true);}
     const tick=now=>{
