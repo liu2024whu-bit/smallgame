@@ -34,9 +34,15 @@
   .keepsake-inspect .character-art { width: min(370px, 100%, calc(var(--ratio) * 55dvh)); height: auto; }
   .collection-caption { max-width: 680px; margin: 26px auto 0; text-align: center; line-height: 1.9; color: #8a947c; }
   .collection-dialog .appearance-controls { margin-bottom: 24px; }
-  .reading-shelf { display: grid; grid-template-columns: 1fr 1fr; gap: 17px 25px; }
-  .reading-shelf .motif { width: 45px; }
-  .reading-shelf span:last-child { font-size: 16px; }
+  .reading-dialog {max-width:860px;}
+  .reading-caption {color:#7c866d;font-size:15px;margin:0 0 18px;}
+  .reading-shelf { display:grid;grid-template-columns:1fr 1fr;gap:36px; }
+  .reading-leaf {min-width:0;}
+  .reading-book {display:grid;grid-template-columns:23px minmax(0,1fr) 25px;align-items:center;gap:10px;width:100%;min-height:58px;padding:10px 0;border-bottom:1px dotted #d5d6c5;text-align:left;color:#69775f;}
+  .reading-book small {font:11px var(--font-print);color:#999b82;}
+  .reading-book > span:nth-child(2) {font:16px/1.7 var(--font-print);}
+  .reading-bookmark {display:grid;place-items:center;min-width:0;}.reading-bookmark .motif {width:24px;opacity:.75;}
+  .reading-book:hover {color:#4b664c;}.reading-book.book-opened {color:#52724f;}
   .interest-notes { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 15px; }
   .interest-notes article { border-bottom: 1px dotted #c9d2b8; padding-bottom: 15px; }
   .interest-notes article > .motif { width: 35px; float: right; opacity: .5; }
@@ -48,15 +54,6 @@
   .wish-flower.chosen-flower { border-color: #92a67b; background: linear-gradient(transparent, #ebf0e050); }
   .flower-wish { padding:26px 15px 5px; text-align:center; color:#657b55; min-height:100px; line-height:2; }
   .pet-dialog .dialog-body { text-align: center; }
-  .ending-dialog { max-width: 760px !important; }
-  .ending-page { text-align: center; padding: 15px 25px 30px; }
-  .ending-flower .motif { width: 135px; margin: 10px; }
-  .ending-page h2 { font: 38px/1.4 Georgia, serif; letter-spacing: -.02em; color: #889c75; margin: 0 0 30px; }
-  .ending-page h2 span { font-size: 46px; }
-  .ending-page > p:not(.eyebrow) { font-size: 17px; line-height: 2.1; margin: 13px auto; }
-  .ending-wish { color: #859a71; }
-  .unfinished-page { display: block; padding: 25px; color: #b7bea8; font-size: 14px; line-height: 2.4; }
-  .ending-page > button { margin: 8px; }
   @media (max-width: 700px) {
     .notebook-paper { padding: 18px 8px; }
     .notebook-tabs { gap: 4px; padding: 0; }.notebook-tabs button { padding:6px 9px 10px; gap:5px; font-size:14px; }.notebook-tabs .icon { width:14px; height:14px; }
@@ -66,6 +63,5 @@
     .reading-shelf { grid-template-columns: 1fr; gap: 10px; }
     .interest-notes { padding: 7px; gap: 16px; }.interest-notes h3 { font-size: 18px; }.interest-notes p { font-size: 13px; }
     .wish-flower { font-size: 12px; }.flower-wish { font-size: 16px; padding-left: 8px; padding-right: 8px; }
-    .ending-page { padding: 12px 5px; }.ending-page h2 { font-size: 32px; }.ending-page h2 span { font-size: 40px; }
   }
 }

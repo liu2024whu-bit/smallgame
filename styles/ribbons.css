@@ -1,0 +1,48 @@
+@layer puzzles {
+.puzzle-ribbons .puzzle-field{padding:0;min-height:0;background:none}
+.ribbons-workbench{margin:auto;max-width:100%}
+.ribbons-viewport{position:relative;width:min(100%,calc((100dvh - 326px)*var(--ribbons-aspect)));aspect-ratio:var(--ribbons-aspect);margin:auto;overflow:hidden;border-radius:4px;isolation:isolate}
+@media(min-width:900px){.puzzle-ribbons.steady-workbench .ribbons-viewport{width:min(100%,calc((100dvh - 280px)*var(--ribbons-aspect)))}}
+.ribbons-world{position:absolute;inset:0 auto auto 0;width:760px;height:850px;transform-origin:0 0}
+.ribbons-elevated{position:absolute;left:0;top:170px;width:760px;height:850px}
+.ribbon-decoder-assembly{position:absolute;left:0;top:-170px;width:760px;height:1024px}
+.ribbon-model,.ribbon-solid,.ribbon-old-face,.ribbon-removal{position:absolute;inset:0;width:760px;height:850px;transform-origin:375px 360px}
+.ribbon-model :where(span,button){box-sizing:border-box}
+.ribbon-body,.ribbon-strap,.ribbon-through,.ribbon-grip,.ribbon-saved,.ribbon-sleeve,.ribbon-reward{position:absolute}
+.ribbon-body{filter:drop-shadow(5px 10px 9px #50432c38)}
+.ribbon-layer{position:absolute;inset:0;pointer-events:none}
+.ribbon-strap{height:28px;transform-origin:0 50%;pointer-events:none;filter:drop-shadow(0 2px 1px #38281a33)}
+.ribbon-material{position:absolute;left:0;top:0;height:28px;background-size:auto 28px;background-repeat:repeat-x;overflow:hidden}
+.ribbon-material>.raster-sprite{width:100%;height:100%}
+.ribbon-texture-ready>.raster-sprite{visibility:hidden}
+.ribbon-end-paint{position:absolute;top:-3px;width:45px;height:35px}
+.ribbon-end-paint>.raster-sprite{width:100%;height:100%}
+.ribbon-folded-end{width:30px;height:39px;top:-5px}
+.ribbon-through{width:44px;height:15px;translate:-50% -50%;pointer-events:none}
+.ribbon-through>.raster-sprite{width:100%;height:100%}
+.ribbon-grip{translate:-50% -50%;width:max(40px,var(--hit,44px));height:max(40px,var(--hit,44px));min-width:0;border:0;padding:0;background:transparent;border-radius:10px;pointer-events:none;z-index:2}
+button.ribbon-grip{pointer-events:auto;cursor:var(--cursor-grab,grab);touch-action:none}
+button.ribbon-grip:focus-visible{outline:2px solid #887452;outline-offset:2px}
+button.ribbon-grip:hover{background:#fff1c911}
+.ribbons-navigation{display:flex;gap:20px;align-items:center;justify-content:center;margin:10px auto 0;min-height:44px}
+.ribbons-navigation .text-button{min-height:44px;font-size:14px;padding:6px 12px}
+.ribbons-navigation [aria-current=true]{text-decoration:underline;text-underline-offset:6px}
+.ribbons-status{height:22px;margin:6px auto 0;text-align:center;font-size:13px;color:#7a6657}
+.ribbon-saved{width:38px;height:50px;filter:drop-shadow(2px 3px 2px #65473344)}
+.ribbon-saved>.raster-sprite{width:100%;height:100%}
+.ribbon-saved>span:not(.raster-sprite){position:absolute;left:25px;top:15px;width:45px;height:35px}
+.ribbon-saved>span:not(.raster-sprite)>.raster-sprite{width:100%;height:100%}
+.ribbon-sleeve>.raster-sprite{width:100%;height:100%}
+.ribbon-reward>.item-art{position:absolute;left:50%;top:50%;translate:-50% -50%;width:130px;height:52px}
+.ribbon-sleeve{filter:drop-shadow(1px 3px 2px #51412844)}
+.ribbon-reward{translate:-50% -50%;border:0;background:transparent;padding:0;min-width:0;min-height:var(--hit,44px);cursor:var(--cursor-grab,grab);filter:drop-shadow(1px 3px 2px #51412844)}
+.ribbon-reward:hover{filter:drop-shadow(1px 3px 3px #51412866)}
+.ribbon-stencil{position:relative;display:block;aspect-ratio:2.5}
+.ribbon-stencil>canvas,.ribbon-stencil>.raster-sprite{position:absolute;inset:0;width:100%;height:100%}
+.ribbon-stencil>canvas{display:none}
+.ribbon-paper-ready>canvas{display:block}
+.ribbon-paper-ready>.raster-sprite{display:none}
+.ribbon-old-face,.ribbon-removal{pointer-events:none;z-index:5}
+.ribbon-room{position:absolute;pointer-events:none;container-type:size}
+.ribbon-room-world{position:absolute;width:760px;height:850px;transform:scale(calc(100cqw / 760px));transform-origin:0 0}
+}

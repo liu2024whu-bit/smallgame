@@ -1,10 +1,7 @@
 import { moveAdjacent, reorder, permutation, same } from './common.js';
 
-export const OPERATIONS = ['翻面', '左移一格', '交换第2、4格'];
 export const STAMPS = ['叶', '月', '星', '花', '云'];
 export const PAPER_SEED = [0, 1, 2, 3, 4];
-export const BACK_ORIGINAL = [3, 0, 4, 1, 2];
-export const BACK_OPERATIONS = [2, 0, 1];
 
 export function operate(values, operation) {
   const result = [...values];
@@ -16,7 +13,6 @@ export function operate(values, operation) {
 
 export const applyOperations = (values, operations) => operations.reduce(operate, values);
 export const PAPER_TARGET = applyOperations(PAPER_SEED, [0, 1, 2]);
-export const BACK_TARGET = applyOperations(BACK_ORIGINAL, BACK_OPERATIONS);
 
 export const paper = {
   create: () => ({order:[2,0,1],opened:false,proof:null,presses:0}),
@@ -32,11 +28,4 @@ export const paper = {
     return state;
   },
   solved: state => permutation(state?.proof,3)&&same(applyOperations(PAPER_SEED,state.proof),PAPER_TARGET),
-};
-
-export const paperBack = {
-  create: () => ({ order: [...PAPER_SEED] }),
-  valid: state => permutation(state?.order, 5),
-  move: (state, action) => action.type === 'reorder' ? { order: reorder(state.order, action.from, action.to) } : action.type === 'shift' ? { order: moveAdjacent(state.order, action.index, action.direction) } : state,
-  solved: state => same(applyOperations(state.order, BACK_OPERATIONS), BACK_TARGET),
 };

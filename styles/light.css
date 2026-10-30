@@ -1,7 +1,7 @@
 @layer puzzles {
  .transparency-prop { position:relative; }
  .transparency-print { position:absolute;object-fit:fill;opacity:.86;pointer-events:none; }
- .puzzle-calibration .puzzle-field { padding:0;background:transparent; }
+ .puzzle-calibration .puzzle-field { padding:0;background:transparent;min-height:0; }
  .light-workbench { overflow:clip;border-radius:3px; }
  .light-case { position:relative;isolation:isolate;aspect-ratio:1536/1150;container-type:inline-size; }
  .light-portrait { aspect-ratio:768/1100; }
@@ -26,31 +26,41 @@
  .light-paper-blocker { position:absolute;inset:0;z-index:4; }
  .light-socket { position:absolute;translate:-50% -50%;width:44px;height:44px;z-index:3;pointer-events:none;border-radius:50%; }
  .is-dragging .light-socket { pointer-events:auto; }
- .light-grip,.light-power,.light-flip,.light-fitting,.light-pencil { position:absolute;translate:-50% -50%;z-index:3; }
+ .light-grip,.light-power,.light-flip,.light-pencil { position:absolute;translate:-50% -50%;z-index:3; }
  .light-grip,.light-power,.light-flip { width:max(44px,4.5cqw);height:max(44px,4.5cqw);padding:0;border:0;border-radius:50%;background:transparent;touch-action:none;cursor:var(--cursor-grab,grab); }
  .light-grip:hover,.light-power:hover,.light-flip:hover { background:#f8f1c92b;box-shadow:inset 0 0 0 1px #8d81533d; }
  .light-grip:active { cursor:var(--cursor-hold,grabbing); }
  .light-flip span { font-size:clamp(11px,1.6cqw,17px);color:#776d4f;letter-spacing:.12em; }
  .light-power { z-index:5; }
  .light-power[aria-pressed=true] { box-shadow:0 0 15px #ffeaa040; }
- .light-fitting { display:flex;align-items:center;min-width:56px;min-height:44px;padding:4px 9px;border-radius:2px 8px 3px 6px;background:#fbf5e4c9;color:#777d66;font-size:clamp(11px,1.7cqw,16px);box-shadow:0 1px 2px #7566461c; }
- .light-fitting.is-fitted { background:#f4edda91;color:#9a937d; }
- .light-fitting:disabled { opacity:.35; }
  .light-pencil { left:86.2%;top:88%;width:18%;min-height:44px;z-index:5;cursor:var(--cursor-grab,grab);touch-action:none; }
  .light-pencil-label { position:absolute;top:100%;left:50%;translate:-50% 0;white-space:nowrap;font-size:clamp(11px,1.7cqw,15px);color:#7e826e;letter-spacing:.12em;pointer-events:none; }
- .light-pencil-ghost { display:block;width:150px;rotate:-25deg;transform-origin:0 50%; }
+ .light-pencil-ghost {display:block;width:150px;rotate:-25deg;transform-origin:0 50%;translate:0 -50%;}
  .drawing-pencil { width:150px;height:50px;pointer-events:none; }
  .light-ready-to-trace .light-paper-art { filter:drop-shadow(0 0 4px #d3be7d66); }
- .light-done .light-fitting,.light-done .light-grip,.light-done .light-flip { visibility:hidden; }
+ .light-done .light-grip,.light-done .light-flip { visibility:hidden; }
  .world-light { position:absolute;left:50.4%;top:27.4%;width:29.67%;pointer-events:none; }
  .world-light .light-case { aspect-ratio:1536/1100; }
  .puzzle-calibration .puzzle-viewport { overflow:clip; }
  .puzzle-calibration .close-look>.puzzle-field { min-width:600px; }
  .puzzle-calibration .close-look .light-case { cursor:var(--cursor-grab,grab); }
  .puzzle-calibration.is-dragging .close-look .light-case { cursor:var(--cursor-hold,grabbing); }
+ .puzzle-calibration .finish-return{margin:0;min-height:44px;flex:0 0 auto;}
+ @media(max-width:899px){
+  .puzzle-calibration .completion-note{max-width:440px;display:flex;align-items:center;justify-content:space-between;gap:18px;margin:6px auto 0;padding:8px 0;}
+  .puzzle-calibration .finish-caption{margin:0;}
+  .puzzle-calibration .finish-caption h3{font-size:16px;}
+  .puzzle-calibration .finish-caption .motif{width:24px;}
+ }
+ @media(min-width:701px){
+  .puzzle-calibration .puzzle-viewport:not(.close-look) .light-workbench{width:min(100%,calc((100dvh - 210px)*1536/1150));margin-inline:auto;}
+  .puzzle-calibration .workbench-look{display:inline-flex;align-items:center;gap:5px;flex:0 0 auto;margin:0 0 10px auto;font-size:12px;min-height:30px;padding:2px 6px;}
+  .puzzle-calibration .workbench-look .icon{width:15px;height:15px;}
+  .puzzle-calibration .puzzle-viewport.close-look{max-height:calc(100dvh - 210px);overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#b1bb9f #f4f0e3;}
+  .puzzle-calibration .close-look>.puzzle-field{min-width:1040px;}
+ }
  @media(max-width:700px) {
-  .light-fitting { padding:2px 5px; }
   .puzzle-calibration .puzzle-viewport.close-look { max-height:68dvh;overflow:auto; }
  }
- @media(forced-colors:active){.light-grip,.light-fitting,.light-flip,.light-power {outline:1px solid ButtonText;}.light-reference-image {opacity:.5;}}
+ @media(forced-colors:active){.light-grip,.light-flip,.light-power {outline:1px solid ButtonText;}.light-reference-image {opacity:.5;}}
 }

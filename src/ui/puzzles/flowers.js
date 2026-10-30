@@ -1,32 +1,26 @@
-import { FRAME_PERFORATIONS } from '../../puzzles/film.js';
-import { FLOWER_LINKS } from '../../puzzles/flowers.js';
-import { GARDEN,GARDEN_WORLD,GARDEN_PLANTS as PLANTS,GARDEN_NAMES,GARDEN_PAIRS } from '../../data/garden.js';
-import { character,motif,moveButton,atlas,icon } from '../dom.js';
+import {viewControl} from '../view-control.js';
+import {ASSETS} from '../../data/assets.js';
+import {inventory} from '../../core/state.js';
+import {GARDEN_CENTERS as CENTERS,GARDEN_LEVELS as LEVELS,GARDEN_CRANKS as CRANKS,GARDEN_SLOTS as SLOTS,GARDEN_CAMERAS as CAMERAS,GARDEN_NAMES,GARDEN_PAIRS} from '../../data/garden.js';
+import {FLOWER_LINKS} from '../../puzzles/flowers.js';
+import {FILM_ORDER} from '../../puzzles/film.js';
+import {plant,bookFigure,drawer,gardenNote,sprite} from './garden-art.js';
 
-function filmNote(order,large=false){
-  const content=`<small>孔 <span aria-hidden="true">↔</span> 高</small><div>${order.map((frame,index)=>`<span><b>${['Ⅰ','Ⅱ','Ⅲ'][frame]}</b><span class="garden-frame">${character('cinema',0,1,1,'胶片')}${motif('petal')}</span><i class="garden-perforations">${Array.from({length:FRAME_PERFORATIONS[frame]},()=>'<i></i>').join('')}</i>${motif(PLANTS[index])}</span>`).join('')}</div>`;
-  return large?`<div class="garden-note-closeup">${content}</div>`:`<button class="garden-film" data-action="flower-note" aria-label="拿近看看胶片纸条">${content}</button>`;
+const act=action=>`data-pmove='${JSON.stringify(action)}'`;
+function gardenArt(p,{owned=[],holding=false,camera=CAMERAS.whole,order=FILM_ORDER}={}){
+ const focus=['left','middle','right'].findIndex(key=>camera===CAMERAS[key]);
+ return `<img class="garden-body" src="${ASSETS.gardenBody}" alt="四档木轨、成对花纹、三只摇柄和底座小屉" draggable="false">
+ ${CENTERS.map((x,i)=>`<span class="garden-scale" style="left:${x-35}px" aria-hidden="true">${LEVELS.map((y,n)=>`<small class="${p.heights[i]===n?'current-level':''}" style="top:${y-12}px">${n}</small>`).join('')}</span>`).join('')}
+ ${p.heights.map((h,i)=>plant(i,h)).join('')}${gardenNote(order,focus>0)}${p.pin>=0?bookFigure(p.pin,{hit:focus<0||focus===p.pin}):''}
+ ${CRANKS.map(([x,y],i)=>`<span class="garden-crank" style="left:${x}px;top:${y}px"><span class="garden-crank-art" data-crank-art="${i}" style="rotate:${p.turns[i]*90}deg">${sprite('parts',3)}</span><button data-garden-crank="${i}" data-flower-links="${FLOWER_LINKS[i]}" data-focus="garden-crank-${i}" ${act({type:'crank',index:i})} aria-label="${GARDEN_PAIRS[i]}花盆的摇柄，可正反转" aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown" ${p.opened||holding||focus>=0&&focus!==i?'disabled':''}></button></span>`).join('')}
+ ${SLOTS.map(([x,y],i)=>`<button class="garden-slot ${p.pin===i?'occupied':''}" data-slot="${i}" data-tool-target="flower-pin:${i}" data-action="use-direct" data-id="bookmark" data-focus="garden-slot-${i}" aria-label="把木书签放进${['左','中','右'][i]}槽" style="left:${x}px;top:${y}px" ${!holding||!owned.includes('bookmark')||focus>=0&&focus!==i?'disabled':''}></button>`).join('')}
+ ${drawer(Number(p.opened),owned.includes('board'),camera,p.opened)}`;
 }
-export const flowerNotePanel=state=>({title:'胶片纸条',className:'inspect-dialog',html:filmNote(state.progress.film.order,true)});
-
-function column(height,index,pin,miniature=false,g=GARDEN){
-  return `<div class="flower-column ${pin===index?'rail-braked':''}" style="--center:${g.centers[index]}%" data-flower-column="${index}" data-tool-target="flower-pin:${index}"><div class="height-scale" aria-hidden="true">${[3,2,1,0].map(level=>`<span class="${height===level?'current-level':''}" style="top:${g.levels[level]}%">${level}</span>`).join('')}</div><div class="flower-pot" style="top:${g.levels[height]}%"><span class="flower-platform"></span>${motif(PLANTS[index])}<span class="platform-collar"></span><i class="carriage-brake" aria-hidden="true"></i></div><div class="flower-column-foot" style="left:${g.slotCenters?.[index]??g.centers[index]}%;top:${g.slot}%;">${miniature?'':moveButton('<i class="pin-mouth" aria-hidden="true"></i>',{type:'pin',index},{className:pin===index?'pinned':'',key:`pin-${index}`,toolTarget:`flower-pin:${index}`}).replace('<button ',`<button aria-label="${pin===index?'取回':'把书签放进'}${['左','中','右'][index]}槽" `)}</div></div>`;
+export function renderFlowers(p,{state,view={}}){
+ const mode=Object.hasOwn(CAMERAS,view.gardenView)?view.gardenView:'whole',camera=CAMERAS[mode],owned=inventory(state),holding=state.selected==='bookmark'&&p.pin<0;
+ const status=p.opened?(owned.includes('board')?'小屉空了。':'托板还在屉里。'):p.attempts?'还卡着呢。':'';
+ return `<div class="flowers-workbench" data-garden-mode="${mode}"><div class="garden-viewport" style="--garden-aspect:${camera[2]/camera[3]}"><div class="garden-world ${holding?'holding-bookmark':''}" data-source-camera="${camera}" data-flower-pin="${p.pin}" data-garden-open="${p.opened}"><img class="garden-environment" src="${ASSETS.gardenNook}" alt="" draggable="false">${gardenArt(p,{owned,holding,camera,order:state.progress.film.order})}</div></div>
+ <nav class="garden-navigation" aria-label="花架取景">${Object.keys(CAMERAS).map((id,i)=>`${viewControl(`${['架上','雏菊','郁金香','薰衣草'][i]}`,`data-action="garden-view" data-id="${id}" aria-current="${id===mode}"`)}`).join('')}</nav><output class="garden-reply" role="status">${status}</output>
+ <output class="sr-only" data-garden-status>${p.heights.map((h,i)=>GARDEN_NAMES[i]+'在第'+h+'格').join('，')}${p.pin>=0?'；'+GARDEN_NAMES[p.pin]+'暂时停住了':''}</output><span class="sr-only">摇柄旁两枚花纹对应一起升降的花盆。拖转或方向键可正反转，端点会停。木书签可以向上拔出，再放进另一条窄槽。下屉可拖拉或按回车试开。</span></div>`;
 }
-function crank(index,turn,holding,miniature=false,g=GARDEN){
-  const arcs='<svg class="garden-turn-arcs" viewBox="0 0 100 100" aria-hidden="true"><path d="M22 37a31 31 0 0 1 51-12m-3-8 5 10-11 1M78 63a31 31 0 0 1-51 12m3 8-5-10 11-1"/></svg>';
-  const art=`${atlas('gardenCrank',0,{className:'garden-handle'})}${arcs}<span class="linked-pots" aria-hidden="true">${FLOWER_LINKS[index].map(i=>icon(PLANTS[i])).join('')}</span>`;
-  if(miniature)return `<span class="garden-crank puzzle-control" style="left:${(g.crankCenters??g.centers)[index]}%;top:${g.crank}%;--garden-turn:${turn*90}deg;">${art}</span>`;
-  return moveButton(art,{type:'crank',index},{className:'garden-crank',disabled:holding,key:`flower-crank-${index}`}).replace('<button ',`<button style="left:${(g.crankCenters??g.centers)[index]}%;top:${g.crank}%;--garden-turn:${turn*90}deg;" data-garden-crank="${index}" data-flower-links="${FLOWER_LINKS[index].join(',')}" aria-label="${GARDEN_PAIRS[index]}花盆的摇柄，可正反转；方向键也能转" aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown" `);
-}
-function bookmark(pin,miniature=false,g=GARDEN){
-  const placed=pin>=0;
-  const tag=miniature?'span':'button';
-  return `<${tag} class="garden-wedge ${placed?'wedge-in':'wedge-rest'}" style="width:${g.bookmarkWidth}%;left:${placed?(g.slotCenters??g.centers)[pin]:g.bookmarkRest[0]}%;top:${placed?g.slot:g.bookmarkRest[1]}%;" ${miniature?'':'data-bookmark-grab data-focus="garden-bookmark"'} ${miniature?'':placed?'data-pmove=\'{"type":"set-pin","index":-1}\'':'data-action="arm-tool" data-id="bookmark"'} aria-label="${placed?'取回木书签，也可以拖出来':'拿起木书签，可以拖进窄槽'}">${atlas('gardenBookmark',0,{className:'wedge-art',label:'侧面的木书签与棕色穗子'})}</${tag}>`;
-}
-export function gardenMiniature(progress,done){
-  return `<div class="world-garden" aria-hidden="true" inert><div class="garden-lift ${done?'garden-awake':''}">${character('gardenBody',0,1,1,'')}${progress.heights.map((h,i)=>column(h,i,progress.pin,true,GARDEN_WORLD)).join('')}${[0,1,2].map(i=>crank(i,progress.turns?.[i]??0,false,true,GARDEN_WORLD)).join('')}${bookmark(progress.pin,true,GARDEN_WORLD)}</div></div>`;
-}
-export function renderFlowers(progress,context){
-  const done=context.state.solved.includes('flowers');
-  return `<div class="flowers-workbench"><div class="garden-lift ${context.state.selected==='bookmark'?'holding-bookmark':''} ${done?'garden-awake':''}" data-flower-pin="${progress.pin}">${character('garden',0,1,1,'有四档木轨、三枚摇柄和书签窄槽的花架')}<span class="garden-windowlight" aria-hidden="true"></span>${filmNote(context.state.progress.film.order)}${progress.heights.map((h,i)=>column(h,i,progress.pin)).join('')}${[0,1,2].map(i=>crank(i,progress.turns?.[i]??0,context.state.selected==='bookmark')).join('')}${bookmark(progress.pin)}<span class="garden-knock" role="status"></span><output class="sr-only" data-garden-status>${progress.heights.map((h,i)=>GARDEN_NAMES[i]+'在第'+h+'格').join('，')}${progress.pin>=0?'；'+GARDEN_NAMES[progress.pin]+'暂时停住了':''}</output></div><span class="sr-only">摇柄旁的两枚花纹对应一起升降的花盆。正反拖转，或用方向键调节。到头会停住。木书签可以暂时抵住一盆；拖出来或再点一下就能取回。</span></div>`;
-}
+export const flowerNotePanel=state=>({title:'检片小样',className:'inspect-dialog garden-note-dialog',html:`<div class="garden-note-closeup">${gardenNote(state.progress.film.order,true)}</div>`});

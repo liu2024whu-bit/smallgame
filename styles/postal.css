@@ -1,6 +1,8 @@
 @layer puzzles {
  .puzzle-postbox .puzzle-field{padding:0;min-height:0;background:transparent;}
  .postal-cabinet,.postal-paper-desk{position:relative;isolation:isolate;container-type:inline-size;aspect-ratio:1200/1000;overflow:hidden;border-radius:3px;}
+ .postal-cabinet {width:min(100%,calc((100dvh - 210px)*var(--postal-aspect)));margin:auto;}
+ .postal-paper-desk {width:min(100%,calc((100dvh - 210px)*4/3));margin:auto;}
  .postal-environment{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;}
  .postal-camera{position:absolute;left:0;top:0;width:100%;aspect-ratio:1200/1000;transform-origin:0 0;}
  .postal-body,.postal-door,.postal-door-paint,.postal-door-front,.postal-door-back{position:absolute;display:block;}
@@ -75,18 +77,22 @@
  .postal-reflection{position:absolute;left:0;top:0;width:600px;height:360px;transform-origin:0 0;filter:saturate(.72) contrast(.9);}
  .postal-reflection::after{content:'';position:absolute;inset:0;background:#e8f0e91a;}
  .postal-mirror-grip{position:absolute;left:26%;bottom:0;width:48%;height:29%;min-height:44px;min-width:44px;border:0;padding:0;background:transparent;color:#757b66;font-size:clamp(10px,1.5cqw,17px);text-shadow:0 1px #fff9e8;cursor:var(--cursor-grab,grab);}
- .postal-mirror-return{position:absolute;left:50%;bottom:-12%;translate:-50% 0;white-space:nowrap;font-size:clamp(11px,1.5cqw,16px);}
+ .postal-mirror-return{position:absolute;left:112%;bottom:0;white-space:nowrap;font-size:clamp(11px,1.5cqw,16px);}
  .postal-mirror-fit{position:absolute;left:10%;top:79%;width:23%;height:13%;min-width:44px;min-height:44px;border:0;background:#fff6df50;color:#7f8269;font-size:clamp(11px,1.7cqw,17px);}
  .postal-paper-return{position:absolute;right:4%;bottom:4%;font-size:clamp(12px,1.5cqw,17px);background:#fff9e8b5;padding:7px 12px;}
- .world-postal{position:absolute;left:51.15%;top:33.7%;width:35.39%;pointer-events:none;}
  .world-postal-grid{position:absolute;left:78.3%;top:13.9%;width:6.3%;height:14.5%;pointer-events:none;}
+ .world-postal-ink{position:absolute;inset:0;pointer-events:none;}
+ .postal-room-digit,.postal-room-sign{position:absolute;display:grid;place-items:center;pointer-events:none;}
+ .postal-room-digit{font:500 18px/1 Georgia,serif;color:#f1dfb5;}
+ .postal-room-sign{font:11px/1 var(--font-print);color:#6b604b;opacity:.8;}
+ .world-postal-ticket{position:absolute;rotate:4deg;transform-origin:18.26% 13.03%;filter:drop-shadow(1px 2px 1px #3a281d26);}
+ .world-postal-ticket>.item-art{display:block;width:100%;height:100%;}
+ .world-postal-pin{position:absolute;pointer-events:none;}
+ .postal-room-pin-art{display:block;width:100%;height:100%;}
  .world-postal-card{position:absolute;top:49.4%;width:4.2%;aspect-ratio:600/360;transform-origin:center;transform:perspective(450px) rotateX(45deg) rotate(-6deg);pointer-events:none;}
  .world-postal-card-0{left:43.5%;}.world-postal-card-1{left:48.3%;top:49.1%;rotate:8deg;}
  .postal-cabinet:not(.postal-detail) .postal-drum:disabled{opacity:1;}
  .postal-grid-evidence{width:min(100%,450px);aspect-ratio:660/590;margin:auto;}
- .postal-miniature .postal-environment{display:none;}
- .postal-miniature .postal-camera{pointer-events:none;}
- .postal-miniature .postal-note-stack,.postal-miniature .postal-grid-button,.postal-miniature button{pointer-events:none;}
  @media(max-width:700px){
    .postal-paper-desk{aspect-ratio:768/1120;}
   .postal-desk-grid{left:4%;top:2%;width:48%;}

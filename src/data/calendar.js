@@ -1,14 +1,15 @@
-// Confirmed dates. The lunar birthday is intentionally not converted into the story's solar date.
-export const GAME_DATE=Object.freeze({year:2026,month:10,day:29,iso:'2026-10-29'});
+// Fictional prop dates; no real person's anniversary is used.
+export const GAME_DATE=Object.freeze({year:2032,month:6,day:15,iso:'2032-06-15'});
 export const DATE_NOTES=Object.freeze([
-  {id:'meeting',mark:'leaf',title:'初见',year:null,month:9,day:1,date:'9月1日',line:'认识的那一天。'},
-  {id:'qq',mark:'star',title:'好友',year:2020,month:9,day:12,date:'2020年9月12日',line:'加上了 QQ 好友。'},
-  {id:'lunar',mark:'moon',title:'月亮',year:null,month:9,day:8,date:'农历九月初八',line:'月亮也记着你的生日。'},
+ {id:'meeting',mark:'leaf',title:'旧页',year:2028,month:2,day:4,date:'2028年2月4日',line:'小屋第一次启封。'},
+ {id:'qq',mark:'star',title:'来信',year:2028,month:2,day:19,date:'2028年2月19日',line:'一封信，留在这一页。'},
+ {id:'lunar',mark:'moon',title:'月签',year:null,month:6,day:15,date:'月签 · 第十五页',line:'月亮把日数留在页边。'},
 ]);
-export const DATE_CODE=Object.freeze(DATE_NOTES.flatMap(note=>[...String(note.day).padStart(2,'0')].map(Number)));
-export const CALENDAR_LAYOUT=Object.freeze({page:[26.5,21,47,40],wheels:[29.5,67.8,42,8.1],latch:[46,78,8.5,6.5]});
-export function calendarCells(year=GAME_DATE.year,month=GAME_DATE.month){
-  const first=new Date(Date.UTC(year,month-1,1)).getUTCDay();
-  const length=new Date(Date.UTC(year,month,0)).getUTCDate();
-  return [...Array(first).fill(null),...Array.from({length},(_,i)=>i+1)];
+export function elapsedCalendarDays(start,end=GAME_DATE){
+ const midnight=({year,month,day})=>{const n=Date.UTC(year,month-1,day),d=new Date(n);if(![year,month,day].every(Number.isInteger)||year<1000||year>9999||d.getUTCFullYear()!==year||d.getUTCMonth()!==month-1||d.getUTCDate()!==day)throw new RangeError('Invalid calendar date');return n;};
+ return (midnight(end)-midnight(start))/86400000;
 }
+export const ANNIVERSARY_DAYS=Object.freeze(Object.fromEntries(DATE_NOTES.filter(n=>n.year!==null).map(n=>[n.id,elapsedCalendarDays(n)+1])));
+export const DATE_CODE=Object.freeze([...String(ANNIVERSARY_DAYS.meeting).padStart(4,'0'),...String(DATE_NOTES[2].day).padStart(2,'0')].map(Number));
+export const LEGACY_DATE_CODE=Object.freeze([0,4,1,9,1,5]);
+export function calendarCells(year=GAME_DATE.year,month=GAME_DATE.month){return [...Array(new Date(Date.UTC(year,month-1,1)).getUTCDay()).fill(null),...Array.from({length:new Date(Date.UTC(year,month,0)).getUTCDate()},(_,i)=>i+1)];}

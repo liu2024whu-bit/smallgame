@@ -2,33 +2,23 @@
   .pet-dialog .dialog-body { padding:12px 12px 24px; }
   .pet-corner { position:relative; width:100%; aspect-ratio:3/2; overflow:hidden; border-radius:5px; isolation:isolate; }
   .pet-corner-painting,.pet-corner-painting>.raster-sprite { position:absolute; inset:0; width:100%; height:100%; }
-  .pet-corner .pet-wake { opacity:0; transition:opacity .75s ease; }.pet-corner.is-awake .pet-wake { opacity:1; }
+  .pet-corner :is(.pet-drowse,.pet-stretch,.pet-wake) {opacity:0;}.pet-corner.is-awake .pet-sleep {opacity:0;}.pet-corner.is-awake .pet-wake {opacity:1;}
   .pet-stroke-area { position:absolute; left:13%; top:25%; width:80%; height:71%; padding:0; background:none; border:0; border-radius:48%; cursor:var(--cursor-grab,grab); touch-action:none; }
   .pet-stroke-area:active { cursor:var(--cursor-hold,grabbing); }.pet-stroke-area:hover { background:none; }
   .pet-stroke-area>.icon { position:absolute; right:10%; bottom:14%; width:25px; height:25px; color:#fffef0; filter:drop-shadow(0 1px 2px #58614d); opacity:0; transition:opacity .2s; }
   .pet-stroke-area:is(:hover,:focus-visible)>.icon { opacity:.85; }
-  .pet-soft-trace { position:absolute; width:27px; height:9px; border-top:1px solid #fffce0; border-radius:50%; transform:translate(-50%,-50%) rotate(-30deg); opacity:0; pointer-events:none; }
   .pet-murmur { text-align:center; font-size:15px; margin:18px 0 8px; color:#64725d; }
   .pet-options { display:flex; justify-content:center; align-items:center; gap:24px; margin:10px 0 0; font-size:14px; }
   .pet-options .icon { width:15px; height:15px; margin-left:7px; }
-  .ending-dialog .dialog-body { padding:0 0 22px; }
-  .ending-scene { position:relative; width:100%; aspect-ratio:2.15; overflow:hidden; mask-image:linear-gradient(#000 70%,transparent); }
-  .ending-scene>.raster-sprite { width:100%; position:absolute; left:0; top:0; }
-  .ending-lamplight { position:absolute; inset:0; background:radial-gradient(ellipse at 52% 38%,#fff7d537,transparent 42%); animation:ending-light 3.8s ease-in-out infinite alternate; }
-  .ending-date { position:absolute; right:6%; bottom:17%; font:11px Georgia,serif; letter-spacing:.08em; padding:5px 8px; background:#fff9e4e0; color:#65715b; }
-  .ending-page { padding:5px 35px 24px; }
-  .ending-page h2 { color:#65816b; margin:10px 0 23px; }
-  .ending-page .birthday-letter { text-align:center; max-width:28em; font-size:17px; line-height:2; margin:12px auto; }
-  .ending-wish-card { margin:25px auto 18px; padding:18px 16px; max-width:400px; border-block:1px solid #d5dccb; }
-  .ending-wish-card>.motif { width:55px; }.ending-wish-card>p { font-size:15px; color:#61715c; margin:8px 0 10px; }.ending-wish-card>.text-button { font-size:12px; }
-  .ending-last-page { display:grid; width:160px; min-height:75px; padding:11px; margin:0 auto 17px !important; border:1px solid #d7d7c6; border-radius:2px 6px 2px 2px; background:#f9f6e9; box-shadow:2px 3px 0 #e7e5d8; font-size:15px; color:#6c775e; }
-  .ending-last-page>span { grid-area:1/1; transition:opacity .35s,translate .35s; align-self:center; }.ending-page-back { opacity:0; translate:0 5px; }.ending-page-back>small { display:block; font-size:12px; margin-top:4px; }
-  .page-turned .ending-page-front { opacity:0; translate:0 -5px; }.page-turned .ending-page-back { opacity:1; translate:0 0; }.ending-last-page .icon { width:15px; height:15px; margin-left:7px; }
-  @keyframes ending-light { to { opacity:.45; } }
+  @media(min-width:900px){
+    .pet-dialog .dialog-body{display:grid;grid-template-columns:minmax(0,1fr) 150px;grid-template-rows:1fr 1fr;gap:24px;align-items:center;}
+    .pet-dialog .pet-corner{grid-column:1;grid-row:1/span 2;width:min(100%,calc((100dvh - 205px)*1.5));margin:auto;}
+    .pet-dialog .pet-murmur{grid-column:2;grid-row:1;align-self:end;margin:0;}
+    .pet-dialog .pet-options{grid-column:2;grid-row:2;align-self:start;flex-direction:column;margin:0;gap:18px;}
+    .pet-dialog .pet-options button{min-height:44px;}
+  }
   .clear-text { --font:'Microsoft YaHei','PingFang SC',sans-serif; }
   .clear-text :is(.hand-note,.input-note,.settings-save-note,.music-status,.pet-murmur,.track-note,.short-note p,.birthday-letter,.journal-entry p) { font-size:17px; line-height:1.9; }
   .clear-text :is(.setting-toggle,.track-pick b) { font-size:17px; }
-  @media(max-width:700px) {
-    .ending-page { padding:3px 18px 20px; }.ending-page .birthday-letter { font-size:16px; max-width:22em; }.ending-date { font-size:9px; }
-  }
+
 }

@@ -4,7 +4,6 @@
  :is(input:not([type=range],[type=checkbox],[type=radio],[type=file]),textarea,[contenteditable=true]) { cursor:text; }
  .hotspot:not(.pickup-hotspot) { cursor:var(--cursor-inspect,pointer); }
  #app:has(.inventory-slot.selected[data-id=crank]) [data-tool-target="birthday-door"],
- #app:has(.inventory-slot.selected[data-id=transparency]) [data-tool-target="chocolate-cover"],
  #app:has(.inventory-slot.selected[data-id=bookmark]) [data-tool-target^="flower-pin:"],
  #app:has(.inventory-slot.selected[data-id=bookmark]) [data-tool-target="paper-latch"],
  #app:has(.inventory-slot.selected[data-id=mirror]) [data-tool-target="postcard-mirror"],

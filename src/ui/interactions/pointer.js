@@ -20,7 +20,7 @@ export function pointerSession(root, handlers) {
   root.addEventListener('dragstart',event=>{if(gesture)event.preventDefault();},options);
   function clear(current,cancelled){
     if(cancelled||current.returnToSource)returnGhost(current);
-    current.ghost?.remove();root.classList.remove('is-dragging');handlers.clear?.();
+    current.ghost?.remove();root.classList.remove('is-dragging');handlers.clear?.(current,cancelled);
   }
   function finish(event, cancelled = false) {
     if (!gesture) return;
@@ -58,6 +58,7 @@ export function pointerSession(root, handlers) {
   window.addEventListener('pointerup', event => { if (gesture?.pointer === event.pointerId) finish(event); }, options);
   window.addEventListener('pointercancel', event => { if (gesture?.pointer === event.pointerId) finish(event, true); }, options);
   window.addEventListener('blur', event => finish(event, true), options);
+  document.addEventListener('visibilitychange',event=>{if(document.hidden)finish(event,true);},options);
   window.addEventListener('resize', event => finish(event, true), options);
   window.addEventListener('keydown', event => {
     if (!gesture && ['Enter', ' '].includes(event.key)) delete root.dataset.suppressUntil;

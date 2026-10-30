@@ -1,0 +1,19 @@
+@layer notebook {
+ .exhibit-yanyun{width:min(1250px,96vw);}
+ .exhibit-yanyun .dialog-body{padding:16px 24px 22px;}
+ .jianghu-desk{display:grid;justify-items:center;gap:8px;}
+ .jianghu-viewport{position:relative;width:min(100%,calc((100dvh - 245px)*var(--jianghu-aspect)));aspect-ratio:var(--jianghu-aspect);overflow:clip;border-radius:4px;}
+ .jianghu-world{position:absolute;width:1536px;height:1024px;transform-origin:0 0;}
+ .jianghu-world>img{position:absolute;inset:0;width:1536px;max-width:none;height:1024px;pointer-events:none;}
+ .jianghu-pose{opacity:0;clip-path:inset(30.4% 0 0);}
+ .jianghu-moving-paint{position:absolute;inset:0;width:1536px;height:1024px;pointer-events:none;}
+ .jianghu-paper-paint{clip-path:polygon(16.7% 34%,56.5% 34%,59% 73%,10% 73%);}
+ .jianghu-handle{position:absolute;left:690px;top:370px;width:168px;height:135px;touch-action:none;}
+ .jianghu-paper-hand{position:absolute;left:170px;top:353px;width:730px;height:390px;padding:0;clip-path:polygon(12% 0,94% 0,100% 100%,0 100%);touch-action:none;cursor:grab;}
+ .jianghu-paper-hand:active{cursor:grabbing;}
+ .jianghu-pagination{display:flex;align-items:center;justify-content:center;gap:28px;}
+ .jianghu-pagination .icon-button{border-radius:50%;background:#8b947511;color:#657559;}
+ .jianghu-pagination p{display:grid;justify-items:center;gap:2px;min-width:150px;margin:0;font-size:16px;}
+ .jianghu-pagination small{font:11px var(--font-print);letter-spacing:3px;color:#8b8e7d;}
+ @media(max-width:899px){.jianghu-viewport{width:100%;}.jianghu-pagination{gap:18px;}}
+}

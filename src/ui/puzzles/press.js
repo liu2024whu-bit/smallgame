@@ -1,5 +1,6 @@
+import {ASSETS} from '../../data/assets.js';
 import {PAPER_SEED,PAPER_TARGET,STAMPS,operate,applyOperations} from '../../puzzles/paper.js';
-import {PRESS_MARKS,PRESS_NAMES,PRESS_WORLD,PRESS_BOOKMARK} from '../../data/press.js';
+import {PRESS_MARKS,PRESS_NAMES,PRESS_WORLD,PRESS_PROOF,PRESS_BOOKMARK,PRESS_HANDLE} from '../../data/press.js';
 import {inventory} from '../../core/state.js';
 import {atlas,moveButton,itemSprite} from '../dom.js';
 import {rasterPlane} from '../raster-plane.js';
@@ -26,9 +27,9 @@ function bookmarkCue(){
  const {view:[width,height],wood,cord}=PRESS_BOOKMARK;
  return `<svg class="press-book-cue" viewBox="0 0 ${width} ${height}" aria-hidden="true"><foreignObject x="0" y="0" width="${width}" height="${height}"><div xmlns="http://www.w3.org/1999/xhtml" style="position:relative;width:${width}px;height:${height}px">${rasterPlane('lightBook',0,wood)}${rasterPlane('lightBook',1,cord)}</div></foreignObject></svg>`;
 }
-export function pressCase(progress,{done=false,miniature=false,ownsBook=true,rewardTaken=false}={}){
+export function pressCase(progress,{done=false,miniature=false,ownsBook=true,rewardTaken=false,drawerContents='',painted=false}={}){
  const opened=progress.opened;
- const lever=atlas('pressParts',1,{className:'press-arm',label:''});
+ const lever=`<span class="press-arm" aria-hidden="true">${PRESS_HANDLE.anchors.map(([x,y],i)=>atlas('pressHandle',i,{className:'press-handle-pose',style:`translate:${-x/512*100}% ${-y/512*100}%;opacity:${i===0?1:0};`}).replace('<span ',`<span data-press-pose="${i}" `)).join('')}</span>`;
  const latch=atlas('pressParts',9,{className:'press-latch-art',label:''});
  const control=miniature?`<span class="press-lever">${lever}</span>`:moveButton(lever,{type:'print'},{className:'press-lever',disabled:!opened||done,key:'press-handle'}).replace('<button ',`<button data-press-handle aria-label="压下木柄，印一张" `);
  const catchAttrs=ownsBook?'data-action="use-direct" data-id="bookmark" data-tool-target="paper-latch"':`data-pmove='{"type":"open"}'`;
@@ -38,13 +39,17 @@ export function pressCase(progress,{done=false,miniature=false,ownsBook=true,rew
  const proof=progress.proof?applyOperations(PAPER_SEED,progress.proof):null;
  const proofTag=miniature?'span':'button';
  const proofAttrs=miniature?'':`data-action="press-proof" data-open="true" data-focus="press-proof" aria-label="拿近看刚印的纸" ${proof?'':'disabled'}`;
- return `<div class="press-case ${opened?'press-open':''} ${done?'press-done':''}" data-press-open="${opened}" data-press-count="${progress.presses}">${atlas('pressMain',0,{className:'press-body',label:'有滑盖、三格版槽和木柄的试印盒'})}<div class="press-wells" ${opened&&!done?'':'inert'}>${progress.order.map((op,i)=>plate(op,i,!opened||done,miniature)).join('')}</div><div class="press-lid">${atlas('pressMain',1,{className:'press-lid-art'})}<span class="press-target-label">印样</span>${inkRow(PAPER_TARGET,'press-target')}</div>${control}${catchControl}${bookmarkCue()}<div class="press-drawer">${atlas('pressMain',2,{className:'press-drawer-art'})}${reward}</div><${proofTag} ${proofAttrs} class="press-proof ${proof?'has-proof':''}" data-proof="${progress.proof?.join('')??''}">${atlas('pressParts',3,{className:'press-slip-art'})}${proof?inkRow(proof):''}</${proofTag}></div>`;
+ const proofPosition=`style="left:${PRESS_PROOF.left}%;top:${PRESS_PROOF.top}%;width:${PRESS_PROOF.width}%"`;
+ return `<div class="press-case ${opened?'press-open':''} ${done?'press-done':''}" data-press-open="${opened}" data-press-count="${progress.presses}">${painted?'':atlas('pressMain',0,{className:'press-body',label:'有滑盖、三格版槽和木柄的试印盒'})}<div class="press-wells" ${opened&&!done?'':'inert'}>${progress.order.map((op,i)=>plate(op,i,!opened||done,miniature)).join('')}</div><div class="press-lid">${atlas('pressMain',1,{className:'press-lid-art'})}<span class="press-target-label">印样</span>${inkRow(PAPER_TARGET,'press-target')}</div>${control}${catchControl}${bookmarkCue()}<div class="press-drawer">${atlas('pressMain',2,{className:'press-drawer-art'})}${reward}${drawerContents}</div><${proofTag} ${proofAttrs} ${proofPosition} class="press-proof ${proof?'has-proof':''}" data-proof="${progress.proof?.join('')??''}">${atlas('pressParts',3,{className:'press-slip-art'})}${proof?inkRow(proof):''}</${proofTag}></div>`;
 }
-export function renderPaper(progress,{state,view={}}){
- if(view.pressProof&&progress.proof)return `<div class="press-reading"><div><p>印样</p><div class="press-reading-slip">${atlas('pressParts',3,{className:'press-slip-art'})}${inkRow(PAPER_TARGET)}</div></div><div><p>刚才那张</p><div class="press-reading-slip">${atlas('pressParts',3,{className:'press-slip-art'})}${inkRow(applyOperations(PAPER_SEED,progress.proof))}</div></div><button class="text-button" data-action="press-proof" data-open="false">放回去</button></div>`;
+export function pressInspection(progress,{view={}}){
+ if(!view.pressProof||!progress.proof)return null;
+ return {title:'试纸',className:'workbench-dialog puzzle-paper press-reading-dialog',html:`<div class="press-reading" role="group" aria-label="两张试纸"><div><p>印样</p><div class="press-reading-slip">${atlas('pressParts',3,{className:'press-slip-art'})}${inkRow(PAPER_TARGET)}</div></div><div><p>刚才那张</p><div class="press-reading-slip">${atlas('pressParts',3,{className:'press-slip-art'})}${inkRow(applyOperations(PAPER_SEED,progress.proof))}</div></div><button class="text-button" data-action="press-proof" data-open="false">放回去</button></div>`};
+}
+export function renderPaper(progress,{state}){
  const done=state.solved.includes('paper');
- return `<div class="press-workbench"><div class="press-machine">${pressCase(progress,{done,ownsBook:inventory(state).includes('bookmark'),rewardTaken:inventory(state).includes('transparency')})}</div><aside class="press-samples" aria-label="留在旁边的试纸"><span class="press-samples-title">试纸</span>${[0,1,2].map(printSlip).join('')}</aside><output class="sr-only" data-press-status>${progress.opened?'滑盖已打开。':'夹扣下留着一条窄缝。'}${progress.proof?`最近的一张：${applyOperations(PAPER_SEED,progress.proof).map(v=>STAMPS[v]).join('、')}。`:'还没有印过。'}</output></div>`;
+ return `<div class="press-workbench"><img class="press-desk" src="${ASSETS.pressDesk}" alt="" draggable="false"><div class="press-machine">${pressCase(progress,{done,ownsBook:inventory(state).includes('bookmark'),rewardTaken:inventory(state).includes('transparency')})}</div><aside class="press-samples" aria-label="留在旁边的试纸">${[0,1,2].map(printSlip).join('')}</aside><output class="sr-only" data-press-status>${progress.opened?'滑盖已打开。':'夹扣下留着一条窄缝。'}${progress.proof?`最近的一张：${applyOperations(PAPER_SEED,progress.proof).map(v=>STAMPS[v]).join('、')}。`:'还没有印过。'}</output></div>`;
 }
 export function pressMiniature(progress,done,owned=[]){
- return `<div class="world-press" style="left:${PRESS_WORLD.left}%;top:${PRESS_WORLD.top}%;width:${PRESS_WORLD.width}%" aria-hidden="true" inert ${done?'data-world-change="paper"':''}>${pressCase(progress,{done,miniature:true,rewardTaken:owned.includes('transparency')})}</div>`;
+ return `<div class="world-press" style="left:${PRESS_WORLD.left}%;top:${PRESS_WORLD.top}%;width:${PRESS_WORLD.width}%" aria-hidden="true" inert ${done?'data-world-change="paper"':''}>${pressCase(progress,{done,miniature:true,painted:true,rewardTaken:owned.includes('transparency')})}</div>`;
 }

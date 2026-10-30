@@ -1,0 +1,76 @@
+/* Device adaptations share the original painted surfaces and hit geometry. */
+@layer room {
+  .room-camera-toggle{display:none;}
+  @media (any-pointer:coarse) and (max-width:1200px){
+    .room-camera-toggle{position:absolute;display:inline-flex;right:12px;top:12px;z-index:8;min-height:44px;padding:7px 12px;background:#fcfaf2ed;font-size:14px;}
+    .room-camera-toggle .icon{width:18px;height:18px;}
+    .game-shell[data-room-close="true"]{width:100%;max-width:100%;}
+    .game-shell[data-room-close="true"] .game-frame{aspect-ratio:auto;overflow:hidden;contain:layout paint; height:max(210px,min(62dvh,calc(100dvh - var(--room-header) - var(--inventory-height) - 20px)));}
+    .game-shell[data-room-close="true"] .room-stage{will-change:translate;}
+    .game-shell[data-room-close="true"] .scene-caption{background:#fffdf0d9;border-radius:8px;padding:5px 10px;}
+    .hud-tools .icon-button{width:40px;height:44px;}
+    .hud-tools .save-status{display:grid;min-width:0;padding:0 4px;font-size:10px;}
+    .hud-tools .save-status small{font-size:9px;}
+    @media(max-width:360px){.hud-tools .icon-button{width:35px;}.hud-tools{gap:1px;}}
+    .scene-arrow{min-width:40px;min-height:48px;}
+    .scene-caption{min-height:40px;}
+    .scene-dots{display:none;}
+    .game-shell{--inventory-height:calc(80px + env(safe-area-inset-bottom));}
+    .inventory-bar{padding-bottom:max(7px,env(safe-area-inset-bottom));}
+    #app{min-width:0;grid-template-columns:minmax(0,1fr);padding-inline:env(safe-area-inset-left) env(safe-area-inset-right);}
+    .game-shell{min-width:0;max-width:100%;}
+  }
+}
+@layer base {
+  @media (any-pointer:coarse){
+    button,a,input,select{-webkit-tap-highlight-color:transparent;}
+    input,select,textarea{font-size:16px;}
+    .dialog-header .icon-button{width:44px;height:44px;}
+    .dialog-header:has(>.journal-notice:not([hidden])){flex-wrap:wrap;}
+    .dialog-header>div{margin-left:auto;}
+    .dialog-header>.journal-notice{order:3;max-width:100%;flex:1 0 100%;margin:6px 0 0;padding:6px 7px;border-top:1px solid #dde1d1;border-radius:0;}
+    .dialog-header>.journal-notice .notice-open{min-height:44px;}
+    .notice-dismiss{min-width:40px;}
+    .dialog-header h2{max-width:calc(100% - 100px);overflow-wrap:anywhere;}
+    #explore-dialog{max-height:calc(100dvh - max(12px,env(safe-area-inset-top)) - max(12px,env(safe-area-inset-bottom)));}
+    @media (max-width:700px){#explore-dialog{width:calc(100vw - 12px);}.dialog-body{padding:12px 10px 18px;}.dialog-header{padding:7px 10px;}}
+  }
+}
+@layer puzzles {
+  .touch-code-entry,.piano-touch-views{display:none;}
+  @media (any-pointer:coarse),(max-width:700px){
+    .touch-code-entry{display:block;margin:14px auto;max-width:400px;}
+    .touch-code-entry label{display:flex;align-items:center;gap:9px;font-size:13px;color:#7b886f;}
+    .touch-code-entry input{min-width:0;flex:1;width:100%;min-height:44px;padding:7px 12px;border:1px solid #c6ceba;border-radius:6px;background:#fffdf4;color:#50644c;font:18px/1.5 var(--font-ui);letter-spacing:.18em;text-transform:uppercase;}
+    .touch-code-entry button{min-height:44px;flex:none;}
+    .touch-code-entry p{font-size:12px;color:#8a8d75;text-align:center;margin:4px 0 0;}
+    .piano-touch-views{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:12px 0;}
+    .piano-touch-views button{min-height:44px;}
+    .piano-touch-views [aria-pressed=true]{background:#e8eddd;border-color:#94a584;}
+    .workbench-footer .quiet-button{min-height:44px;}
+    .view-control{min-height:44px;}
+    .tools-dock .workbench-tools{gap:6px;margin-bottom:10px;padding-bottom:8px;}
+    .tools-dock .workbench-tools>button{min-height:44px;}
+  }
+  @media (any-pointer:coarse) and (orientation:landscape) and (max-height:600px){
+    .steady-layout{display:grid;grid-template-columns:minmax(0,1fr) 142px;gap:10px 18px;align-items:start;}
+    .steady-object{grid-column:1;grid-row:1/span 2;min-width:0;}
+    .steady-tools{grid-column:2;grid-row:1;min-width:0;}
+    .steady-aside{grid-column:2;grid-row:2;min-width:0;}
+    .steady-tools .workbench-tools{flex-direction:column;align-items:stretch;}
+    .steady-tools .workbench-tools>button{padding:5px 6px;}
+    .steady-tools .item-art{width:28px;}
+    .steady-aside .workbench-footer,.steady-aside .workbench-footer>div{flex-direction:column;gap:8px;}
+    .steady-aside .workbench-footer{margin-top:10px;}
+    .steady-workbench .hint-notes{grid-column:1/-1;}
+    .touch-code-entry label{flex-wrap:wrap;gap:6px;}
+    .touch-code-entry label>span{width:100%;}
+    .touch-code-entry input{width:100%;flex:1 1 100%;font-size:16px;}
+    .touch-code-entry button{width:100%;}
+    /* Height-based desktop reserves otherwise reduce a phone's board to
+       a few pixels. Keep the original ratio and allow the dialog to scroll. */
+    .steady-workbench :is(.piano-viewport,.calendar-viewport,.balance-viewport,.belt-viewport,.choc-viewport,.cocoa-viewport,.gap-viewport,.drawer-viewport,.drawer-room-view,.film-viewport,.flip-viewport,.garden-viewport,.light-viewport,.word-viewport,.screen-viewport,.ribbons-viewport,.sweets-viewport,.decoder-viewport,.postal-cabinet,.postal-paper-desk,.cloud-stage){min-width:min(100%,440px);}
+    .piano-touch-views{gap:6px;}.piano-touch-views button{padding:6px 11px;}
+    .piano-viewport{min-width:min(100%,540px)!important;}
+  }
+}

@@ -1,0 +1,13 @@
+export const CALENDAR_DRAWER_PARTS={width:2172,height:724,frames:[[51,94,2073,220],[61,350,2055,304]]};
+export const CALENDAR_DETAILS={width:1536,height:1024,frames:[[34,65,387,155],[441,65,341,155],[796,65,350,155],[1162,65,353,155],[97,382,420,255],[611,251,232,380],[953,280,219,351],[1291,435,170,158],[463,669,617,276]]};
+export const CALENDAR_INK_MARKS={width:2172,height:724,frames:[[143,56,564,603],[867,130,504,482],[1621,131,439,491]]};
+export const CALENDAR_WORLD=[1536,1024];
+export const CALENDAR_PAGE=[407,216,722,409];
+export const CALENDAR_CAMERAS={whole:[295,85,975,900],paper:[370,170,880,470],lock:[400,635,760,325],drawer:[355,775,824,180]};
+export const CALENDAR_WHEELS=[472,568,664,760,876,972].map(x=>[x,704,90,90*276/617]);
+export const CALENDAR_DRAWER=[355,795,824,824*304/2055];
+export const CALENDAR_FRONT=61;
+export const CALENDAR_STAMP=[740,795,70,42.5];
+export const CALENDAR_TABS=[0,1,2,-1].map((index,i)=>({index,rect:[1145,268+i*83,85,68]}));
+export const calendarRect=([x,y,w,h])=>`left:${x}px;top:${y}px;width:${w}px;height:${h}px;`;
+export const calendarCamera=view=>['paper','lock','drawer'].includes(view?.calendarView)?view.calendarView:'whole';

@@ -19,7 +19,7 @@
   .welcome-links button:hover { border-bottom-color:#9ea890; }
   .welcome-links .icon { width:17px; height:17px; }
   .welcome-colophon { margin:26px 0 0; color:#727b69; font-size:11px; letter-spacing:.08em; }
-  .invitation { padding:0 0 20px; }
+  .invitation { padding:0 0 8px; }
   .invitation h1 { font-size:clamp(24px,2.1vw,35px); line-height:1.6; color:#52695a; margin:0 0 30px; letter-spacing:.04em; }
   .invitation-copy { color:#5c6a56; font-size:clamp(16px,1.38vw,21px); line-height:2.2; margin:0 0 33px; text-wrap:pretty; }
   .invitation-copy p { margin-bottom:23px; }
@@ -36,6 +36,13 @@
   .about-credits { margin-top:30px; font-size:12px; color:#737a6b; text-align:left; }
   .about-credits summary { width:fit-content; cursor:var(--cursor-point,pointer); border-bottom:1px dotted #b3b7a3; margin:auto; }
   .about-credits p { margin:18px 0 0; line-height:1.9; }
+  @media(min-width:701px) and (max-height:740px) {
+    .about-page {padding:8px 12px;}
+    .about-page h3 {margin-top:10px;}
+    .about-dedication {margin-bottom:16px;}
+    .about-chapters {margin-block:18px;padding-block:16px;}
+    .about-credits {margin-top:18px;}
+  }
   @media (max-width:1000px) and (min-width:701px) { .welcome-content { padding-left:5vw; width:51vw; }.welcome-start { gap:15px; }.welcome-links { gap:22px; } }
   @media (max-width:1100px) and (orientation:portrait) {
     .welcome-painting { position:relative; display:block; height:auto; width:100%; object-fit:contain; mask-image:linear-gradient(black 85%,transparent); }

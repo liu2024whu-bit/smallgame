@@ -12,4 +12,6 @@ export const RECORD_DISPLAY = Object.freeze({
   memories:{x:80,y:60,angle:-8,kind:'cloud',action:'journal-tab',tab:'collections'},
   keepsakes:{x:62,y:78,angle:5,kind:'bookmark',action:'collection',id:'gifts'},
   birthday:{x:80,y:80,angle:-5,kind:'star',action:'scene',id:'birthday'},
+  jianghu:{action:'scene',id:'rain'},
+  piano:{action:'scene',id:'birthday'},
 });

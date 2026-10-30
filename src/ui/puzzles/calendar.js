@@ -1,15 +1,9 @@
-import { GAME_DATE,DATE_NOTES,CALENDAR_LAYOUT,calendarCells } from '../../data/calendar.js';
-import { character,moveButton,icon,escape } from '../dom.js';
-
-const rect=([x,y,w,h])=>`left:${x}%;top:${y}%;width:${w}%;height:${h}%;`;
-function today(){
-  return `<div class="calendar-month" data-copy-group><header><span>${GAME_DATE.year}</span><b>${GAME_DATE.month}月</b><small>今天</small></header><div class="calendar-week">${['日','一','二','三','四','五','六'].map(day=>`<span>${day}</span>`).join('')}</div><div class="calendar-days">${calendarCells().map(day=>`<span class="${day===GAME_DATE.day?'day-circled':''}">${day??''}</span>`).join('')}</div></div>`;
-}
-function note(index){
-  const n=DATE_NOTES[index];
-  return `<div class="calendar-memo"><span class="calendar-note-mark">${icon(n.mark)}</span><p>${n.year?n.year+' · 九月':n.id==='lunar'?'农历 · 九月':'九月'}</p><h3>${n.id==='lunar'?'初八':String(n.day).padStart(2,'0')}</h3><span class="calendar-note-name">${escape(n.title)}</span><p class="calendar-note-line">${escape(n.line)}</p></div>`;
-}
-export function renderCalendar(progress,context){
-  const active=Number.isInteger(context.view.dateNote)?context.view.dateNote:-1;
-  return `<div class="calendar-apparatus ${progress.opened?'calendar-open':''}" data-password-lock="number" data-attempts="${progress.attempts}">${character('calendar',0,1,1,'窗边木日历和黄铜小抽屉','calendar-painting')}<div class="calendar-paper" style="${rect(CALENDAR_LAYOUT.page)}">${active>=0&&active<3?note(active):today()}</div><div class="calendar-clips" aria-label="夹在日历里的三张纸签">${DATE_NOTES.map((n,index)=>`<button data-action="calendar-note" data-index="${index}" data-focus="date-note-${index}" aria-label="翻看${n.title}纸签" aria-pressed="${active===index}">${icon(n.mark)}</button>`).join('')}<button class="calendar-today" data-action="calendar-note" data-index="-1" aria-label="翻回今天的日历">29</button></div><div class="calendar-wheels" data-copy-group style="${rect(CALENDAR_LAYOUT.wheels)}">${progress.values.map((value,index)=>`<div class="date-wheel"><span class="date-pair-mark" aria-hidden="true">${index%2===0?icon(DATE_NOTES[index/2].mark):''}</span>${moveButton(`<span class="wheel-previous">${(value+9)%10}</span><b>${value}</b><span class="wheel-next">${(value+1)%10}</span>`,{type:'cursor',index},{className:'wheel-drum',key:`number-${index}`}).replace('<button ',`<button data-lock-digit="${index}" aria-label="第${index+1}轮，当前${value}，可拖动或直接输入" `)}</div>`).join('')}</div>${moveButton('<span class="sr-only">拉开日历的小抽屉</span>',{type:'submit'},{className:'calendar-latch',key:'calendar-latch'}).replace('<button ',`<button style="${rect(CALENDAR_LAYOUT.latch)}" `)}${progress.opened?`<div class="calendar-secret"><span>${icon('star')}</span><p>这一页，从九月开始。</p><small>后来，还有好多天。</small></div>`:''}</div><p class="calendar-reply" role="status">${progress.opened?'':progress.attempts?'抽屉轻轻弹回。':'三张纸签，都夹在这里。'}</p>`;
+import {viewControl} from '../view-control.js';
+import {CALENDAR_CAMERAS,calendarCamera} from '../../data/calendar-apparatus.js';
+import {calendarModel} from '../calendar-props.js';
+export function renderCalendar(p,{view={}}){
+ const mode=calendarCamera(view),held=!!view.calendarStamp&&!p.shut&&!p.stamped,note=held?-1:Number.isInteger(view.dateNote)?view.dateNote:-1;
+ const camera=CALENDAR_CAMERAS[mode];
+ const modes=[['whole','桌边'],['paper','纸页'],['lock','字轮'],...(p.opened&&!p.shut?[['drawer','屉里']]:[])];
+ return `<div class="calendar-workbench"><div class="calendar-viewport" style="--calendar-aspect:${camera[2]/camera[3]}"><div class="calendar-world" data-source-camera="${camera}">${calendarModel(p,{mode,note,held})}</div></div><nav class="calendar-navigation" aria-label="日历取景">${modes.map(([id,title])=>`${viewControl(`${title}`,`data-calendar-view="${id}" data-focus="calendar-view-${id}" aria-current="${mode===id}"`)}`).join('')}${held?viewControl(`放回去`,`data-calendar-return`):''}</nav><p class="calendar-status" role="status">${held?'今天旁边，还空着一点地方。':p.stamped?'这一天，有颗小星星。':p.opened?(p.shut?'':mode==='drawer'?'':'抽屉里，有枚小印章。'):p.attempts?'还扣着呢。':''}</p><span class="sr-only">纸签可以翻页。字轮支持拖动、上下方向键与数字输入，左右方向键换轮。抽屉把手可以拉动或按下。小印章可以拿起，在今天的纸页留下星星，Esc 会放回。</span></div>`;
 }

@@ -1,0 +1,20 @@
+@layer puzzles {
+ .puzzle-flips .puzzle-field{padding:0;min-height:0;background:none;}
+ .flip-viewport{position:relative;width:min(100%,calc((100dvh - 265px)*var(--flip-aspect)));aspect-ratio:var(--flip-ratio);margin:auto;overflow:clip;border-radius:3px;}
+ @media(min-width:900px){.puzzle-flips.steady-workbench .flip-viewport{width:min(100%,calc((100dvh - 230px)*var(--flip-aspect)));}.puzzle-flips.steady-workbench .flip-close .flip-viewport{width:min(100%,calc((100dvh - 320px)*var(--flip-aspect)));}}
+ .flip-world{position:absolute;width:1254px;height:1254px;transform-origin:0 0;}
+ .flip-case-paint{position:absolute;inset:0;display:block;width:100%;height:100%;pointer-events:none;}
+ .flip-mount{position:absolute;left:0;top:0;width:256px;height:256px;transform-origin:0 0;}
+ .flip-tile{position:absolute;inset:0;display:block;width:100%;height:100%;padding:0;border:0;background:transparent;box-shadow:none;touch-action:manipulation;}
+ .flip-turn{position:absolute;inset:0;display:block;transform-style:preserve-3d;pointer-events:none;}
+ .flip-face-front,.flip-face-back{position:absolute;inset:0;display:block;backface-visibility:hidden;}
+ .flip-face-back{transform:rotateY(180deg);}
+ :is(.flip-face-front,.flip-face-back)>.raster-sprite{display:block;width:100%;height:100%;}
+ .flip-tile:focus-visible{outline:3px dashed #68745a;outline-offset:3px;border-radius:10px;}
+ .flip-after{position:relative;display:grid;justify-items:center;gap:4px;padding-top:9px;font-size:14px;}
+ .flip-after>span{font-size:12px;color:#8b8b77;}.flip-after>p{margin:0;}.flip-after>.text-button{min-width:44px;min-height:44px;}
+ .world-flip-top{position:absolute;inset:0;pointer-events:none;}
+ .world-flip-plane{position:absolute;left:0;top:0;width:1254px;height:1254px;transform-origin:0 0;filter:saturate(.8) contrast(.95);}
+ .world-flip-plane>.flip-room-bitmap{position:absolute;inset:0;display:block;width:100%;height:100%;background-size:100% 100%;background-repeat:no-repeat;filter:contrast(.93) brightness(1.02);}
+ @media(max-width:899px){.flip-viewport{width:100%;}}
+}

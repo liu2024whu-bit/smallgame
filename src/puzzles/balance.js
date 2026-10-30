@@ -1,16 +1,13 @@
-import { bounded, indexIn } from './common.js';
+import {bounded,indexIn} from './common.js';
+import {balanceLoads} from '../data/balance-apparatus.js';
 
-export const WEIGHTS = [2, 3, 4, 5];
-export const WEIGHT_LABELS = ['猫爪', '星星', '花朵', '月亮'];
-export function panWeights(places) {
-  return [1, 2].map(pan => places.reduce((sum, location, index) => sum + (location === pan ? WEIGHTS[index] : 0), 0));
-}
-export const balance = {
-  create: () => ({ places: [0, 0, 0, 0] }),
-  valid: state => bounded(state?.places, 4, 3),
-  move: (state, action) => action.type === 'place' && indexIn(action.index, 4) && (action.pan === undefined || indexIn(action.pan, 3)) ? { places: state.places.map((v, i) => i === action.index ? action.pan ?? (v + 1) % 3 : v) } : state,
-  solved(state) {
-    const [left, right] = panWeights(state.places);
-    return state.places.filter(v => v === 1).length === 2 && state.places.filter(v => v === 2).length === 2 && left === right;
-  },
+// Six places in the tray, three per pan. A drop never exchanges two objects.
+export const balance={
+ create:()=>({places:[0,1,2,3,4,5]}),
+ valid:p=>bounded(p?.places,6,12)&&new Set(p.places).size===6,
+ move(p,a){
+  if(a.type!=='place'||!indexIn(a.index,6)||!indexIn(a.slot,12)||p.places.includes(a.slot))return p;
+  return {places:p.places.map((slot,i)=>i===a.index?a.slot:slot)};
+ },
+ solved(p){const [a,b]=balanceLoads(p.places);return p.places.every(slot=>slot>=6)&&a===b;},
 };

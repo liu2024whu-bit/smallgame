@@ -1,13 +1,14 @@
 import {ease} from './shared.js';
+import {animatePressHandle,readPressStroke} from '../press-handle.js';
 const box=root=>root.querySelector('.press-case');
 export const pressMotion={
  capture(root){
-  const field=box(root);if(!field)return null;
+  const field=box(root);if(!field)return root.querySelector('.press-reading')?{inspection:true}:null;
   const source=root.querySelector('.press-plate.drag-source'),ghost=root.querySelector('.reorder-ghost.press-plate');
-  return {opened:field.dataset.pressOpen,count:field.dataset.pressCount,done:field.classList.contains('press-done'),
+  return {inspection:false,opened:field.dataset.pressOpen,count:field.dataset.pressCount,done:field.classList.contains('press-done'),
    lid:getComputedStyle(field.querySelector('.press-lid')).translate,
    plates:new Map([...field.querySelectorAll('[data-plate]')].map(el=>[el.dataset.plate,ghost&&el===source?ghost.getBoundingClientRect():el.getBoundingClientRect()])),
-   angle:parseFloat(getComputedStyle(field.querySelector('.press-arm')).rotate)||0,
+   stroke:readPressStroke(field.querySelector('.press-arm')),
    proof:field.querySelector('.press-proof')?.dataset.proof,
    proofOpacity:getComputedStyle(field.querySelector('.press-proof')).opacity,
    proofTranslate:getComputedStyle(field.querySelector('.press-proof')).translate,
@@ -15,7 +16,12 @@ export const pressMotion={
    drawerClip:getComputedStyle(field.querySelector('.press-drawer')).clipPath};
  },
  play(root,before){
-  const field=box(root);if(!field||!before)return;
+  if(!before)return;
+  const reading=root.querySelector('.press-reading');
+  if(!!reading!==before.inspection){
+   (reading??root.querySelector('.press-workbench'))?.animate([{opacity:.55,translate:'0 7px'},{opacity:1,translate:'0 0'}],{duration:240,easing:ease});
+  }
+  const field=box(root);if(!field||before.inspection)return;
   const opened=field.dataset.pressOpen,done=field.classList.contains('press-done');
   const lid=field.querySelector('.press-lid'),arm=field.querySelector('.press-arm'),drawer=field.querySelector('.press-drawer');
   const lidDestination=getComputedStyle(lid).translate;
@@ -33,10 +39,14 @@ export const pressMotion={
   }
   const proof=field.querySelector('.press-proof');
   if((Number(before.count)+1)%65536===Number(field.dataset.pressCount)){
-   arm?.animate([{rotate:before.angle+'deg'},{rotate:'28deg',offset:.2},{rotate:'28deg',offset:.48},{rotate:'0deg'}],{duration:500,easing:'ease-in-out'});
-   proof?.animate([{opacity:0,translate:'38px -15px'},{opacity:1,translate:'0 0'}],{duration:480,delay:160,fill:'backwards',easing:ease});
+   animatePressHandle(arm,[[0,before.stroke],[.2,1],[.48,1],[1,0]],500);
+   if(proof){
+    const body=field.getBoundingClientRect(),paper=proof.getBoundingClientRect();
+    const dx=body.left+body.width*.43-paper.left-paper.width/2,dy=body.top+body.height*.84-paper.top-paper.height/2;
+    proof.animate([{opacity:0,translate:`${dx}px ${dy}px`,scale:.9},{opacity:1,translate:`${dx*.45}px ${dy*.5-10}px`,scale:.97,offset:.48},{opacity:1,translate:'0 0',scale:1}],{duration:480,delay:160,fill:'backwards',easing:ease});
+   }
   }else{
-   if(before.angle)arm?.animate([{rotate:before.angle+'deg'},{rotate:'0deg'}],{duration:220,easing:'ease-out'});
+   if(before.stroke)animatePressHandle(arm,[[0,before.stroke],[1,0]],220);
    if(proof?.dataset.proof===before.proof&&Number(before.proofOpacity)<1&&before.proof)proof.animate([{opacity:before.proofOpacity,translate:before.proofTranslate},{opacity:1,translate:'0 0'}],{duration:220,easing:ease});
   }
   const destination=getComputedStyle(drawer);

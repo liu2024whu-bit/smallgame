@@ -30,6 +30,9 @@ export function pieceTiles(id, turns = 0) {
   return pieceCells(id, turns).map(([row, column], index) => ({ row, column, print: PRINTS[id][index], turn: (turns - PRINT_TURNS[id] + 4) % 4 }));
 }
 
+// Earlier saves may contain a different preview turn; placed wood keeps its real pose.
+export const visiblePackingTurn=(state,id)=>state.placed[id]?.turn??(state.selected===id?state.turn:0);
+
 export function pictureFits(placed) {
   return placed.every((position, id) => position && pieceTiles(id, position.turn).every(tile => tile.turn === 0 && tile.print === (tile.row + position.row) * PACK_COLS + tile.column + position.column));
 }
@@ -57,8 +60,8 @@ export const packing = {
       return { ...state, selected: action.id, turn: action.turn, placed: state.placed.map((value, id) => id === action.id ? position : value) };
     }
     if (action.type === 'select' && indexIn(action.index, 5)) return { ...state, selected: action.index, turn: state.placed[action.index]?.turn ?? 0 };
-    if (action.type === 'rotate') return { ...state, turn: (state.turn + 1) % 4 };
-    if (action.type === 'remove') return { ...state, placed: state.placed.map((v, i) => i === state.selected ? null : v) };
+    if (action.type === 'rotate') return state.placed[state.selected] ? state : { ...state, turn: (state.turn + 1) % 4 };
+    if (action.type === 'remove') return { ...state,turn:state.placed[state.selected]?.turn??state.turn, placed: state.placed.map((v, i) => i === state.selected ? null : v) };
     if (action.type !== 'cell' || !indexIn(action.index, PACK_ROWS * PACK_COLS)) return state;
     const position = { row: Math.floor(action.index / PACK_COLS), column: action.index % PACK_COLS, turn: state.turn };
     if (!fitsPiece(state.placed, state.selected, position)) return state;

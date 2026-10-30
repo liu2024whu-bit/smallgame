@@ -1,0 +1,43 @@
+@layer puzzles {
+ .puzzle-balance .puzzle-field { padding:0;min-height:0; background:none; }
+ .balance-workbench { position:relative; width:100%; display:grid; justify-items:center; gap:8px; }
+ .balance-viewport { position:relative; width:min(100%,calc((100dvh - 310px)*var(--balance-aspect))); aspect-ratio:var(--balance-aspect); overflow:hidden; border-radius:5px; isolation:isolate; }
+ @media(min-width:900px){.puzzle-balance.steady-workbench .balance-viewport{width:min(100%,calc((100dvh - 250px)*var(--balance-aspect)))}}
+ .balance-world { position:absolute; left:0; top:0; width:1536px; height:1024px; transform-origin:0 0; }
+ .balance-model { position:absolute; inset:0; width:1536px; height:1024px; }
+ .balance-counter { position:absolute; inset:0; width:100%; height:100%; max-width:none; pointer-events:none; }
+ .balance-post,.balance-beam,.balance-hanger,.balance-pan-front { position:absolute; display:block; pointer-events:none; }
+ .balance-post { z-index:1; filter:drop-shadow(1px 3px 2px #4a392a36); }
+ .balance-beam,.balance-hanger { z-index:2; }
+ .balance-beam>.raster-sprite,.balance-hanger>.raster-sprite,.balance-pan-front>.raster-sprite { display:block; width:100%; height:100%; }
+ .balance-pan-front { z-index:5; clip-path:polygon(0 76%,25% 83%,50% 86%,75% 83%,100% 76%,100% 100%,0 100%); }
+ .balance-model>button { min-width:0; min-height:0; margin:0; padding:0; border:0; border-radius:0; background:none; box-shadow:none; }
+ .balance-weight { position:absolute; display:block; z-index:4; touch-action:none; transform-origin:50% 100%; cursor:var(--cursor-grab,grab); }
+ .balance-weight-paint { display:block; width:100%; height:100%; pointer-events:none; filter:drop-shadow(1px 2px 1px #4c392847); }
+ .balance-weight::after { content:''; position:absolute; left:50%; top:50%; width:max(100%,var(--hit,100px)); height:max(100%,var(--hit,100px)); translate:-50% -50%; }
+ .balance-weight:focus-visible { outline:2px solid #78866f; outline-offset:5px; border-radius:5px; }
+ .balance-weight.balance-held { visibility:hidden; }
+ .balance-model .balance-weight:disabled { opacity:1; }
+ .balance-slot { position:absolute; z-index:6; width:var(--hit,100px); height:var(--hit,100px); translate:-50% -70%; pointer-events:none; }
+ .balance-model[data-balance-held] .balance-slot:not(:disabled) { pointer-events:auto; }
+ .balance-slot:focus-visible,.balance-slot.balance-drop-ready { outline:2px solid #82916b80; border-radius:50%; box-shadow:0 0 18px #fff5d0; }
+ .balance-note-look { position:absolute; z-index:7; }
+ .balance-note-look:focus-visible { outline:2px solid #78866f; outline-offset:5px; }
+ .balance-note-ink { position:absolute; left:0; top:0; width:210px; height:200px; transform-origin:0 0; z-index:6; pointer-events:none; mix-blend-mode:multiply; color:#73624e; }
+ .balance-note-weight { position:absolute; display:block; filter:sepia(.8) saturate(.35); opacity:.8; }
+ .balance-note-weight .balance-weight-paint { filter:none; }
+ .balance-note-ink>b { position:absolute; left:92px; font:17px/1.3 Georgia,serif; font-weight:400; }
+ .balance-note-ink>small { position:absolute; left:0; bottom:3px; width:100%; text-align:center; font:14px/1.4 var(--font-print,serif); letter-spacing:.06em; }
+ .balance-navigation { display:flex; justify-content:center; gap:24px; }.balance-navigation>button { min-height:44px; min-width:44px; }
+ .balance-navigation button[aria-current=true] { border-bottom-color:#869377; }
+ .balance-status { position:absolute; right:16px; bottom:12px; max-width:180px; margin:0; font-size:14px; color:#828c73; }
+ .balance-status:empty { display:none; }
+ .balance-drag-ghost { opacity:1; padding:0; background:none; border:0; }
+ .balance-drag-ghost>.raster-sprite { width:100%; height:100%; }
+ .balance-model[data-balance-busy] button { pointer-events:none; }
+}
+@layer room {
+ .world-balance-mechanism { position:absolute; inset:0; z-index:1; pointer-events:none; container-type:size; }
+ .balance-room-coordinate { position:absolute; left:0; top:0; width:1672px; height:941px; transform:scale(calc(100cqw / 1672px)); transform-origin:0 0; }
+ .balance-room-world { position:absolute; left:0; top:0; width:1536px; height:1024px; transform-origin:0 0; filter:saturate(.6) contrast(.82) brightness(1.06); }
+}

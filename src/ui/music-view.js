@@ -33,7 +33,11 @@ export function bindMusicView(root,player,{getContext,feedback=()=>{}}){
   const signal={signal:abort.signal};
   slider.addEventListener('pointerdown',()=>{slider.dataset.held='true';},signal);
   const release=()=>{delete slider.dataset.held;sync();};
-  slider.addEventListener('pointerup',release,signal);slider.addEventListener('pointercancel',release,signal);
+  const seekKeys=new Set(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown']);
+  slider.addEventListener('keydown',event=>{if(seekKeys.has(event.key))slider.dataset.held='true';else if(event.key==='Escape')release();},signal);
+  slider.addEventListener('keyup',event=>{if(seekKeys.has(event.key))release();},signal);
+  window.addEventListener('pointerup',release,signal);window.addEventListener('pointercancel',release,signal);
+  window.addEventListener('blur',release,signal);window.addEventListener('resize',release,signal);slider.addEventListener('blur',release,signal);
   slider.addEventListener('input',()=>{room.querySelector('[data-music-elapsed]').textContent=formatTime(Number(slider.value));},signal);
   slider.addEventListener('change',()=>{delete slider.dataset.held;player.seek(Number(slider.value));},signal);
   function shelf(id){room.dataset.shelf=id;sync();}

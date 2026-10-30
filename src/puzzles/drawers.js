@@ -1,9 +1,11 @@
 import { bounded, indexIn, same } from './common.js';
 
 export const DRAWER_TARGET = [0, 0, 1, 1];
-export const DRAWER_CONDITIONS = ['D关着时，A可以移动。', 'A打开时，B可以移动。', 'B开着、A关着时，C可以移动。', 'C开着、B关着时，D可以移动。'];
+// Each pair is one physical stop: the drawer driving it and its clear position.
+export const DRAWER_LOCKS = [[[3,0]],[[0,1]],[[1,1],[0,0]],[[2,1],[1,0]]];
+export const drawerStops=(open,index)=>(DRAWER_LOCKS[index]??[]).filter(([driver,clear])=>open[driver]!==clear);
 export function drawerEnabled(open, index) {
-  return [!open[3], Boolean(open[0]), Boolean(open[1]) && !open[0], Boolean(open[2]) && !open[1]][index];
+  return indexIn(index,4)&&drawerStops(open,index).length===0;
 }
 export const drawers = {
   create: () => ({ open: [0, 0, 0, 0] }),

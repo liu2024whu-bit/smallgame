@@ -1,5 +1,5 @@
 import { indexIn } from './common.js';
-import { RIBBON_TAIL_SIDES, ribbonBlockers } from '../data/birthday-workshop.js';
+import { RIBBON_TAIL_SIDES, ribbonBlockers } from '../data/ribbons.js';
 
 export const ribbonFree=(state,index)=>ribbonBlockers(index).every(other=>state.removed.includes(other));
 export const ribbons = {

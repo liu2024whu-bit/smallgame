@@ -1,44 +1,58 @@
-import { pointerSession } from './pointer.js';
-import { announce } from '../dom.js';
+import {pointerSession} from './pointer.js';
+import {announce} from '../dom.js';
+import {motionAllowed,ease} from '../../services/motion/shared.js';
+import {coverRubbing,rubbingFinished} from '../../services/rubbing-coverage.js';
+import {RUBBING_PENCIL as rest,RUBBING_SHEET as paper,RUBBING_KEY_ROWS} from '../../data/campus-rubbing.js';
 
-export function bindRubbing(root,activity) {
-  const desk=root.querySelector('[data-rubbing]'),field=desk?.querySelector('.rubbing-sheet');
-  if(!field||desk.dataset.rubbing==='true')return ()=>{};
-  const group=field.querySelector('[data-rubbing-strokes]'),key=root.querySelector('[data-rubbing-key]');
-  const preventNative=event=>event.preventDefault();
-  field.addEventListener('pointerdown',preventNative);
-  field.addEventListener('dragstart',preventNative);
-  let covered=new Set(),rows=0;
-  function mark(gesture,x,y) {
-    if(x<0||y<0||x>100||y>100)return;
-    const old=gesture.last??[x,y],steps=Math.max(1,Math.ceil(Math.hypot(x-old[0],y-old[1])/3));
-    for(let i=1;i<=steps;i++) {
-      const px=old[0]+(x-old[0])*i/steps,py=old[1]+(y-old[1])*i/steps;
-      gesture.covered.add(Math.min(7,Math.floor(py/12.5))*8+Math.min(7,Math.floor(px/12.5)));
-    }
-    gesture.last=[x,y];gesture.d+=`${gesture.d?'L':'M'}${x.toFixed(1)} ${(y*.6).toFixed(1)} `;
-    gesture.path.setAttribute('d',gesture.d);
-    gesture.tone.setAttribute('d',gesture.d);
-  }
-  function start() {
-    const path=document.createElementNS('http://www.w3.org/2000/svg','path');group.append(path);
-    const tone=path.cloneNode();field.querySelector('[data-rubbing-tones]').append(tone);
-    return {path,tone,d:'',covered:new Set(covered)};
-  }
-  function commit(gesture) {
-    covered=gesture.covered;
-    if(covered.size>=42){announce('拓好了。');activity('campus:desk');}
-  }
-  const stop=pointerSession(root,{
-    pick(event){return event.target.closest('.rubbing-sheet')?{source:field}:null;},
-    start(gesture){Object.assign(gesture,start());const b=field.getBoundingClientRect();mark(gesture,(gesture.x-b.x)/b.width*100,(gesture.y-b.y)/b.height*100);},
-    move(gesture,event){const b=field.getBoundingClientRect();mark(gesture,(event.clientX-b.x)/b.width*100,(event.clientY-b.y)/b.height*100);},
-    end(gesture,_,cancelled){if(cancelled){gesture.path.remove();gesture.tone.remove();}else commit(gesture);},
-  });
-  function keyboardRub(){
-    const gesture=start(),y=6.25+(rows++%8)*12.5;
-    mark(gesture,1,y);mark(gesture,99,y);commit(gesture);
-  }
-  key?.addEventListener('click',keyboardRub);
-  return ()=>{stop();key?.removeEventListener('click',keyboardRub);field.removeEventListener('pointerdown',preventNative);field.removeEventListener('dragstart',preventNative);};
+export function bindRubbing(root,{activity,view,feedback}){
+ const desk=root.querySelector('[data-rubbing]'),field=desk?.querySelector('.rubbing-sheet'),pencil=desk?.querySelector('[data-rubbing-pencil]');
+ if(!field)return ()=>{};
+ const data=view.rubbing??={strokes:[],covered:[],rows:0},key=root.querySelector('[data-rubbing-key]');
+ let covered=new Set(data.covered),returning=[],active=false;
+ const cancelReturn=()=>{returning.forEach(a=>a.cancel());returning=[];};
+ function park(from){
+  cancelReturn();desk.classList.remove('is-rubbing');pencil.dataset.pose='0';
+  pencil.style.left=rest.x+'%';pencil.style.top=rest.y+'%';pencil.style.setProperty('--pen-angle',rest.angle+'deg');
+  if(!from||!motionAllowed())return;
+  const timing={duration:240,easing:ease};
+  returning=[pencil.animate([{left:from.x+'%',top:from.y+'%'},{left:rest.x+'%',top:rest.y+'%'}],timing),...Array.from(pencil.querySelectorAll('.pencil-pose'),pose=>pose.animate([{rotate:rest.writingAngle+'deg'},{rotate:rest.angle+'deg'}],timing))];
+ }
+ function movePencil(x,y){
+  cancelReturn();if(!desk.classList.contains('is-rubbing'))desk.classList.add('is-rubbing');
+  const point={x:paper.left+x/100*paper.width,y:paper.top+y/60*paper.height};
+  pencil.style.left=point.x+'%';pencil.style.top=point.y+'%';pencil.style.setProperty('--pen-angle',rest.writingAngle+'deg');
+  pencil.dataset.pose=String(motionAllowed()?Math.floor(performance.now()/150)%4:0);
+  return point;
+ }
+ const resize=()=>cancelReturn(),disposePen=()=>{cancelReturn();window.removeEventListener('resize',resize);};
+ window.addEventListener('resize',resize);
+ if(data.returnFrom){const from=data.returnFrom;delete data.returnFrom;park(from);}
+ if(desk.dataset.rubbing==='true')return disposePen;
+ const group=field.querySelector('[data-rubbing-strokes]'),tones=field.querySelector('[data-rubbing-tones]');
+ const preventNative=event=>event.preventDefault();field.addEventListener('pointerdown',preventNative);field.addEventListener('dragstart',preventNative);
+ function mark(gesture,x,y){
+  if(x<0||y<0||x>100||y>60){gesture.last=null;return;}
+  coverRubbing(gesture.covered,gesture.last,[x,y]);
+  gesture.d+=`${gesture.last?'L':'M'}${x.toFixed(1)} ${y.toFixed(1)} `;gesture.last=[x,y];
+  gesture.path.setAttribute('d',gesture.d);gesture.tone.setAttribute('d',gesture.d);
+  gesture.pen=movePencil(x,y);
+ }
+ function start(){
+  const path=document.createElementNS('http://www.w3.org/2000/svg','path');group.append(path);const tone=path.cloneNode();tones.append(tone);
+  return {path,tone,d:'',covered:new Set(covered)};
+ }
+ function commit(gesture){
+  covered=gesture.covered;data.covered=[...covered];if(gesture.d)data.strokes.push(gesture.d);
+  if(rubbingFinished(covered)){data.returnFrom=gesture.pen;announce('拓好了。');activity('campus:desk');}
+  else park(gesture.pen);
+ }
+ const stop=pointerSession(root,{
+  pick:event=>!active&&event.target.closest('.rubbing-sheet')?{source:field}:null,
+  start(gesture){active=true;Object.assign(gesture,start(),{fieldRect:field.getBoundingClientRect()});const b=gesture.fieldRect;mark(gesture,(gesture.x-b.x)/b.width*100,(gesture.y-b.y)/b.height*60);feedback('roll');},
+  move(gesture,event){const b=gesture.fieldRect;mark(gesture,(event.clientX-b.x)/b.width*100,(event.clientY-b.y)/b.height*60);},
+  end(gesture,_,cancelled){active=false;if(cancelled){gesture.path.remove();gesture.tone.remove();park(gesture.pen);}else commit(gesture);},
+ });
+ function keyboardRub(){if(active)return;const gesture=start(),y=RUBBING_KEY_ROWS[data.rows++%RUBBING_KEY_ROWS.length];mark(gesture,10,y);mark(gesture,90,y);feedback('roll');commit(gesture);}
+ key?.addEventListener('click',keyboardRub);
+ return ()=>{stop();disposePen();key?.removeEventListener('click',keyboardRub);field.removeEventListener('pointerdown',preventNative);field.removeEventListener('dragstart',preventNative);};
 }

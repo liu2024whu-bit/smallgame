@@ -1,0 +1,30 @@
+@layer puzzles {
+ .album-workbench,.album-layout{width:100%;height:100%;}
+ .album-layout{position:relative;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:30px;align-items:center;justify-items:center;}
+ .album-layout .loose-page,.album-drag-ghost .loose-page{position:relative;isolation:isolate;width:var(--album-leaf-width,620px);height:var(--album-leaf-height,517.766px);padding:0;margin:0;border:0;background:none;box-shadow:none;text-align:center;perspective:1800px;filter:drop-shadow(0 3px 2px #4d39241c);transition:translate .16s ease;}
+ .album-page-handle{position:absolute;inset:0;display:block;width:100%;height:100%;min-width:0;min-height:0;padding:0;border:0;background:transparent;box-shadow:none;pointer-events:auto;touch-action:none;cursor:var(--cursor-grab,grab);}
+ .album-page-handle:hover:not(:disabled){background:transparent;}
+ .album-page-handle:focus-visible{outline:4px solid #859375;outline-offset:-15px;border-radius:12px;}
+ .album-paper-turn{position:absolute;inset:0;display:block;transform-style:preserve-3d;transform-origin:50% 50%;}
+ .album-paper-face{position:absolute;inset:0;display:block;backface-visibility:hidden;}
+ .album-paper-verso{transform:rotateY(180deg);}
+ .album-paper-art{position:absolute;inset:0;display:block;width:100%;height:100%;}
+ .album-inscription{position:absolute;left:0;right:0;top:5%;display:flex;align-items:baseline;justify-content:center;gap:16px;color:#59644f;font:70px/1.1 var(--font-print);}
+ .album-inscription>small{font-size:66px;}
+ .album-place-marks{position:absolute;inset:0;pointer-events:none;}
+ .album-place-marks>span{position:absolute;color:#a79773;opacity:.92;font:70px/1 var(--font-print);}
+ .album-swap-preview{filter:drop-shadow(0 6px 4px #4d39242b);}
+ .album-layout .drag-source{opacity:.16!important;}
+ .album-drag-ghost{display:block;background:none;padding:0;border:0;}
+ .album-ghost-plane{position:absolute;inset:0;transform-origin:0 0;}
+ .album-drag-ghost .loose-page{position:absolute;inset:0;filter:none;transition:none;}
+ .album-drag-ghost .album-page-handle{visibility:visible;pointer-events:none;}
+ @media(min-width:900px){.puzzle-album.steady-workbench .word-viewport{width:min(100%,calc((100dvh - 240px)*var(--word-aspect)));}}
+ @media(max-width:899px){
+  .puzzle-album .completion-note{display:flex;align-items:center;justify-content:center;gap:24px;max-width:500px;margin:6px auto 0;padding:8px 0;background:none;}
+  .puzzle-album .finish-caption{margin:0;}
+  .puzzle-album .finish-caption h3{font-size:16px;}
+  .puzzle-album .finish-caption .motif{width:24px;}
+  .puzzle-album .finish-return{margin:0;min-height:44px;}
+ }
+}

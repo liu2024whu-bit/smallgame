@@ -1,0 +1,50 @@
+@layer puzzles {
+ .belt-workbench { --belt-ratio:1320/750; }
+ .puzzle-belt .puzzle-field { padding:0;min-height:0;background:none; }
+ .belt-viewport { position:relative; width:min(100%,calc((100dvh - 260px)*var(--belt-view-aspect))); margin-inline:auto; aspect-ratio:var(--belt-ratio); overflow:hidden; isolation:isolate; background:#e9e3d3; border-radius:3px; }
+ .belt-viewport>.belt-case { position:absolute; left:var(--belt-left);top:var(--belt-top);width:var(--belt-width);height:var(--belt-height); }
+ .belt-case { position:relative; aspect-ratio:3/2; isolation:isolate; container-type:inline-size; }
+ .belt-environment { position:absolute;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none; }
+ .belt-chassis { position:relative;display:block; width:100%; height:100%; pointer-events:none; }
+ .belt-wheel,.belt-pulley-shell,.belt-crank-arm,.belt-selector,.belt-cross-leaf,.belt-gate-window,.belt-spring { position:absolute; display:block; pointer-events:none; }
+ .belt-wheel { z-index:2; transform-origin:50% 50%; filter:drop-shadow(0 2px 1px #6b5a3e36); }
+ .belt-wheel>.raster-sprite,.belt-crank-arm>.raster-sprite,.belt-selector>.raster-sprite,.belt-cross-leaf>.raster-sprite,.belt-pulley-shell>.item-art,.belt-spring>.raster-sprite { display:block; width:100%; height:100%; }
+ .belt-pulley-shell { z-index:3; filter:drop-shadow(0 2px 1px #6b5a3e36); }
+ .belt-cord { position:absolute; inset:0; width:100%; height:100%; z-index:4; pointer-events:none; filter:drop-shadow(0 1.8px 1px #57452e7a); }
+ .belt-crank-arm { z-index:5; transform-origin:8.9% 64.9%; filter:drop-shadow(0 2px 1px #6b5a3e4d); }
+ .belt-selector,.belt-cross-leaf { z-index:5; filter:drop-shadow(0 1px 1px #6b5a3e4d); }
+ .belt-cross-leaf { transform-origin:20% 50%; }
+ .belt-spring { z-index:5; }
+ .belt-case button { position:absolute; z-index:7; border:0; background:transparent; box-shadow:none; padding:0; min-width:44px; min-height:44px; touch-action:none; }
+ .belt-case button[hidden] { display:none; }
+ .belt-case button:hover:not(:disabled) { background:#fdf6cc18; }
+ .belt-case button:focus-visible { outline:2px solid #8b9576; outline-offset:3px; }
+ .belt-node { width:6.4%; aspect-ratio:1; translate:-50% -50%; border-radius:50%; cursor:var(--cursor-grab,grab); }
+ .belt-node.belt-threaded { box-shadow:inset 0 0 12px #fff8b236; }
+ .is-dragging .belt-loose-end { visibility:hidden; }
+ .belt-fitting { border-radius:3px; }
+ .belt-fitting>span { position:absolute; top:100%; left:50%; translate:-50% 0; padding:2px 6px; white-space:nowrap; font-size:clamp(11px,1.3cqw,18px); background:#faf4e1eb; color:#756b53; opacity:0; pointer-events:none; }
+ .belt-fitting:hover>span,.belt-fitting:focus-visible>span { opacity:1; }
+ .belt-crank-grip,.belt-selector-grip { cursor:var(--cursor-grab,grab);border-radius:30%; }
+ .belt-crossover { border-radius:40%; cursor:var(--cursor-grab,grab); }
+ .belt-gate-window { z-index:3; overflow:hidden; background:#352f26; }
+ .belt-film { display:flex; position:absolute; width:351.5%; height:100%; left:0; }
+ .belt-film>.raster-sprite { display:block; width:50%;flex:0 0 50%;height:100%; }
+ .belt-gauge-pointer { position:absolute;inset:0;z-index:5;pointer-events:none; }
+ .belt-gauge-needle,.belt-gauge-clamp,.belt-gauge-target { position:absolute;pointer-events:none;filter:drop-shadow(0 1px 1px #665b4255); }
+ .belt-gauge-target { z-index:5; }
+ .belt-gauge-needle>.raster-sprite,.belt-gauge-clamp>.raster-sprite,.belt-gauge-target>.raster-sprite { display:block;width:100%;height:100%; }
+ .belt-film-take { position:absolute;display:grid;place-items:center;border:0;padding:0;background:transparent; }.belt-film-take:is(button) { min-width:44px;min-height:44px; }.belt-film-take>.item-art { display:block;width:100%;height:auto; }
+ .belt-navigation { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:9px; margin:14px auto 2px; }
+ .belt-navigation button { min-width:58px;min-height:44px; }
+ .belt-navigation [aria-current=true] { color:#6d7657; text-decoration:underline; text-underline-offset:6px; }
+ .belt-reply { display:block; min-height:1.7em; margin:6px 0 0; text-align:center; font-size:13px; color:#7c7f69; }
+ @media(max-width:700px) {
+  .puzzle-belt .puzzle-field { padding:8px 4px 6px; }
+  .belt-navigation { gap:5px; margin-top:10px; }
+ }
+}
+@layer room {
+ .world-belt { position:absolute;pointer-events:none; }
+ .world-belt .belt-case { width:100%; }
+}

@@ -1,0 +1,38 @@
+@layer puzzles {
+ .puzzle-piano .puzzle-field{padding:0;background:none;min-height:0;}
+ .piano-viewport{position:relative;width:min(100%,calc((100dvh - 340px)*var(--piano-aspect)));aspect-ratio:var(--piano-aspect);margin:auto;overflow:clip;border-radius:4px;}
+ .piano-world{position:absolute;width:1536px;height:1024px;transform-origin:0 0;}
+ .piano-case-paint{position:absolute;inset:0;width:1536px;max-width:none;height:1024px;pointer-events:none;}
+ .piano-fragment{position:absolute;top:244px;width:164px;height:182px;padding:0;touch-action:none;color:#55513f;filter:drop-shadow(1px 3px 2px #4d42222b);}
+ .piano-fragment:disabled{opacity:1;cursor:default;}
+ .piano-card-turner,.piano-card-front,.piano-card-back{position:absolute;inset:0;display:block;transform-style:preserve-3d;}
+ .piano-card-front,.piano-card-back{backface-visibility:hidden;}
+ .piano-card-back{transform:rotateY(180deg);}
+ .piano-paper-stock{position:absolute!important;inset:0;width:100%!important;height:100%!important;pointer-events:none;}
+ .piano-note-ink{position:absolute;inset:50px 5px 36px;display:flex;align-items:center;justify-content:center;gap:25px;font:38px/1.5 var(--font-print);}
+ .piano-note-ink b{font-weight:400;}
+ .ink-through{opacity:.28;transform:scaleX(-1);}
+ .piano-seam{position:absolute;top:18px;width:40px;height:40px;overflow:hidden;}
+ .piano-seam .raster-sprite{position:absolute;width:40px;height:40px;}
+ .piano-seam.left{left:1px;}.piano-seam.left>.raster-sprite{left:-20px;}.piano-seam.right{right:1px;}.piano-seam.right>.raster-sprite{left:20px;}
+ .piano-seal{position:absolute;top:22px;font:20px var(--font-note);color:#a46a51;}.piano-seal.left{left:19px;}.piano-seal.right{right:19px;}
+ .piano-leaf-held{opacity:.25;}
+ .piano-leaf-ghost{position:fixed;inset:auto;z-index:100;width:164px;height:182px;pointer-events:none;transform-origin:50% 50%;}
+ .piano-key{position:absolute;padding:0;background:transparent;touch-action:manipulation;}
+ .piano-key-paint{position:absolute;inset:0;display:block;overflow:hidden;transform-origin:50% 0;pointer-events:none;}
+ .piano-key-paint>img{position:absolute;width:1536px;max-width:none;height:1024px;pointer-events:none;}
+ .piano-white{z-index:1;}.piano-black{z-index:2;}
+ .piano-key:focus-visible .piano-key-paint{filter:brightness(.88);}
+ .piano-pedal{position:absolute;left:730px;top:810px;width:83px;height:88px;z-index:3;padding:0;touch-action:manipulation;}
+ .piano-key-number{position:absolute;width:34px;text-align:center;font:22px/1.2 var(--font-print);color:#8b806a;pointer-events:none;}
+ .piano-key-number i{position:absolute;left:0;right:0;top:-12px;font-style:normal;letter-spacing:2px;}
+ .piano-keyboard{text-align:center;font-size:12px;color:#77816b;margin-top:6px;}.piano-keyboard summary{display:inline-block;cursor:pointer;min-height:28px;padding:5px 12px;}.piano-keyboard p{margin:5px auto;line-height:1.9;}.piano-keyboard kbd{font:12px var(--font-print);letter-spacing:3px;color:#626953;}
+ .piano-phrase{display:inline-flex;justify-content:center;align-items:center;gap:15px;min-height:40px;padding:10px 8px 3px;color:#565740;font:20px/1.2 var(--font-print);}
+ .piano-phrase>span{position:relative;min-width:10px;text-align:center;}.piano-phrase i{position:absolute;top:-12px;left:0;right:0;text-align:center;font-style:normal;line-height:1;}
+ .piano-reading{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px 24px;padding:12px 0 0;font-size:14px;}
+ .piano-reading p{margin:0;text-align:center;}.piano-reading .text-button{min-height:44px;}
+ .piano-encore-note{position:absolute;left:630px;top:733px;width:300px;height:64px;padding:0;color:#66573f;font:23px var(--font-note);z-index:4;}
+ .piano-song-caption{margin:2px 0 0;text-align:center;font-size:13px;}
+ @media(min-width:900px){.puzzle-piano.steady-workbench .piano-viewport{width:min(100%,calc((100dvh - 300px)*var(--piano-aspect)));}}
+ @media(max-width:899px){.piano-viewport{width:100%;}.piano-reading{gap:10px;font-size:14px;}}
+}

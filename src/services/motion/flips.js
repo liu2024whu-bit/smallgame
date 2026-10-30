@@ -1,0 +1,5 @@
+import {ease} from './shared.js';
+export const flipsMotion={
+ capture(root){const world=root.querySelector('.flip-world');if(!world)return null;return {faces:new Map([...world.querySelectorAll('[data-flip-face]')].map(el=>[el.dataset.flipFace,getComputedStyle(el).transform])),camera:world.dataset.sourceCamera,box:world.getBoundingClientRect()};},
+ play(root,before){if(!before)return;const world=root.querySelector('.flip-world');if(!world)return;for(const el of world.querySelectorAll('[data-flip-face]')){const from=before.faces.get(el.dataset.flipFace),to=getComputedStyle(el).transform;if(from&&from!==to)el.animate([{transform:from},{transform:el.style.transform}],{duration:330,easing:ease});}const b=world.getBoundingClientRect();if(before.camera!==world.dataset.sourceCamera||Math.abs(before.box.width-b.width)>.5){const v=world.parentElement.getBoundingClientRect();world.animate([{transform:`translate(${before.box.left-v.left}px,${before.box.top-v.top}px) scale(${before.box.width/1254})`},{transform:world.style.transform}],{duration:360,easing:ease});}},
+};

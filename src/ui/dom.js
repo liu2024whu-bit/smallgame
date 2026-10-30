@@ -1,6 +1,7 @@
 import {LIGHT_FILM_SURFACE} from '../data/light.js';
 import { ASSETS, MOTIFS, MOTIF_LABELS } from '../data/assets.js';
 import { ASSET_LAYOUTS } from '../data/asset-layouts.js';
+import {ALBUM_NAMES} from '../data/album.js';
 
 export const escape = value => String(value ?? '').replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
 
@@ -58,10 +59,14 @@ export function atlas(asset, index, { columns = 4, rows = 3, label = '', classNa
 export const motif = (id, className = '') => atlas('motifs', MOTIFS[id] ?? 0, { label: MOTIF_LABELS[id] ?? '', className: `motif ${className}` });
 export function itemSprite(index,className=''){
  if(typeof index==='object'){
+  if(index.asset==='ribbonStencil')return `<span class="item-art ribbon-stencil ${className}" data-ribbon-paper data-turned="${!!index.turned}" data-verso="${!!index.back}" role="img" aria-label="星角与四个透光小孔的纸带">${atlas('ribbonStencil',0,{className:'ribbon-paper-fallback'})}<canvas width="800" height="320" aria-hidden="true"></canvas></span>`;
   if(index.print)return `<span class="item-art printed-prop ${className}">${atlas(index.asset,index.index,{...index,className:'printed-paper'})}<span class="prop-inscription">${escape(index.print)}${index.note?`<small>${escape(index.note)}</small>`:''}</span></span>`;
   return atlas(index.asset,index.index,{...index,className:`item-art ${className}`});
  }
  if(index===0)return atlas('bookmarkFull',0,{columns:1,rows:1,label:'木书签',className:`item-art ${className}`});
+ if(index===2)return atlas('lightParts',0,{label:'小圆镜',className:`item-art ${className}`});
+ if(index>=7&&index<=10)return atlas('albumPages',index-7,{label:`${ALBUM_NAMES[index-7]}画页`,className:`item-art ${className}`});
+ if(index===11)return atlas('gardenBoard',0,{label:'四角有短木桩的装订托板',className:`item-art ${className}`});
  if(index!==4)return atlas('items',index,{className:`item-art ${className}`});
  const surface=LIGHT_FILM_SURFACE,frame=ASSET_LAYOUTS.lightFilm.frames[0];
  const drawing=`<img class="transparency-print" src="${ASSETS.lightPrint}" alt="" draggable="false" style="left:${(surface.x-frame[0])/frame[2]*100}%;top:${(surface.y-frame[1])/frame[3]*100}%;width:${surface.width/frame[2]*100}%;height:${surface.height/frame[3]*100}%">`;

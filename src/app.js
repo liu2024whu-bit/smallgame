@@ -1,20 +1,21 @@
+import {hydrateSceneMaterials} from './services/scene-materials.js';
 import { createCompanions } from './services/companions.js';
 import {playMoveFeedback} from './services/move-feedback.js';
-import { birthdayActions } from './services/birthday-flow.js';
+import {birthdayActions,lightBirthdayCandle} from './services/birthday-flow.js';
 import { createStore } from './core/store.js';
-import { inventory, access } from './core/state.js';
+import { inventory } from './core/state.js';
 import { sceneOpen, openScenes, neighborScene, birthdayReady } from './core/exploration.js';
-import { roomToolTarget, toolFor, puzzleToolUse } from './data/tool-uses.js';
-import { SCENE_BY_ID } from './data/scenes.js';
-import { SCENE_ART } from './data/assets.js';
+import { roomToolTarget, toolFor } from './data/tool-uses.js';
+import { SCENE_BY_ID,hotspotVisible } from './data/scenes.js';
+import {createScenePreloader} from './services/scene-preloader.js';
 import { BLOCKED_LINES } from './data/feedback.js';
 import { ITEMS } from './data/items.js';
-import { renderRoom, renderHud,sceneSignature } from './ui/room.js';
+import { renderRoom, renderHud,renderScenePicture,sceneSignature } from './ui/room.js';
 import { renderPanel } from './ui/panels.js';
 import { createDialog } from './ui/dialog.js';
-import { announce, itemSprite } from './ui/dom.js';
+import { announce } from './ui/dom.js';
 import { createAudio } from './services/audio.js';
-import { fitHandle } from './services/tool-motion.js';
+import {createToolUseFlow,createToolLocator} from './services/tool-use-flow.js';
 import { motionAllowed,watchMotionPreferences } from './services/motion.js';
 import { roomPainting, transitionRoom } from './services/room-transition.js';
 import { bindInteractions } from './ui/interactions/index.js';
@@ -29,71 +30,106 @@ import {bindSessionView} from './ui/session-view.js';
 import {updateMusicView} from './ui/music.js';
 import {capturePickup,playPickup} from './services/collect-motion.js';
 import { audioOnlyUpdate } from './core/presentation-updates.js';
+import {paintBeltCord} from './ui/puzzles/belt-cord.js';
+import {hydrateStitchCotton} from './ui/stitch-cotton.js';
+import {prepareFilmMove} from './ui/interactions/film.js';
+import {prepareGardenMove} from './ui/interactions/garden.js';
+import {preparePressBackMove} from './ui/interactions/press-back.js';
+import {createFolderActions,bindAutomaticSave} from './services/folder-flow.js';
+import {prepareWordMove} from './ui/interactions/wordlock.js';
+import {prepareBirthdayMove} from './ui/interactions/birthday-lock.js';
+import {prepareStitchMove} from './ui/interactions/stitch.js';
+import {applyGameDisplay} from './ui/game-display.js';
+import {createSourceViews} from './services/source-views.js';
+import {createMelodyPlayback} from './services/melody-playback.js';
+import {createSaveShelfFlow} from './services/save-shelf-flow.js';
+import {createNotices} from './services/notices.js';
+import {createRoomCamera} from './services/room-camera.js';
 
-export function mountGame({storage,library}={}) {
+export function mountGame({storage,library,saves}={}) {
 const app = document.querySelector('#app');
-app.innerHTML = '<div class="game-shell"><div id="room-stage" class="room-stage"></div><div id="hud"></div></div><section id="welcome" class="welcome" aria-labelledby="welcome-heading"></section><dialog id="explore-dialog" aria-labelledby="dialog-title"></dialog><p id="toast" role="status" class="toast" hidden></p><input id="save-file" type="file" accept=".json,application/json" hidden><input id="music-file" type="file" accept="audio/*,.mp3,.m4a,.ogg,.wav,.flac,.aac,.opus" hidden>';
+app.innerHTML = '<div class="game-shell"><div class="game-frame"><div id="room-stage" class="room-stage"></div></div><div id="hud"></div></div><section id="welcome" class="welcome" aria-labelledby="welcome-heading"></section><dialog id="explore-dialog" aria-labelledby="dialog-title"></dialog><p id="toast" role="status" class="toast" hidden></p><input id="save-file" type="file" accept=".json,application/json" hidden><input id="music-file" type="file" accept="audio/*,.mp3,.m4a,.ogg,.wav,.flac,.aac,.opus" hidden>';
 const store = createStore(storage??{ getItem: key => window.localStorage.getItem(key), setItem: (key, value) => window.localStorage.setItem(key, value),removeItem:key=>window.localStorage.removeItem(key) });
 const audio = createAudio({advance:id=>setting('musicTrack',id),library});
+const musicBox=createMelodyPlayback(audio);
 const ui = { panel: null, stack: [], home: true, skyPair: 0 };
 const stage = document.querySelector('#room-stage');
+const roomSourceViews=createSourceViews();
 const dialog = createDialog(document.querySelector('#explore-dialog'), closePanel);
-let roomSignature = '', hudSignature = '', toastTimer;
+let roomSignature = '', hudSignature = '';
+const notices=createNotices({host:document.querySelector('#toast'),root:app,dialog:dialog.element,openPanel});
 let disposeInteractions = () => {},disposeSession=()=>{};
-let fittingHandle=false;
-const preloadedScenes = new Set();
+const preloadScenes=createScenePreloader();
 const settleMotion=watchMotionPreferences(app);
-const welcome=createWelcome(document.querySelector('#welcome'),{onCue:()=>audio.material('paper'),getState:()=>store.get(),onReveal:()=>{document.querySelector('.game-shell').hidden=false;},onEnter:()=>{ui.home=false;if(!store.get().begun)store.dispatch({type:'start'});else render(store.get());document.querySelector('.wordmark')?.focus({preventScroll:true});}});
+const welcome=createWelcome(document.querySelector('#welcome'),{onCue:()=>audio.material('paper'),getState:()=>store.get(),getSaves:()=>saves?.summary(),onReveal:()=>{document.querySelector('.game-shell').hidden=false;},onEnter:()=>{ui.home=false;if(!store.get().begun)store.dispatch({type:'start'});else render(store.get());document.querySelector('.wordmark')?.focus({preventScroll:true});}});
 const engageAudio=event=>audio.resume({music:!event.target.closest('.music-dialog,.settings-dialog,[data-action="music"],[data-action="settings"],[data-action="sound"]')}).catch(()=>{});
 const freshPress=event=>{if(event.type==='pointerdown'||['Enter',' '].includes(event.key)){delete app.dataset.suppressUntil;delete dialog.element.dataset.suppressUntil;}};
 app.addEventListener('pointerdown',freshPress,{capture:true});app.addEventListener('keydown',freshPress,{capture:true});
 bindButtonTaps(app);
 app.addEventListener('pointerdown',engageAudio,{capture:true});app.addEventListener('keydown',engageAudio,{capture:true});
-const transfers=bindSaveTransfer(document.querySelector('#save-file'),{store,loaded:()=>showWelcome(),toast,refresh:()=>{if(ui.panel?.type==='settings')renderDialog();},remember:storage?null:{getItem:key=>window.sessionStorage.getItem(key),setItem:(key,value)=>window.sessionStorage.setItem(key,value)}});
+const saveFlow=createSaveShelfFlow({saves,store,panel:()=>ui.panel,openPanel,renderDialog,closeAllPanels,enter:()=>welcome.begin(),toast,root:app});
+const transfers=bindSaveTransfer(document.querySelector('#save-file'),{store,loaded:()=>showWelcome(),imported:saveFlow.imported,filename:()=>saves?.summary().slots.find(s=>s.id===saves.summary().active)?.name,toast,refresh:()=>{if(ui.panel?.type==='settings')renderDialog();},remember:storage?null:{getItem:key=>window.sessionStorage.getItem(key),setItem:(key,value)=>window.sessionStorage.setItem(key,value)}});
 const companions=createCompanions({panel:()=>ui.panel,activity,audio,toast});
+const useTool=createToolUseFlow({store,panel:()=>ui.panel,toast,audio,openPuzzle,openCollection,closeAllPanels,goScene,renderDialog,performMove,lightCandle:index=>lightBirthdayCandle({store,panel:()=>ui.panel,render:renderDialog,audio},index)});
 const musicActions=bindMusicControls(document.querySelector('#music-file'),{player:audio.music,store,setting,openPanel,closePanel,toast});
 
-function context() { return { state: store.get(), view: ui.panel?.view ?? {}, skyPair: ui.skyPair, flower: store.get().settings.flower, petAwake: Boolean(ui.panel?.view?.petAwake), writable: store.writable(),saveTransfer:transfers.summary(),music:audio.music.snapshot() }; }
+function context() { return { state: store.get(), view: ui.panel?.view ?? {}, sourcePicture:(exclude=[],scene=store.get().scene)=>renderScenePicture({...store.get(),scene},{exclude}),skyPair: ui.skyPair, flower: store.get().settings.flower, petAwake: Boolean(ui.panel?.view?.petAwake), writable: store.writable(),autoSave:storage?.summary?.(),saves:saves?.summary(),saveTransfer:transfers.summary(),music:audio.music.snapshot() }; }
 function activity(id) { return store.dispatch({ type: 'activity', id }); }
-function performMove(move) {
+function performMove(move,arrival=null) {
   if (ui.panel?.type !== 'puzzle') return false;
   const id = ui.panel.id;
-  if(id==='melody')audio.stopMelody();
-  const previous=store.get().progress[id];
+  if(id==='melody')musicBox.stop();
+  if(id==='film')prepareFilmMove(dialog.element,move);
+  const before=store.get(),previous=before.progress[id];
+  if(id==='birthdayLock')prepareBirthdayMove(dialog.element,move,previous,ui.panel.view,arrival);
+  if(id==='flowers')prepareGardenMove(dialog.element,move,previous,ui.panel.view,arrival);
+  if(id==='paperBack')preparePressBackMove(dialog.element,move,arrival);
+  if(id==='wordlock')prepareWordMove(dialog.element,move);
+  const clearStitchFocus=id==='stitch'?prepareStitchMove(dialog.element,move):null;
   const changed = store.dispatch({ type: 'move', id, move });
+  if(!changed)clearStitchFocus?.();
   if(changed)playMoveFeedback(audio,id,move,previous,store.get().progress[id]);
   return changed;
 }
 function renderDialog(preserveFocus = true, restore = null) {
-  disposeInteractions();disposeSession();
+  disposeInteractions();disposeSession();musicBox.stop();
   if (!ui.panel) return;
-  dialog.show(renderPanel(ui.panel, context()), { preserveFocus, restore });
+  ui.panel.view??={};
+  dialog.show(renderPanel(ui.panel, context()), { preserveFocus, restore,save:{writable:store.writable(),info:storage?.summary?.()} });
+  notices.sync();
   if (ui.panel.type === 'ambient') audio.rain(); else audio.stopRain();
   const state = store.get(), id = ui.panel.type === 'puzzle' ? ui.panel.id : null;
-  disposeInteractions = bindInteractions(dialog.element, { id, progress: state.progress[id], solved: state.solved.includes(id), move: performMove, activity, feedback:kind=>audio.foley(kind), changeView: patch => { ui.panel.view = {...ui.panel.view,...patch}; renderDialog(); } });
+  disposeInteractions = bindInteractions(dialog.element, { id, progress: state.progress[id], solved: state.solved.includes(id), view:ui.panel.view, move: performMove, activity, feedback:(kind,delay)=>audio.foley(kind,delay),playPiano:note=>audio.pianoNote(note),playMelody:()=>musicBox.play(dialog.element,store.get().progress.melody.notes),stopMelody:musicBox.stop, changeView: (patch,record) => { ui.panel.view = {...ui.panel.view,...patch}; if(!record||!activity(record))renderDialog(); } });
   const unbindPuzzle=disposeInteractions,unbindPet=companions.bind(dialog.element);disposeInteractions=()=>{unbindPuzzle();unbindPet();};
   disposeSession=bindSessionView(dialog.element,audio.music,{getContext:context,feedback:()=>audio.foley('detent')});
 }
 function render(state,previous=null) {
+  // A newly selected motion preference applies to this paint, not the next.
+  document.documentElement.classList.toggle('reduce-motion',!state.settings.motion);
   const signature=sceneSignature(state);
   if (signature !== roomSignature) {
     const sameScene = stage.dataset.scene === state.scene;
     const previousArt=roomPainting(stage);
     const previousPaint=new Set([...stage.querySelectorAll('[data-world-change]')].map(el=>el.dataset.worldChange));
     stage.innerHTML = renderRoom(state); stage.dataset.scene = state.scene; roomSignature = signature;
+    stage.querySelectorAll('[data-belt-case]').forEach(field=>paintBeltCord(field,state.progress.belt));
+    hydrateSceneMaterials(stage);
+    hydrateStitchCotton(stage);
     if(sameScene)stage.querySelectorAll('[data-world-change]').forEach(el=>{if(previousPaint.has(el.dataset.worldChange))el.style.animation='none';});
     transitionRoom(stage,previousArt);
   }
   const hudKey = JSON.stringify([inventory(state), state.selected, state.scene, state.solved.length,state.usedTools, state.settings.sound, store.writable()]);
   if (hudKey !== hudSignature) {
     const owned = new Set([...document.querySelectorAll('.inventory-slot')].map(element => element.dataset.id));
-    document.querySelector('#hud').innerHTML = renderHud(state, store.writable()); hudSignature = hudKey;
+    document.querySelector('#hud').innerHTML = renderHud(state, store.writable(),storage?.summary?.()); hudSignature = hudKey;
+    hydrateSceneMaterials(document.querySelector('#hud'));
     document.querySelectorAll('.inventory-slot').forEach(element => { if (!owned.has(element.dataset.id)) element.classList.add('new-item'); });
   }
   const shell=document.querySelector('.game-shell');shell.hidden=ui.home;shell.inert=ui.home;
+  applyGameDisplay(shell,state.settings,state.scene);
+  roomSourceViews.refresh(stage);
   document.body.classList.toggle('at-welcome',ui.home);if(ui.home)welcome.render(state);
   document.documentElement.classList.toggle('show-hotspots', state.settings.hotspots);
-  document.documentElement.classList.toggle('reduce-motion', !state.settings.motion);
   document.documentElement.classList.toggle('clear-text',state.settings.clearText);
   document.documentElement.classList.toggle('native-cursor',!state.settings.customCursor);
   settleMotion();
@@ -104,76 +140,46 @@ function render(state,previous=null) {
   preloadScenes(state);
 }
 function openPanel(panel, push = true) {
-  audio.stopMelody();
+  musicBox.stop();
   if (push && ui.panel) { ui.panel.presentation=dialog.capture(); ui.stack.push(ui.panel); }
   ui.panel = panel;
   renderDialog(false);
 }
 function closePanel() {
   disposeInteractions();disposeSession();
-  audio.stopMelody();
+  musicBox.stop();
   audio.stopRain();
   ui.panel = ui.stack.pop() ?? null;
-  if (ui.panel) renderDialog(false, ui.panel.presentation); else dialog.hide();
+  if (ui.panel) renderDialog(false, ui.panel.presentation); else {dialog.hide();notices.sync();if(ui.home)welcome.render(store.get());}
 }
 function toast(text) {
-  const element = document.querySelector('#toast');
-  element.textContent = text; element.hidden = false;
-  window.clearTimeout(toastTimer);
-  toastTimer = window.setTimeout(() => { element.hidden = true; }, 3500);
-  announce(text);
+  notices.show(text);
 }
 function look(direction) {
   store.dispatch({ type: 'scene', id: neighborScene(store.get(),direction) });
   audio.material('paper');
 }
-function closeAllPanels(){ui.stack=[];ui.panel=null;disposeInteractions();disposeSession();audio.stopMelody();audio.stopRain();dialog.hide();}
+function closeAllPanels(){ui.stack=[];ui.panel=null;disposeInteractions();disposeSession();musicBox.stop();audio.stopRain();dialog.hide();notices.sync();}
 function showWelcome(phase='title'){closeAllPanels();ui.home=true;welcome.show(phase);render(store.get());}
 function goScene(id){if(!sceneOpen(store.get(),id)){openPanel({type:'passage',id});return;}closeAllPanels();store.dispatch({type:'scene',id});}
-async function useTool(item,target){
-  const state=store.get();
-  if(!inventory(state).includes(item)||toolFor(target)!==item){toast('这里暂时用不上。');return false;}
-  if(target==='birthday-door'){
-    if(fittingHandle)return false;
-    if(!state.solved.includes('stitch')){toast('画册还没有装好。');return false;}
-    fittingHandle=true;
-    try{await fitHandle(document.querySelector('.handle-socket')??document.querySelector('[data-tool-target="birthday-door"]'),itemSprite(3));}finally{fittingHandle=false;}
-    store.dispatch({type:'use-tool',item,target});
-    if(sceneOpen(store.get(),'birthday')){goScene('birthday');audio.material('metal');return true;}
-    toast('画册还没有装好。');return false;
-  }
-  if(target==='postcard-mirror'){
-    store.dispatch({type:'select',id:null});
-    if(ui.panel?.type==='puzzle'&&ui.panel.id==='postbox')ui.panel.view={...ui.panel.view,postal:'papers',reflected:true};
-    else if(ui.panel?.type==='collection'&&ui.panel.id==='cities')ui.panel.view={...ui.panel.view,reflected:true};
-    else {openCollection('cities');ui.panel.view={card:1,back:true,reflected:true};}
-    renderDialog(false);audio.material('glass');return true;
-  }
-  const effect=puzzleToolUse(target);if(!effect)return false;
-  const {id,move}=effect;
-  if(!access(state,id).ready){openPuzzle(id);return false;}
-  if(ui.panel?.type!=='puzzle'||ui.panel.id!==id){closeAllPanels();openPuzzle(id);}
-  if(state.selected)store.dispatch({type:'select',id:null});
-  return performMove(move);
-}
-function openPuzzle(id) { openPanel({ type: 'puzzle', id }); }
+function openPuzzle(id,view={}) { openPanel({ type: 'puzzle', id,view:{...view} }); }
 function collectItem(id,source){
   const from=capturePickup(source);
   if(!store.dispatch({type:'pickup',id}))return;
-  audio.material('pickup');toast(`${ITEMS[id].name}，放在手边了。`);playPickup(dialog.element,from);
+  audio.material('pickup');playPickup(dialog.element,from);
 }
-function openCollection(id) { store.dispatch({ type: 'discover', id }); activity(`memory:${id}`); openPanel({ type: 'collection', id }); }
+function openCollection(id,source) { store.dispatch({ type: 'discover', id }); activity(`memory:${id}`); openPanel({ type: 'collection', id,view:source?{source}:{} }); }
 function hotspot(id) {
   const state = store.get();
   const spot = SCENE_BY_ID[state.scene].hotspots.find(h => h.id === id);
-  if (!spot) return;
+  if (!spot||!hotspotVisible(spot,state)) return;
   const target=roomToolTarget(state,id,state.selected);
   if(state.selected&&target&&toolFor(target)===state.selected){useTool(state.selected,target);return;}
   const handlers = {
     pickup: () => collectItem(spot.target),
-    puzzle: () => openPuzzle(spot.revisit && state.solved.includes(spot.revisitAfter) ? spot.revisit : spot.target),
+    puzzle: () => {const revisiting=spot.revisit&&state.solved.includes(spot.revisitAfter);openPuzzle(revisiting?spot.revisit:spot.target,revisiting?spot.revisitView??spot.view:spot.view);},
     album: () => openPuzzle(state.solved.includes('album') ? 'stitch' : 'album'),
-    collection: () => openCollection(spot.target),
+    collection: () => openCollection(spot.target,spot.detail),
     evidence: () => { activity(`evidence:${spot.target}`); openPanel({ type: 'evidence', id: spot.target }); },
     ambient: () => { audio.material('glass'); openPanel({ type: 'ambient' }); },
     pet: () => openPanel({ type: 'pet', id: spot.target }),
@@ -183,10 +189,16 @@ function hotspot(id) {
   (handlers[spot.kind] ?? (() => openPanel({ type: spot.kind })))();
 }
 function currentPuzzle(action) {
-  if(ui.panel?.type==='puzzle'){ui.panel.view=afterPuzzleAction(ui.panel.view,action);store.dispatch({type:action,id:ui.panel.id});}
+  if(ui.panel?.type==='puzzle'){
+    const id=ui.panel.id;if(id==='film'&&action==='undo')prepareFilmMove(dialog.element,{},store.get().history[id]?.at(-1));
+    ui.panel.view=afterPuzzleAction(ui.panel.view,action,id);store.dispatch({type:action,id});
+  }
 }
 function setting(key, value) { store.dispatch({ type: 'setting', key, value }); }
 const actions = {
+  ...createFolderActions({storage,store,toast}),
+  'tool-location':createToolLocator({getState:store.get,panel:()=>ui.panel,goScene,openPuzzle,toast}),
+  ...saveFlow.actions,
   ...viewActions({ panel: () => ui.panel, render: renderDialog, activity,foley:audio.foley }),
   ...transfers.actions,...musicActions,
   start:()=>welcome.begin(),'welcome-enter':()=>welcome.enter(),'intro-unfold':()=>welcome.unfold(),'intro-next':()=>welcome.next(),'welcome-back':()=>welcome.show(),
@@ -223,16 +235,8 @@ const actions = {
     if(note)announce(note.textContent);
   },
   'sky-pair': () => { ui.skyPair = 1 - ui.skyPair; renderDialog(); audio.foley('turn'); },
-  'play-melody': () => {
-    const field=dialog.element.querySelector('.music-apparatus');
-    audio.melody(store.get().progress.melody.notes, index => {
-      if(!field?.isConnected)return;
-      field.querySelectorAll('.music-pin-column').forEach((el, i) => el.classList.toggle('playing', index === i));
-      window.setTimeout(() => field.querySelectorAll('.playing').forEach(el => el.classList.remove('playing')), 350);
-    });
-  },
   fullscreen: async () => { try { if (document.fullscreenElement) await document.exitFullscreen(); else await document.documentElement.requestFullscreen(); } catch { toast('也可以使用浏览器的全屏功能。'); } },
-  restart: () => openPanel({ type: 'restart' }),
+  restart: () => saves?saveFlow.actions['save-new']():openPanel({ type: 'restart' }),
   'confirm-restart': () => { closeAllPanels();ui.home=true;welcome.show();store.restart(); },
 };
 
@@ -240,7 +244,9 @@ app.addEventListener('click', async event => {
   if (Date.now() < Math.max(Number(dialog.element.dataset.suppressUntil ?? 0),Number(app.dataset.suppressUntil??0))) { event.preventDefault(); return; }
   const button = event.target.closest('button');
   if (!button || button.disabled) return;
-  await engageAudio(event);
+  // Unlock the sound bus inside this gesture, without holding the game input
+  // behind an asynchronous browser audio-context resume.
+  engageAudio(event);
   if(store.get().selected&&button.dataset.toolTarget&&toolFor(button.dataset.toolTarget)===store.get().selected&&button.dataset.action!=='use-direct'){useTool(store.get().selected,button.dataset.toolTarget);return;}
   if (button.dataset.pmove && ui.panel?.type === 'puzzle') {
     try {
@@ -254,7 +260,7 @@ app.addEventListener('click', async event => {
 app.addEventListener('change', event => {
   if (event.target.dataset.setting) {
     const input = event.target;
-    setting(input.dataset.setting, input.type === 'checkbox' ? input.checked : Number(input.value));
+    setting(input.dataset.setting, input.type === 'checkbox' ? input.checked : ['range','number'].includes(input.type) ? Number(input.value) : input.value);
     if(input.checked&&['sound','music'].includes(input.dataset.setting))audio.music.engage();
   }
 });
@@ -270,25 +276,24 @@ document.addEventListener('keydown', event => {
   if(event.key==='Escape'){if(store.get().selected)store.dispatch({type:'select',id:null});else showWelcome();return;}
   if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') { event.preventDefault(); look(event.key === 'ArrowLeft' ? -1 : 1); }
 });
-store.subscribe((state, previous) => {
+store.subscribe((state, previous,action) => {
   render(state,previous);
   const revealed=openScenes(state).filter(scene=>!sceneOpen(previous,scene.id));
   if(revealed.length)toast(revealed[0].unlocked);
   if (state.solved.length > previous.solved.length) {
     audio.success();
   }
-});
-function preloadScenes(state) {
-  for(const [id,src] of Object.entries(SCENE_ART)) {
-    if(preloadedScenes.has(id)||!sceneOpen(state,id))continue;
-    preloadedScenes.add(id);
-    const image=new Image();image.decoding='async';image.src=src;
+  if(['move','pickup','activity','discover'].includes(action?.type)){
+    const recorded=notices.arrival(previous,state);
+    if(!recorded&&action.type==='pickup')toast(`${ITEMS[action.id].name}，放在手边了。`);
   }
-}
+});
 render(store.get());
+bindAutomaticSave(app,storage,store);
 
 bindInventoryUse(app,{getState:()=>store.get(),owns:id=>inventory(store.get()).includes(id),use:useTool});
+createRoomCamera(app,()=>store.get());
 if (store.notice) toast(store.notice);
 
-return {resetPresentation:()=>{ui.skyPair=0;clearTimeout(toastTimer);document.querySelector('#toast').hidden=true;},store,openPanel,closeAllPanels,showWelcome,enter:()=>welcome.enter(),panel:()=>ui.panel,audio};
+return {resetPresentation:()=>{ui.skyPair=0;notices.clear();},store,openPanel,closeAllPanels,showWelcome,enter:()=>welcome.enter(),panel:()=>ui.panel,audio};
 }

@@ -6,8 +6,11 @@ export function settleAnimations(root){
   }
 }
 export function watchMotionPreferences(root){
-  const settle=()=>{if(!motionAllowed())settleAnimations(root);};
-  matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change',settle);
+  const media=matchMedia('(prefers-reduced-motion: reduce)');
+  // Keep the observed MediaQueryList alive with the returned handler. A new
+  // query inside motionAllowed does not retain this event target.
+  const settle=()=>{if(media.matches||!motionAllowed())settleAnimations(root);};
+  media.addEventListener('change',settle);
   return settle;
 }
 export const ease = 'cubic-bezier(.22,.75,.3,1)';

@@ -17,8 +17,8 @@ export const LIGHT_FILM_SIZE=200;
 export const LIGHT_LANDMARKS=[[28,82],[172,82],[101,12],[30,156],[171,156],[59,120],[94,103],[86,150]];
 
 export const LIGHT_LAYOUTS=Object.freeze({
- wide:{camera:LIGHT_GEOMETRY.camera,view:[0,0,1536,1150],slots:[[930,885],[1210,885],[520,500]],pencil:[1020,1000,275,48],look:[.6,.62]},
- tall:{camera:{xx:.8,xy:-.52,x0:300,yx:.12,yy:.35,yz:-1,y0:680},view:[0,0,768,1100],slots:[[610,630],[670,925],[200,430]],pencil:[220,880,150,26],look:[.52,.58]},
+ wide:{camera:LIGHT_GEOMETRY.camera,view:[0,0,1536,1150],pencil:[1020,1000,275,48],look:[.6,.62]},
+ tall:{camera:{xx:.8,xy:-.52,x0:300,yx:.12,yy:.35,yz:-1,y0:680},view:[0,0,768,1100],pencil:[220,880,150,26],look:[.52,.58]},
  room:{camera:{xx:1.35,xy:-.38,x0:400,yx:.12,yy:.15,yz:-1,y0:700},view:[0,0,1536,1100]}
 });
 export const lightLayout=view=>LIGHT_LAYOUTS[view==='room'?'room':view===true||view==='tall'?'tall':'wide'];

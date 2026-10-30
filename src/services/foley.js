@@ -1,5 +1,5 @@
 // Original, short material sounds. No recorded music or external audio dependency.
-export const FOLEY_KINDS=Object.freeze(['detent','turn','wedge-in','wedge-out','stop','return','stamp','press']);
+export const FOLEY_KINDS=Object.freeze(['detent','turn','roll','wedge-in','wedge-out','stop','return','stamp','press']);
 function noise(ctx,bus,frequency,duration,volume,at){
   const buffer=ctx.createBuffer(1,Math.ceil(ctx.sampleRate*duration),ctx.sampleRate),data=buffer.getChannelData(0);
   let smooth=0;
@@ -20,6 +20,7 @@ export function playFoley(ctx,bus,kind,at=ctx.currentTime){
   const tap=(hz,seconds,level,delay=0)=>knock(ctx,bus,hz,seconds,level,at+delay);
   if(kind==='detent'){rub(2600,.024,.08);tap(830,.038,.045);}
   if(kind==='turn'){rub(630,.13,.09);tap(240,.065,.075,.025);}
+  if(kind==='roll'){rub(510,.14,.032);tap(320,.035,.018,.035);}
   if(kind==='wedge-in'){rub(920,.15,.075);tap(185,.085,.13,.105);tap(420,.04,.045,.13);}
   if(kind==='wedge-out'){tap(320,.05,.05);rub(1200,.13,.075,.025);}
   if(kind==='stop'){tap(98,.095,.16);rub(240,.04,.12);}

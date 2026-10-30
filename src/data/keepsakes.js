@@ -10,7 +10,7 @@ export const KEEPSAKES = Object.freeze([
   gift('umbrella', '小雨伞', 'giftsMore', 1, 3, 3, { puzzle: 'maze' }),
   gift('muichiro-block', '霞柱亚克力砖', 'giftsMore', 2, 3, 3, { puzzle: 'calibration' }),
   gift('mitsuri-block', '恋柱亚克力砖', 'giftsMore', 3, 3, 3, { puzzle: 'screen' }),
-  gift('snacks', '零食', 'giftsMore', 4, 3, 3, { puzzle: 'drawers' }),
+  gift('snacks', '零食', 'drawerSnacks', 0, 1, 1, { puzzle: 'drawers' }),
   gift('small-care', '护手霜与小瓶', 'giftsMore', 5, 3, 3, { puzzle: 'flowers' }),
   gift('writing-book', '写作本', 'giftsMore', 6, 3, 3, { puzzle: 'paperBack' }),
   gift('cat-charm', '小黑猫挂件', 'giftsMore', 7, 3, 3, { puzzle: 'packing' }),

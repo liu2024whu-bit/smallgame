@@ -1,5 +1,5 @@
 import {pointerSession} from './pointer.js';
-import {motionAllowed} from '../../services/motion.js';
+import {animatePressHandle,readPressStroke,setPressStroke} from '../../services/press-handle.js';
 import {announce} from '../dom.js';
 
 export function bindPress(root,progress,move){
@@ -14,20 +14,16 @@ export function bindPress(root,progress,move){
   if(move({type:'reorder',from,to}))announce(PRESS_POSITION(to));
  };
  root.addEventListener('keydown',keyboard,{signal:controller.signal});
- let angle=0;
+ const arm=field.querySelector('.press-arm');
  const dispose=pointerSession(root,{
   pick(event){const handle=event.target.closest('[data-press-handle]');return handle&&!handle.disabled?{source:handle}:null;},
-  start(g){g.distance=Math.max(40,field.getBoundingClientRect().height*.18);},
-  move(g,event){g.stroke=Math.max(0,Math.min(1,(event.clientY-g.y)/g.distance));angle=g.stroke*28;g.source.querySelector('.press-arm').style.rotate=angle+'deg';},
+  start(g){g.distance=Math.max(40,field.getBoundingClientRect().height*.18);setPressStroke(arm,readPressStroke(arm));},
+  move(g,event){g.stroke=Math.max(0,Math.min(1,(event.clientY-g.y)/g.distance));setPressStroke(arm,g.stroke);},
   end(g,_,cancelled){
-   if(!cancelled&&g.stroke>=.55){g.source.dataset.pressRelease=angle;move({type:'print'});}
+   if(!cancelled&&g.stroke>=.55)move({type:'print'});
   },
   clear(){
-   const handle=root.querySelector('.press-arm');
-   if(handle?.isConnected&&handle.style.rotate){
-    handle.style.removeProperty('rotate');
-    if(motionAllowed()&&angle)handle.animate([{rotate:angle+'deg'},{rotate:'0deg'}],{duration:210,easing:'ease-out'});
-   }angle=0;
+   if(arm?.isConnected){const stroke=readPressStroke(arm);if(stroke)animatePressHandle(arm,[[0,stroke],[1,0]],210);}
   }
  });
  return ()=>{dispose();controller.abort();};

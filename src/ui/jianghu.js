@@ -1,0 +1,9 @@
+import {ASSETS} from '../data/assets.js';
+import {YANYUN_CAMERA,YANYUN_PAGES} from '../data/yanyun.js';
+import {escape,icon} from './dom.js';
+import {JIANGHU_POSES} from '../data/jianghu-apparatus.js';
+
+export function jianghuExhibit({state,view={}}){
+ const opened=state.activities.includes('yanyun:open'),page=YANYUN_PAGES.find(p=>p.id===view.jianghuPage)??YANYUN_PAGES[0],index=YANYUN_PAGES.indexOf(page),[,,w,h]=YANYUN_CAMERA;
+ return `<div class="jianghu-desk" data-jianghu-state="${opened?'open':'closed'}" data-jianghu-page="${page.id}"><div class="jianghu-viewport" style="--jianghu-aspect:${w/h}"><div class="jianghu-world" data-source-camera="${YANYUN_CAMERA}"><img class="jianghu-base" src="${opened?ASSETS.jianghuDrawer:ASSETS.jianghuClosed}" alt="雨廊桌下的小木抽屉" draggable="false">${JIANGHU_POSES.map(({src},i)=>`<img class="jianghu-pose" data-jianghu-pose="${i}" src="${src}" alt="" draggable="false">`).join('')}${opened?`<img class="jianghu-paper-paint" src="${ASSETS[page.asset]}" alt="${escape(page.caption)}，淡彩画印在抽屉里的纸页上" draggable="false"><button class="jianghu-paper-hand" data-jianghu-paper data-focus="jianghu-paper" aria-label="${escape(page.caption)}，拖动纸边翻页，左右方向键也可以"></button>`:'<button class="jianghu-handle" data-jianghu-handle data-focus="jianghu-handle" aria-label="轻拉抽屉的黄铜把手"></button>'}</div></div>${opened?`<div class="jianghu-pagination"><button class="icon-button" data-jianghu-step="-1" data-focus="jianghu-prev" aria-label="前一张画">${icon('left')}</button><p aria-live="polite">${escape(page.caption)}<small>${index+1} / ${YANYUN_PAGES.length}</small></p><button class="icon-button" data-jianghu-step="1" data-focus="jianghu-next" aria-label="后一张画">${icon('right')}</button></div>`:''}<span class="sr-only">抽屉把手可向自己这边拉，也可以用回车打开。画页可以左右拖动或点翻页箭头，方向键也可以。Escape放回手中的纸。看过的画会记在手账，不影响生日结尾。</span></div>`;
+}

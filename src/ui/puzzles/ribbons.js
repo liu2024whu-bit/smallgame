@@ -1,12 +1,16 @@
-import { RIBBON_PATHS, RIBBON_LAYERS, RIBBON_COLORS, RIBBON_NAMES, RIBBON_TAIL_SIDES, BOX_CROP, BOX_LID } from '../../data/birthday-workshop.js';
-import { cropPosition, sugarArt } from '../workshop-props.js';
-import { character, moveButton, icon } from '../dom.js';
+import {viewControl} from '../view-control.js';
+import {RIBBON_CAMERAS,RIBBON_ROOM,RIBBON_WORLD} from '../../data/ribbons.js';
+import {decoderModel} from '../decoder-props.js';
+import {boxCanTurn} from '../../data/birthday-lock.js';
+import {ribbonModel} from '../ribbon-props.js';
+import {sceneSource} from '../scene-source.js';
+import {renderScenePicture} from '../room.js';
 
-export function ribbonLines(progress) {
-  const paths=RIBBON_PATHS[Number(progress.back)];
-  return `<svg class="ribbon-connections" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">${RIBBON_LAYERS.filter(index=>!progress.removed.includes(index)).map(index=>{const [a,b]=paths[index],d=`M${a.join(' ')}L${b.join(' ')}`;return `<g data-ribbon-line="${index}" style="--ribbon:${RIBBON_COLORS[index]}"><path class="ribbon-shadow" d="${d}"/><path class="ribbon-cloth" d="${d}"/><path class="ribbon-stitch" d="${d}"/></g>`;}).join('')}</svg>`;
-}
-export function renderRibbons(progress) {
-  const face=Number(progress.back),[x,y]=cropPosition(BOX_LID,BOX_CROP);
-  return `<div class="ribbon-box ${progress.back?'box-verso':''}" data-ribbon-side="${Number(progress.back)}">${character('ribbonBox',0,1,1,progress.back?'生日匣的背面':'缎带缠着的生日匣','workshop-painting')}<div class="ribbon-field" data-ribbon-field style="left:${x}%;top:${y}%;width:${BOX_LID[2]/BOX_CROP[2]*100}%;height:${BOX_LID[3]/BOX_CROP[3]*100}%">${ribbonLines(progress)}${RIBBON_PATHS[face].map(([a,b],index)=>progress.removed.includes(index)?'':RIBBON_TAIL_SIDES[index]===face?moveButton(sugarArt(index),{type:'pull',index},{className:'ribbon-tail',key:`ribbon-tail-${index}`}).replace('<button ',`<button data-ribbon-tail="${index}" aria-label="抽出${RIBBON_NAMES[index]}纸带" style="left:${b[0]}%;top:${b[1]}%;--ribbon:${RIBBON_COLORS[index]}" `):`<span class="ribbon-loop" style="left:${b[0]}%;top:${b[1]}%;--ribbon:${RIBBON_COLORS[index]}" aria-hidden="true">${sugarArt(index)}</span>`).join('')}</div><span class="box-side-label">${progress.back?'背面':'正面'}</span><span class="ribbon-pockets" aria-label="已抽出${progress.removed.length}根">${progress.removed.map(index=>sugarArt(index)).join('')}</span></div><div class="workshop-turn">${moveButton(`${icon('undo')}翻过来`,{type:'flip'},{key:'ribbon-flip',className:'quiet-button'})}</div><span class="sr-only">纸带从两面交错穿过。尾端的糖果小签可以向外抽，也可以按回车；合着的环在另一面开口。</span>`;
+export function renderRibbons(progress,{state,view={},sourcePicture}){
+ const p=progress,mode=state.progress.birthdayLock.lid||progress.removed.length===6&&!view.ribbonDoneInspect?'whole':view.ribbonView==='weave'?'weave':'whole';
+ const done=p.removed.length===6,opened=done&&state.progress.birthdayLock.lid,original=RIBBON_CAMERAS[mode],camera=opened?[60,0,700,1024]:[original[0],original[1]+170,original[2],original[3]];
+ const solid=done?`<div class="ribbon-decoder-assembly">${decoderModel(state.progress.birthdayLock,{back:p.back,passive:true})}</div>`:null;
+ const picture=sourcePicture?.(['ribbons'],'party')??renderScenePicture({...state,scene:'party'},{exclude:['ribbons']});
+ const background=sceneSource(picture,{left:RIBBON_ROOM[0]/1536*100,top:0,width:RIBBON_WORLD[0]/1536*100,height:100});
+ return `<div class="ribbons-workbench"><div class="ribbons-viewport" style="--ribbons-aspect:${camera[2]/camera[3]}"><div class="ribbons-world" style="height:1024px" data-source-camera="${camera}">${background}<div class="ribbons-elevated">${ribbonModel(p,{collected:state.collected.includes('birthdayRibbon'),paperVisible:mode==='whole',solid})}</div></div></div><nav class="ribbons-navigation" aria-label="缎带取景">${viewControl(`盒边`,`data-ribbon-view="whole" aria-current="${mode==='whole'}"`)}${opened?'':`${viewControl(`近看`,`data-ribbon-view="weave" aria-current="${mode==='weave'}"`)}${viewControl(p.back?'翻回正面':'看看背面',`data-ribbon-flip ${boxCanTurn(state)?'':'disabled'}`,'undo')}`}${done?viewControl(`匣子`,`data-action="puzzle" data-id="birthdayLock"`):''}</nav><p class="ribbons-status" role="status"></p><span class="sr-only">六条纸带通过匣子的六处口，正反面交错。鱼尾是松开的末端，卷边在另一面。尾端可以沿纸带向外拖动，也可以轻点或按回车；被压住时会拉紧再放回。抽完后，孔带留在盒底纸套里，可以单独拿起。</span></div>`;
 }

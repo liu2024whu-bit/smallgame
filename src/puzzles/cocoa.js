@@ -1,12 +1,12 @@
 import { indexIn, same } from './common.js';
-import { COCOA_CAPACITIES, COCOA_GOAL } from '../data/birthday.js';
+import {COCOA_CAPACITIES,COCOA_GOAL} from '../data/cocoa.js';
 
 export function pourAmount(levels,from,to) {
-  return indexIn(from,3)&&indexIn(to,3)&&from!==to ? Math.min(levels[from],COCOA_CAPACITIES[to]-levels[to]) : 0;
+  return indexIn(from,5)&&indexIn(to,5)&&from!==to ? Math.min(levels[from],COCOA_CAPACITIES[to]-levels[to]) : 0;
 }
 export const cocoa = {
-  create:()=>({levels:[8,0,0]}),
-  valid:state=>Array.isArray(state?.levels)&&state.levels.length===3&&state.levels.every((level,i)=>Number.isInteger(level)&&level>=0&&level<=COCOA_CAPACITIES[i])&&state.levels.reduce((a,b)=>a+b,0)===8,
+  create:()=>({levels:[8,0,0,0,0]}),
+  valid:state=>Array.isArray(state?.levels)&&state.levels.length===5&&state.levels.every((level,i)=>Number.isInteger(level)&&level>=0&&level<=COCOA_CAPACITIES[i])&&state.levels.reduce((a,b)=>a+b,0)===8,
   move(state,action) {
     if(action.type!=='pour')return state;
     const amount=pourAmount(state.levels,action.from,action.to);

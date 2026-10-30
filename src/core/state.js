@@ -4,17 +4,21 @@ import { RULES } from '../puzzles/index.js';
 import { COLLECTIONS, COLLECTION_PUZZLES } from '../data/assets.js';
 import { KEEPSAKES } from '../data/keepsakes.js';
 import { ACTIVITY_IDS } from '../data/activities.js';
-import { CONTENT_REVISION, migrateContent,migrateProgress } from './migrations.js';
+import { CONTENT_REVISION, migrateContent,migrateProgress,migrateAssemblyInputs } from './migrations.js';
 import { sceneOpen, birthdayReady } from './exploration.js';
-import { PERSISTENT_TOOL_USES, PUZZLE_TOOL_INPUTS } from '../data/tool-uses.js';
+import { PERSISTENT_TOOL_USES, PUZZLE_TOOL_INPUTS,toolMounts,toolElsewhere,MIRROR_SITES } from '../data/tool-uses.js';
 import { MUSIC_BY_ID } from '../data/music.js';
 import {PICKUPS,REWARD_SOURCES,COLLECTIBLE_IDS} from '../data/rewards.js';
+import {DISPLAY_ASPECTS,DISPLAY_SIZES} from '../data/display.js';
+import {boxCanTurn} from '../data/birthday-lock.js';
 
 export const SAVE_VERSION = 2;
 export {PICKUPS};
-const DEFAULT_SETTINGS = { sound: true, volume: 0.35, music:true, musicVolume:.65, effectsVolume:1, musicTrack:'window',musicOrder:'cycle',motion: true, clearText:false, customCursor:true, hotspots: false, skyCapeLeft: 'bat', skyCapeRight: 'bat', skyMask: 'chibi', flower: 'rose' };
+// The three sky appearance keys only preserve older saves; current paper figures
+// share the verified artwork in data/sky.js and expose no inactive dress controls.
+const DEFAULT_SETTINGS = { sound: true, volume: 0.35, music:true, musicVolume:.65, effectsVolume:1, musicTrack:'window',musicOrder:'cycle',motion: true, clearText:false, customCursor:true, hotspots: false,displayAspect:'auto',displaySize:'fit',skyCapeLeft: 'bat', skyCapeRight: 'bat', skyMask: 'chibi', flower: 'rose' };
 const LEVELS=['volume','musicVolume','effectsVolume'];
-const OPTIONS = { musicTrack:Object.keys(MUSIC_BY_ID),musicOrder:['cycle','repeat'],skyCapeLeft: ['bat', 'kizuna'], skyCapeRight: ['bat', 'kizuna'], skyMask: ['chibi', 'innocence'], flower: ['daisy', 'tulip', 'lavender', 'rose'] };
+const OPTIONS = { musicTrack:Object.keys(MUSIC_BY_ID),musicOrder:['cycle','repeat'],displayAspect:DISPLAY_ASPECTS.map(x=>x.id),displaySize:DISPLAY_SIZES,skyCapeLeft: ['bat', 'kizuna'], skyCapeRight: ['bat', 'kizuna'], skyMask: ['chibi', 'innocence'], flower: ['daisy', 'tulip', 'lavender', 'rose'] };
 
 export function createState() {
   return { version: SAVE_VERSION, revision: CONTENT_REVISION, begun: false, scene: 'desk', collected: [], discovered: [], activities: [], usedTools:[], solved: [], progress: Object.fromEntries(PUZZLES.map(p => [p.id, RULES[p.id].create()])), hints: {}, history: {}, selected: null, ending: false, settings: { ...DEFAULT_SETTINGS } };
@@ -26,7 +30,7 @@ export function inventory(state) {
 
 function inputsOwned(state,id,progress) {
   const inputs=PUZZLE_TOOL_INPUTS[id];
-  return !inputs||inputs.every((item,index)=>!progress.fitted[index]||inventory(state).includes(item));
+  return !inputs||inputs.every((item,index)=>!toolMounts(id,progress)[index]||inventory(state).includes(item));
 }
 
 export function keepsakes(state) {
@@ -69,12 +73,14 @@ export function normalizeState(raw) {
   let changed = true;
   while (changed) {
     changed = false;
+    migrateAssemblyInputs(raw,state);
     for (const puzzle of PUZZLES) {
       if (state.solved.includes(puzzle.id) || !Array.isArray(raw.solved) || !raw.solved.includes(puzzle.id)) continue;
       if (access(state, puzzle.id).ready && inputsOwned(state,puzzle.id,state.progress[puzzle.id]) && RULES[puzzle.id].solved(state.progress[puzzle.id])) {
         state.solved.push(puzzle.id);
         // Old runs already received these objects. New runs preserve only real pickups.
-        const earned=puzzle.rewards.filter(item=>(raw.revision??0)<(item==='borrowSlip'?11:10)||requested.has(item));
+        const legacyFilm=puzzle.id==='belt'&&(raw.revision??0)<16&&state.progress.film.opened;
+        const earned=puzzle.rewards.filter(item=>requested.has(item)||(item!=='matches'&&(item==='filmStrip'?legacyFilm:(raw.revision??0)<(item==='borrowSlip'?11:10))));
         state.collected.push(...earned.filter(item=>!state.collected.includes(item)));
         restoreUses();
         changed = true;
@@ -86,8 +92,23 @@ export function normalizeState(raw) {
   state.solved = PUZZLES.filter(puzzle => completed.has(puzzle.id)).map(puzzle => puzzle.id);
   for(const [id,inputs] of Object.entries(PUZZLE_TOOL_INPUTS)) {
     if(inputsOwned(state,id,state.progress[id]))continue;
-    state.progress[id]={...state.progress[id],...(Object.hasOwn(state.progress[id],'opened')?{opened:false}:{}),fitted:state.progress[id].fitted.map((value,index)=>value&&inventory(state).includes(inputs[index]))};
+    state.progress[id]={...state.progress[id],...(Object.hasOwn(state.progress[id],'opened')?{opened:false}:{}),...(id==='birthdayLock'?{lid:false,revealed:false}:{}),...(id==='flowers'?{pin:-1}:{fitted:state.progress[id].fitted.map((value,index)=>value&&inventory(state).includes(inputs[index]))})};
   }
+  // Imported preparation cannot leave the same needle or cotton at two sites.
+  // A verified, partly sewn folio keeps its working tools; otherwise the
+  // projector retains them until the player actually takes them back.
+  for(const [folioIndex,projectorIndex]of [[0,0],[1,3]])if(state.progress.stitch.fitted[folioIndex]&&state.progress.belt.fitted[projectorIndex]){
+    if(state.solved.includes('album')&&state.progress.stitch.path.length)state.progress.belt=RULES.belt.move(state.progress.belt,{type:'unfit',index:projectorIndex});
+    else state.progress.stitch={...state.progress.stitch,fitted:state.progress.stitch.fitted.map((v,i)=>i===folioIndex?false:v)};
+  }
+  // Old preparation could draw the same mirror in several rooms. Retain the
+  // furthest accessible placement; returning the others preserves their proof.
+  let mirrorKept=false;
+  for(const [id,index]of MIRROR_SITES)if(state.progress[id].fitted[index]){
+    if(!mirrorKept&&access(state,id).ready){mirrorKept=true;continue;}
+    state.progress[id]=RULES[id].move(state.progress[id],{type:'unfit',index});
+  }
+  if(!boxCanTurn(state))state.progress.ribbons={...state.progress.ribbons,back:false};
   if(!sceneOpen(state,state.scene))state.scene='desk';
   for (const key of ['sound', 'music','motion','clearText','customCursor', 'hotspots']) if (typeof settings[key] === 'boolean') state.settings[key] = settings[key];
   for (const [key, values] of Object.entries(OPTIONS)) if (values.includes(settings[key])) state.settings[key] = settings[key];
@@ -119,22 +140,30 @@ export function reduce(state, action) {
   if (!PUZZLE_BY_ID[action.id] || !state.begun) return state;
   const id = action.id;
   if (action.type === 'hint') return { ...state, hints: { ...state.hints, [id]: Math.min(3, (state.hints[id] ?? 0) + 1) } };
-  if (state.solved.includes(id) || !access(state, id).ready) return state;
+  const completedBefore=state.solved.includes(id);
+  // A proven mechanism may release a fitting or turn the physical ribbon box.
+  // Its pure rule must still preserve completion, without adding undo steps.
+  const completedMove=action.type==='move'&&(['fit','unfit'].includes(action.move?.type)||id==='belt'&&action.move?.type==='unfit-all'||id==='calendar'&&['drawer','stamp'].includes(action.move?.type)||id==='ribbons'&&action.move?.type==='flip'||id==='birthdayLock'&&['lid','card-unfold','card-flip','ribbon-turn','ribbon-flip','paper-slide','mirror-slide'].includes(action.move?.type));
+  if (completedBefore&&!completedMove || !access(state, id).ready) return state;
+  if(id==='ribbons'&&action.type==='move'&&action.move?.type==='flip'&&!boxCanTurn(state))return state;
   if (action.type === 'reset' || action.type === 'undo') {
     const previous = state.history[id] ?? [];
     if (action.type === 'undo' && !previous.length) return state;
     return { ...state, progress: { ...state.progress, [id]: action.type === 'reset' ? RULES[id].create() : previous.at(-1) }, history: { ...state.history, [id]: action.type === 'reset' ? [] : previous.slice(0, -1) } };
   }
   if (action.type !== 'move') return state;
+  if(id==='birthdayLock'&&['fit','lid'].includes(action.move?.type)&&state.progress.ribbons.back)return state;
   const previous = state.progress[id];
+  if(action.move?.type==='fit'&&toolElsewhere(state,id,action.move.index))return state;
   const next = RULES[id].move(previous, action.move ?? {});
   if (!RULES[id].valid(next) || !inputsOwned(state,id,next) || JSON.stringify(next) === JSON.stringify(previous)) return state;
   const completed = RULES[id].solved(next);
+  if(completedBefore&&!completed)return state;
   return {
     ...state,
     progress: { ...state.progress, [id]: next },
-    history: { ...state.history, [id]: [...(state.history[id] ?? []), structuredClone(previous)].slice(-48) },
-    solved: completed ? [...state.solved, id] : state.solved,
+    history: completedBefore?state.history:{ ...state.history, [id]: [...(state.history[id] ?? []), structuredClone(previous)].slice(-48) },
+    solved: completed&&!completedBefore ? [...state.solved, id] : state.solved,
     selected: completed ? null : state.selected,
   };
 }

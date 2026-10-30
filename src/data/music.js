@@ -7,8 +7,8 @@ export const MUSIC = Object.freeze([
   {id:'birthday-whistle',title:'生日快乐 · 口哨',by:'Joseph SARDIN',file:'assets/audio/birthday-whistle.mp3'},
   {id:'encounter',title:'遇见',by:'孙燕姿 · 2010垦丁现场',stream:official(34200629),link:'https://music.163.com/song?id=34200629'},
   {id:'birds',title:'鸟之诗',by:'Lia · AIR / Ornithopter',stream:official(761594),link:'https://music.163.com/song?id=761594'},
-  {id:'unknown',title:'无人知晓',by:'Fayeii · 翻唱版',stream:official(1878024509),link:'https://music.163.com/song?id=1878024509',originalBy:'田馥甄',originalLink:'https://music.163.com/song?id=1481929839',note:'《流氓叙事》里那首。'},
-  {id:'season',title:'等你的季节',by:'严艺丹 · 请服仙丹现场',stream:official(3392065663),link:'https://music.163.com/song?id=3392065663',note:'另备了作曲者的现场版本。'},
+  {id:'unknown',title:'无人知晓',by:'Fayeii · 翻唱版',stream:official(1878024509),link:'https://music.163.com/song?id=1878024509',originalBy:'田馥甄',originalLink:'https://music.163.com/song?id=1481929839'},
+  {id:'season',title:'等你的季节',by:'严艺丹 · 请服仙丹现场',stream:official(3392065663),link:'https://music.163.com/song?id=3392065663'},
   {id:'sunshine',title:'阳光下的星星',by:'金海心 · 创作自选集',stream:official(1353159923),link:'https://music.163.com/song?id=1353159923'},
   {id:'farewell',title:'诀别书',by:'邓垚',stream:official(2038191895),link:'https://music.163.com/song?id=2038191895'},
 ]);

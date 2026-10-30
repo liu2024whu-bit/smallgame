@@ -1,13 +1,10 @@
 import {LIGHT_GEOMETRY as G,lightLayout,LIGHT_PART_REGISTRATION} from '../../data/light.js';
-import {PUZZLE_TOOL_INPUTS} from '../../data/tool-uses.js';
 import {ASSETS} from '../../data/assets.js';
 import {ASSET_LAYOUTS} from '../../data/asset-layouts.js';
-import {inventory} from '../../core/state.js';
 import {filmCenter,mirrorCircle,bookHeight} from '../../puzzles/light-geometry.js';
 import {project,lightPaper,mirrorQuad,filmFrameQuad,filmSheetQuad,bookQuad,cordQuad,paperQuad,paperDrawing,printQuad,bookProjectionQuad,drawingMasks,lampQuad,lampSwitch,bookArmQuad,uprightQuad,washQuad} from './light-raster.js';
 import {rasterPlane,paintPlane} from '../raster-plane.js';
 import {escape} from '../dom.js';
-const names=['透片','小圆镜','木书签'];
 const pos=([x,y],view)=>{const [left,top,width,height]=lightLayout(view).view;return `left:${(x-left)/width*100}%;top:${(y-top)/height*100}%;`;};
 const flat=([x,y,w,h])=>[[x,y],[x+w,y],[x+w,y+h],[x,y+h]];
 const sprite=(asset,index,quad,name='',className='',cutout=null)=>rasterPlane(asset,index,quad,{name,className,cutout});
@@ -18,19 +15,18 @@ export function lightControlPoint(values,index,view=false){
  return project(mirrorCircle(values)[48],view);
 }
 const flipPoint=(values,view)=>{const c=filmCenter(values),p=project([c[0],c[1],c[2]+85],view);return [p[0]+75,p[1]+25];};
-function controls(progress,owned,done,tall){
+function controls(progress,done,tall){
  const layout=lightLayout(tall);
  const grips=[0,1,2].map(index=>{
-  const actual=index===2?1:index===1?2:0,point=lightControlPoint(progress.values,index,tall),fitted=progress.fitted[actual],item=PUZZLE_TOOL_INPUTS.calibration[actual];
-  const slider=`<button class="light-grip light-grip-${index}" data-light-adjust="${index}" ${!fitted?`data-tool-target="light-fit:${actual}"`:''} data-focus="light-grip-${index}" ${pmove({type:'turn',index,direction:1})} role="slider" aria-label="${['透片滑架','书签升降夹','圆镜朝向'][index]}" aria-orientation="${index===1?'vertical':'horizontal'}" aria-valuemin="0" aria-valuemax="3" aria-valuenow="${progress.values[index]}" aria-valuetext="第${progress.values[index]+1}档，共四档" aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown Home End" style="${pos(point,tall)}" ${done||index===2&&!fitted?'disabled':''}><span class="sr-only">可以拖动，也可以用方向键</span></button>`;
-  const action=fitted?pmove({type:'unfit',index:actual}):`data-action="use-direct" data-id="${item}" data-tool-target="light-fit:${actual}"`;
-  return slider+`<button class="light-fitting ${fitted?'is-fitted':''}" ${action} data-focus="light-fit-${actual}" style="${pos(layout.slots[actual],tall)}" aria-label="${fitted?'取回':'放上'}${names[actual]}" ${done||!owned.includes(item)?'disabled':''}><span>${names[actual]}</span></button>`;
+  const actual=index===2?1:index===1?2:0,point=lightControlPoint(progress.values,index,tall),fitted=progress.fitted[actual];
+  const slider=fitted?`<button class="light-grip light-grip-${index}" data-light-adjust="${index}" data-focus="light-grip-${index}" ${pmove({type:'turn',index,direction:1})} role="slider" aria-label="${['透片滑架','书签升降夹','圆镜朝向'][index]}" aria-orientation="${index===1?'vertical':'horizontal'}" aria-valuemin="0" aria-valuemax="3" aria-valuenow="${progress.values[index]}" aria-valuetext="第${progress.values[index]+1}档，共四档" aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown Home End" style="${pos(point,tall)}" ${done?'disabled':''}><span class="sr-only">可以拖动，也可以用方向键</span></button>`:'';
+  return slider;
  }).join('');
  const power=`<button class="light-power" ${pmove({type:'power'})} data-focus="light-power" aria-label="${progress.lit?'关灯':'开灯'}" aria-pressed="${progress.lit}" style="${pos(lampSwitch(tall),tall)}" ${done?'disabled':''}></button>`;
- const flip=`<button class="light-flip" ${pmove({type:'flip'})} data-focus="light-flip" aria-label="翻过透片" aria-pressed="${progress.flipped}" style="${pos(flipPoint(progress.values,tall),tall)}" ${done||!progress.fitted[0]?'disabled':''}><span>翻面</span></button>`;
+ const flip=progress.fitted[0]?`<button class="light-flip" ${pmove({type:'flip'})} data-focus="light-flip" aria-label="翻过透片" aria-pressed="${progress.flipped}" style="${pos(flipPoint(progress.values,tall),tall)}" ${done?'disabled':''}><span>另一面</span></button>`:'';
  const [x,y,w,h]=layout.pencil;
- const pencil=`<button class="light-pencil" ${pmove({type:'trace'})} data-light-pencil data-focus="light-pencil" aria-label="拿铅笔描一笔，也可以拖到纸上" style="${pos([x+w/2,y+h/2],tall)}width:${w/layout.view[2]*100}%;height:${Math.max(8,h/layout.view[3]*100)}%;" ${done?'disabled':''}><span class="light-pencil-label">${done?'留住了':'描一笔'}</span></button>`;
- const sockets=[0,1,2].filter(index=>!progress.fitted[index]&&!done).map(index=>`<span class="light-socket" data-tool-target="light-fit:${index}" data-light-slot="${index}" style="${pos(slotPoint(progress.values,index,tall),tall)}" aria-hidden="true"></span>`).join('');
+ const pencil=done?'':`<button class="light-pencil" ${pmove({type:'trace'})} data-light-pencil data-focus="light-pencil" aria-label="拿铅笔描一笔，也可以拖到纸上" style="${pos([x+w/2,y+h/2],tall)}width:${w/layout.view[2]*100}%;height:${Math.max(8,h/layout.view[3]*100)}%;"><span class="light-pencil-label">描一笔</span></button>`;
+ const sockets=[0,1,2].filter(index=>!progress.fitted[index]&&!done).map(index=>`<span class="light-socket" data-tool-overlap data-tool-target="light-fit:${index}" data-light-slot="${index}" style="${pos(slotPoint(progress.values,index,tall),tall)}" aria-hidden="true"></span>`).join('');
  return grips+power+flip+pencil+sockets;
 }
 const slotPoint=(values,index,view)=>index===0?project(filmCenter(values),view):index===1?project(G.mirror,view):lightControlPoint(values,1,view);
@@ -40,37 +36,38 @@ function standQuad(values,view){
 }
 function fixture(index,x,y,z,width,height,view){return uprightQuad(ASSET_LAYOUTS.lightFixtures.frames[index],{x,y,z,width,height},view);}
 function handleQuad(values,index,view){const [x,y]=lightControlPoint(values,index,view);return flat([x-20,y-10,40,26]);}
-export function lightArtwork(pose,{environment=true,view=false}={}){
+export function lightArtwork(pose,{environment=true,view=false,painted=false}={}){
  const layout=lightLayout(view),tall=view===true||view==='tall',book=lightControlPoint(pose.values,1,view),source=project(G.source,view);
  const railQuad=[[196,260,0],[526,260,0],[526,350,0],[196,350,0]].map(p=>project(p,view));
+ const fixed=(...args)=>painted?'':sprite(...args);
  return `${environment?`<img class="light-desk" src="${tall?ASSETS.lightDeskTall:ASSETS.lightDesk}" alt="" draggable="false">`:''}
-  ${sprite('lightLamp',0,lampQuad(view),'lamp','light-lamp-art')}
+  ${fixed('lightLamp',0,lampQuad(view),'lamp','light-lamp-art')}
   <div class="light-bulb" style="opacity:${Number(pose.lit)*.36}">${sprite('lightWashes',0,flat([source[0]-90,source[1]-75,180,150]),'bulb')}</div>
-  ${sprite('lightBracket',0,bookArmQuad(view),'book-arm')}
-  ${sprite('lightSupports',3,railQuad,'rail')}
+  ${fixed('lightBracket',0,bookArmQuad(view),'book-arm')}
+  ${fixed('lightSupports',3,railQuad,'rail')}
   ${sprite('lightSupports',1,standQuad(pose.values,view),'film-post')}
-  ${sprite('lightFixtures',1,fixture(1,700,300,-5,75,110,view),'mirror-post')}
+  ${fixed('lightFixtures',1,fixture(1,700,300,-5,75,110,view),'mirror-post')}
   <div class="light-tool" data-light-tool="2" style="opacity:${Number(pose.fitted[2])}">${sprite('lightBook',0,bookQuad(pose.values,view),'book')}${sprite('lightBook',1,cordQuad(pose.values,view),'cord')}</div>
   ${sprite('lightSupports',2,flat([book[0]-21,book[1]-8,42,28]),'book-clamp')}
   <div class="light-tool light-film-art" data-light-tool="0" style="opacity:${Number(pose.fitted[0])}">${sprite('lightFilm',0,filmSheetQuad(pose.values,pose.flipped,view),'film')}${sprite('lightPrint',0,printQuad(pose.values,pose.flipped,true,view),'physical','light-physical-print')}</div>
   ${sprite('lightParts',1,filmFrameQuad(pose.values,pose.flipped,view),'holder','light-holder',LIGHT_PART_REGISTRATION.film)}
   <div class="light-tool" data-light-tool="1" style="opacity:${Number(pose.fitted[1])}">${sprite('lightParts',0,mirrorQuad(pose.values,view),'mirror')}</div>
-  ${sprite('lightSupports',0,uprightQuad(ASSET_LAYOUTS.lightSupports.frames[0],{x:700,y:702,z:-15,width:240,height:210,anchor:[.5,.98]},view),'easel')}
+  ${fixed('lightSupports',0,uprightQuad(ASSET_LAYOUTS.lightSupports.frames[0],{x:700,y:702,z:-15,width:240,height:210,anchor:[.5,.98]},view),'easel')}
   <div class="light-paper-art">${sprite('lightParts',3,paperQuad(view),'paper')}</div>
   ${paperDrawing(pose,view)}
   ${[0,1,2].map(index=>`<div data-light-handle="${index}" style="opacity:${index===2?Number(pose.fitted[1]):1}">${sprite('lightFixtures',5,handleQuad(pose.values,index,view),'handle-'+index)}</div>`).join('')}
   ${view==='room'?'':sprite('lightFixtures',4,flat(layout.pencil),'pencil','light-pencil-art')}`;
 }
-export function lightCase(progress,{owned=[],done=false,miniature=false,environment=true,tall=false}={}){
+export function lightCase(progress,{done=false,miniature=false,environment=true,tall=false}={}){
  const view=miniature?'room':tall,layout=lightLayout(view),paper=lightPaper(view);
  const clip=paper.map(([x,y])=>(x-layout.view[0])/layout.view[2]*100+'% '+(y-layout.view[1])/layout.view[3]*100+'%').join(',');
  // SVG is solely a responsive viewport. Every visible element inside it is a
  // painted bitmap; clip geometry never appears as artwork or a light beam.
- return `<div class="light-case ${tall?'light-portrait':''} ${done?'light-done':''}" data-light-case data-light-tall="${tall}" data-light-layout="${miniature?'room':tall?'tall':'wide'}" data-light-state="${escape(JSON.stringify(progress))}" ${miniature?'inert aria-hidden="true"':''}><svg class="light-art" viewBox="${layout.view.join(' ')}" aria-hidden="true"><foreignObject x="0" y="0" width="${layout.view[2]}" height="${layout.view[3]}"><div xmlns="http://www.w3.org/1999/xhtml" class="light-stage" style="width:${layout.view[2]}px;height:${layout.view[3]}px">${lightArtwork(progress,{environment,view})}</div></foreignObject></svg>${miniature?'':`<div class="light-paper-blocker" data-light-paper style="clip-path:polygon(${clip})" aria-hidden="true"></div>${controls(progress,owned,done,tall)}`}<output class="sr-only">${done?'纸上留住了雨窗。灯已关好，三件工具都拿回来了。':!progress.lit?'纸上留着淡淡的小窗。':!progress.fitted[1]?'灯亮着，纸上还没有接到光。':!progress.fitted[0]?'镜子把一片灯光送到了纸上。':'雨窗的影子，落在纸上。'}</output></div>`;
+ return `<div class="light-case ${tall?'light-portrait':''} ${done?'light-done':''}" data-light-case data-light-tall="${tall}" data-light-layout="${miniature?'room':tall?'tall':'wide'}" data-light-state="${escape(JSON.stringify(progress))}" ${miniature?'inert aria-hidden="true"':''}><svg class="light-art" viewBox="${layout.view.join(' ')}" aria-hidden="true"><foreignObject x="0" y="0" width="${layout.view[2]}" height="${layout.view[3]}"><div xmlns="http://www.w3.org/1999/xhtml" class="light-stage" style="width:${layout.view[2]}px;height:${layout.view[3]}px">${lightArtwork(progress,{environment,view,painted:miniature})}</div></foreignObject></svg>${miniature?'':`<div class="light-paper-blocker" data-light-paper style="clip-path:polygon(${clip})" aria-hidden="true"></div>${controls(progress,done,tall)}`}<output class="sr-only">${done?'纸上留住了雨窗。灯已关好，三件工具都拿回来了。':!progress.lit?'纸上留着淡淡的小窗。':!progress.fitted[1]?'灯亮着，纸上还没有接到光。':!progress.fitted[0]?'镜子把一片灯光送到了纸上。':'雨窗的影子，落在纸上。'}</output></div>`;
 }
 export function renderCalibration(progress,{state,view={}}){
  const tall=view.lightPortrait??(globalThis.matchMedia?.('(max-width:700px)').matches??false);
- return `<div class="light-workbench" data-look-point="${lightLayout(tall).look.join(',')}">${lightCase(progress,{owned:inventory(state),done:state.solved.includes('calibration'),tall})}</div>`;
+ return `<div class="light-workbench" data-look-point="${lightLayout(tall).look.join(',')}">${lightCase(progress,{done:state.solved.includes('calibration'),tall})}</div>`;
 }
 export function paintLight(field,pose){
  if(!field?.isConnected)return;

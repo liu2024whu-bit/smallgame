@@ -7,8 +7,8 @@ export function bindButtonTaps(root){
  const cancel=()=>{down=null;if(pending)clearTimeout(pending.timer);pending=null;};
  root.addEventListener('pointerdown',event=>{
   cancel();if(event.pointerType!=='touch'||!event.isPrimary)return;
-  const button=event.target.closest('button[data-action],button[data-pmove]');
-  if(button&&!button.disabled)down={button,pointer:event.pointerId,x:event.clientX,y:event.clientY};
+  const button=event.target.closest('button');
+  if(button&&!button.disabled&&(button.matches('[data-action],[data-pmove]')||button.closest('[data-button-taps]')))down={button,pointer:event.pointerId,x:event.clientX,y:event.clientY};
  },{capture:true,signal});
  window.addEventListener('pointermove',event=>{
   if(down?.pointer===event.pointerId&&Math.hypot(event.clientX-down.x,event.clientY-down.y)>=5)down=null;

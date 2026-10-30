@@ -9,7 +9,7 @@
   [hidden] { display: none !important; }
 }
 @layer base {
-  :root { color-scheme: light; --paper: #fcfaf4; --ink: #4c4b43; --soft: #85877c; --line: #d8d8c9; --green: #637765; --pink: #dbb5ab; --cream: #f3efe2; --font-note: 'KaiTi', 'STKaiti', 'FangSong', 'Noto Serif SC', serif; --font-print:'SimSun','Songti SC','Noto Serif SC',serif; --font:var(--font-note); }
+  :root { color-scheme: light; --paper: #fcfaf4; --ink: #4c4b43; --soft: #85877c; --line: #d8d8c9; --green: #637765; --pink: #dbb5ab; --cream: #f3efe2; --font-note: 'KaiTi', 'STKaiti', 'FangSong', 'Noto Serif SC', serif; --font-print:'SimSun','Songti SC','Noto Serif SC',serif; --font-ui:'Microsoft YaHei UI','Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; --font:var(--font-note); }
   body { background: #f3f3ec; color: var(--ink); font: 17px/1.65 var(--font); overflow-x: hidden; }
   button { border: 0; background: none; -webkit-tap-highlight-color: transparent; }
   button, a, input { touch-action: manipulation; }
@@ -29,8 +29,8 @@
   .quiet-button { display: inline-flex; gap: 8px; align-items: center; justify-content: center; min-height:42px; padding: 7px 13px; border: 1px solid #cecebc; border-radius: 3px 6px 3px 5px; background: #fffdf7c9; box-shadow:0 1px 0 #b5af9626; transition:background .18s,border-color .18s; }
   .quiet-button:hover:not(:disabled) { background: #edf0e3; border-color:#99a58b; }
   .quiet-button:active:not(:disabled) { box-shadow:inset 0 1px 2px #8b94762b; }
-  .text-button { padding: 5px 6px; border-bottom: 1px dotted #a7b29c; color: #607558; text-underline-offset:5px; }
-  .text-button:hover:not(:disabled) { border-bottom-style:solid; color:#435c48; }
+  .text-button { padding: 5px 6px; border-bottom:1px solid transparent; color: #607558; text-underline-offset:5px; }
+  .text-button:hover:not(:disabled) { border-bottom-color:#a7b29c; color:#435c48; }
   .eyebrow { font: 11px/1.6 Georgia, serif; letter-spacing: .2em; color: #848a7a; }
   .hand-note { font-size: 15px; color: #626e59; margin: 16px 0 0; text-align: center; text-wrap:pretty; }
   h1,h2,h3 { text-wrap:balance; }
@@ -42,13 +42,30 @@
   .character-art { width: min(230px, 100%); }
   .item-art { width: 70px; }
   .toast { position: fixed; z-index: 100; bottom: 122px; left: 50%; transform: translateX(-50%); background: #fbfaf0f5; padding: 10px 24px; border: 1px solid #c2cab6; box-shadow: 0 5px 22px #58624c18; border-radius: 4px; font-size: 15px; max-width: min(90vw, 540px); text-align: center; pointer-events: none; }
+  .toast[hidden]{display:none!important;}
+  .toast.journal-notice{display:flex;align-items:center;gap:12px;bottom:20px;width:max-content;max-width:min(92vw,620px);padding:10px 13px;border-radius:8px;pointer-events:auto;font-size:14px;}
+  .notice-object{display:grid;place-items:center;width:46px;height:48px;flex:none;}
+  .notice-object>.character-art{display:block;min-width:0;width:min(46px,calc(46px*var(--ratio)));height:min(46px,calc(46px/var(--ratio)));aspect-ratio:var(--ratio);}
+  .notice-message{text-align:left;line-height:1.7;}
+  .notice-open{display:inline-flex;align-items:center;justify-content:center;gap:7px;flex:none;min-height:44px;padding:5px 10px;color:#51694c;border-radius:5px;background:#e9eedf;}
+  .notice-open>.icon,.notice-dismiss>.icon{width:18px;height:18px;}
+  .notice-dismiss{display:grid;place-items:center;flex:none;min-width:36px;min-height:44px;padding:5px;}
+  .dialog-header>.journal-notice{position:static;transform:none;flex:0 1 620px;min-width:0;width:auto;max-width:62%;margin:0 12px 0 auto;padding:4px 8px;gap:8px;box-shadow:none;font-size:13px;}
+  .dialog-header>.journal-notice .notice-message{min-width:0;overflow-wrap:anywhere;}
+  .dialog-header>.journal-notice .notice-object{width:38px;height:38px;}
+  .dialog-header>.journal-notice .notice-object>.character-art{width:min(38px,calc(38px*var(--ratio)));height:min(38px,calc(38px/var(--ratio)));}
+  .dialog-header>.journal-notice .notice-open{font-size:13px;padding:5px 8px;}
+  .dialog-header>.journal-notice .notice-dismiss{min-width:28px;}
+  .dialog-header:has(>.journal-notice:not([hidden])){padding-block:8px;}
   #explore-dialog { margin: auto; width: min(1040px, calc(100vw - 48px)); max-width: 1200px; max-height: calc(100dvh - 48px); padding: 0; border: 1px solid #c8c9b9; border-radius: 7px 4px 6px 3px; background: var(--paper); color: var(--ink); box-shadow: 0 20px 100px #3f49382b; overscroll-behavior: contain; }
   #explore-dialog::backdrop { background: #50594f60; backdrop-filter: blur(4px); }
   .dialog-header { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; padding: 14px 22px; background: #fcfaf4; border-bottom: 1px solid #d9ddce; }
   .dialog-header h2 { font-size: 23px; letter-spacing: .06em; }
+  .dialog-header h2,.dialog-header>div{flex-shrink:0;}
   .dialog-header > div { display: flex; align-items: center; }
   .dialog-body { padding: 22px 30px 28px; }
   .inspect-dialog, .pet-dialog, .flower-dialog { max-width: 660px !important; }
+  @media(min-width:900px){.pet-dialog{max-width:1000px !important;}}
   .short-note { padding: 20px 18px; text-align: center; }
   .short-note p { margin-bottom: 24px; }
   .short-note .quiet-button { margin: 12px; }
@@ -57,8 +74,10 @@
   .keyboard-note p { margin:12px 0 0; }
   .locked-object { text-align: center; padding: 20px; }
   .locked-object > .motif { width: 80px; margin-bottom: 14px; }
+  .locked-object.has-source { padding:0 0 8px; }
+  .locked-scene { position:relative;overflow:hidden;isolation:isolate;aspect-ratio:var(--source-aspect);width:min(100%,700px,calc(46dvh * var(--source-aspect)));margin:0 auto 14px;border-radius:4px; }
   .locked-object p { max-width: 460px; margin: 0 auto 20px; }
-  .missing-tools { display: flex; justify-content: center; gap: 10px; color: #89917f; font-size: 14px; margin: 20px; }
+  .missing-tools { display: flex;flex-wrap:wrap;justify-content: center; gap: 10px; color: #89917f; font-size: 14px; margin: 20px; }
   .missing-tools span { border-bottom: 1px dotted #aab19f; }
   .item-inspect { text-align: center; }
   .item-inspect > .item-art { width: 220px; margin: 12px; }

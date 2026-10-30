@@ -1,30 +1,9 @@
-import { ease, turnDelta } from './shared.js';
-import { settleDial } from './dials.js';
-import { playMazeRoute } from './maze.js';
-
-const turns = root => [...root.querySelectorAll('.dial-face')].map(el => parseFloat(el.style.getPropertyValue('--turn')) || 0);
-const rings = root => [...root.querySelectorAll('[data-maze-rotor]')].map(el => Number(el.getAttribute('transform')?.match(/rotate\((-?[\d.]+)/)?.[1] ?? 0));
-export const mechanismMotion = {
-  capture: root => ({ dials: turns(root), rings: rings(root), lean: root.querySelector('.scale-apparatus')?.style.getPropertyValue('--lean'), arrived: !!root.querySelector('.maze-arrived') }),
-  play(root, before) {
-    const nextTurns = turns(root), nextRings = rings(root);
-    root.querySelectorAll('.dial-face').forEach((el, i) => {
-      const next = nextTurns[i], old = before.dials[i];
-      if (old === undefined || next === old) return;
-      settleDial(el, old, next);
-    });
-    root.querySelectorAll('[data-maze-rotor]').forEach((el, i) => {
-      const next = nextRings[i], old = before.rings[i];
-      if (old !== undefined && old !== next) {
-        el.style.transformOrigin = '210px 210px';
-        el.animate([{ transform: `rotate(${next + turnDelta(old, next)}deg)` }, { transform: `rotate(${next}deg)` }], { duration: 300, easing: ease });
-      }
-    });
-    const scale = root.querySelector('.scale-moving'), lean = root.querySelector('.scale-apparatus')?.style.getPropertyValue('--lean');
-    if (scale && before.lean !== undefined && before.lean !== lean) scale.animate([{ transform: `rotate(${before.lean})` }, { transform: `rotate(${lean})` }], { duration: 620, easing: 'cubic-bezier(.3,1.45,.5,1)' });
-    const ball = root.querySelector('.maze-arrived');
-    if (ball && !before.arrived) {
-      playMazeRoute(root, JSON.parse(ball.dataset.walk));
-    }
-  },
+import {settleDial} from './dials.js';
+const turns=root=>[...root.querySelectorAll('.dial-face')].map(el=>parseFloat(el.style.getPropertyValue('--turn'))||0);
+export const mechanismMotion={
+ capture:root=>({dials:turns(root)}),
+ play(root,before){
+  const next=turns(root);
+  root.querySelectorAll('.dial-face').forEach((el,i)=>{if(before.dials[i]!==undefined&&before.dials[i]!==next[i])settleDial(el,before.dials[i],next[i]);});
+ },
 };

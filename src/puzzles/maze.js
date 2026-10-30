@@ -1,60 +1,36 @@
-import { bounded, indexIn, mod } from './common.js';
+import {MAZE_START,MAZE_END,mazeSeenStars,mazeExitLimit,mazeConnections} from '../data/maze-apparatus.js';
+import {bounded,indexIn,mod} from './common.js';
 
-export const RING_ARCS = [
-  [[0, 1], [1, 2], [3, 4]],
-  [[0, 1], [2, 3], [3, 4], [4, 5]],
-  [[0, 1], [1, 2], [2, 3], [4, 5]],
-];
-export const RING_BRIDGES = [[2, 4], [1, 5]];
-export const MAZE_STARS = [8, 17];
-
-export function mazeEdges(turns) {
-  const edges = [];
-  RING_ARCS.forEach((arcs, ring) => arcs.forEach(([a, b]) => edges.push([ring * 6 + mod(a + turns[ring], 6), ring * 6 + mod(b + turns[ring], 6)])));
-  RING_BRIDGES.forEach((angles, ring) => angles.forEach(angle => {
-    const position = mod(angle + turns[ring], 6);
-    edges.push([ring * 6 + position, (ring + 1) * 6 + position]);
-  }));
-  return edges;
+export const mazeStars=mazeSeenStars;
+export const mazeHome=p=>p.path.length===1&&p.next===null;
+export function validMazeWalk(turns,path){
+ if(!Array.isArray(path)||!path.length||path.length>256||path[0]!==MAZE_START||!path.every(n=>indexIn(n,20)))return false;
+ const edges=mazeConnections(turns);
+ for(let i=1;i<path.length;i++){
+  if(path[i-1]===MAZE_END||!edges.some(([a,b])=>a===path[i-1]&&b===path[i]||b===path[i-1]&&a===path[i]))return false;
+  if(path[i]===MAZE_END&&mazeStars(path.slice(0,i)).length!==2)return false;
+ }
+ return true;
 }
-
-export function mazePath(turns) {
-  const edges = mazeEdges(turns);
-  function search(path) {
-    const node = path.at(-1);
-    if (node === 15) return MAZE_STARS.every(star => path.includes(star)) ? path : null;
-    for (const edge of edges) {
-      const next = edge[0] === node ? edge[1] : edge[1] === node ? edge[0] : -1;
-      if (next < 0 || path.includes(next)) continue;
-      const found = search([...path, next]);
-      if (found) return found;
-    }
-    return null;
+const adjacent=(turns,from,to)=>mazeConnections(turns).some(([a,b])=>a===from&&b===to||b===from&&a===to);
+export const maze={
+ create:()=>({turns:[3,4,0],path:[MAZE_START],next:null,amount:0}),
+ valid(p){
+  if(!bounded(p?.turns,3,6)||!validMazeWalk(p.turns,p.path))return false;
+  if(p.next===null)return p.amount===0;
+  return indexIn(p.next,20)&&Number.isFinite(p.amount)&&p.amount>0&&p.amount<1&&p.path.at(-1)!==MAZE_END&&adjacent(p.turns,p.path.at(-1),p.next)&&(p.next!==MAZE_END||p.amount<=mazeExitLimit(p.path));
+ },
+ move(p,a){
+  if(p.path.at(-1)===MAZE_END)return p;
+  if(a.type==='return')return mazeHome(p)?p:{...p,path:[MAZE_START],next:null,amount:0};
+  if(mazeHome(p)){
+   if(a.type==='set-turn'&&indexIn(a.index,3)&&indexIn(a.value,6))return {...p,turns:p.turns.map((v,i)=>i===a.index?a.value:v)};
+   if(a.type==='turn'&&indexIn(a.index,3)&&[-1,1].includes(a.direction))return {...p,turns:p.turns.map((v,i)=>i===a.index?mod(v+a.direction,6):v)};
   }
-  return search([0]);
-}
-
-// A trial follows only the current grooves. It never suggests a new ring angle.
-export function mazeTrial(turns) {
-  const complete=mazePath(turns);
-  if(complete)return complete;
-  const edges=mazeEdges(turns);let best=[0],score=-1;
-  function visit(path){
-    const value=path.filter(node=>MAZE_STARS.includes(node)).length*30+path.length;
-    if(value>score){score=value;best=path;}
-    const node=path.at(-1);
-    if(node===15)return;
-    for(const [a,b] of edges){const next=a===node?b:b===node?a:-1;if(next>=0&&!path.includes(next))visit([...path,next]);}
-  }
-  visit([0]);return best;
-}
-
-export const maze = {
-  create: () => ({ turns: [3, 4, 0] }),
-  valid: state => bounded(state?.turns, 3, 6),
-  move(state, action) {
-    if (action.type === 'set-turn' && indexIn(action.index, 3) && indexIn(action.value, 6)) return { turns:state.turns.map((v,i) => i === action.index ? action.value : v) };
-    return action.type === 'turn' && indexIn(action.index, 3) && [-1,1].includes(action.direction) ? { turns:state.turns.map((v,i) => i === action.index ? mod(v + action.direction,6) : v) } : state;
-  },
-  solved: state => Boolean(mazePath(state.turns)),
+  if(a.type!=='roll'||!Array.isArray(a.path)||a.path.length<p.path.length||!p.path.every((v,i)=>a.path[i]===v))return p;
+  const next={...p,path:[...a.path],next:a.next,amount:a.amount};
+  if(!maze.valid(next))return p;
+  return next.path.length>1&&next.path.at(-1)===MAZE_START&&next.next===null?{...next,path:[MAZE_START]}:next;
+ },
+ solved:p=>p.path.at(-1)===MAZE_END,
 };

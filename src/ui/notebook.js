@@ -10,6 +10,9 @@ import { achievementsPage } from './achievements.js';
 import { EVIDENCE_TITLES } from './evidence.js';
 import { ITEM_EVIDENCE } from '../data/ciphers.js';
 import {renderSkyPair} from './sky.js';
+import {SCENE_DETAILS} from '../data/scene-details.js';
+import {sceneSource} from './scene-source.js';
+import {jianghuExhibit} from './jianghu.js';
 
 export function journalPanel(state, tab = 'clues', view = {}) {
   const tabs = [['clues', '线索','feather'], ['memories', '以前','moon'], ['collections', '收藏','star'], ['activities', '小记','book']];
@@ -20,12 +23,12 @@ export function journalPanel(state, tab = 'clues', view = {}) {
     collections: collectionIndex(state),
     activities: achievementsPage(state, view),
   };
-  return { title: '手账', className: 'notebook-dialog', html: `<nav class="notebook-tabs" aria-label="手账内容">${tabs.map(([id, text, mark]) => `<button data-action="journal-tab" data-tab="${id}" class="${tab === id ? 'active' : ''}" aria-current="${tab === id}">${icon(mark)}${text}</button>`).join('')}</nav><div class="notebook-paper">${body[tab] ?? body.clues}</div>` };
+  return { title: '手账', className: `notebook-dialog ${tab==='activities'?'records-dialog':''}`, html: `<nav class="notebook-tabs" aria-label="手账内容">${tabs.map(([id, text, mark]) => `<button data-action="journal-tab" data-tab="${id}" class="${tab === id ? 'active' : ''}" aria-current="${tab === id}">${icon(mark)}${text}</button>`).join('')}</nav><div class="notebook-paper">${body[tab] ?? body.clues}</div>` };
 }
 
 function collectionIndex(state) {
   const found = discoveredCollections(state);
-  const covers={naruto:'memoryNaruto',genshin:'memoryGenshin',hei:'cinema',cities:'campusWhu'};
+  const covers={yanyun:'jianghuPair',naruto:'memoryNaruto',genshin:'memoryGenshin',hei:'cinema',cities:'campusWhu'};
   return `<div class="collection-index">${Object.entries(COLLECTIONS).map(([id, c]) => `<button class="collection-link ${found.has(id) ? '' : 'collection-hidden'}" aria-label="${escape(c.title)}" data-action="collection" data-id="${id}" ${found.has(id) ? '' : 'disabled'}>${found.has(id) ? id==='sky'?renderSkyPair(0,{cover:true}):covers[id]?`<img src="${ASSETS[covers[id]]}" alt="${escape(c.title)}" draggable="false">`:character(c.asset, 0, c.columns, c.rows, c.names[0]) : `<span class="unfound-art">${motif('envelope')}</span>`}<span>${escape(c.title)}</span>${found.has(id) ? '' : '<small>还没找到</small>'}</button>`).join('')}</div><div class="journal-links"><button class="quiet-button" data-action="reading">书与电影</button><button class="quiet-button" data-action="interests">平时</button><button class="quiet-button" data-action="flowers">花</button></div>`;
 }
 
@@ -41,17 +44,23 @@ export function keepsakePanel(id, state) {
 }
 
 export function collectionPanel(id, context) {
+  if(id==='yanyun')return {title:'清河与故人',className:'collection-dialog exhibit-yanyun',html:jianghuExhibit(context)};
   const collection = COLLECTIONS[id];
   if (!collection) return readingPanel();
-  return { title: collection.title, className: `collection-dialog exhibit-${id}`, html: id === 'gifts' ? giftGallery(context.state) : memoryExhibit(id, context) };
+  const origin=SCENE_DETAILS[context.view?.source],source=origin?.scene===context.state.scene&&origin.collection===id?origin:null;
+  const atSource=source&&!context.view?.pageOpen,aspect=source?source.crop.width/source.crop.height*(1672/941):1;
+  const beside=['naruto','genshin'].includes(id);
+  const html=atSource?`<div class="scene-detail" style="--source-aspect:${aspect}">${sceneSource(context.sourcePicture(),source.crop)}</div><div class="memory-tabs"><button class="text-button" data-action="memory-page" data-open="true">${source.open}</button></div>`:id==='gifts'?giftGallery(context.state):memoryExhibit(id,{...context,memoryReturn:source&&!atSource&&beside?source.back:null});
+  return { title: collection.title, className: `collection-dialog exhibit-${id} ${source&&!atSource?'source-page':''}`, html:html+(source&&!atSource&&!beside?`<div class="memory-tabs"><button class="text-button" data-action="memory-page" data-open="false">${source.back}</button></div>`:'') };
 }
 
 export function readingPanel(state) {
-  return { title: '你推荐的', className: 'notebook-dialog', html: `<div class="reading-shelf">${READING.map((title, i) => `<button data-action="reading-book" data-index="${i}" aria-pressed="${state?.activities.includes(`reading:${i}`) ?? false}" class="reading-book ${state?.activities.includes(`reading:${i}`) ? 'book-opened' : ''}">${motif('book')}<span>${escape(title)}</span></button>`).join('')}</div>` };
+  const book=(title,i)=>{const read=state?.activities.includes(`reading:${i}`)??false;return `<button data-action="reading-book" data-index="${i}" data-focus="reading-${i}" aria-pressed="${read}" class="reading-book ${read?'book-opened':''}"><small>${String(i+1).padStart(2,'0')}</small><span>${escape(title)}</span><span class="reading-bookmark" aria-hidden="true">${read?motif('leaf'):''}</span></button>`;};
+  return { title: '你推荐的', className: 'notebook-dialog reading-dialog', html: `<p class="reading-caption">下次看什么？</p><div class="reading-shelf">${[0,5].map(start=>`<div class="reading-leaf">${READING.slice(start,start+5).map((title,i)=>book(title,start+i)).join('')}</div>`).join('')}</div>` };
 }
 
 export function interestsPanel() {
-  return { title: '平时', className: 'notebook-dialog', html: `<div class="interest-notes">${INTERESTS.map(([name, text]) => `<article>${motif('star')}<h3>${escape(name)}</h3><p>${escape(text)}</p></article>`).join('')}</div>` };
+  return { title: '平时', className: 'notebook-dialog', html: `<div class="interest-notes">${INTERESTS.map(([name, text],i) => `<article>${motif(['leaf','daisy','moon','star','book'][i])}<h3>${escape(name)}</h3><p>${escape(text)}</p></article>`).join('')}</div>` };
 }
 
 export function flowersPanel(selected = 'rose') {

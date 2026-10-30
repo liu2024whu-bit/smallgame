@@ -1,6 +1,6 @@
 import {BOOKS} from '../puzzles/books.js';
 import {ASSET_LAYOUTS} from '../data/asset-layouts.js';
-import {LIBRARY_BOOKMARKS} from '../data/library.js';
+import {LIBRARY_BOOKMARKS,LIBRARY_BOOK_SCALES} from '../data/library.js';
 import {ITEMS} from '../data/items.js';
 import {atlas,character,escape,itemSprite} from './dom.js';
 
@@ -8,11 +8,15 @@ export function libraryBookmark(book){
  const mark=LIBRARY_BOOKMARKS[book];if(!mark)return '';
  return `<span class="library-tab">${atlas('postalSupports',4,{className:'library-tab-paper',label:''})}<span class="library-tab-print">${character('genshin',mark.figure,2,1,mark.name)}</span><small>${mark.name}</small></span>`;
 }
-export function libraryBook(book,{mark=true,title=true}={}){
+export function libraryBookHeight(book){
+ const frames=ASSET_LAYOUTS.librarySpines.frames;
+ const tallest=Math.max(...frames.slice(0,5).map(frame=>frame[3]));
+ return 93*frames[book<0?5:book][3]/tallest*(LIBRARY_BOOK_SCALES[book]??1);
+}
+export function libraryBook(book,{mark=true,title=true,corner=false}={}){
  const frame=ASSET_LAYOUTS.librarySpines.frames[book<0?5:book];
- const tallest=Math.max(...ASSET_LAYOUTS.librarySpines.frames.slice(0,5).map(frame=>frame[3]));
  const words=book<0?'':escape(BOOKS[book]);
- return `<span class="library-book-paint" data-book="${book}" style="aspect-ratio:${frame[2]}/${frame[3]};--book-height:${93*frame[3]/tallest}%">${mark?libraryBookmark(book):''}${atlas('librarySpines',book<0?5:book,{className:'library-book-cloth',label:''})}${title?`<span class="library-spine-title">${words}</span>`:''}</span>`;
+ return `<span class="library-book-paint" data-book="${book}" style="aspect-ratio:${frame[2]}/${frame[3]};--book-height:${libraryBookHeight(book)}%">${mark?libraryBookmark(book):''}${atlas('librarySpines',book<0?5:book,{className:'library-book-cloth',label:''})}${title?`<span class="library-spine-title">${words}</span>`:''}${corner?atlas('libraryPages',1,{className:'library-page-corner',label:''}):''}</span>`;
 }
 export function librarySlip(back=false){
  return `<span class="library-slip-leaf ${back?'library-slip-turned':''}"><span class="library-slip-face" ${back?'data-copy-hidden':''}>${itemSprite(ITEMS.borrowSlip.sprite)}</span><span class="library-slip-rear" ${back?'':'data-copy-hidden'}>${atlas('postalSupports',4,{className:'library-slip-paper',label:''})}<span class="library-slip-print"><span>书签之间</span><span class="library-gap-diagram">${[0,-1,-1,2].map(book=>`<span>${libraryBook(book,{title:false})}</span>`).join('')}</span><span>隔着两本书。</span></span></span></span>`;

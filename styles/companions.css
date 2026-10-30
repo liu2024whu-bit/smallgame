@@ -1,4 +1,8 @@
 @layer room {
+  .painted-companion {position:absolute;z-index:4;padding:0;border:0;background:transparent;box-shadow:none;border-radius:35%;}
+  .painted-companion:hover {background:none;}.painted-companion:focus-visible {outline:1px solid #a8af8c;outline-offset:3px;}
+  .prince-light {position:absolute;display:block;aspect-ratio:3/2;translate:-50% -50%;pointer-events:none;}
+  .prince-light-frame {position:absolute;inset:0;display:block;width:100%;height:100%;opacity:0;}
   .room-mascot { position:absolute; left:15%; bottom:9%; width:7.2%; aspect-ratio:560/580; padding:0; border:0; background:none; box-shadow:none; z-index:3; }
   .room-mascot::before { content:''; position:absolute; bottom:1%; left:18%; width:64%; height:8%; border-radius:50%; background:#5f665630; filter:blur(3px); }
   .room-mascot:hover { background:none; }.room-mascot:focus-visible { outline:1px solid #a8af8c; outline-offset:3px; }

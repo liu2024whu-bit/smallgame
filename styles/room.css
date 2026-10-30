@@ -1,10 +1,12 @@
 @layer room {
   #app { min-height: 100dvh; display: grid; place-items: center; padding: 8px 0; }
-  .game-shell { width: min(1600px, 100vw, calc((100dvh - 112px) * 1.777)); position: relative; background: #fbfbf5; box-shadow: 0 12px 80px #495b4610; }
-  .game-shell:has(.room-stage[data-scene="party"]) { width:min(1600px,100vw,calc((100dvh - 112px) * 1.5)); }
-  .room-stage[data-scene="party"] { aspect-ratio:1.5; }
-  .room-stage { aspect-ratio: 1672 / 941; position: relative; isolation: isolate; }
+  .game-shell { --room-header:62px;--inventory-height:92px;width:min(var(--display-limit,100vw),100vw,calc((100dvh - var(--room-header) - var(--inventory-height) - 16px)*var(--display-aspect,1.777)));padding-top:var(--room-header);position:relative;background:#fbfbf5;box-shadow:0 12px 80px #495b4610; }
+  .game-frame { position:relative;aspect-ratio:var(--display-aspect,1672/941);overflow:clip;background:#f3f0e6; }
+  .room-stage { width:var(--picture-width,100%);height:var(--picture-height,100%);position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);isolation:isolate; }
   .scene-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; user-select: none; pointer-events: none; }
+  .scene-source { position:absolute;inset:0;overflow:hidden;pointer-events:none;isolation:isolate; }
+  .scene-source-picture { position:absolute;isolation:isolate; }
+  .scene-source .scene-change { animation:none; }
   .scene-transition { z-index:2;position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none;user-select:none; }
   .scene-change { position:absolute; inset:0; width:100%; height:100%; object-fit:fill; mask-composite:intersect; user-select:none; pointer-events:none; animation:paint-settles .4s ease-out; }
   @keyframes paint-settles { from{opacity:0}to{opacity:1} }
@@ -28,39 +30,42 @@
   .scene-caption { position: absolute; left: 27px; bottom: 18px; display: inline-flex;align-items:center;gap:7px;padding:3px 7px;border-radius:3px 7px;background:#fffdf3a1;z-index:3;pointer-events:auto; color: #63715c; text-shadow: 0 1px 10px #fff; }
   .scene-caption span { letter-spacing: .2em; font-size: 18px; }
   .scene-caption small { font-size: 13px; opacity: .82; }
-  .hud-top { position: absolute; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; align-items: flex-start; padding: 21px 27px; pointer-events: none; }
-  .hud-top button, .hud-tools { pointer-events: auto; }
-  .wordmark { background:#fcfaf2df; border:1px solid #e4e0ce80; border-radius:3px 10px 4px 8px; box-shadow:0 2px 12px #6d684012; font-size: 20px; letter-spacing: .14em; display: grid; gap: 3px; text-align: left; padding: 5px 10px; color: #606d57; }
+  .hud-top {position:absolute;top:0;left:0;right:0;height:var(--room-header);display:flex;justify-content:space-between;align-items:center;padding:7px 21px;pointer-events:none;border-bottom:1px solid #e3e1d4;background:#fcfaf4;}
+  .hud-top button { pointer-events: auto; }
+  .wordmark {border:1px solid transparent;border-radius:3px 7px;font-size:19px;letter-spacing:.12em;display:grid;gap:1px;text-align:left;padding:2px 8px;color:#53654f;}
   .wordmark span { font: 9px/1.6 Georgia, serif; letter-spacing: .18em; opacity: .7; }
-  .hud-tools { display: flex; gap: 3px; align-items: center; background: #fafaf277; border-radius: 30px; }
-  .save-status { font-size: 12px; padding: 0 10px; color: #8a927f; }
-  .inventory-bar { height: 92px; display: flex; align-items: center; border-top: 1px solid #e2e3d3; background: #fafbf3; padding: 9px 20px; gap: 18px; }
+  .hud-tools {display:flex;gap:3px;align-items:center;}
+  .save-status {display:grid;gap:1px;font:11.5px/1.5 var(--font-ui);padding:0 10px;color:#65735c;white-space:nowrap;min-width:92px;}
+  .save-status small {font:11px/1.4 var(--font-print);color:#747d69;font-variant-numeric:tabular-nums;}
+  .save-status[data-save-phase=error],.save-status[data-save-phase=conflict] {color:#916f51;}
+  .dialog-save-status {font-size:11px;min-width:98px;text-align:right;margin-right:9px;}
+  .inventory-bar { height:var(--inventory-height); display:flex;align-items:center;border-top:1px solid #e2e3d3;background:#fafbf3;padding:9px 20px;gap:18px; }
   .inventory-caption { font-size: 14px; line-height: 1.5; color: #77836c; flex: 0 0 62px; border-right: 1px solid #daddcd; }
   .inventory-caption span { display: block; font: 10px Georgia, serif; padding-top: 7px; color: #a3aa96; }
-  .inventory-items { display: flex; flex: 1; gap: 6px; min-width: 0; overflow-x: auto; padding: 4px; scrollbar-width: thin; scrollbar-color: #cdd4bf transparent; }
+  .inventory-items { display: flex; flex: 1; gap: 6px; min-width: 0; overflow-x: auto;overflow-y:hidden; padding: 4px; scrollbar-width: thin; scrollbar-color: #cdd4bf transparent; }
   .inventory-slot { display: grid; place-items: center; position: relative; padding: 0 3px; flex: 0 0 67px; height: 66px; border: 1px solid #d7ddc766; border-radius: 5px 7px 4px 6px; }
-  .inventory-slot .item-art { width: 49px; }
-  .inventory-slot > span:last-child { font-size: 10px; position: absolute; bottom: -1px; color: #6f7c60; }
+  .inventory-slot .item-art { width:min(49px,calc(40px * var(--ratio,1)));max-height:40px;translate:0 -6px; }
+  .inventory-slot > span:last-child {font:11.5px/1.3 var(--font-ui);position:absolute;bottom:0;color:#58674d;white-space:nowrap;}
   .inventory-slot:hover, .inventory-slot.selected { background: #ecf0e1; border-color: #a5b795; }
   .empty-inventory { font-size: 13px; color: #a0a58f; margin: 0; padding: 8px; }
   .journal-tab { display: grid; justify-items: center; font-size: 13px; color: #6b795e; padding-left: 14px; border-left: 1px solid #daddcd; }
-  .scene-dots { display: flex; position: absolute; bottom: 110px; left: 50%; transform: translateX(-50%); gap: 7px; }
+  .scene-dots { display:flex;position:absolute;bottom:calc(var(--inventory-height) + 18px);left:50%;transform:translateX(-50%);gap:7px; }
   .scene-dots button { width: 20px; height: 20px; display: grid; place-items: center; padding: 0; }
   .scene-dots button::before { content: ''; width: 5px; height: 5px; border: 1px solid #9aa58a; border-radius: 50%; }
   .scene-dots button.current::before { background: #78876c; }
-  @media (max-width: 800px) {
+  @media (max-width: 800px), (max-height: 600px) {
     #app { padding: 0; }
-    .game-shell { width: 100vw; }
-    .hud-top { padding: 10px 12px; }
-    .wordmark { background:#fcfaf2df; border:1px solid #e4e0ce80; border-radius:3px 10px 4px 8px; box-shadow:0 2px 12px #6d684012; font-size: 15px; }
-    .wordmark span, .save-status { display: none; }
+    .game-shell {--room-header:52px;--inventory-height:80px;}
+    .hud-top { min-height:52px;align-items:center;padding:5px 8px; }
+    .hud-tools .icon-button { width:30px;height:30px; }
+    .wordmark {font-size:15px;}
+    .wordmark span, .hud-tools .save-status { display: none; }
     .scene-caption small { display: none; }
     .scene-caption { left: 20px; bottom: 12px; }
-    .inventory-bar { padding: 7px 8px; gap: 6px; height: 80px; }
+    .inventory-bar { padding:7px 8px;gap:6px; }
     .inventory-caption { font-size: 11px; flex-basis: 48px; }
     .inventory-slot { flex-basis: 58px; height: 59px; }
     .journal-tab { padding-left: 6px; }
-    .scene-dots { bottom: 85px; }
     .scene-arrow { width: 25px; height: 46px; }
   }
   @media (max-width: 480px) {

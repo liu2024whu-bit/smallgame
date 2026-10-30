@@ -1,5 +1,6 @@
 import { READING } from './memories.js';
 import { EVIDENCE_IDS } from './ciphers.js';
+import {YANYUN_PAGES} from './yanyun.js';
 
 export const MEMORY_IDS = ['sky', 'naruto', 'hashira', 'genshin', 'hei', 'prince', 'cities'];
 export const ACTIVITY_IDS = Object.freeze([
@@ -13,6 +14,7 @@ export const ACTIVITY_IDS = Object.freeze([
   ...['rose', 'daisy', 'tulip', 'lavender'].map(id => `flower:${id}`),
   ...READING.map((_, index) => `reading:${index}`),
   ...MEMORY_IDS.map(id => `memory:${id}`),
+  'memory:yanyun','yanyun:open',...YANYUN_PAGES.map(p=>`yanyun:person:${p.id}`),'piano:letter',
 ]);
 
 export const ACHIEVEMENTS = Object.freeze([
@@ -21,11 +23,13 @@ export const ACHIEVEMENTS = Object.freeze([
   { id:'campuses', title:'两枚邮戳', intro:'纸上也能逛校园。', hint:'两张折页里，还有地方没走到。', text:'两张折页，都盖好印了。', keys:['campus:whu','campus:nju'], motif:'envelope' },
   { id:'pets', title:'毛茸茸的', intro:'解谜先歇会儿？这边有毛茸茸的。', hint:'屋里还睡着另一只。', text:'猫和狗都醒过一小会儿。', keys:['pet:cat','pet:dog'], motif:'paw' },
   { id:'flowers', title:'一小束', intro:'每朵花，都有一句祝福。', hint:'还可以换一朵看看。', text:'四朵花，都挑过了。', keys:['rose','daisy','tulip','lavender'].map(id=>`flower:${id}`), motif:'daisy' },
-  { id:'reading', title:'下一本', intro:'你推荐的，留着慢慢看。', hint:'书脊上还有没翻开的名字。', text:'书和电影的名字，都翻到了。', keys:READING.map((_,index)=>`reading:${index}`), motif:'book' },
+  { id:'reading', title:'下一本', intro:'你推荐的，留着慢慢看。', hint:'纸上还有几个名字。', text:'书和电影的名字，都翻到了。', keys:READING.map((_,index)=>`reading:${index}`), motif:'book' },
   { id:'sketch', title:'添点颜色', intro:'这张画，还差一点颜色。', hint:'铅笔就搁在画边呢。', text:'画里有了颜色。', keys:['art:color'], motif:'leaf' },
   { id:'details', title:'画出来的', intro:'从纸上，变成拿在手里的东西。', hint:'画稿旁边，还有几样。', text:'稿本、明信片，还有挂件。', keys:[0,1,2].map(index=>`art:detail:${index}`), motif:'envelope' },
   { id:'cinema', title:'再放一遍', intro:'灯暗下来，电影就要开场。', hint:'票夹里留着那一晚。', text:'又看了一小段。', keys:['cinema:play'], motif:'moon' },
   { id:'memories', title:'翻到这里', intro:'那些喜欢的，偶尔也会换一换。', hint:'柜子和窗边，好像还有没翻开的。', text:'熟悉的身影，都见到了。', keys:MEMORY_IDS.map(id=>`memory:${id}`), motif:'cloud' },
   { id:'keepsakes', title:'一直留着', intro:'有些小东西，一直在。', hint:'还有几样，藏在这些小机关里。', text:'都收进盒子里了。', total:14, motif:'rose', hideCount:true },
   { id:'birthday', title:'留给今天', intro:'有脆脆的，也有软乎乎的。', hint:'蛋糕旁边，还有一份等着拆。', text:'薯条和小兔，都在这里。', keys:['birthday:fries','birthday:unwrap'], motif:'star' },
+  {id:'jianghu',title:'清河与故人',intro:'九流门、天泉，还有清河的熟面孔。',hint:'雨廊桌下的画，还没翻完。',text:'江叔、寒姨……这回一个也没落下。',keys:YANYUN_PAGES.map(p=>p.id==='pair'?'yanyun:open':`yanyun:person:${p.id}`),motif:'leaf',extra:true},
+  {id:'piano',title:'再弹一会儿',intro:'琴上藏着个小机关，琴里还藏了别的。',hint:'弹完以后，琴腹的盖板好像松了。',text:'短笺看过了，琴也还可以接着弹。',puzzles:['piano'],keys:['piano:letter'],motif:'music',extra:true},
 ]);

@@ -1,6 +1,7 @@
 @layer puzzles {
  .puzzle-cloud .puzzle-field { padding:0; background:transparent; }
- .cloud-stage { position:relative; width:100%; aspect-ratio:1.5; background:url('../assets/illustrations/cloud-ledge.webp') center/100% 100% no-repeat; isolation:isolate; overflow:clip; }
+ .cloud-stage { position:relative; width:min(100%,calc((100dvh - 210px)*1.5)); margin:auto; aspect-ratio:1.5; background:url('../assets/illustrations/cloud-ledge.webp') center/100% 100% no-repeat; isolation:isolate; overflow:clip; }
+ .puzzle-cloud .close-look .cloud-stage{width:100%;}
  .cloud-case { position:absolute; left:2%; top:6%; width:96%; aspect-ratio:1.5; perspective:1800px; container-type:inline-size; }
  .cloud-turntable { position:absolute; inset:0; transform-style:preserve-3d; rotate:y var(--cloud-face,0deg); }
  .cloud-face { position:absolute; inset:0; backface-visibility:hidden; transform-style:flat; }
@@ -13,10 +14,8 @@
  .cloud-orbit { position:absolute; inset:0; transform-origin:50% 50%; }
  .cloud-paper-ring { position:absolute; left:50%; top:50%; translate:-50% -50%; width:100%; }
  .cloud-orbit-inner .cloud-paper-ring { width:70%; }
- .cloud-fragment { position:absolute; inset:0; width:100%; height:100%; overflow:visible; fill:#6e827d; stroke:#62716a; stroke-width:.6; }
- .cloud-orbit-inner .cloud-fragment { fill:#b89a63; stroke:#9c8153; }
- .cloud-fragment-tip { filter:drop-shadow(0 .6px .3px #57472e27); }
- .cloud-paper-stem { fill:none; stroke:#f8edcf; stroke-width:6px; stroke-linecap:round; }
+ .cloud-fragment {display:block;position:absolute;left:28%;top:1%;width:44%;clip-path:inset(0 50% 0 0);filter:drop-shadow(0 .6px .3px #57472e27);}
+ .cloud-fragment.fragment-half-1 {clip-path:inset(0 0 0 50%);}
  .cloud-center-pin { position:absolute; width:5%; aspect-ratio:1; left:47.5%; top:47.5%; border:1px solid #bcad83; border-radius:50%; background:#e2d3a9; box-shadow:inset 0 0 2px #fff7d4; }
  .cloud-handles { position:absolute; inset:0; width:100%; height:100%; overflow:visible; pointer-events:none; touch-action:none; user-select:none; }
  .cloud-paper-handle { position:absolute; inset:0; width:100%; height:100%; padding:0; border:0; background:transparent; pointer-events:auto; cursor:var(--cursor-grab,grab); touch-action:none; }
@@ -29,7 +28,7 @@
  .cloud-winder-art { display:block; width:100%; }
  .cloud-mark { width:24px; height:24px; fill:none; stroke:currentColor; stroke-width:1.4; stroke-linecap:round; stroke-linejoin:round; }
  .cloud-winder .cloud-mark { position:absolute; left:37%; top:38%; width:26%; height:26%; color:#796b4b; }
- .cloud-loop { position:absolute; inset:0; width:100%; height:100%; overflow:visible; fill:none; stroke:#e8ddbd; stroke-width:2.4; stroke-linecap:round; opacity:0; filter:drop-shadow(0 1px .4px #776d5340); pointer-events:none; }
+ .cloud-loop {position:absolute;inset:0;width:100%;height:100%;opacity:0;pointer-events:none;}
  .cloud-being-wound .cloud-loop { opacity:1; }
  .cloud-detents { position:absolute; inset:0; border-radius:50%; pointer-events:none; }
  .cloud-detents i { position:absolute; left:49%; top:5%; width:2%; height:6%; background:#8e7b54; transform-origin:50% 750%; }
@@ -42,12 +41,10 @@
  .cloud-wing { display:block; position:absolute; inset:0; backface-visibility:visible; }
  .cloud-wing-art { display:block; width:100%; }
  .cloud-figure { display:block; position:absolute; left:50%; bottom:22%; translate:-50% 0; filter:drop-shadow(.8px 1px .5px #68502b2a); }
- .cloud-drive { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; fill:none; }
- .cloud-belt { stroke:#c4bda0; stroke-width:3; fill:none; stroke-linecap:round; filter:drop-shadow(0 1px .5px #685a3a33); }
- .cloud-gear { fill:#d8c49b; stroke:#9b875e; stroke-width:2.2; }
- .cloud-drive circle { fill:#e9dcb9; stroke:#a48f60; stroke-width:2; }
- .cloud-sheave-spoke { stroke:#b5a579; stroke-width:3; }
- .world-cloud { position:absolute; aspect-ratio:1.5; pointer-events:none; }
+ .cloud-drive,.cloud-belt-canvas {position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+ .cloud-drive-part {display:block;position:absolute;aspect-ratio:1;translate:-50% -50%;}
+ .cloud-drive-part>.raster-sprite {display:block;width:100%;filter:saturate(.62) contrast(.92) brightness(1.04);}
+ .world-cloud { position:absolute; aspect-ratio:1.5; pointer-events:none; container-type:inline-size; }
  .world-cloud>.cloud-case { inset:0; width:100%; }.world-cloud .cloud-winder { min-width:0; min-height:0; }
  .world-cloud .cloud-detents i { min-width:0; }.world-cloud .cloud-mark { stroke-width:1.7; }
  .album-cloud { display:block; position:relative; width:100%; aspect-ratio:1.5; }
@@ -58,7 +55,6 @@
   .cloud-pair::before { transition:none; }
  }
  @media(forced-colors:active){
-  .cloud-fragment,.cloud-orbit-inner .cloud-fragment { fill:CanvasText; stroke:CanvasText; }.cloud-paper-stem { stroke:Canvas; }
   .cloud-winder:focus-visible,.cloud-flip:focus-visible { outline:2px solid Highlight; }
  }
 }

@@ -1,4 +1,5 @@
 import {createFoley} from './foley.js';
+import {playPianoVoice} from './piano-voice.js';
 import { createMusicPlayer } from './music-player.js';
 
 // Independent music/effect buses. The first gesture unlocks audio, never page load.
@@ -68,23 +69,25 @@ export function createAudio({advance,library}={}) {
     source.onended = () => { source.disconnect(); filter.disconnect(); };
   }
 
-  function material(kind = 'wood') {
+  function material(kind = 'wood',delay=0) {
     if (kind === 'paper') return paper();
     const notes = { wood: [260, 0.09], glass: [940, 0.65], pet: [390, 0.22], pickup: [520, 0.4], key:[155,.045], metal:[720,.065] };
     const [frequency, length] = notes[kind] ?? notes.wood;
-    tone(frequency, length, 0.15, 0, kind === 'wood' ? 'triangle' : 'sine');
+    const animated=settings.motion!==false&&!globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    tone(frequency, length, 0.15, animated?delay:0, kind === 'wood' ? 'triangle' : 'sine');
   }
 
   function pour() {
     if(!context||!settings.sound||document.hidden)return;
-    const buffer=context.createBuffer(1,Math.floor(context.sampleRate*.6),context.sampleRate),samples=buffer.getChannelData(0);
+    const animated=settings.motion!==false&&!globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches,delay=animated?.38:0,length=animated?.82:.38;
+    const buffer=context.createBuffer(1,Math.floor(context.sampleRate*length),context.sampleRate),samples=buffer.getChannelData(0);
     let smooth=0;
     for(let i=0;i<samples.length;i++){smooth=(smooth+(Math.random()*2-1)*.08)/1.05;samples[i]=smooth*Math.sin(Math.PI*i/samples.length)*.18;}
     const source=context.createBufferSource(),filter=context.createBiquadFilter();
     source.buffer=buffer;filter.type='lowpass';filter.frequency.value=1200;
-    source.connect(filter).connect(master);source.start();
+    source.connect(filter).connect(master);source.start(context.currentTime+delay);
     source.onended=()=>{source.disconnect();filter.disconnect();};
-    tone(920,.18,.035,.5);
+    tone(660,.14,.025,delay+length+.22);
   }
 
   function success() {
@@ -115,5 +118,6 @@ export function createAudio({advance,library}={}) {
       timers.add(timer);
     });
   }
-  return { resume, configure, material, foley, pour, success, music, melody, stopMelody, previewNote, rain, stopRain };
+  const pianoNote=note=>{if(!context||!settings.sound||document.hidden)return;playPianoVoice(context,master,note);duck(true);window.clearTimeout(duckTimer);duckTimer=window.setTimeout(()=>duck(false),1100);};
+  return { resume, configure, material, foley, pour, success, music, melody, stopMelody, previewNote,pianoNote, rain, stopRain };
 }

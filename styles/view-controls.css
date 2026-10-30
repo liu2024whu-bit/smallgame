@@ -1,0 +1,16 @@
+@layer puzzles {
+ .object-view-control{position:relative;display:inline-flex;align-items:center;justify-content:center;flex:0 1 auto;min-width:48px;width:auto;min-height:46px;padding:8px 13px;gap:7px;border:1px solid #b8b9a34a;border-radius:24px;color:#6c7a61;background:#f7f4e9cc;box-shadow:inset 0 1px 0 #fffdf8,0 2px 5px #71644508;vertical-align:middle;}
+ nav .object-view-control{min-width:48px;min-height:46px;width:auto;height:auto;text-decoration:none;}
+ .object-view-control>.motif{width:27px;height:27px;flex:none;}
+ .object-view-control>.icon{width:21px;height:21px;}
+ .object-view-control:is([aria-current=true],[aria-pressed=true]){background:#e8eddfbd;border-color:#98a58b8c;box-shadow:inset 0 0 0 2px #f5f5eabb;}
+ .object-view-control:hover:not(:disabled){background:#eef1e5;border-color:#879b7d;}
+ .view-control-label{display:block;max-width:180px;color:#5c6d56;font:13px/1.6 var(--font-ui);white-space:nowrap;pointer-events:none;}
+ .object-view-control:is(:hover,:focus-visible)>.view-control-label{opacity:1;}
+ .screen-return-view{position:absolute;right:10px;top:10px;z-index:8;}
+ .screen-adjacent-view{position:absolute;top:48%;z-index:8;}.screen-adjacent-view.prev{left:8px;}.screen-adjacent-view.next{right:8px;}
+ .screen-look-base{position:absolute;z-index:6;padding:0;background:none;}
+ .screen-mode-paper .screen-viewport{width:min(100%,calc((100dvh - 285px)*510/756));}
+ .piano-reading{gap:12px 20px;}
+ .piano-reading>.object-view-control{flex:0 1 auto;}
+}

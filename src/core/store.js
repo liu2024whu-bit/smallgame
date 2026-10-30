@@ -6,19 +6,19 @@ export function createStore(storage) {
   let state = loaded.state;
   let writable = true;
   const listeners = new Set();
-  function update(next,options) {
+  function update(next,options,action) {
     if (next === state) return false;
     const previous = state;
     state = next;
     writable = writeSave(storage, state,options);
-    for (const listener of listeners) listener(state, previous);
+    for (const listener of listeners) listener(state, previous,action);
     return true;
   }
   return {
     get: () => state,
-    notice: loaded.notice,
-    writable: () => writable,
-    dispatch: action => update(reduce(state, action)),
+    notice: loaded.notice||storage?.notice||'',
+    writable: () => writable&&storage?.writable?.()!==false,
+    dispatch: action => update(reduce(state, action),undefined,action),
     replace: raw => update(normalizeState(raw)),
     restart: () => update({...createState(),settings:{...state.settings}},{fresh:true}),
     subscribe(listener) { listeners.add(listener); return () => listeners.delete(listener); },

@@ -1,48 +1,6 @@
 @layer puzzles {
   .birthday-painting { display:block; width:100%; }
-  .chocolate-workbench,.cocoa-workbench { position:relative; width:min(100%,800px); margin:0 auto; isolation:isolate; }
-  .chocolate-cells { position:absolute; left:30.5%; top:18%; width:47%; height:68%; display:grid; grid-template-columns:repeat(5,1fr); grid-template-rows:repeat(5,1fr); }
-  .chocolate-cell { padding:9%; display:grid; place-items:center; border-radius:10%; touch-action:none; }
-  .chocolate-cell .character-art { width:100%; pointer-events:none; transition:opacity .17s, transform .2s; filter:drop-shadow(1px 3px 2px #5b361d32); }
-  .chocolate-cell.has-chocolate:hover .character-art { transform:translateY(-3px) rotate(-3deg); }
-  .chocolate-cell.cup-empty .character-art { opacity:0; transform:translateY(-8px) scale(.8); }
-  .chocolate-cell:hover { background:#fff8d928; }
-  .chocolate-cell:disabled { opacity:1; }
-  .chocolate-column-clues { position:absolute; left:30.5%; top:2.5%; height:14%; width:47%; display:grid; grid-template-columns:repeat(5,1fr); align-items:end; color:#796b56; }
-  .chocolate-column-clues>span { display:flex; flex-direction:column; align-items:center; font:clamp(10px,1.3vw,17px)/1.25 Georgia,serif; }
-  .chocolate-column-clues b { font-weight:400; }
-  .chocolate-row-clues { position:absolute; left:17%; top:18%; width:12%; height:68%; display:grid; grid-template-rows:repeat(5,1fr); text-align:right; align-items:center; color:#796b56; font:clamp(10px,1.3vw,17px) Georgia,serif; }
-  .empty-word { position:absolute; top:8%; left:17.5%; font-size:clamp(10px,1.3vw,16px); color:#8a7c65; }
-  .cup-example { position:absolute; left:83%; top:36%; width:14%; color:#9b8361; font:12px Georgia,serif; text-align:center; transform:rotate(12deg); }
-  .cup-example>span { display:flex; gap:4px; justify-content:center; }
-  .cup-example i { width:13px; aspect-ratio:1; border:1px solid #baa683; border-radius:2px; background:#faf4dd; }
-  .cup-example .filled-example { background:#8e6749; border-color:#8e6749; }
-  .cup-example small { display:block; margin-top:5px; font:inherit; }
-  .chocolate-sheet { position:absolute; left:81%; top:55%; width:16%; display:grid; justify-items:center; gap:5px; padding:5px; color:#8a806e; font-size:clamp(10px,1.25vw,15px); transform:rotate(4deg); }
-  .chocolate-sheet .item-art { width:70%; }
-  .chocolate-tools { display:flex; justify-content:center; gap:25px; margin:15px 0 0; }
-  .chocolate-tools button { border-bottom:1px dotted #b9b09b; padding:4px 15px; color:#948b77; }
-  .chocolate-tools .tool-active { color:#635b49; border-bottom:2px solid #8c9b76; }
-  .tracing-paper { position:absolute; inset:-2%; pointer-events:none; opacity:0; background:#f7edc72a; border:1px solid #b6b7a14d; box-shadow:2px 4px 6px #49352312; transition:opacity .3s; }
-  .tracing-paper>.item-art { display:block;width:100%;height:100%;aspect-ratio:auto;opacity:.17; }
-  .sheet-covered .tracing-paper { opacity:1; }
-  .sheet-covered .cup-empty { background:#e4c97875; box-shadow:inset 0 0 12px #ecd880; }
-  .sheet-covered .chocolate-sheet { color:#687b5f; }
-  .cocoa-vessel { position:absolute; padding:0; touch-action:none; cursor:var(--cursor-grab,grab); border-radius:20% 16% 16% 14%; }
-  .cocoa-liquid { position:absolute; left:13%; right:28%; bottom:3%; height:calc(var(--fill) * .84); background:linear-gradient(90deg,#9d775074,#765135a8 25%,#b7916890 70%,#785033a0); border-radius:20% 14% 13% 15%; pointer-events:none; mix-blend-mode:multiply; }
-  .cocoa-liquid::before { content:''; position:absolute; left:0; right:0; top:0; height:5px; border-radius:50%; background:#aa825d99; border-top:1px solid #e3c4a3a1; }
-  .cocoa-level { position:absolute; left:38%; bottom:6%; font:clamp(15px,2vw,25px) Georgia,serif; color:#59442e; text-shadow:0 1px #fff9; pointer-events:none; }
-  .cocoa-capacity { position:absolute; top:102%; left:0; right:0; font-size:clamp(11px,1.5vw,17px); color:#82745d; }
-  .cocoa-vessel.vessel-picked { outline:1px dashed #b4a178; outline-offset:3px; background:#fff6cf18; }
-  .cocoa-vessel.pour-destination { box-shadow:0 0 14px #a6ba8580; outline:2px solid #91a376; }
-  .pour-stream { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; overflow:visible; z-index:2; }
-  .pour-stream path { fill:none; stroke:#94663e; stroke-width:.8; stroke-linecap:round; }
-  .pour-status { text-align:center; color:#8c826e; margin:8px 0 16px; min-height:1.7em; font-size:15px; }
   .recipe-slip { width:fit-content; max-width:100%; margin:14px auto; padding:12px 30px; color:#8c7e68; font-size:16px; line-height:1.9; text-align:center; background:#f1ecdc5e; transform:rotate(-1deg); }
-  .cocoa-goal { display:flex; justify-content:center; gap:30px; margin:0 auto 18px; color:#99856b; }
-  .cocoa-goal>span { display:block; position:relative; border:1px solid #baa78b; border-top:2px solid #baa78b; border-radius:1px 1px 8px 8px; width:45px; height:35px; font:20px Georgia,serif; text-align:center; line-height:32px; }
-  .cocoa-goal>span::after { content:''; position:absolute; top:5px; right:-11px; width:10px; height:17px; border:1px solid #baa78b; border-radius:0 8px 8px 0; }
-  .cocoa-goal small { font:11px var(--font); margin-left:3px; }
   .passage-dialog { max-width:480px!important; text-align:center; }
   .passage-picture { position:relative; width:180px; margin:0 auto; }
   .passage-picture>.character-art { width:100%; }
@@ -55,18 +13,30 @@
   .birthday-note-dialog { max-width:760px!important; text-align:center; }
   .birthday-note-art { display:flex; justify-content:center; align-items:center; min-height:180px; }
   .birthday-note-art .character-art { width:min(100%,330px,calc(var(--ratio)*300px)); }
-  .birthday-note-art.parcel-wrapped .character-art { width:min(220px,calc(var(--ratio)*300px)); }
   .birthday-note-art img { display:block; width:min(100%,600px); height:auto; }
   .birthday-note-dialog .memory-caption { margin:22px auto; color:#8a806d; }
   .candle-dialog { max-width:840px!important; }.candle-dialog .dialog-body { padding:18px 22px 26px; }
-  .candle-table { position:relative; isolation:isolate; max-width:760px; margin:auto; border-radius:45% 45% 4px 4px / 8% 8% 4px 4px; overflow:hidden; }
-  .candle-base { display:block; width:100%; }.candle-light { position:absolute; inset:0; pointer-events:none; animation:candle-breath 3.2s ease-in-out infinite alternate; }.candle-light>.character-art { display:block; width:100%; }
-  .candle-light.flame-0 { mask-image:radial-gradient(ellipse 4% 8% at 42.86% 31.58%,#000 40%,transparent 100%); }.candle-light.flame-1 { mask-image:radial-gradient(ellipse 4% 8% at 51.25% 31.58%,#000 40%,transparent 100%); animation-delay:-1.7s; }
-  .candle-wick { position:absolute; top:37%; width:12%; height:28%; translate:-50% -50%; padding:0; border-radius:50%; }.wick-0 { left:42.86%; }.wick-1 { left:51.25%; }
+  .candle-table { position:relative; isolation:isolate; width:min(100%,760px,calc((100dvh - 360px)*560/380)); margin:auto; aspect-ratio:560/380;border-radius:4px;overflow:hidden; }
+  .candle-light {position:absolute;width:6.8%;pointer-events:none;}
+  .candle-flame-pose {position:absolute;display:block;width:100%;translate:calc(0% - var(--root-x)) calc(0% - var(--root-y));opacity:0;animation:candle-shape 1120ms steps(1,end) var(--pose-delay) infinite;}
+  .candle-flame-pose:first-child {opacity:1;}
+  @keyframes candle-shape {0%,12.49%{opacity:1}12.5%,100%{opacity:0}}
+  .candle-wick { position:absolute;top:37%;width:12%;height:28%;translate:-50% -50%;padding:0;border-radius:50%; }
   .wick-ring { position:absolute; left:50%; top:31%; width:25px; height:25px; translate:-50% -50%; border:1px dashed #b8a16a; border-radius:50%; opacity:0; }.candle-wick:hover .wick-ring,.candle-wick:focus-visible .wick-ring { opacity:.8; }.candle-wick:focus-visible { outline:none; }.candle-wick[aria-pressed="true"] .wick-ring { opacity:0; }.candle-wick[aria-pressed="true"]:focus-visible .wick-ring { opacity:.65; }
   .candle-wick[aria-pressed="true"] { cursor:var(--cursor-idle,default); }.candles-ready { box-shadow:0 4px 28px #d3af5e1c; }
   .candle-afterword { text-align:center; min-height:110px; padding-top:18px; }.candle-afterword p { font-size:16px; color:#87795e; margin:0 0 16px; }
-  @keyframes candle-breath { from { filter:brightness(1); } to { filter:brightness(1.05); } }
+  .birthday-burning-match{position:absolute;width:100px;height:44px;pointer-events:none;z-index:5;}
+  .birthday-burning-match>.raster-sprite{display:block;width:100%;height:100%;}
+  .candle-matches{display:flex;align-items:center;gap:10px;width:fit-content;max-width:100%;margin:12px auto 0;padding:3px 10px;border:0;background:none;box-shadow:none;touch-action:none;font-size:14px;}
+  .candle-matches>.item-art{display:block;width:70px;height:58px;}
+  .birthday-parcel-stage {position:relative;isolation:isolate;width:min(100%,620px,calc((100dvh - 286px)*1.5));aspect-ratio:3/2;margin:auto;overflow:hidden;border-radius:4px;background:#f2e9d8;}
+  .birthday-parcel-stage img {position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:fill;}
+  .parcel-revealed,.parcel-opening {mask-composite:intersect;opacity:0;pointer-events:none;}
+  [data-parcel-open=true] .parcel-revealed {opacity:1;}
+  .parcel-dialog .memory-caption {margin:18px auto 12px;}
+  .reduce-motion .candle-flame-pose {animation:none;opacity:0;}
+  .reduce-motion .candle-flame-pose:first-child {opacity:1;}
+  @media(prefers-reduced-motion:reduce){.candle-flame-pose{animation:none;opacity:0}.candle-flame-pose:first-child{opacity:1}}
   .workbench-tools button { display:flex; align-items:center; gap:8px; padding:4px 12px; font-size:14px; }
   .workbench-tools .tool-armed { background:#e6ebdb; border-radius:5px; }
   .inventory-ghost { width:90px; height:90px; display:grid; place-items:center; }
@@ -78,10 +48,6 @@
   .tool-drop-wrong { outline:1px dashed #b49d8780!important; outline-offset:3px; }
   .record-detail { font-size:13px!important; color:#9b9c87!important; margin-top:6px!important; }
   @media (max-width:700px) {
-    .chocolate-row-clues { letter-spacing:-1px; font-size:10px; }
-    .chocolate-sheet { padding:0; font-size:10px; }
-    .cocoa-workbench { margin-top:8px; }
-    .cocoa-level { font-size:14px; }
     .recipe-slip { font-size:14px; padding:10px 20px; }
     .keepsake-card { padding:4px; grid-template-rows:110px auto; }
     .keepsake-card .character-art { width:min(100%,calc(var(--ratio)*110px)); }

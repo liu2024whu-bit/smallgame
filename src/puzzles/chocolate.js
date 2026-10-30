@@ -1,23 +1,19 @@
-import { bounded, indexIn } from './common.js';
-import { CHOCOLATE_PATTERN } from '../data/birthday.js';
+import {indexIn,bounded} from './common.js';
+import {CHOCOLATE_PATTERN} from '../data/birthday.js';
 
-export const chocolate = {
-  create:()=>({cells:Array(25).fill(1),tool:0,covered:false}),
-  valid:state=>bounded(state?.cells,25,2)&&[0,1].includes(state.tool)&&typeof state.covered==='boolean',
-  move(state,action) {
-    if(action.type==='cover')return {...state,covered:!state.covered};
-    if(state.covered)return state;
-    if(action.type==='tool'&&[0,1].includes(action.value))return {...state,tool:action.value};
-    if(action.type==='mark'&&indexIn(action.index,25)) {
-      const value=action.value??state.tool;
-      if(![0,1].includes(value))return state;
-      return {...state,cells:state.cells.map((cell,i)=>i===action.index?value:cell)};
-    }
-    if(action.type==='paint'&&Array.isArray(action.indexes)&&action.indexes.length>0&&action.indexes.length<=25&&action.indexes.every(i=>indexIn(i,25))&&[0,1].includes(action.value)) {
-      const selected=new Set(action.indexes);
-      return {...state,cells:state.cells.map((cell,i)=>selected.has(i)?action.value:cell)};
-    }
-    return state;
-  },
-  solved:state=>state.covered&&state.cells.every((cell,i)=>(cell===0?1:0)===CHOCOLATE_PATTERN[i]),
+// A piece keeps its identity. Locations 0–24 are paper cups; 25–49 are the
+// serving plate. No chocolate is created, destroyed or silently swapped.
+export const chocolateEmpty=places=>Array.from({length:25},(_,i)=>Number(!places.includes(i)));
+export const chocolateFits=places=>chocolateEmpty(places).every((v,i)=>v===CHOCOLATE_PATTERN[i]);
+export const chocolate={
+ create:()=>({places:Array.from({length:25},(_,i)=>i),opened:false,drawer:false}),
+ valid:p=>bounded(p?.places,25,50)&&new Set(p.places).size===25&&typeof p.opened==='boolean'&&typeof p.drawer==='boolean'&&(!p.drawer||p.opened&&chocolateFits(p.places)),
+ move(p,a){
+  if(a.type==='lid')return p.drawer?p:{...p,opened:!p.opened};
+  if(!p.opened)return p;
+  if(a.type==='drawer')return !p.drawer&&chocolateFits(p.places)?{...p,drawer:true}:p;
+  if(a.type!=='place'||p.drawer||!indexIn(a.piece,25)||!indexIn(a.to,50)||p.places.includes(a.to))return p;
+  return {...p,places:p.places.map((v,i)=>i===a.piece?a.to:v)};
+ },
+ solved:p=>p.drawer&&chocolateFits(p.places),
 };

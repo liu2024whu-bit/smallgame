@@ -1,12 +1,10 @@
 @layer motion {
   button { transition: background-color .18s, border-color .18s, color .18s, transform .18s; }
+  .cocoa-vessel { transition:none; }
   .room-light { transition: opacity 1.6s; }
   .hotspot-caption { transition: opacity .18s; }
   .inventory-slot.new-item { animation: item-enter .35s ease both; }
   .completion-note { animation: note-enter .5s ease both; }
-  .ending-flower { animation: note-enter 1s .1s ease both; }
-  .ending-page > p, .ending-page h2 { animation: note-enter .7s ease both; }
-  .ending-page > p:nth-of-type(3) { animation-delay: .15s; }.ending-page > p:nth-of-type(4) { animation-delay: .3s; }.ending-page > p:nth-of-type(5) { animation-delay: .45s; }
   @keyframes item-enter { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes note-enter { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: translateY(0); } }
   .reduce-motion *, .reduce-motion *::before, .reduce-motion *::after { animation-duration: .001ms !important; animation-delay: 0ms !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }

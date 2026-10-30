@@ -1,0 +1,84 @@
+@layer puzzles{
+ .mechanical-keyboard-source{position:absolute;left:0;top:0;width:1492px;height:385px;transform-origin:0 0;}
+ .mechanical-housing{display:block;width:1492px;height:385px;}
+ .mechanical-key-plane{position:absolute;left:0;top:0;transform-origin:0 0;}
+ .mechanical-key{position:absolute;border:0;background:transparent;padding:2px;cursor:var(--cursor-idle,default);}
+ button.mechanical-key{cursor:var(--cursor-point,pointer);touch-action:manipulation;}
+ .mechanical-key-art{position:absolute;inset:2px;display:block;pointer-events:none;}
+ .mechanical-key-art>.raster-sprite{display:block;position:absolute;inset:0;width:100%;height:100%;}
+ .mechanical-key-legend{display:grid;place-items:center;position:absolute;inset:0 0 16px;font:25px/1.1 'Cascadia Mono',Consolas,monospace;color:#f6f2e5;pointer-events:none;white-space:nowrap;}
+ .mechanical-key-legend.small-legend{font-size:12px;}
+ .mechanical-key:focus-visible{outline:2px solid #d4d9ac;outline-offset:-2px;border-radius:4px;}
+ button.mechanical-key:hover .mechanical-key-art{filter:brightness(1.1);}
+ button.mechanical-key:active .mechanical-key-art,button.mechanical-key:active .mechanical-key-legend{translate:0 2px;}
+ .tall-key>.tall-head{height:23px;bottom:auto;}
+ .tall-key>.tall-middle{top:22px;bottom:13px;height:calc(100% - 35px);}
+ .tall-key>.tall-foot{top:auto;height:14px;}
+ .word-window{position:absolute;display:grid;place-items:center;border:0;background:none;padding:0;z-index:4;font:86px/1 'Cascadia Mono',Consolas,monospace;color:#616756;}
+ .word-window.active::after{content:'';position:absolute;left:28%;right:28%;height:3px;bottom:14px;background:#879278;}
+ .word-window:focus-visible{outline:3px solid #8b9878;outline-offset:6px;}
+ .word-apparatus,.mechanical-keyboard-projected,.word-outside-tray{position:absolute;inset:0;pointer-events:none;}
+ .word-face{position:absolute;left:0;top:0;transform-origin:0 0;pointer-events:none;}
+ .word-face-paint{position:absolute;inset:0;width:100%;height:100%;}
+ .word-cable{position:absolute;left:0;top:0;transform-origin:0 0;pointer-events:none;clip-path:inset(0 42% 0 0);}
+ .word-face .word-window,button.mechanical-key{pointer-events:auto;}
+ .word-physical-grip{position:absolute;translate:-50% -50%;height:var(--hit,60px);min-width:var(--hit,60px);pointer-events:auto;border:0;background:none;padding:0;touch-action:none;cursor:var(--cursor-grab,grab);}
+ .word-physical-grip:disabled{pointer-events:none;}
+ .word-physical-grip:focus-visible{outline:3px solid #819879;outline-offset:5px;}
+ .word-reading-table{position:absolute;left:0;top:0;width:1536px;height:941px;}
+ .word-reading-wood{position:absolute;width:2500px;height:1407px;max-width:none;left:-300px;top:-340px;pointer-events:none;}
+ .word-reading-board{position:absolute;left:65px;top:100px;width:400px;height:517.28px;rotate:-3deg;}
+ .word-board-turn,.word-reading-board-art{position:absolute;inset:0;display:block;width:100%;height:100%;padding:0;}
+ .word-notebook{position:absolute;left:500px;top:145px;width:934px;height:643px;transform:scale(1.0385);transform-origin:0 0;rotate:2deg;}
+ .word-notebook-art{position:absolute;inset:0;display:block;width:100%;height:100%;pointer-events:none;}
+ .word-chart-title{position:absolute;left:86px;top:56px;font:22px/1.4 var(--font-print);color:#61634f;}
+ .word-letter-chart{position:absolute;left:62px;top:108px;width:328px;height:320px;table-layout:fixed;border-collapse:collapse;text-align:center;font:28px/1.3 'Cascadia Mono',Consolas,monospace;color:#5e6250;}
+ .word-letter-chart th{font-size:19px;font-weight:400;color:#817b64;}
+ .word-chart-note{position:absolute;left:108px;top:452px;font:18px/1.3 var(--font-print);color:#78745d;}
+ .word-chart-hit{position:absolute;left:48px;top:35px;width:365px;height:495px;background:none;padding:0;}
+ .word-paper-corner{position:absolute;left:510px;top:250px;width:690px;height:136px;scale:.58;transform-origin:0 0;rotate:-2deg;}
+ .word-board-strip{position:absolute;left:32px;top:220px;width:690px;height:136px;scale:.48;transform-origin:0 0;}
+ .word-strip{position:relative;display:block;width:690px;height:136px;padding:0;border:0;background:none;filter:drop-shadow(0 2px 1px #4c3c2733);transform-origin:center;}
+ .word-strip>canvas{position:absolute;inset:0;width:690px;height:136px;opacity:0;}
+ .word-strip[data-ready=true]>canvas{opacity:1;}
+ .word-strip-ink{position:absolute;inset:0;opacity:0;}
+ .word-strip[data-ready=true] .word-strip-ink{opacity:.85;}
+ .word-strip-ink>i{position:absolute;min-width:20px;translate:-50% 0;font:17px/1 'Cascadia Mono',Consolas,monospace;color:#665e46;font-style:normal;}
+ .word-strip-label{position:absolute;left:45px;top:48px;font:27px/1.3 var(--font-print);opacity:0;}
+ .word-strip[data-ready=true] .word-strip-label{opacity:.8;}
+ .word-strip.strip-back{transform:scaleX(-1);}
+ .word-strip.strip-back[data-ready=true] .word-strip-ink,.word-strip.strip-back[data-ready=true] .word-strip-label{opacity:.42;}
+}
+@layer puzzles{
+ .word-viewport{position:relative;overflow:clip;width:min(100%,calc((100dvh - 320px)*var(--word-aspect)));aspect-ratio:var(--word-aspect);margin:auto;}
+ .word-lock-world{position:absolute;left:0;top:0;width:1672px;height:941px;transform-origin:0 0;}
+ .word-lock-world:focus-visible{outline-offset:-2px;}
+ .word-backdrop-face,.word-assembly-board,.word-assembly-content{position:absolute;left:0;top:0;transform-origin:0 0;}
+ .word-backdrop-face{pointer-events:none;}
+ .word-assembly-model{position:absolute;inset:0;pointer-events:none;}
+ .word-assembly-board{width:897px;height:1160px;pointer-events:none;}
+ .word-navigation{display:flex;flex-wrap:wrap;gap:6px 22px;align-items:center;justify-content:center;min-height:42px;margin-top:8px;}
+ .word-navigation>button{min-height:40px;font-size:15px;}
+ .word-navigation>button[aria-current=true]{border-bottom-style:solid;}
+ .word-reply{min-height:1.5em;text-align:center;font-size:14px;margin:2px 0;}
+ .word-reply:empty{min-height:0;margin:0;}
+ .word-tray-open{position:absolute;left:0;top:0;width:1600px;height:1000px;transform-origin:0 0;background:none;padding:0;}
+ .word-source-viewport>.scene-source{position:absolute;inset:0;}
+ .world-word-desk{position:absolute;inset:0;pointer-events:none;}
+ .word-room-drawer,.word-room-drawer-plane{position:absolute;inset:0;transform-origin:0 0;pointer-events:none;}
+ .word-room-ink .word-chart-title,.word-room-ink .word-letter-chart,.word-room-ink .word-chart-note{opacity:.8;}
+ .puzzle-wordlock .workbench-top,.puzzle-album .workbench-top{display:none;}
+ .puzzle-wordlock .puzzle-field,.puzzle-album .puzzle-field,.puzzle-stitch .puzzle-field{padding:0;min-height:0;background:none;}
+ .puzzle-wordlock .puzzle-viewport,.puzzle-album .puzzle-viewport,.puzzle-stitch .puzzle-viewport{overflow:visible;max-height:none;}
+ @media(min-width:900px){.puzzle-wordlock.steady-workbench .word-viewport{width:min(100%,calc((100dvh - 250px)*var(--word-aspect)));}}
+ @media(max-width:899px){
+  .puzzle-wordlock .completion-note{display:flex;gap:24px;align-items:center;justify-content:center;background:none;border:0;padding:8px 0;margin:5px auto 0;}
+  .puzzle-wordlock .finish-caption{gap:10px;margin:0;}
+  .puzzle-wordlock .finish-caption>.motif{width:24px;}
+  .puzzle-wordlock .completion-note h3{font-size:16px;}
+ }
+ .word-evidence-dialog .dialog-body{padding:16px 24px;}
+ .word-binding-content button{pointer-events:auto;}
+ .word-paper-departure{pointer-events:none;z-index:3;}
+ .desk-sketchbook-source{position:relative;aspect-ratio:32/26*1672/941;overflow:clip;}
+}

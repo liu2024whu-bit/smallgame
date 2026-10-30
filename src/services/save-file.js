@@ -1,9 +1,10 @@
 import {serializable} from '../core/state.js';
 import {parseSave} from '../core/storage.js';
 
-export function saveFilename(date=new Date()){
+export function saveFilename(date=new Date(),name='我的进度'){
   const pair=n=>String(n).padStart(2,'0');
-  return '第20圈以前-存档-'+date.getFullYear()+pair(date.getMonth()+1)+pair(date.getDate())+'-'+pair(date.getHours())+pair(date.getMinutes())+pair(date.getSeconds())+'-'+String(date.getMilliseconds()).padStart(3,'0')+'.json';
+  const label=String(name||'我的进度').replace(/[<>:"/\\|?*\u0000-\u001f]/g,' ').trim().slice(0,32)||'我的进度';
+  return '第20圈以前 — '+label+' — '+(date.getMonth()+1)+'月'+date.getDate()+'日 '+pair(date.getHours())+'时'+pair(date.getMinutes())+'分.json';
 }
 export function encodeSave(state){
   const text=JSON.stringify(serializable(state),null,2)+'\n';parseSave(text);return text;

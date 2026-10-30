@@ -1,19 +1,15 @@
-// Coordinates measured from the decoded raster, never from a viewport screenshot.
-export const MUSIC_LANES=[[503,456,488,691],[610,455,598,692],[713,455,710,692],[819,455,820,692],[925,455,932,692],[1027,455,1044,692]];
-export function musicPoint(index,note) {
-  const [topX,topY,bottomX,bottomY]=MUSIC_LANES[index],t=note/4;
-  return [bottomX+(topX-bottomX)*t,bottomY+(topY-bottomY)*t];
-}
-export function musicRect(index) {
-  const [a,y,b,end]=MUSIC_LANES[index];
-  return [Math.min(a,b)-34,y-6,Math.abs(a-b)+68,end-y+12];
-}
-export function musicPinStyle(index,note) {
-  const [x,y]=musicPoint(index,note),[left,top,width,height]=musicRect(index);
-  return `left:${(x-left)/width*100}%;top:${(y-top)/height*100}%;`;
-}
-export const BINDING_HOLES=[27,42,58,73].map(x=>[x,45.2]).concat([27,42,58,73].map(x=>[x,51]));
-export const DRAWER_RECTS=[11.6,29.5,47.5,65.4].map(top=>[16.6,top,66.5,17.1]);
-export const FLIP_RECT=[15.4,10,69.8,65.6];
 // Winding socket in the paper theatre; pivot is measured inside item sprite 3.
 export const ENCORE_HANDLE = Object.freeze({ x:76.6,y:66.3,width:13,pivotX:.106,pivotY:.717 });
+// The shaft is normal to the book page. Deproject the painted page before
+// turning, then project it back; a screen-space rotate would orbit the wrong axis.
+export const ENCORE_PLANE=Object.freeze({depth:.62,skew:.12});
+export function encoreCrankPose(degrees){
+ const a=degrees*Math.PI/180,c=Math.cos(a),s=Math.sin(a),{depth:d,skew:k}=ENCORE_PLANE;
+ return `matrix(${c+k*s},${d*s},${-(1+k*k)*s/d},${c-k*s},0,0)`;
+}
+export function encorePageAngle(x,y){const {depth:d,skew:k}=ENCORE_PLANE;return Math.atan2(y/d,x-k*y/d)*180/Math.PI;}
+export function encoreCrankAngle(transform,near=0){
+ const values=transform.match(/^matrix\(([^)]+)\)$/)?.[1].split(',').map(Number);if(!values)return near;
+ const s=values[1]/ENCORE_PLANE.depth,c=values[0]-ENCORE_PLANE.skew*s,a=Math.atan2(s,c)*180/Math.PI;
+ return a+Math.round((near-a)/360)*360;
+}

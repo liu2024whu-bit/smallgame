@@ -1,14 +1,16 @@
 import { motionAllowed,settleWorkbenchZoom } from '../services/motion.js';
 import {centerWorkbenchViewport} from './dialog-state.js';
-export const afterPuzzleAction=(view={},action)=>['undo','reset'].includes(action)?{...view,pressProof:false}:view;
+export const afterPuzzleAction=(view={},action,id)=>['undo','reset'].includes(action)?{...view,pressProof:false,...(id==='film'&&action==='reset'?{filmPlayback:null,filmView:'whole'}:{}),...(id==='stitch'&&action==='reset'?{stitchCamera:'whole',stitchSample:false,stitchKey:null}:{})}:view;
 // Transient presentation choices stay out of the save and puzzle rule modules.
 export function viewActions({ panel, render, activity,foley=()=>{} }) {
   const change = patch => { const current = panel(); current.view = { ...current.view, ...patch }; render(); };
   return {
+    'piano-score-back':()=>{change({pianoBack:!panel().view?.pianoBack});foley('turn');},
     'cloud-face':button=>{const back=button.dataset.back==='true';if(back!==!!panel().view?.back){change({back});foley('turn');}},
     'press-proof':button=>change({pressProof:button.dataset.open==='true'}),
+    'back-view':button=>{if(['whole','tray','mirror','samples'].includes(button.dataset.id)){change({backView:button.dataset.id});foley('turn');}},
+    'gap-view':button=>{if(['front','back','papers','window'].includes(button.dataset.id)){change({gapView:button.dataset.id});foley('turn');}},
     'settings-page':button=>{if(['sound','picture','save'].includes(button.dataset.id))change({section:button.dataset.id});},
-    'calendar-note':button=>change({dateNote:Number(button.dataset.index)}),
     'ending-page':button=>{
       const current=panel(),lastPage=!current.view?.lastPage;current.view={...current.view,lastPage};
       button.classList.toggle('page-turned',lastPage);button.setAttribute('aria-expanded',lastPage);
@@ -33,7 +35,10 @@ export function viewActions({ panel, render, activity,foley=()=>{} }) {
     'library-slip-flip':()=>{change({slipBack:!panel().view?.slipBack});foley('turn');},
     'library-ask':()=>change({askedSlip:true}),
     'screen-view':button=>{if(['whole','paper','lock','pocket'].includes(button.dataset.id)){const group=Number(button.dataset.index??panel().view?.screenGroup??0);change({screenView:button.dataset.id,screenGroup:[0,1,2].includes(group)?group:0});foley('turn');}},
+    'belt-view':button=>{if(['whole','left','right'].includes(button.dataset.id)){change({beltView:button.dataset.id});foley('turn');}},
+    'garden-view':button=>{if(['whole','left','middle','right'].includes(button.dataset.id)){change({gardenView:button.dataset.id});foley('turn');}},
     'memory-detail': button => { const focus = Number(button.dataset.index); change({ focus }); activity(`art:detail:${focus}`); },
+    'memory-page':button=>{change({pageOpen:button.dataset.open==='true'});foley('turn');},
     'memory-cinema': () => { change({ playing: !panel().view?.playing }); activity('cinema:play'); },
     'memory-figure': button => change({ figure: Number(button.dataset.index) }),
     'memory-open': () => change({ open: !panel().view?.open }),
@@ -43,16 +48,18 @@ export function viewActions({ panel, render, activity,foley=()=>{} }) {
     'evidence-flip': () => change({ flipped: !panel().view?.flipped }),
     'campus-look': button => { change({ looked: !panel().view?.looked }); if(button.dataset.activity)activity(button.dataset.activity); },
     'campus-stop': button => change({ corner:Number(button.dataset.index),looked:false }),
-    'record-detail': button => change({record:button.dataset.id}),
-    'record-page': button => change({recordSide:button.dataset.id,record:null}),
-    'encore-wind': () => change({wind:Math.min(720,(panel().view?.wind??0)+120)}),
+    'record-detail': button => {change({record:button.dataset.id});foley('turn');},
+    'record-page': button => {change({recordSide:button.dataset.id,record:null});foley('turn');},
+    'record-extra':()=>{change({recordExtra:!panel().view?.recordExtra,record:null});foley('turn');},
+    'encore-wind': () => {change({wind:Math.min(720,(panel().view?.wind??0)+120)});foley('turn');},
     'encore-letter': () => {
       if((panel().view?.wind??0)<360)return;
-      const letter=!panel().view?.letter;change({letter});
-      if(letter)document.querySelector('.encore-letter')?.scrollIntoView({block:'nearest',behavior:motionAllowed()?'smooth':'instant'});
+      change({letter:!panel().view?.letter,unsealed:true});foley('turn');
     },
     'campus-stamp': button => {activity(`campus:${button.dataset.id}`);foley('stamp');},
     'mechanism-back': () => change({ back:!panel().view?.back }),
+    'gift-card-unfold':()=>{change({cardUnfolded:!panel().view?.cardUnfolded});foley('turn');},
+    'gift-strip-flip':()=>{change({stripBack:!panel().view?.stripBack});foley('turn');},
     'paper-turn':()=>change({turned:!panel().view?.turned}),
     'reading-book': button => activity(`reading:${Number(button.dataset.index)}`),
   };

@@ -1,8 +1,5 @@
-node_modules/
-dist/
 .DS_Store
+node_modules/
+存档/
+本机配置/
 *.log
-.env*
-coverage/
-playwright-report/
-test-results/

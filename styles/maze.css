@@ -1,30 +1,38 @@
 @layer puzzles {
-  .maze-goal { display:flex; align-items:center; justify-content:center; gap:10px; color:#9eaa8e; margin:3px auto 8px; }
-  .maze-goal i { width:11px; height:11px; border-radius:50%; background:radial-gradient(at 30% 25%,#fff1bf,#b2945e); border:1px solid #ad915f; }
-  .maze-goal b { color:#b59554; font-size:19px; font-weight:400; }.maze-goal em { width:13px; height:13px; border:2px solid #a7af90; border-radius:50%; }
-  .maze-apparatus { position:relative; width:min(460px,100%); margin:auto; }
-  .maze-apparatus>.character-art { width:100%; display:block; }
-  .maze-apparatus>.ring-maze { position:absolute; left:8%; top:7.5%; width:84%; height:80%; margin:0; overflow:visible; }
-  .maze-seam { fill:none; stroke:#bca377; stroke-width:1; opacity:.65; pointer-events:none; }
-  .maze-track { fill:none; stroke:#81784e; stroke-width:7; stroke-linecap:round; pointer-events:none; }
-  .maze-grip { stroke:#a48c61; stroke-width:2; opacity:.65; pointer-events:none; }
-  .maze-ring-touch { fill:none; stroke:transparent; stroke-width:45; cursor:var(--cursor-grab,grab); touch-action:none; }
-  .maze-ring-touch:hover,.maze-ring-touch:focus-visible { stroke:#f7f0cc25; outline:none; }
-  .is-dragging .maze-ring-touch { cursor:var(--cursor-hold,grabbing); }
-  .ring-maze .maze-star { font-size:26px; fill:#ac986c; stroke:#fcf3d5; stroke-width:3px; paint-order:stroke; pointer-events:none; }
-  .ring-maze .star-touched { fill:#d4a244; filter:drop-shadow(0 0 3px #f3d68c); }
-  .maze-end { fill:#eee6c6; stroke:#89936b; stroke-width:3; pointer-events:none; }
-  .maze-end-mark { fill:none; stroke:#a0ac85; stroke-width:1.5; pointer-events:none; }
-  .maze-entry-arrow { fill:none; stroke:#a89363; stroke-width:2; pointer-events:none; }
-  .maze-ball { cursor:var(--cursor-point,pointer); transform-box:view-box; }.maze-ball>circle { pointer-events:none; }.maze-ball .ball-hit { fill:transparent; pointer-events:all; }
-  .maze-ball:focus-visible { outline:none; filter:drop-shadow(0 0 4px #c6a469); }
-  .maze-tested-route { fill:none; stroke:#e2b85c; stroke-width:2; opacity:.8; stroke-linecap:round; pointer-events:none; }
-  .maze-trial-path { pointer-events:none; }
-  .maze-ring-controls { display:flex; justify-content:center; gap:clamp(12px,4vw,40px); margin:4px auto; }
-  .maze-ring-controls>div { display:grid; grid-template-columns:32px 26px 32px; align-items:center; gap:2px; }
-  .maze-ring-controls span { grid-column:1/-1; text-align:center; font-size:12px; color:#8f9b80; margin-bottom:5px; }
-  .maze-ring-controls .puzzle-control { min-width:30px; min-height:30px; padding:5px; background:transparent; border-color:#b7bd9e88; }
-  .ring-turn-mark { text-align:center; font-style:normal; color:#aa9871; font-size:21px; }
-  .balance-goal { text-align:center; color:#939d83; font-size:13px; margin:16px auto 0; }
-  @media(max-width:700px){.maze-ring-controls { gap:9px; }.maze-ring-controls>div { grid-template-columns:28px 18px 28px; }.maze-ring-controls .puzzle-control { min-width:28px; }.maze-goal { gap:7px; }}
+ .puzzle-maze .puzzle-field { padding:0;min-height:0; background:none; overflow:hidden; }
+ .maze-workbench { width:100%; display:grid; justify-items:center; gap:10px; }
+ .maze-viewport { position:relative; width:min(100%,calc((100dvh - 320px)*var(--maze-aspect))); aspect-ratio:var(--maze-aspect); overflow:hidden; border-radius:5px; isolation:isolate; }
+ @media(min-width:900px){.puzzle-maze.steady-workbench .maze-viewport{width:min(100%,calc((100dvh - 250px)*var(--maze-aspect)))}}
+ .maze-world { position:absolute; left:0; top:0; width:1254px; height:1254px; transform-origin:0 0; }
+ .maze-model { position:absolute; inset:0; width:1254px; height:1254px; }
+ .maze-painting,[data-maze-surface] { position:absolute; inset:0; display:block; width:100%; height:100%; pointer-events:none; }
+ [data-maze-surface] { opacity:0; }
+ .maze-model>button { margin:0; padding:0; border:0; border-radius:0; box-shadow:none; background:none; min-height:0; min-width:0; }
+ .maze-ring { position:absolute; inset:0; z-index:3; touch-action:none; }
+ span.maze-ring { pointer-events:none; }
+ .maze-model button.maze-ring { cursor:var(--cursor-grab,grab); }
+ .maze-model button.maze-ring:focus-visible { outline:0; background:#fff1bb2b; }
+ .maze-model button.maze-ring[aria-disabled="true"] { cursor:var(--cursor-point,pointer); }
+ .maze-ball { position:absolute; width:var(--hit,100px); height:var(--hit,100px); translate:-50% -50%; z-index:4; touch-action:none; }
+ .maze-ball>.raster-sprite { position:absolute; width:34px; height:33px; left:50%; top:50%; translate:-50% -50%; filter:drop-shadow(2px 3px 2px #4a301c66); }
+ .maze-model button.maze-ball:focus-visible { outline:2px dotted #8c7b50; border-radius:50%; }
+ .maze-well { position:absolute; z-index:2; }.maze-well>.raster-sprite { display:block; width:100%; height:100%; }
+ .maze-lid { position:absolute; transform-origin:50% 6px; z-index:5; pointer-events:none; filter:drop-shadow(0 3px 2px #533b2430); }
+ .maze-lid>.raster-sprite { display:block; width:100%; height:100%; }
+ .maze-window-light { position:absolute; top:49px; width:13px; height:13px; pointer-events:none; }.maze-window-light>.raster-sprite { display:block; width:100%; height:100%; }
+ .maze-brake { position:absolute; z-index:5; pointer-events:none; }.maze-brake>.raster-sprite { display:block; width:100%; height:100%; }
+ .maze-brake-arm { transform-origin:21.28px 20.52px; }
+ .maze-return { position:absolute; z-index:6; touch-action:none; }
+ .maze-model button.maze-return:focus-visible { outline:2px solid #8c7b50; outline-offset:2px; border-radius:12px; }
+ [data-maze-ready="false"]>button { pointer-events:none; }
+ .maze-controls { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:20px; width:100%; }
+ .maze-navigation { grid-column:2; display:flex; justify-content:center; align-items:center; gap:24px; }.maze-navigation>button { min-width:44px; min-height:44px; }
+ .maze-navigation button[aria-current="true"] { border-bottom-color:#869377; }
+ .maze-status { grid-column:3; justify-self:start; margin:0; font-size:14px; line-height:1.7; color:#828c73; }
+}
+@layer room {
+ .world-maze-mechanism { position:absolute; inset:0; z-index:1; pointer-events:none; container-type:size; }
+ .maze-room-coordinate { position:absolute; left:0; top:0; width:1672px; height:941px; transform:scale(calc(100cqw / 1672px)); transform-origin:0 0; }
+ .maze-room-world { position:absolute; left:0; top:0; width:1254px; height:1254px; transform-origin:0 0; }
+ .maze-room-world [data-maze-surface] { clip-path:circle(490px at 627px 600px); }
 }
