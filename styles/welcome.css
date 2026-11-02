@@ -32,7 +32,7 @@
   .about-chapters { display:flex; gap:24px; justify-content:center; flex-wrap:wrap; margin:28px 0; border-block:1px solid #d7dacb; padding:23px 0; }
   .about-chapters span { display:grid; gap:8px; justify-items:center; font-size:13px; }
   .about-chapters .icon { width:20px; height:20px; color:#9a956e; }
-  .about-links { display:flex; gap:14px; justify-content:center; }
+  .about-links { display:flex; flex-wrap:wrap; gap:14px; justify-content:center; }.about-links a { text-decoration:none; }
   .about-credits { margin-top:30px; font-size:12px; color:#737a6b; text-align:left; }
   .about-credits summary { width:fit-content; cursor:var(--cursor-point,pointer); border-bottom:1px dotted #b3b7a3; margin:auto; }
   .about-credits p { margin:18px 0 0; line-height:1.9; }
