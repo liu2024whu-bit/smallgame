@@ -33,6 +33,12 @@ test('automatic travel can continue alternate walks and partially moved old save
  assert.ok(maze.valid(stopped));assert.ok(maze.solved(continued));assert.deepEqual(mazeStars(continued.path),MAZE_MARKS);
  assert.equal(mazeAutoWalk(rest),null);
 });
+test('completion accepts different valid walks rather than comparing a prescribed answer path',()=>{
+ const p={...maze.create(),turns:[0,2,3]},direct=mazeAutoWalk(p).path;
+ const [junction,tip]=mazeConnections(p.turns).find(([a,b])=>b>=20&&direct.includes(a)),at=direct.indexOf(junction);
+ const walks=[direct,[...direct.slice(0,3),direct[1],...direct.slice(2)],[...direct.slice(0,at+1),tip,junction,...direct.slice(at+1)]];
+ for(const path of walks){const next=maze.move(p,{type:'roll',path,next:null,amount:0});assert.ok(maze.solved(next));assert.deepEqual(mazeStars(next.path),MAZE_MARKS);}
+});
 test('every trial follows real grooves and returns home without falsely completing the puzzle',()=>{
  for(let a=0;a<6;a++)for(let b=0;b<6;b++)for(let c=0;c<6;c++){
   const p={...maze.create(),turns:[a,b,c]},next=mazeAutoTravel(p);

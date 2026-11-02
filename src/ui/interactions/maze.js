@@ -14,7 +14,7 @@ export function bindMaze(root,p,{move,changeView,feedback=()=>{}}){
  const inside=e=>{const b=world.parentElement.getBoundingClientRect();return e&&e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom;};
  const blocked=()=>{feedback('stop');changeView({mazeBlocked:true});};
  const roll=q=>move({type:'roll',path:q.path,next:q.next,amount:q.amount});
- const autoRoll=createMazeAutoRoll(root,model,p,{roll,feedback});autoRoll.start();
+ const autoRoll=createMazeAutoRoll(root,model,p,{roll,feedback});
  const stop=pointerSession(root,{
   pick(e){
    if(busy())return null;const ball=e.target.closest('button[data-maze-ball]'),handle=e.target.closest('[data-maze-return]');if(ball||handle){model.dataset.mazeHeld='true';return {source:ball??handle,kind:ball?'ball':'handle'};}
