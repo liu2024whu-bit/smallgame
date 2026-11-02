@@ -1,6 +1,7 @@
 // The painted cutouts, collisions, ball and room share these source coordinates.
 export const MAZE_SIZE=1254,MAZE_CENTER=[627,600];
 export const MAZE_RADII=[390,270,150],MAZE_BOUNDARIES=[450,330,210,90];
+export const MAZE_BALL_RADIUS=17,MAZE_GROOVE_WIDTH=38,MAZE_SEAM=1.2,MAZE_NODE_COUNT=20+MAZE_RADII.length*12;
 export const MAZE_ARCS=[[[0,1],[1,2],[3,4]],[[0,1],[2,3],[3,4],[4,5]],[[0,1],[1,2],[2,3],[4,5]]];
 export const MAZE_INNER_PORTS=[[2,4],[1,5],[0,3]],MAZE_OUTER_PORTS=[[0,3],[0,1],[0,1]];
 export const MAZE_MARKS=[8,17],MAZE_START=18,MAZE_END=19;
@@ -29,16 +30,27 @@ export const mazePolar=(radius,n)=>[MAZE_CENTER[0]+radius*Math.cos(mazeAngle(n))
 export function mazePoint(node){
  if(node===MAZE_START)return mazePolar(470,0);
  if(node===MAZE_END)return mazePolar(60,3);
+ if(node>=20){
+  const index=Math.floor((node-20)/12),part=(node-20)%12,clearance=MAZE_BALL_RADIUS+MAZE_SEAM;
+  const radius=part<6?MAZE_BOUNDARIES[index]-clearance:MAZE_BOUNDARIES[index+1]+clearance;
+  return mazePolar(radius,part%6);
+ }
  return mazePolar(MAZE_RADII[Math.floor(node/6)],node%6);
 }
 export function mazeConnections(turns){
  const edges=MAZE_ARCS.flatMap((list,r)=>list.map(([a,b])=>[r*6+mod(a+turns[r]),r*6+mod(b+turns[r])]));
+ const used=new Set(),port=(r,outer,n)=>20+r*12+(outer?0:6)+n;
  for(let r=0;r<2;r++)for(const a of MAZE_INNER_PORTS[r]){
   const n=mod(a+turns[r]);
-  if(MAZE_OUTER_PORTS[r+1].some(b=>mod(b+turns[r+1])===n))edges.push([r*6+n,(r+1)*6+n]);
+  if(MAZE_OUTER_PORTS[r+1].some(b=>mod(b+turns[r+1])===n)){edges.push([r*6+n,(r+1)*6+n]);used.add(port(r,false,n));used.add(port(r+1,true,n));}
  }
- if(MAZE_OUTER_PORTS[0].some(n=>mod(n+turns[0])===0))edges.push([MAZE_START,0]);
- if(MAZE_INNER_PORTS[2].some(n=>mod(n+turns[2])===3))edges.push([15,MAZE_END]);
+ if(MAZE_OUTER_PORTS[0].some(n=>mod(n+turns[0])===0)){edges.push([MAZE_START,0]);used.add(port(0,true,0));}
+ if(MAZE_INNER_PORTS[2].some(n=>mod(n+turns[2])===3)){edges.push([15,MAZE_END]);used.add(port(2,false,3));}
+ // Unpaired painted openings are real short grooves, not invisible walls at
+ // their junction. Leave enough space for the ball before the wooden rim.
+ for(let r=0;r<3;r++)for(const outer of [true,false])for(const a of (outer?MAZE_OUTER_PORTS:MAZE_INNER_PORTS)[r]){
+  const n=mod(a+turns[r]),end=port(r,outer,n);if(!used.has(end))edges.push([r*6+n,end]);
+ }
  return edges;
 }
 export function mazeEdgePoint(from,to,amount){

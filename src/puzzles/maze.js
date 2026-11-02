@@ -1,10 +1,10 @@
-import {MAZE_START,MAZE_END,MAZE_MARKS,mazeSeenStars,mazeExitLimit,mazeConnections} from '../data/maze-apparatus.js';
+import {MAZE_START,MAZE_END,MAZE_MARKS,MAZE_NODE_COUNT,mazeSeenStars,mazeExitLimit,mazeConnections} from '../data/maze-apparatus.js';
 import {bounded,indexIn,mod} from './common.js';
 
 export const mazeStars=mazeSeenStars;
 export const mazeHome=p=>p.path.length===1&&p.next===null;
 export function validMazeWalk(turns,path){
- if(!Array.isArray(path)||!path.length||path.length>256||path[0]!==MAZE_START||!path.every(n=>indexIn(n,20)))return false;
+ if(!Array.isArray(path)||!path.length||path.length>256||path[0]!==MAZE_START||!path.every(n=>indexIn(n,MAZE_NODE_COUNT)))return false;
  const edges=mazeConnections(turns);
  for(let i=1;i<path.length;i++){
   if(path[i-1]===MAZE_END||!edges.some(([a,b])=>a===path[i-1]&&b===path[i]||b===path[i-1]&&a===path[i]))return false;
@@ -35,12 +35,26 @@ export function mazeAutoWalk(p){
  }
  return null;
 }
+export function mazeAutoTravel(p){
+ const finish=mazeAutoWalk(p);if(finish)return finish;
+ if(!maze.valid(p)||!mazeHome(p)||maze.solved(p))return null;
+ const edges=mazeConnections(p.turns),path=[MAZE_START],seen=new Set(path);
+ function visit(node){
+  for(const[a,b]of edges){
+   const to=a===node?b:b===node?a:null;
+   if(to===null||to===MAZE_END||seen.has(to))continue;
+   seen.add(to);path.push(to);visit(to);path.push(node);
+  }
+ }
+ visit(MAZE_START);
+ return path.length>1?{...p,path,next:null,amount:0}:null;
+}
 export const maze={
  create:()=>({turns:[3,4,0],path:[MAZE_START],next:null,amount:0}),
  valid(p){
   if(!bounded(p?.turns,3,6)||!validMazeWalk(p.turns,p.path))return false;
   if(p.next===null)return p.amount===0;
-  return indexIn(p.next,20)&&Number.isFinite(p.amount)&&p.amount>0&&p.amount<1&&p.path.at(-1)!==MAZE_END&&adjacent(p.turns,p.path.at(-1),p.next)&&(p.next!==MAZE_END||p.amount<=mazeExitLimit(p.path));
+  return indexIn(p.next,MAZE_NODE_COUNT)&&Number.isFinite(p.amount)&&p.amount>0&&p.amount<1&&p.path.at(-1)!==MAZE_END&&adjacent(p.turns,p.path.at(-1),p.next)&&(p.next!==MAZE_END||p.amount<=mazeExitLimit(p.path));
  },
  move(p,a){
   if(p.path.at(-1)===MAZE_END)return p;

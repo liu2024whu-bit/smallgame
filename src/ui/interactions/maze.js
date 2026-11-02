@@ -3,7 +3,7 @@ import {MAZE_SIZE,MAZE_CENTER,MAZE_RADII,MAZE_BRAKE_PIVOT} from '../../data/maze
 import {advanceMazeBall,mazeKeyBall,mazeJourney} from '../../data/maze-travel.js';
 import {mazeMaterial,mazeBallPoint} from '../../services/maze-material.js';
 import {routeMeasure} from '../../services/motion/maze.js';
-import {bindMazeAutoRoll} from '../../services/maze-auto-roll.js';
+import {createMazeAutoRoll} from '../../services/maze-auto-roll.js';
 import {pointerSession} from './pointer.js';
 import {mod} from '../../puzzles/common.js';
 
@@ -14,14 +14,14 @@ export function bindMaze(root,p,{move,changeView,feedback=()=>{}}){
  const inside=e=>{const b=world.parentElement.getBoundingClientRect();return e&&e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom;};
  const blocked=()=>{feedback('stop');changeView({mazeBlocked:true});};
  const roll=q=>move({type:'roll',path:q.path,next:q.next,amount:q.amount});
- const stopAuto=bindMazeAutoRoll(root,model,p,{roll,feedback});
+ const autoRoll=createMazeAutoRoll(root,model,p,{roll,feedback});autoRoll.start();
  const stop=pointerSession(root,{
   pick(e){
-   if(busy())return null;const ball=e.target.closest('button[data-maze-ball]'),handle=e.target.closest('[data-maze-return]');if(ball)return {source:ball,kind:'ball'};if(handle)return {source:handle,kind:'handle'};
+   if(busy())return null;const ball=e.target.closest('button[data-maze-ball]'),handle=e.target.closest('[data-maze-return]');if(ball||handle){model.dataset.mazeHeld='true';return {source:ball??handle,kind:ball?'ball':'handle'};}
    if(!model.querySelector('button[data-maze-ring]')||!mazeHome(p))return null;
    const at=point(e),radius=Math.hypot(at[0]-MAZE_CENTER[0],at[1]-MAZE_CENTER[1]),scale=world.getBoundingClientRect().width/MAZE_SIZE;
    const i=MAZE_RADII.findIndex(r=>Math.abs(radius-r)<=Math.max(60,22/scale));if(i<0)return null;
-   return {source:model.querySelector(`button[data-maze-ring="${i}"]`),kind:'ring',index:i,angle:Math.atan2(at[1]-MAZE_CENTER[1],at[0]-MAZE_CENTER[0]),rotation:0};
+   model.dataset.mazeHeld='true';return {source:model.querySelector(`button[data-maze-ring="${i}"]`),kind:'ring',index:i,angle:Math.atan2(at[1]-MAZE_CENTER[1],at[0]-MAZE_CENTER[0]),rotation:0};
   },
   start(g){
    const state=material()?.snapshot();if(!state)return;g.base=state.turns;g.pose=structuredClone(p);g.scale=world.getBoundingClientRect().width/MAZE_SIZE;
@@ -54,13 +54,14 @@ export function bindMaze(root,p,{move,changeView,feedback=()=>{}}){
    if(g.kind==='ball'&&g.pose)roll(g.pose);
    if(g.kind==='handle'&&g.amount>=.6){move({type:'return'});feedback('return');}
   },
-  clear(){if(model.isConnected){const before=material()?.snapshot();if(before){const route=mazeJourney(before.p,p,before.ball),duration=Math.min(1500,Math.max(190,routeMeasure(route).total*.75));material()?.animate(before,p,route,{duration,blocking:true});}}},
+  clear(g){delete model.dataset.mazeHeld;if(g.dragging&&model.isConnected){const before=material()?.snapshot();if(before){const route=mazeJourney(before.p,p,before.ball),duration=Math.min(1500,Math.max(190,routeMeasure(route).total*.75));material()?.animate(before,p,route,{duration,blocking:true});}}},
  });
  root.addEventListener('click',e=>{
   if(busy()||Date.now()<Number(root.dataset.suppressUntil??0))return;
   const button=e.target.closest('[data-maze-view],button[data-maze-ring],[data-maze-return],button[data-maze-ball]');if(!button)return;e.preventDefault();e.stopPropagation();
   if(button.dataset.mazeView){changeView({mazeView:button.dataset.mazeView,mazeBlocked:false});feedback('turn');return;}
   if(button.hasAttribute('data-maze-return')){move({type:'return'});feedback('return');return;}
+  if(button.hasAttribute('data-maze-ball')){autoRoll.start();return;}
   if(button.hasAttribute('data-maze-ring')){if(!mazeHome(p)){blocked();return;}move({type:'turn',index:Number(button.dataset.mazeRing),direction:1});feedback('detent');}
  },{signal});
  root.addEventListener('keydown',e=>{
@@ -70,5 +71,5 @@ export function bindMaze(root,p,{move,changeView,feedback=()=>{}}){
   const direction={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]}[e.key];
   if(ball&&direction){e.preventDefault();e.stopPropagation();const next=mazeKeyBall(p,direction);if(next===p)feedback('stop');else{roll(next);feedback('roll');}}
  },{signal});
- return ()=>{stopAuto();stop();controller.abort();};
+ return ()=>{autoRoll.dispose();stop();controller.abort();};
 }
