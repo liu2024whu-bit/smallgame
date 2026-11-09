@@ -28,8 +28,11 @@ export function createToolUseFlow({store,panel,toast,audio,openPuzzle,openCollec
   if(target==='birthday-door'){
    if(fittingHandle)return false;
    if(!state.solved.includes('stitch')){toast('画册还没有装好。');return false;}
+   const origin=panel(),socket=document.querySelector('.handle-socket')??document.querySelector('[data-tool-target="birthday-door"]');
    fittingHandle=true;
-   try{await fitHandle(document.querySelector('.handle-socket')??document.querySelector('[data-tool-target="birthday-door"]'),itemSprite(3));}finally{fittingHandle=false;}
+   let fitted;
+   try{fitted=await fitHandle(socket,itemSprite(3));}finally{fittingHandle=false;}
+   if(!fitted||panel()!==origin||store.get().scene!==state.scene||!socket.isConnected||!socket.getClientRects().length)return false;
    store.dispatch({type:'use-tool',item,target});
    if(sceneOpen(store.get(),'birthday')){goScene('birthday');audio.material('metal');return true;}
    toast('画册还没有装好。');return false;

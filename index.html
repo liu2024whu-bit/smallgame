@@ -65,10 +65,21 @@
 </head>
 <body>
   <main id="app" aria-label="第20圈以前">
-    <p class="boot-message">等一下……</p>
+    <div class="boot-message"><p id="boot-status" role="status">等一下……</p><button id="boot-retry" class="quiet-button" type="button" hidden>再推一次门</button></div>
   </main>
   <div id="live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
   <noscript>书房还没能打开，请检查浏览器设置后重试。</noscript>
   <script type="module" src="src/main.js"></script>
+  <script>
+    (()=>{
+      const retry=document.getElementById('boot-retry');
+      retry.addEventListener('click',()=>location.reload());
+      document.querySelector('script[type="module"]').addEventListener('error',()=>{
+        const status=document.getElementById('boot-status');if(!status)return;
+        status.textContent='小屋还没展开，再推一次门？';
+        retry.hidden=false;
+      });
+    })();
+  </script>
 </body>
 </html>

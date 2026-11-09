@@ -22,7 +22,15 @@ export function pointerSession(root, handlers) {
     if(cancelled||current.returnToSource)returnGhost(current);
     current.ghost?.remove();root.classList.remove('is-dragging');handlers.clear?.(current,cancelled);
   }
+  function complete(current,event,cancelled){
+    cancelled ||= current.viewportWidth!==window.innerWidth||current.viewportHeight!==window.innerHeight||document.hidden||!!current.source&&!current.source.isConnected;
+    try{if(current.dragging)handlers.end?.(current,event,cancelled);}finally{clear(current,cancelled);}
+  }
   function finish(event, cancelled = false) {
+    if(pending){
+      if(cancelled){const current=pending.current;window.clearTimeout(pending.timer);pending=null;complete(current,event,true);}
+      return;
+    }
     if (!gesture) return;
     const current = gesture;
     // A resize event can arrive after pointerup. A changed coordinate space
@@ -30,7 +38,7 @@ export function pointerSession(root, handlers) {
     cancelled ||= current.viewportWidth!==window.innerWidth||current.viewportHeight!==window.innerHeight;
     gesture = null;
     if(current.dragging)root.dataset.suppressUntil=Date.now()+350;
-    const release=()=>{pending=null;try{if(current.dragging)handlers.end?.(current,event,cancelled);}finally{clear(current,cancelled);}};
+    const release=()=>{pending=null;complete(current,event,cancelled);};
     // Keep the original target connected until Chromium delivers touchend.
     // Replacing it during pointerup can suppress the following native tap.
     if(current.dragging&&!cancelled&&event?.pointerType==='touch')pending={current,timer:window.setTimeout(release,0)};
@@ -62,12 +70,11 @@ export function pointerSession(root, handlers) {
   window.addEventListener('resize', event => finish(event, true), options);
   window.addEventListener('keydown', event => {
     if (!gesture && ['Enter', ' '].includes(event.key)) delete root.dataset.suppressUntil;
-    if (!gesture?.dragging) return;
+    if (!gesture?.dragging&&!pending) return;
     if (event.key === 'Escape') { event.preventDefault(); event.stopImmediatePropagation(); finish(event, true); }
-    else handlers.key?.(gesture, event);
+    else if(gesture)handlers.key?.(gesture, event);
   }, { ...options, capture: true });
   return () => {
-    if(pending){window.clearTimeout(pending.timer);clear(pending.current,true);pending=null;}
     finish(null,true);controller.abort();
   };
 }

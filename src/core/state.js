@@ -33,6 +33,14 @@ function inputsOwned(state,id,progress) {
   return !inputs||inputs.every((item,index)=>!toolMounts(id,progress)[index]||inventory(state).includes(item));
 }
 
+function restoreProgress(state,id,progress){
+  // Undo belongs to this puzzle. A fitting moved to another room stays there.
+  for(const [index]of (PUZZLE_TOOL_INPUTS[id]??[]).entries()){
+    if(toolMounts(id,progress)[index]&&toolElsewhere(state,id,index))progress=RULES[id].move(progress,{type:'unfit',index});
+  }
+  return progress;
+}
+
 export function keepsakes(state) {
   return KEEPSAKES.filter(gift => gift.pickup ? state.collected.includes(gift.pickup) : state.solved.includes(gift.puzzle));
 }
@@ -149,7 +157,9 @@ export function reduce(state, action) {
   if (action.type === 'reset' || action.type === 'undo') {
     const previous = state.history[id] ?? [];
     if (action.type === 'undo' && !previous.length) return state;
-    return { ...state, progress: { ...state.progress, [id]: action.type === 'reset' ? RULES[id].create() : previous.at(-1) }, history: { ...state.history, [id]: action.type === 'reset' ? [] : previous.slice(0, -1) } };
+    const progress=action.type==='reset'?RULES[id].create():restoreProgress(state,id,previous.at(-1));
+    if(!RULES[id].valid(progress)||!inputsOwned(state,id,progress))return state;
+    return { ...state, progress: { ...state.progress, [id]: progress }, history: { ...state.history, [id]: action.type === 'reset' ? [] : previous.slice(0, -1) } };
   }
   if (action.type !== 'move') return state;
   if(id==='birthdayLock'&&['fit','lid'].includes(action.move?.type)&&state.progress.ribbons.back)return state;

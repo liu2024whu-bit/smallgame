@@ -1,6 +1,7 @@
 @layer puzzles {
  .puzzle-packing .puzzle-field {padding:0;min-height:0;}
- .packing-workbench {--packing-height:min(480px,calc(100dvh - 250px));height:var(--packing-height);display:grid;grid-template-columns:minmax(0,1.65fr) minmax(210px,1fr);grid-template-rows:minmax(0,1fr);align-items:center;gap:20px;padding:12px 56px 18px 64px;}
+ /* Short screens may scroll the dialog; the rack still needs room for every piece. */
+ .packing-workbench {--packing-height:clamp(360px,calc(100dvh - 250px),480px);height:var(--packing-height);display:grid;grid-template-columns:minmax(0,1.65fr) minmax(210px,1fr);grid-template-rows:minmax(0,1fr);align-items:center;gap:20px;padding:12px 56px 18px 64px;}
  .packing-tray {position:relative;justify-self:center;width:min(100%,calc((var(--packing-height) - 30px)*var(--tray-ratio)));aspect-ratio:var(--tray-ratio);min-width:0;min-height:0;}
  .packing-tray-art {position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
  .packing-grid {position:absolute;left:var(--grid-left);top:var(--grid-top);width:var(--grid-width);height:var(--grid-height);display:grid;grid-template-columns:repeat(var(--pack-cols),1fr);grid-template-rows:repeat(4,1fr);gap:0;}
